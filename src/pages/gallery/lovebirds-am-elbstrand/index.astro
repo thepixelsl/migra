@@ -1,0 +1,1069 @@
+---
+import "../../../styles/global.css";
+import { Image } from "astro:assets";
+
+import art8413 from "../../../assets/lovebirds-am-elbstrand/art-8413.jpg";
+import art8273 from "../../../assets/lovebirds-am-elbstrand/art-8273.jpg";
+import art8407 from "../../../assets/lovebirds-am-elbstrand/art-8407.jpg";
+import art8249 from "../../../assets/lovebirds-am-elbstrand/art-8249.jpg";
+import art8381 from "../../../assets/lovebirds-am-elbstrand/art-8381.jpg";
+import art8080 from "../../../assets/lovebirds-am-elbstrand/art-8080.jpg";
+import art8385 from "../../../assets/lovebirds-am-elbstrand/art-8385.jpg";
+import art8380 from "../../../assets/lovebirds-am-elbstrand/art-8380.jpg";
+import art8360 from "../../../assets/lovebirds-am-elbstrand/art-8360.jpg";
+import art8239 from "../../../assets/lovebirds-am-elbstrand/art-8239.jpg";
+import art8208 from "../../../assets/lovebirds-am-elbstrand/art-8208.jpg";
+import art8065 from "../../../assets/lovebirds-am-elbstrand/art-8065.jpg";
+import art7981 from "../../../assets/lovebirds-am-elbstrand/art-7981.jpg";
+import art7696 from "../../../assets/lovebirds-am-elbstrand/art-7696.jpg";
+import art7547 from "../../../assets/lovebirds-am-elbstrand/art-7547.jpg";
+import art7943 from "../../../assets/lovebirds-am-elbstrand/art-7943.jpg";
+import art7786 from "../../../assets/lovebirds-am-elbstrand/art-7786.jpg";
+import art7859 from "../../../assets/lovebirds-am-elbstrand/art-7859.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/lovebirds-am-elbstrand/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Verlobungsshooting am Elbstrand";
+const pageHeading = "Lovebirds am Elbstrand";
+const articleTitle = "Lovebirds am Elbstrand - 5 Gründe für ein Verlobungsshooting in Hamburg";
+const description = "Lovebirds am Hamburger Elbstrand. 5 Gründe, warum Du unbedingt vor der Hochzeit mit dem Hochzeitsfotografen ein Verlobungsshooting machen solltest.";
+const originalImageUrl = "https://artbild-fotografie.de/wp-content/uploads/2019/07/ART_8413.jpg";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const galleryImages = [
+  { id: "art-8413", image: art8413, alt: "Paarshooting am Hamburger Elbstrand", aspect: "landscape" },
+  { id: "art-8273", image: art8273, alt: "Verlobungsshooting eines lachenden Paares in Hamburg", aspect: "landscape", muted: true },
+  { id: "art-8407", image: art8407, alt: "Paarportrait am Elbstrand in Hamburg", aspect: "landscape" },
+  { id: "art-8249", image: art8249, alt: "Intimer Moment beim Paarshooting am Elbstrand", aspect: "portrait" },
+  { id: "art-8381", image: art8381, alt: "Paarshooting in Hamburg in ruhigem Licht", aspect: "landscape" },
+  { id: "art-8080", image: art8080, alt: "Paarshooting am Elbstrand in ruhiger Nähe", aspect: "wide" },
+  { id: "art-8385", image: art8385, alt: "Natürliches Verlobungsshooting am Wasser", aspect: "landscape" },
+  { id: "art-8380", image: art8380, alt: "Brautpaar vor der Hochzeit beim Kennenlernshooting", aspect: "landscape" },
+  { id: "art-8360", image: art8360, alt: "Paarfoto am Hamburger Elbstrand", aspect: "landscape" },
+  { id: "art-8239", image: art8239, alt: "Hochformat Portrait eines Paares am Elbstrand", aspect: "portrait" },
+  { id: "art-8208", image: art8208, alt: "Verlobungsshooting mit natürlicher Bewegung", aspect: "landscape" },
+  { id: "art-8065", image: art8065, alt: "Paarshooting in Hamburg vor der Hochzeit", aspect: "landscape" },
+  { id: "art-7696", image: art7696, alt: "Kennenlernshooting eines Paares am Elbstrand", aspect: "landscape" },
+  { id: "art-7981", image: art7981, alt: "Elegantes Paarportrait am Wasser", aspect: "landscape" },
+  { id: "art-7547", image: art7547, alt: "Lovebirds am Hamburger Elbstrand", aspect: "landscape" },
+  { id: "art-7943", image: art7943, alt: "Hochzeitsfotograf begleitet ein Paarshooting in Hamburg", aspect: "landscape" },
+  { id: "art-7786", image: art7786, alt: "Verlobungsshooting mit Blick auf die Elbe", aspect: "landscape" },
+  { id: "art-7859", image: art7859, alt: "Natürliches Paarfoto am Elbstrand", aspect: "landscape" },
+];
+
+const galleryColumns = [
+  ["art-8413", "art-8249", "art-8239", "art-7943"],
+  ["art-8273", "art-8381", "art-8385", "art-8360", "art-8065", "art-7981", "art-7786"],
+  ["art-8407", "art-8080", "art-8380", "art-8208", "art-7696", "art-7547", "art-7859"],
+].map((column) => column.map((id) => galleryImages.find((item) => item.id === id)).filter(Boolean));
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      "headline": title,
+      "name": title,
+      "description": description,
+      "keywords": "Verlobungsshooting, Elbstrand, Hamburg, Hochzeitsfotograf",
+      "author": {
+        "@type": "Person",
+        "name": "York Augustin"
+      },
+      "datePublished": "2019-07-05T17:18:22+02:00",
+      "dateModified": "2024-12-04T16:44:03+01:00",
+      "image": {
+        "@id": `${pageUrl}#primaryimage`
+      },
+      "publisher": {
+        "@id": `${siteUrl}/#organization`
+      },
+      "mainEntityOfPage": {
+        "@id": `${pageUrl}#webpage`
+      },
+      "inLanguage": "de"
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      "name": pageHeading,
+      "description": description,
+      "image": galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        "position": index + 1,
+        "caption": item.alt
+      }))
+    },
+    {
+      "@type": "Place",
+      "@id": `${siteUrl}/#place`,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rahlstedter Bahnhofstraße 27",
+        "addressLocality": "Rahlstedt",
+        "addressRegion": "Hamburg",
+        "postalCode": "22143",
+        "addressCountry": "Deutschland"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      "name": "Artbild Fotografie Hochzeitsfotograf Hamburg",
+      "legalName": "Artbild-Fotografie",
+      "url": siteUrl,
+      "sameAs": [
+        "https://www.facebook.com/artbildfotografie/",
+        "https://twitter.com/artbild"
+      ],
+      "email": "info@artbild-fotografie.de",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rahlstedter Bahnhofstraße 27",
+        "addressLocality": "Rahlstedt",
+        "addressRegion": "Hamburg",
+        "postalCode": "22143",
+        "addressCountry": "Deutschland"
+      },
+      "logo": {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        "url": logoUrl,
+        "contentUrl": logoUrl,
+        "caption": "Artbild-Fotografie",
+        "inLanguage": "de"
+      },
+      "location": {
+        "@id": `${siteUrl}/#place`
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "item": {
+            "@id": siteUrl,
+            "name": "Startseite"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "item": {
+            "@id": `${siteUrl}/portfolio/`,
+            "name": "Portfolio"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "item": {
+            "@id": pageUrl,
+            "name": pageHeading
+          }
+        }
+      ]
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${pageUrl}#primaryimage`,
+      "url": originalImageUrl,
+      "width": "1384",
+      "height": "924",
+      "caption": "Paarshooting in Hamburg",
+      "inLanguage": "de"
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      "url": pageUrl,
+      "name": title,
+      "description": description,
+      "datePublished": "2019-07-05T17:18:22+02:00",
+      "dateModified": "2024-12-04T16:44:03+01:00",
+      "primaryImageOfPage": {
+        "@id": `${pageUrl}#primaryimage`
+      },
+      "breadcrumb": {
+        "@id": `${pageUrl}#breadcrumb`
+      },
+      "inLanguage": "de"
+    }
+  ]
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:publisher" content="https://www.facebook.com/artbildfotografie/">
+  <meta property="article:author" content="https://web.facebook.com/artbildfotografie/">
+  <meta property="article:published_time" content="2019-07-05T17:18:22+02:00">
+  <meta property="article:modified_time" content="2024-12-04T16:44:03+01:00">
+  <meta property="og:updated_time" content="2024-12-04T16:44:03+01:00">
+  <meta property="og:image" content={originalImageUrl}>
+  <meta property="og:image:secure_url" content={originalImageUrl}>
+  <meta property="og:image:width" content="1384">
+  <meta property="og:image:height" content="924">
+  <meta property="og:image:alt" content="Paarshooting in Hamburg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:site" content="@artbild">
+  <meta name="twitter:creator" content="@artbild">
+  <meta name="twitter:image" content={originalImageUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template lovebirds-page">
+  <header class="gallery-header">
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="lovebirds-article">
+      <header class="lovebirds-hero">
+        <p class="lovebirds-script">{pageHeading}</p>
+        <h1>{articleTitle}</h1>
+        <p class="lovebirds-intro">Heute möchte ich Dir erzählen, warum ich mit meinen Brautpaaren stets ein Verlobungsshooting mache, wenn sie sich für mich als ihren Hochzeitsfotografen entscheiden. Deswegen habe ich dir 5 Gründe aufgeschrieben, die auf jeden Fall für ein Verlobungsshooting sprechen und weshalb du unbedingt eins machen solltest! Also los!</p>
+      </header>
+
+      <section class="lovebirds-grid" aria-label="Lovebirds am Elbstrand Galerie">
+        {galleryColumns.map((column) => (
+          <div class="lovebirds-grid__column">
+            {column.map((item) => (
+              <figure class:list={["lovebirds-grid__item", `is-${item.aspect}`, { "is-muted": item.muted }]} data-reveal>
+                <button
+                  class="lovebirds-grid__button"
+                  type="button"
+                  data-gallery-trigger
+                  data-full-src={item.image.src}
+                  data-alt={item.alt}
+                  aria-label={`Bild in Vollansicht öffnen: ${item.alt}`}
+                >
+                  <Image
+                    src={item.image}
+                    alt={item.alt}
+                    widths={[360, 620, 920, 1200]}
+                    sizes="(max-width: 700px) 100vw, (max-width: 1100px) 45vw, 31vw"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+              </figure>
+            ))}
+          </div>
+        ))}
+      </section>
+
+      <div class="lovebirds-lightbox" data-gallery-lightbox hidden>
+        <button class="lovebirds-lightbox__backdrop" type="button" data-gallery-close aria-label="Vollansicht schließen"></button>
+        <div class="lovebirds-lightbox__dialog" role="dialog" aria-modal="true" aria-label="Bild Vollansicht">
+          <button class="lovebirds-lightbox__close" type="button" data-gallery-close aria-label="Vollansicht schließen">×</button>
+          <button class="lovebirds-lightbox__nav is-prev" type="button" data-gallery-prev aria-label="Vorheriges Bild">‹</button>
+          <figure class="lovebirds-lightbox__figure">
+            <img data-gallery-image alt="">
+            <figcaption data-gallery-caption></figcaption>
+          </figure>
+          <button class="lovebirds-lightbox__nav is-next" type="button" data-gallery-next aria-label="Nächstes Bild">›</button>
+        </div>
+      </div>
+
+      <aside class="lovebirds-share" aria-label="Artikel teilen und Schlagworte">
+        <div>
+          <span>Tags:</span>
+          <a href="https://artbild-fotografie.de/tag/elbstrand/">Elbstrand</a>
+          <a href="https://artbild-fotografie.de/tag/engagementshooting/">Engagementshooting</a>
+          <a href="https://artbild-fotografie.de/tag/hamburg/">Hamburg</a>
+          <a href="https://artbild-fotografie.de/tag/verlobungsshooting/">Verlobungsshooting</a>
+        </div>
+        <div>
+          <span>Share:</span>
+          <a href="https://www.facebook.com/sharer/sharer.php?u=https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/" aria-label="Auf Facebook teilen">f</a>
+          <a href="https://www.pinterest.com/pin/create/button/" aria-label="Auf Pinterest teilen">p</a>
+        </div>
+      </aside>
+
+      <section class="lovebirds-copy">
+        <div class="lovebirds-copy__inner">
+          <section>
+            <h2>1. Grund - Erfahrung</h2>
+            <p>Viele Brautpaare haben keine Erfahrung vor der Kamera. Sie wissen nicht wie ein Fotoshooting abläuft, oder wie sie sich ein Brautpaarshooting bei einem Hochzeitsfotografen vorstellen sollen.</p>
+            <p>Bei dem Kennenlernshooting jedoch, ist der Ablauf zumindest eines Brautpaarshootings im Rahmen einer günstigen Ablaufplanung, fast wie bei der Hochzeit.</p>
+            <p>Du erhältst so eine relativ genaue Vorstellung wie der Ablauf bei diesem Fotografen wäre und wie es sich für Dich angefühlt hat.</p>
+          </section>
+
+          <section>
+            <h2>2. Grund - Sympathie oder Antipathie?</h2>
+            <p>Der mitunter wichtigste Grund, damit Bilder gelingen ist der, dass sich die Menschen vor und hinter der Kamera wohl fühlen müssen.</p>
+            <p>So nebensächlich es klingen mag, es spielt doch eine große Rolle ob man entspannt und glücklich oder angespannt und ängstlich auf den Bildern ausschaut.</p>
+            <p>Sympathie ist keine Einbahnstraße. Beide müssen sich wohlfühlen, denn ein Fotograf der sich frei bewegen kann, wird auf der Hochzeit auch andere Bilder machen.</p>
+          </section>
+
+          <section>
+            <h2>3. Grund - Der Fotograf lernt auch Euch kennen</h2>
+            <p>Manchmal sind Paare wie Models, die einfach vor die Kamera gehören und gelöst wirken. Dann gibt es aber auch Paare, die ein wenig Anleitung benötigen.</p>
+            <p>Beim Fotografieren erfährt der Fotograf, was am besten für dieses Paar funktioniert. Dieses Wissen ist Gold wert, denn bei der Hochzeit kann er mit diesem Wissen punkten.</p>
+          </section>
+
+          <section>
+            <h2>4. Grund - Die Bilder und der Bildlook</h2>
+            <p>Hier trennt sich die Spreu vom Weizen. Wenn es um die Fotos geht, kann man nichts schön reden oder entschuldigen.</p>
+            <p>Entweder die Bilder rocken und genau diese Art von Bildern wünscht Ihr Euch für Eure Hochzeit oder es passt nicht. Gefällt Euch der Look? Mögt Ihr Euch auf den Bildern?</p>
+          </section>
+
+          <section>
+            <h2>Stimmt das Gesamtpaket?</h2>
+            <p>Ist das Gesamtpaket rund, oder hakt es an allen Ecken und Enden? Ihr habt den Fotografen kennengelernt, Vertrauen aufgebaut und Euch vor der Kamera wohl gefühlt.</p>
+            <p>Jetzt wisst Ihr besser, ob der passende Mensch für Eure Hochzeitsreportage vor Euch steht. Schlaft mal drüber und dann müsst Ihr Euch entscheiden, denn freie Termine gibt es immer nur einen pro Tag.</p>
+          </section>
+
+          <section class="lovebirds-price-note">
+            <h2>Vergleiche Preise &amp; Leistungen</h2>
+            <p>Sieh Dir meine Preise an und vergleiche gerne die Angebote anderer Fotografen. Bei uns inklusive: die Bearbeitung aller Bilder. Keine Extrakosten, keine versteckten Kosten.</p>
+            <p>Alle Pakete sind Rundum-Sorglos-Pakete. Wenn Du Deinen Termin anfragen möchtest, bevor dieser vergeben ist, kannst Du stets unverbindlich anfragen.</p>
+            <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Hier klicken!</a>
+          </section>
+        </div>
+      </section>
+
+      <section class="lovebirds-contact" aria-labelledby="lovebirds-contact-title">
+        <div>
+          <h2 id="lovebirds-contact-title">Jetzt Kennenlernshooting vereinbaren!</h2>
+          <p>Fragt unverbindlich für einen Termin für ein Kennenlernshooting an und lernt mich doch kennen.</p>
+        </div>
+        <div class="lovebirds-contact__meta">
+          <p><span>Phone Number</span><a href="tel:+4915161438120">+49 151 61438120</a></p>
+          <p><span>Email</span><a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a></p>
+          <p><span>Social Media</span><a href="https://www.instagram.com/artbild/">@ARTBILD</a></p>
+        </div>
+        <form class="lovebirds-form" aria-label="Unverbindliche Anfrage">
+          <h3>Schreib mir einfach!</h3>
+          <p>Unverbindliche Anfrage senden.</p>
+          <label>
+            <span>Dein Name</span>
+            <input type="text" name="name" autocomplete="name">
+          </label>
+          <label>
+            <span>Deine E-Mail-Adresse</span>
+            <input type="email" name="email" autocomplete="email">
+          </label>
+          <label>
+            <span>Bitte auswählen</span>
+            <select name="shooting">
+              <option>Hochzeit</option>
+              <option>Standesamtliche Trauung</option>
+              <option>Portraitshooting</option>
+              <option>After-Wedding</option>
+              <option>Anderes</option>
+            </select>
+          </label>
+          <label>
+            <span>Wunschdatum wählen</span>
+            <input type="text" name="date">
+          </label>
+          <label class="is-wide">
+            <span>Deine Nachricht</span>
+            <textarea name="message" rows="5"></textarea>
+          </label>
+          <a class="button ghost" href="https://artbild-fotografie.de/kontakt/">Anfrage senden</a>
+        </form>
+      </section>
+
+      <section class="lovebirds-instagram">
+        <p>Folgt mir auf Instagram für kostenlose TFP-Shootings!</p>
+        <a href="https://www.instagram.com/artbild/">@ARTBILD</a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+  <script is:inline>
+    (() => {
+      const items = [...document.querySelectorAll("[data-reveal]")];
+      const reveal = (item) => item.classList.add("is-visible");
+
+      if (items.length && !("IntersectionObserver" in window)) {
+        items.forEach(reveal);
+      } else if (items.length) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            reveal(entry.target);
+            observer.unobserve(entry.target);
+          });
+        }, {
+          rootMargin: "0px 0px -8% 0px",
+          threshold: 0.14,
+        });
+
+        items.forEach((item) => observer.observe(item));
+      }
+
+      const triggers = [...document.querySelectorAll("[data-gallery-trigger]")];
+      const lightbox = document.querySelector("[data-gallery-lightbox]");
+      const image = document.querySelector("[data-gallery-image]");
+      const caption = document.querySelector("[data-gallery-caption]");
+      const closeButtons = [...document.querySelectorAll("[data-gallery-close]")];
+      const prevButton = document.querySelector("[data-gallery-prev]");
+      const nextButton = document.querySelector("[data-gallery-next]");
+      let activeIndex = 0;
+      let lastFocused = null;
+
+      if (!triggers.length || !lightbox || !image || !caption || !prevButton || !nextButton) return;
+
+      const slides = triggers.map((trigger) => {
+        const thumbnail = trigger.querySelector("img");
+        return {
+          button: trigger,
+          src: trigger.dataset.fullSrc || thumbnail?.currentSrc || thumbnail?.src || "",
+          alt: trigger.dataset.alt || thumbnail?.alt || "",
+        };
+      });
+
+      const show = (index) => {
+        activeIndex = (index + slides.length) % slides.length;
+        const slide = slides[activeIndex];
+        image.src = slide.src;
+        image.alt = slide.alt;
+        caption.textContent = slide.alt;
+      };
+
+      const open = (index) => {
+        lastFocused = document.activeElement;
+        show(index);
+        lightbox.hidden = false;
+        document.documentElement.classList.add("has-lightbox");
+        requestAnimationFrame(() => {
+          lightbox.classList.add("is-open");
+          nextButton.focus();
+        });
+      };
+
+      const close = () => {
+        lightbox.classList.remove("is-open");
+        document.documentElement.classList.remove("has-lightbox");
+        window.setTimeout(() => {
+          lightbox.hidden = true;
+          image.removeAttribute("src");
+          if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
+        }, 180);
+      };
+
+      triggers.forEach((trigger, index) => {
+        trigger.addEventListener("click", () => open(index));
+      });
+
+      closeButtons.forEach((button) => button.addEventListener("click", close));
+      prevButton.addEventListener("click", () => show(activeIndex - 1));
+      nextButton.addEventListener("click", () => show(activeIndex + 1));
+
+      document.addEventListener("keydown", (event) => {
+        if (lightbox.hidden) return;
+        if (event.key === "Escape") close();
+        if (event.key === "ArrowLeft") show(activeIndex - 1);
+        if (event.key === "ArrowRight") show(activeIndex + 1);
+      });
+    })();
+  </script>
+</body>
+</html>
+
+<style>
+  .lovebirds-article {
+    padding-top: clamp(54px, 5.2vw, 66px);
+  }
+
+  .lovebirds-hero {
+    width: min(1040px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .lovebirds-script {
+    margin: 0;
+    color: #343842;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(30px, 3vw, 39px);
+    line-height: 1;
+  }
+
+  .lovebirds-hero h1 {
+    margin: clamp(92px, 9.6vw, 122px) auto 0;
+    color: #34323a;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2vw, 29px);
+    font-weight: 400;
+    line-height: 1.28;
+  }
+
+  .lovebirds-intro {
+    width: min(920px, 100%);
+    margin: 22px auto 0;
+    color: #5f5a54;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.35vw, 20px);
+    line-height: 1.55;
+    text-align: left;
+  }
+
+  .lovebirds-grid {
+    --gallery-gap: clamp(32px, 2.65vw, 52px);
+    width: min(1756px, calc(100% - clamp(48px, 10.8vw, 214px)));
+    margin: clamp(76px, 8vw, 104px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--gallery-gap);
+    align-items: start;
+  }
+
+  .lovebirds-grid__column {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: var(--gallery-gap);
+  }
+
+  .lovebirds-grid__item {
+    margin: 0;
+    background: #eee9e3;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: opacity, transform;
+  }
+
+  .lovebirds-grid__button {
+    width: 100%;
+    height: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    cursor: zoom-in;
+  }
+
+  .lovebirds-grid__button:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 5px;
+  }
+
+  .lovebirds-grid__item.is-visible {
+    animation: lovebirdsReveal 760ms ease forwards;
+  }
+
+  .lovebirds-grid__item :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 420ms ease, filter 420ms ease;
+  }
+
+  .lovebirds-grid__button:hover :global(img),
+  .lovebirds-grid__button:focus-visible :global(img) {
+    transform: scale(1.018);
+    filter: brightness(.92);
+  }
+
+  .lovebirds-grid__item.is-landscape {
+    aspect-ratio: 3 / 2;
+  }
+
+  .lovebirds-grid__item.is-wide {
+    aspect-ratio: 4 / 3;
+  }
+
+  .lovebirds-grid__item.is-portrait {
+    aspect-ratio: 2 / 3;
+  }
+
+  .lovebirds-grid__item.is-muted :global(img) {
+    filter: grayscale(1);
+  }
+
+  .lovebirds-grid__item.is-muted .lovebirds-grid__button:hover :global(img),
+  .lovebirds-grid__item.is-muted .lovebirds-grid__button:focus-visible :global(img) {
+    filter: grayscale(1) brightness(.92);
+  }
+
+  .has-lightbox {
+    overflow: hidden;
+  }
+
+  .lovebirds-lightbox {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(18px, 4vw, 52px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .lovebirds-lightbox[hidden] {
+    display: none;
+  }
+
+  .lovebirds-lightbox.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .lovebirds-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(15, 15, 16, .88);
+    cursor: zoom-out;
+  }
+
+  .lovebirds-lightbox__dialog {
+    position: relative;
+    width: min(100%, 1380px);
+    height: min(100%, 900px);
+    display: grid;
+    grid-template-columns: minmax(44px, 70px) minmax(0, 1fr) minmax(44px, 70px);
+    align-items: center;
+    gap: clamp(10px, 2vw, 26px);
+  }
+
+  .lovebirds-lightbox__figure {
+    min-width: 0;
+    max-height: 100%;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+  }
+
+  .lovebirds-lightbox__figure img {
+    max-width: 100%;
+    max-height: min(78vh, 780px);
+    display: block;
+    object-fit: contain;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+  }
+
+  .lovebirds-lightbox__figure figcaption {
+    color: rgba(255, 255, 255, .78);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .lovebirds-lightbox__close,
+  .lovebirds-lightbox__nav {
+    border: 0;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .lovebirds-lightbox__close:hover,
+  .lovebirds-lightbox__nav:hover,
+  .lovebirds-lightbox__close:focus-visible,
+  .lovebirds-lightbox__nav:focus-visible {
+    background: rgba(255, 255, 255, .18);
+  }
+
+  .lovebirds-lightbox__close:focus-visible,
+  .lovebirds-lightbox__nav:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+  }
+
+  .lovebirds-lightbox__close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .lovebirds-lightbox__nav {
+    width: clamp(44px, 5vw, 64px);
+    height: clamp(44px, 5vw, 64px);
+    border-radius: 50%;
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1;
+  }
+
+  .lovebirds-lightbox__nav.is-prev {
+    justify-self: end;
+  }
+
+  .lovebirds-lightbox__nav.is-next {
+    justify-self: start;
+  }
+
+  @keyframes lovebirdsReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .lovebirds-share {
+    width: min(1140px, calc(100% - 140px));
+    margin: 36px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 22px 44px;
+    color: #555;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .lovebirds-share div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+  }
+
+  .lovebirds-share a {
+    color: #7e746d;
+    text-decoration: none;
+  }
+
+  .lovebirds-copy {
+    width: min(1040px, calc(100% - 120px));
+    margin: clamp(110px, 12vw, 170px) auto 0;
+  }
+
+  .lovebirds-copy__inner {
+    width: min(760px, 100%);
+    margin: 0 auto;
+  }
+
+  .lovebirds-copy section + section {
+    margin-top: clamp(62px, 7vw, 96px);
+  }
+
+  .lovebirds-copy h2,
+  .lovebirds-contact h2 {
+    margin: 0 0 25px;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(30px, 3.6vw, 54px);
+    font-weight: 400;
+    line-height: 1.13;
+  }
+
+  .lovebirds-copy p,
+  .lovebirds-contact p {
+    margin: 0 0 23px;
+    color: #66605b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .lovebirds-price-note {
+    padding: clamp(42px, 5vw, 66px);
+    background: #f3f1ec;
+    text-align: center;
+  }
+
+  .lovebirds-price-note a {
+    display: inline-flex;
+    margin-top: 18px;
+    color: #242731;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .lovebirds-contact {
+    width: min(1140px, calc(100% - 120px));
+    margin: clamp(112px, 12vw, 170px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+    gap: clamp(48px, 7vw, 96px);
+    align-items: start;
+  }
+
+  .lovebirds-contact__meta {
+    padding-top: 8px;
+    border-top: 1px solid #e4ded6;
+  }
+
+  .lovebirds-contact__meta p {
+    margin: 0;
+    padding: 24px 0;
+    border-bottom: 1px solid #e4ded6;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .lovebirds-contact__meta span,
+  .lovebirds-form label span {
+    display: block;
+    margin-bottom: 9px;
+    color: #7e746d;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+  }
+
+  .lovebirds-contact__meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .lovebirds-form {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 26px 34px;
+    margin-top: 10px;
+    padding: clamp(48px, 5vw, 72px);
+    background: #f7f5f1;
+  }
+
+  .lovebirds-form h3,
+  .lovebirds-form p {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+  }
+
+  .lovebirds-form h3 {
+    color: #242731;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 400;
+  }
+
+  .lovebirds-form p {
+    margin-bottom: 18px;
+  }
+
+  .lovebirds-form input,
+  .lovebirds-form select,
+  .lovebirds-form textarea {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid #cfc8bf;
+    border-radius: 0;
+    background: transparent;
+    color: #242731;
+    font: inherit;
+    min-height: 44px;
+  }
+
+  .lovebirds-form textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .lovebirds-form .is-wide,
+  .lovebirds-form .button {
+    grid-column: 1 / -1;
+  }
+
+  .lovebirds-form .button {
+    justify-self: center;
+    margin-top: 14px;
+  }
+
+  .lovebirds-instagram {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(102px, 11vw, 160px) auto clamp(96px, 10vw, 142px);
+    text-align: center;
+  }
+
+  .lovebirds-instagram p {
+    margin: 0;
+    color: #242731;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 4vw, 54px);
+    line-height: 1.15;
+  }
+
+  .lovebirds-instagram a {
+    display: inline-flex;
+    margin-top: 34px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-decoration: none;
+  }
+
+  @media (max-width: 980px) {
+    .lovebirds-grid,
+    .lovebirds-share,
+    .lovebirds-copy,
+    .lovebirds-contact {
+      width: min(100% - 44px, 760px);
+    }
+
+    .lovebirds-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px;
+    }
+
+    .lovebirds-grid__column {
+      gap: 32px;
+    }
+
+    .lovebirds-contact {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .lovebirds-article {
+      padding-top: 48px;
+    }
+
+    .lovebirds-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .lovebirds-hero h1 {
+      margin-top: 84px;
+    }
+
+    .lovebirds-grid {
+      width: min(100% - 24px, 460px);
+      grid-template-columns: 1fr;
+      margin-top: 72px;
+      gap: 24px;
+    }
+
+    .lovebirds-grid__column {
+      gap: 24px;
+    }
+
+    .lovebirds-share {
+      width: min(100% - 28px, 460px);
+      justify-content: center;
+      text-align: center;
+    }
+
+    .lovebirds-copy,
+    .lovebirds-contact {
+      width: min(100% - 28px, 560px);
+      margin-top: 86px;
+    }
+
+    .lovebirds-price-note,
+    .lovebirds-form {
+      padding: 34px 24px;
+    }
+
+    .lovebirds-form {
+      grid-template-columns: 1fr;
+    }
+
+    .lovebirds-lightbox {
+      padding: 16px;
+    }
+
+    .lovebirds-lightbox__dialog {
+      height: 100%;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr auto;
+      gap: 14px;
+    }
+
+    .lovebirds-lightbox__figure {
+      grid-column: 1 / -1;
+    }
+
+    .lovebirds-lightbox__figure img {
+      max-height: 74vh;
+    }
+
+    .lovebirds-lightbox__nav.is-prev,
+    .lovebirds-lightbox__nav.is-next {
+      justify-self: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lovebirds-grid__item {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+
+    .lovebirds-grid__item :global(img),
+    .lovebirds-lightbox {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,379 @@
+---
+import "../../styles/global.css";
+import PortfolioGrid from "../../components/PortfolioGrid.astro";
+import { portfolioEntries, portfolioFilters } from "../../data/portfolio";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}/portfolio/`;
+const title = "Portfolio";
+const metaTitle = "Portfolio - Hochzeitsfotografie Hamburg | Artbild-Fotografie";
+const description = "Portfolio von Artbild-Fotografie: Hochzeitsbilder, Paarshootings, Travel- und Peoplefotografie aus Hamburg und darüber hinaus.";
+const primaryImage = `${siteUrl}/images/getting-ready-gallery-2.jpg`;
+
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Startseite",
+      "item": siteUrl,
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Portfolio",
+      "item": pageUrl,
+    },
+  ],
+};
+
+const collectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${pageUrl}#collection`,
+  "url": pageUrl,
+  "name": title,
+  "description": description,
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": `${siteUrl}/#website`,
+    "name": "Artbild-Fotografie",
+    "url": siteUrl,
+  },
+  "about": [
+    "Hochzeitsfotografie Hamburg",
+    "Portfolio",
+    "Peoplefotografie",
+    "Travel Fotografie",
+  ],
+  "mainEntity": {
+    "@type": "ItemList",
+    "name": "Portfolio Galerien",
+    "numberOfItems": portfolioEntries.length,
+    "itemListElement": portfolioEntries.map((entry, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": entry.href.startsWith("http") ? entry.href : `${siteUrl}${entry.href}`,
+      "name": entry.title,
+      "description": `${entry.category} Portfolio vom ${entry.date}`,
+    })),
+  },
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{metaTitle}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={metaTitle}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:alt" content="Portfolio Artbild-Fotografie Hochzeitsfotografie Hamburg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={metaTitle}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)}></script>
+</head>
+<body class="gallery-template portfolio-template">
+  <header class="gallery-header">
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a aria-current="page" href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="portfolio-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Startseite</a>
+      <span aria-hidden="true">/</span>
+      <span>Portfolio</span>
+    </nav>
+
+    <section class="portfolio-hero" aria-labelledby="portfolio-title">
+      <p class="portfolio-kicker">Galleries</p>
+      <h1 id="portfolio-title">Portfolio</h1>
+      <p>
+        Egal ob Landschaftsbilder oder Peoplefotografie - ich liebe es zu fotografieren.<br>
+        Schaut Euch um, schreibt mich an und stellt Fragen.
+      </p>
+    </section>
+
+    <section class="portfolio-filter" aria-label="Portfolio Kategorien">
+      <p>Thema</p>
+      <div>
+        {portfolioFilters.map((filter) => (
+          <a href={filter === "All" ? "/portfolio/" : `/portfolio/?cat=${filter.toLowerCase()}`} aria-current={filter === "All" ? "page" : undefined}>{filter}</a>
+        ))}
+      </div>
+    </section>
+
+    <PortfolioGrid entries={portfolioEntries} />
+
+    <section class="portfolio-funnel" aria-label="Nächste Schritte">
+      <a href="https://artbild-fotografie.de/gallery-category/hochzeit/">
+        <span>01</span>
+        Hochzeitsreportagen ansehen
+      </a>
+      <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">
+        <span>02</span>
+        Preise ansehen
+      </a>
+      <a href="https://artbild-fotografie.de/kontakt/">
+        <span>03</span>
+        Verfügbarkeit anfragen
+      </a>
+    </section>
+
+    <nav class="portfolio-pagination" aria-label="Portfolio Seiten">
+      <div>
+        <a aria-current="page" href="/portfolio/">1</a>
+        <a href="https://artbild-fotografie.de/portfolio/page/2/">2</a>
+      </div>
+      <a class="portfolio-pagination__next" href="https://artbild-fotografie.de/portfolio/page/2/">Weiter</a>
+    </nav>
+
+    <section class="portfolio-instagram">
+      <p>Folgt mir auf Instagram für kostenlose TFP-Shootings!</p>
+      <a href="https://www.instagram.com/artbild/">@ARTBILD</a>
+    </section>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .portfolio-template main {
+    padding-bottom: 34px;
+  }
+
+  .portfolio-breadcrumb {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(52px, 6vw, 86px) auto 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .portfolio-hero {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(92px, 11vw, 168px) auto 0;
+    text-align: center;
+  }
+
+  .portfolio-kicker {
+    margin: 0 0 28px;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-hero h1 {
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(58px, 8vw, 112px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .portfolio-hero p {
+    margin: clamp(34px, 4vw, 52px) auto 0;
+    color: #5f5a54;
+    font-size: clamp(18px, 1.55vw, 22px);
+    line-height: 1.72;
+  }
+
+  .portfolio-filter {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(70px, 7vw, 118px) auto 0;
+    text-align: center;
+  }
+
+  .portfolio-filter p {
+    margin: 0 0 22px;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-filter div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px 30px;
+  }
+
+  .portfolio-filter a {
+    color: #2a2a2a;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: 18px;
+    text-decoration: none;
+  }
+
+  .portfolio-filter a:hover,
+  .portfolio-filter a:focus,
+  .portfolio-filter a[aria-current="page"] {
+    color: #9b6f4f;
+  }
+
+  .portfolio-funnel {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(120px, 13vw, 210px) auto 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    border-top: 1px solid #e8e2da;
+    border-bottom: 1px solid #e8e2da;
+  }
+
+  .portfolio-funnel a {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 84px;
+    padding: 22px 0;
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 3vw, 38px);
+    line-height: 1.16;
+    text-decoration: none;
+    border-top: 1px solid #e8e2da;
+  }
+
+  .portfolio-funnel a:first-child {
+    border-top: 0;
+  }
+
+  .portfolio-funnel span {
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+  }
+
+  .portfolio-pagination {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(82px, 9vw, 130px) auto 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #24242a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-pagination div {
+    display: flex;
+    gap: 24px;
+  }
+
+  .portfolio-pagination a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .portfolio-pagination a[aria-current="page"] {
+    color: #9b6f4f;
+  }
+
+  .portfolio-instagram {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(104px, 12vw, 180px) auto 0;
+    text-align: center;
+  }
+
+  .portfolio-instagram p {
+    margin: 0;
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 4vw, 54px);
+    line-height: 1.16;
+  }
+
+  .portfolio-instagram a {
+    display: inline-block;
+    margin-top: 34px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-decoration: none;
+  }
+
+  @media (min-width: 860px) {
+    .portfolio-funnel {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .portfolio-funnel a {
+      min-height: 190px;
+      padding: 32px;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-top: 0;
+      border-left: 1px solid #e8e2da;
+    }
+
+    .portfolio-funnel a:first-child {
+      border-left: 0;
+    }
+  }
+</style>

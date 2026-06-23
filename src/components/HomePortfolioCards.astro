@@ -1,0 +1,45 @@
+---
+import { Image } from "astro:assets";
+import type { PortfolioEntry } from "../data/portfolio";
+
+type Props = {
+  entries: PortfolioEntry[];
+};
+
+const { entries } = Astro.props;
+
+const toDateTime = (date: string) => {
+  const [day, month, year] = date.split(".");
+  return `${year}-${month}-${day}`;
+};
+---
+
+<div class="portfolio-grid" role="list" aria-label="Portfolio-Auswahl Hochzeitsfotografie Hamburg">
+  {entries.map((entry, index) => (
+    <article class:list={["portfolio-card", index === 0 && "tall"]} role="listitem">
+      <a
+        class="portfolio-card__link"
+        href={entry.href}
+        aria-label={`${entry.title} ansehen, ${entry.category} aus dem Portfolio von Artbild-Fotografie`}
+      >
+        <Image
+          src={entry.image}
+          alt={entry.alt}
+          widths={[360, 520, 760, 980]}
+          sizes="(max-width: 620px) calc(100vw - 32px), (max-width: 1020px) 45vw, 31vw"
+          loading={index === 0 ? "eager" : "lazy"}
+          fetchpriority={index === 0 ? "high" : "auto"}
+          decoding="async"
+        />
+        <div class="portfolio-card__body">
+          <p>
+            <span>{entry.category}</span>
+            <span aria-hidden="true">/</span>
+            <time datetime={toDateTime(entry.date)}>{entry.date}</time>
+          </p>
+          <h3>{entry.title}</h3>
+        </div>
+      </a>
+    </article>
+  ))}
+</div>

@@ -1,0 +1,324 @@
+---
+import "../styles/global.css";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Das perfekte Getting Ready für deine Hochzeit in Hamburg";
+const socialTitle = "Das perfekte Getting Ready für Deine Hochzeit";
+const description = "\"Es ist eben nicht egal, wo das Getting Ready stattfindet, denn...\" - Darauf musst Du unbedingt achten wenn Du Dein Getting Ready planst...";
+const socialDescription = "3. Die perfekte Location für Dein Getting Ready\n\nIch bin der Meinung, dass es nicht völlig egal ist, wo dein Getting Ready stattfindet. Denn die Location sollte zum einen... Jetzt weiterlesen...!";
+const imageUrl = `${siteUrl}/images/getting-ready-gallery-2.jpg`;
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#schema-685600`,
+      "headline": title,
+      "name": title,
+      "description": description,
+      "keywords": "Getting Ready für deine Hochzeit,Hamburg",
+      "author": {
+        "@type": "Person",
+        "name": "York Augustin"
+      },
+      "datePublished": "2020-11-08T07:36:02+01:00",
+      "dateModified": "2025-08-08T22:16:31+02:00",
+      "image": {
+        "@id": `${imageUrl}#primaryimage`
+      },
+      "isPartOf": {
+        "@id": `${pageUrl}#webpage`
+      },
+      "publisher": {
+        "@id": `${siteUrl}/#organization`
+      },
+      "inLanguage": "de",
+      "mainEntityOfPage": {
+        "@id": `${pageUrl}#webpage`
+      }
+    },
+    {
+      "@type": "Place",
+      "@id": `${siteUrl}/#place`,
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rahlstedter Bahnhofstraße 27",
+        "addressLocality": "Rahlstedt",
+        "addressRegion": "Hamburg",
+        "postalCode": "22143",
+        "addressCountry": "Deutschland"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      "name": "Artbild Fotografie Hochzeitsfotograf Hamburg",
+      "legalName": "Artbild-Fotografie",
+      "url": siteUrl,
+      "sameAs": [
+        "https://www.facebook.com/artbildfotografie/",
+        "https://twitter.com/artbild"
+      ],
+      "email": "info@artbild-fotografie.de",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rahlstedter Bahnhofstraße 27",
+        "addressLocality": "Rahlstedt",
+        "addressRegion": "Hamburg",
+        "postalCode": "22143",
+        "addressCountry": "Deutschland"
+      },
+      "logo": {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        "url": logoUrl,
+        "contentUrl": logoUrl,
+        "caption": "Artbild-Fotografie",
+        "inLanguage": "de",
+        "width": "1200",
+        "height": "480"
+      },
+      "description": "Freiberuflicher Hochzeitsfotograf in Hamburg für standesamtliche Hochzeiten und Hochzeitsreportagen in Hamburg, Altona, Eimsbüttel, Eppendorf, Winterhude, Barmbek, Wandsbek, Rahlstedt, Norderstedt, Uhlenhorst, Pöseldorf und Harvestehude.",
+      "location": {
+        "@id": `${siteUrl}/#place`
+      }
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "url": siteUrl,
+      "name": "Artbild-Fotografie",
+      "publisher": {
+        "@id": `${siteUrl}/#organization`
+      },
+      "inLanguage": "de"
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${imageUrl}#primaryimage`,
+      "url": imageUrl,
+      "width": "924",
+      "height": "1384",
+      "caption": "Getting Ready für deine Hochzeit",
+      "inLanguage": "de"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": "1",
+          "item": {
+            "@id": siteUrl,
+            "name": "Startseite"
+          }
+        },
+        {
+          "@type": "ListItem",
+          "position": "2",
+          "item": {
+            "@id": pageUrl,
+            "name": title
+          }
+        }
+      ]
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      "url": pageUrl,
+      "name": title,
+      "datePublished": "2020-11-08T07:36:02+01:00",
+      "dateModified": "2025-08-08T22:16:31+02:00",
+      "isPartOf": {
+        "@id": `${siteUrl}/#website`
+      },
+      "primaryImageOfPage": {
+        "@id": `${imageUrl}#primaryimage`
+      },
+      "inLanguage": "de",
+      "breadcrumb": {
+        "@id": `${pageUrl}#breadcrumb`
+      }
+    }
+  ]
+};
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Getting Ready",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Darauf musst Du unbedingt in Deiner Hochzeitsplanung achten, wenn Du Dein Getting Ready fotografieren lassen möchtest..."
+      }
+    }
+  ]
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={socialTitle}>
+  <meta property="og:description" content={socialDescription}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:publisher" content="https://www.facebook.com/artbildfotografie/">
+  <meta property="article:author" content="https://web.facebook.com/artbildfotografie/">
+  <meta property="article:published_time" content="2020-11-08T07:36:02+01:00">
+  <meta property="article:modified_time" content="2025-08-08T22:16:31+02:00">
+  <meta property="og:updated_time" content="2025-08-08T22:16:31+02:00">
+  <meta property="og:image" content={imageUrl}>
+  <meta property="og:image:secure_url" content={imageUrl}>
+  <meta property="og:image:width" content="924">
+  <meta property="og:image:height" content="1384">
+  <meta property="og:image:alt" content="Getting Ready für deine Hochzeit">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={socialTitle}>
+  <meta name="twitter:description" content={socialDescription}>
+  <meta name="twitter:site" content="@artbild">
+  <meta name="twitter:creator" content="@artbild">
+  <meta name="twitter:image" content={imageUrl}>
+  <meta name="twitter:label1" content="Lesedauer">
+  <meta name="twitter:data1" content="Weniger als eine Minute">
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
+</head>
+<body class="gallery-template">
+  <header class="gallery-header">
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="https://artbild-fotografie.de/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="gallery-article">
+      <h1 class="gallery-script-title">Das perfekte Getting Ready für deine Hochzeit in Hamburg</h1>
+
+      <section class="gallery-triptych" aria-label="Getting Ready Galerie Einstieg">
+        <img class="is-muted" src="/images/getting-ready-gallery-2.jpg" width="924" height="1384" alt="Brautportrait mit Schleier beim Getting Ready" loading="eager" fetchpriority="high" decoding="async">
+        <img src="/images/getting-ready-gallery-3.jpg" width="924" height="1384" alt="Brautportrait am Hochzeitsmorgen" loading="eager" decoding="async">
+        <img class="is-muted" src="/images/getting-ready-gallery-1.jpg" width="924" height="1384" alt="Braut unter dem Schleier vor der Hochzeit" loading="eager" decoding="async">
+      </section>
+
+      <div class="gallery-share" aria-label="Artikel teilen">
+        <span>Teilen:</span>
+        <a href="https://www.facebook.com/sharer/sharer.php?u=https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/" aria-label="Auf Facebook teilen">f</a>
+        <a href="https://www.pinterest.com/pin/create/button/" aria-label="Auf Pinterest teilen">p</a>
+      </div>
+
+      <section class="gallery-text-block">
+        <h2 class="gallery-script-title gallery-script-title--small">Das perfekte Getting Ready für deine Hochzeit in Hamburg</h2>
+        <div class="gallery-copy-columns">
+          <p>Beim feierlichen Getting Ready wird aus einer „normalen Frau“ eine märchenhafte Braut. Diesen Moment der Vorfreude auf die Trauung solltet ihr zelebrieren und unbedingt auf tollen Bildern festhalten.</p>
+          <p>Da das Brautstyling am Hochzeitsmorgen etwas sehr Persönliches ist, habe ich mich mit <a href="https://www.elladeck.de/">Ella Deck Couture</a> und <a href="https://www.salon-manija-hamburg.de/">Manija Biebow</a> zusammengefunden. Gemeinsam gestalten wir dein individuelles und ganz persönliches Getting Ready.</p>
+        </div>
+      </section>
+
+      <section class="gallery-text-block" id="warum">
+        <h2 class="gallery-script-title gallery-script-title--small">1. Warum solltest du dein Getting Ready auf Bildern festhalten?</h2>
+        <div class="gallery-copy-columns">
+          <p>Für mich ist klar, dass die einmalig schönen und vor allem intimen Momente der Brautvorbereitung unbedingt bildlich festgehalten werden müssen. Das freudige Getting Ready mit Sektempfang und jeder Menge Spaß erleben nur diejenigen, die anwesend sind.</p>
+          <p>Umso wichtiger ist es, das Brautstyling fotografisch zu begleiten. Wie sonst erfährt der Bräutigam später, was sich am Hochzeitsmorgen abgespielt hat und welche schönen emotionalen Momente die Braut erlebt hat?</p>
+        </div>
+      </section>
+
+      <section class="gallery-triptych" aria-label="Brautstyling Galerie">
+        <img class="is-muted" src="/images/getting-ready-gallery-2.jpg" width="924" height="1384" alt="Braut beim Getting Ready in Schwarzweiß" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-gallery-3.jpg" width="924" height="1384" alt="Braut mit Schleier beim Getting Ready" loading="lazy" decoding="async">
+        <img class="is-muted" src="/images/getting-ready-gallery-1.jpg" width="924" height="1384" alt="Brautportrait in ruhigem Licht" loading="lazy" decoding="async">
+      </section>
+
+      <section class="gallery-text-block" id="kennenlernshooting">
+        <h2 class="gallery-script-title gallery-script-title--small">2. Kennenlernshooting zur Vorbereitung</h2>
+        <div class="gallery-copy-columns">
+          <p>Ein Kennenlernshooting mit dem Fotografen sollte unbedingt in der Hochzeitsplanung stehen. Nur durch einen Probetermin kannst du feststellen, ob dir diese Art der Hochzeitsfotografie gefällt und ob du dich vor der Kamera sicher fühlst.</p>
+          <p>Am Tag der Hochzeit kommt dann kein völlig fremder Mensch zu dir, sondern jemand, den du bereits kennst und dem du vertrauen kannst.</p>
+        </div>
+      </section>
+
+      <section class="gallery-text-block" id="location">
+        <h2 class="gallery-script-title gallery-script-title--small">3. Was ist die beste Location für das Braut Getting Ready?</h2>
+        <div class="gallery-copy-columns">
+          <p>Es ist nicht egal, wo dein Getting Ready stattfindet. Die Location sollte ausreichend Platz für alle Anwesenden bieten und gleichzeitig für das Auge ansprechend sein.</p>
+          <p>Die Raumqualität spielt beim Brautstyling eine wichtige Rolle. Sie soll Ruhe und Wohlgefühl schaffen und natürlich auch etwas Nervosität nehmen.</p>
+        </div>
+      </section>
+
+      <section class="gallery-mosaic" aria-label="Getting Ready Bilder">
+        <img src="/images/getting-ready-hamburg-hero.jpg" width="924" height="1384" alt="Braut beim Getting Ready vor der Hochzeit in Hamburg" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-detail-1.jpg" width="924" height="1384" alt="Braut wird am Hochzeitsmorgen gestylt" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-detail-2.jpg" width="924" height="1384" alt="Detailaufnahme beim Brautstyling" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-gallery-4.jpg" width="924" height="1384" alt="Ruhiger Moment beim Brautstyling" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-gallery-5.jpg" width="924" height="1384" alt="Getting Ready Detail einer Braut" loading="lazy" decoding="async">
+        <img src="/images/getting-ready-gallery-6.jpg" width="924" height="1384" alt="Braut wird vor der Hochzeit vorbereitet" loading="lazy" decoding="async">
+      </section>
+
+      <section class="gallery-text-block" id="begleitung">
+        <h2 class="gallery-script-title gallery-script-title--small">4. Getting Ready alleine oder mit Freunden und Familie?</h2>
+        <div class="gallery-copy-columns">
+          <p>Bedenke, dass du beim Brautstyling auch in sehr persönlichen Momenten fotografiert wirst. Deshalb solltest du nur Menschen um dich haben, denen du vertraust und die du wirklich bei dir haben möchtest.</p>
+          <p>Brautmutter, beste Freundinnen und Brautjungfern können für eine heitere Stimmung sorgen. Unerwünschte Personen bewirken dagegen oft das Gegenteil.</p>
+        </div>
+      </section>
+
+      <section class="gallery-text-block" id="outfit">
+        <h2 class="gallery-script-title gallery-script-title--small">5. Was ziehe ich bei meinem Getting Ready an?</h2>
+        <div class="gallery-copy-columns">
+          <p>Klassiker sind ein kurzer Morgenmantel aus Satin, ein bequemer Bademantel oder ein weißer Kimono mit eleganter Spitze.</p>
+          <p>Gemütliche Pantoffeln, kuschelige Socken oder verzierte Flip-Flops sorgen für Entspannung und ein angenehmes Gefühl, bevor der positive Hochzeitsstress startet.</p>
+        </div>
+      </section>
+
+      <section class="gallery-cta">
+        <h2 class="gallery-script-title gallery-script-title--small">Jetzt Kontakt aufnehmen</h2>
+        <p>Wenn ihr euer Getting Ready in Hamburg fotografisch begleiten lassen möchtet, schreibt mir unverbindlich.</p>
+        <a class="button ghost" href="https://artbild-fotografie.de/kontakt/">Jetzt Termin anfragen</a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>

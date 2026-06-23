@@ -1,46 +1,340 @@
 ---
-const title = "Migration Preview – Artbild Fotografie";
----
+import "../styles/global.css";
+import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
+import HomePortfolioCards from "../components/HomePortfolioCards.astro";
+import { portfolioEntries } from "../data/portfolio";
 
+const homePortfolioEntries = portfolioEntries.slice(0, 3);
+---
 <!doctype html>
 <html lang="de">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="robots" content="noindex, nofollow" />
-    <title>{title}</title>
-    <style>
-      :root {
-        color-scheme: light;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background: #f6f4ef;
-        color: #1f2328;
-      }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Hochzeitsfotograf Hamburg. Kreative und emotionale Hochzeitsfotos in Hamburg und europaweit.">
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href="https://artbild-fotografie.de/">
+  <title>Hochzeitsfotograf Hamburg</title>
+  <script src="/js/hero-slider.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="booking-strip" href="#kontakt">Jetzt für 2026/2027 buchen</a>
+    <div class="nav-shell">
+      <a class="brand" href="#" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie Logo">
+      </a>
+      <nav class="main-nav" aria-label="Hauptnavigation">
+        <ul>
+          <li><a href="https://artbild-fotografie.de/">Start</a></li>
+          <li>
+            <a href="https://artbild-fotografie.de/portfolio/">Portfolio</a>
+            <ul>
+              <li>
+                <a href="https://artbild-fotografie.de/gallery-category/travel/">Travel</a>
+                <ul>
+                  <li><a href="https://artbild-fotografie.de/gallery-category/hamburg-travel/">Hamburg</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery-category/hannover/">Hannover</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery-category/norddeutschland/">Norddeutschland</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery-category/mallorca/">Mallorca</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery/teneriffa/">Teneriffa</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery-category/venedig/">Venedig</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="https://artbild-fotografie.de/gallery-category/hochzeit/">Hochzeit</a>
+                <ul>
+                  <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-hochzeit-schessel-hamburg/">Hochzeitsfotograf Hochzeit Scheeßel Hamburg</a></li>
+                  <li><a href="https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/">5 Gründe für ein Verlobungsshooting</a></li>
+                  <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/">Hochzeitsfotograf Standesamt Hamburg Altona</a></li>
+                  <li><a href="https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Das perfekte Getting Ready für deine Hochzeit in Hamburg</a></li>
+                  <li><a href="https://artbild-fotografie.de/standesamt-hamburg/">Standesamt Hamburg</a></li>
+                  <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Preise für Hochzeitsreportagen</a></li>
+                </ul>
+              </li>
+              <li><a href="https://artbild-fotografie.de/brautstyling-hamburg/">Dienstleister für das Brautstyling in Hamburg</a></li>
+              <li><a href="https://artbild-fotografie.de/gallery-category/peoplefotografie/">Peoplefotografie</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+            <ul>
+              <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+              <li><a href="https://artbild-fotografie.de/sicherer-kontakt/">Sicherer Kontakt</a></li>
+              <li><a href="https://artbild-fotografie.de/kundengalerie/">Kundengalerie</a></li>
+              <li><a href="https://artbild-fotografie.de/about/">Über den Hamburger Fotografen York Augustin</a></li>
+              <li><a href="https://artbild-fotografie.de/impressum/">Impressum</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://artbild-fotografie.de/blog/">Blog</a>
+            <ul>
+              <li><a href="https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Das perfekte Getting Ready für deine Hochzeit in Hamburg</a></li>
+              <li>
+                <a href="https://artbild-fotografie.de/standesamt-hamburg/">Standesämter in Hamburg</a>
+                <ul>
+                  <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/">Hochzeitsfotograf Standesamt Hamburg Altona</a></li>
+                </ul>
+              </li>
+              <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-ratgeber/">Geld sparen beim Hochzeitsfotografen</a></li>
+              <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="https://artbild-fotografie.de/about/">Über mich</a>
+            <ul>
+              <li><a href="https://artbild-fotografie.de/about/">Über den Hamburger Fotografen York Augustin</a></li>
+              <li><a href="https://artbild-fotografie.de/impressum/">Impressum</a></li>
+              <li><a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a></li>
+              <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+              <li><a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Preise für Hochzeitsreportagen</a></li>
+            </ul>
+          </li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+          <li><a href="https://artbild-fotografie.de/?s=">Suche</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-      body {
-        min-height: 100vh;
-        margin: 0;
-        display: grid;
-        place-items: center;
-      }
+  <main>
+    <section class="hero-slider hero-slider--desktop" data-hero-slider data-mode="desktop" aria-label="Hero Slider Desktop">
+      <div class="hero-slider__viewport">
+        <div class="hero-slider__stage">
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="Brautportrait mit Blumenstrauß" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide is-initial" data-focus-x="72" data-focus-y="98">
+            <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="Braut beim Fotoshooting in Paris" loading="eager" fetchpriority="high" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="97" data-focus-y="61">
+            <img data-src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="Lachende Braut vor dem Eiffelturm" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="Braut in kurzem Kleid in Paris" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Portrait einer Braut am See" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut auf einer eleganten Treppe" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut mit Bouquet im Treppenhaus" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Brautjungfer im Schweriner Schlossgarten" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4632.jpg" width="924" height="1386" alt="Brautportrait mit Schleier" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_3143-bearbeitet-scaled-2.jpg" width="924" height="1384" alt="Braut mit Schleier" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/getting_ready_hochzeitsfotograf_hamburg2372-scaled-2.jpg" width="924" height="1384" alt="Getting-ready-Moment vor der Hochzeit" decoding="async">
+          </figure>
+        </div>
+      </div>
+      <div class="hero-slider__controls" aria-label="Slider Steuerung">
+        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild">‹</button>
+        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false">Pause</button>
+        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild">›</button>
+      </div>
+    </section>
 
-      main {
-        width: min(100% - 32px, 720px);
-        text-align: center;
-      }
+    <section class="hero-slider hero-slider--mobile" data-hero-slider data-mode="mobile" aria-label="Hero Slider Mobile">
+      <div class="hero-slider__viewport">
+        <div class="hero-slider__stage">
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="Brautportrait mit Blumenstrauß" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide is-initial" data-focus-x="97" data-focus-y="99">
+            <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="Braut beim Fotoshooting in Paris" loading="eager" fetchpriority="high" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="98" data-focus-y="99">
+            <img data-src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="Lachende Braut vor dem Eiffelturm" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="Braut in kurzem Kleid in Paris" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Portrait einer Braut am See" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut auf einer eleganten Treppe" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut mit Bouquet im Treppenhaus" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Brautjungfer im Schweriner Schlossgarten" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_4632.jpg" width="924" height="1386" alt="Brautportrait mit Schleier" decoding="async">
+          </figure>
+          <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
+            <img data-src="/images/art_3143-bearbeitet-scaled-2.jpg" width="924" height="1384" alt="Braut mit Schleier" decoding="async">
+          </figure>
+        </div>
+      </div>
+      <div class="hero-slider__controls" aria-label="Slider Steuerung">
+        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild">‹</button>
+        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false">Pause</button>
+        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild">›</button>
+      </div>
+    </section>
 
-      h1 {
-        margin: 0;
-        font-size: clamp(2rem, 7vw, 4rem);
-        font-weight: 500;
-        letter-spacing: 0;
-        line-height: 1.1;
-      }
-    </style>
-  </head>
-  <body>
-    <main>
-      <h1>Migration Preview – Artbild Fotografie</h1>
-    </main>
-  </body>
+    <section class="intro section-narrow">
+      <div class="intro-title">
+        <p class="eyebrow">ARTBILD-FOTOGRAFIE</p>
+        <h1>Hochzeitsfotograf</h1>
+        <p class="intro-script">Hamburg</p>
+      </div>
+      <FeaturedPortfolioLinks />
+    </section>
+
+    <section class="about section-grid" id="about">
+      <div class="text-block">
+        <p class="eyebrow">Hi, ich bin York</p>
+        <h2>Der Fotograf hinter der Kamera</h2>
+        <p>Ich bin York Augustin, Euer Hochzeitsfotograf aus Hamburg. Mit Liebe zum Detail, zum Spiel mit dem Licht und einem feinen Gespür für Emotionen halte ich das fest, was bleibt.</p>
+        <p>Seit der Gründung ist Artbild-Fotografie als eingetragener Handwerksbetrieb in der Handwerkskammer Hamburg geführt.</p>
+      </div>
+      <figure class="image-panel portrait-panel">
+        <img src="/images/york-augustin-portrait.png" width="1024" height="683" alt="York Augustin Portrait">
+      </figure>
+    </section>
+
+    <section class="services section-narrow">
+      <p class="eyebrow">Leistungsübersicht</p>
+      <h2>Artbild-Fotografie bietet</h2>
+      <ul class="service-list">
+        <li>Hochzeitsreportagen</li>
+        <li>Fotos von Hochzeitsfeiern</li>
+        <li>Standesamtliche Trauungen</li>
+        <li>Portraitfotoshootings</li>
+      </ul>
+      <p>Für Hochzeitsfotografie biete ich Euch die Möglichkeit eines kostenlosen und unverbindlichen Kennenlernshootings vor der Buchung an.</p>
+    </section>
+
+    <section class="portfolio-section" id="portfolio">
+      <div class="section-heading">
+        <p class="eyebrow">Echte Hochzeiten</p>
+        <h2>Portfolio</h2>
+        <p>Diese Paare haben mir erlaubt, einige ihrer Hochzeitsmomente zu zeigen.</p>
+      </div>
+      <HomePortfolioCards entries={homePortfolioEntries} />
+      <a class="button ghost" href="/portfolio/" aria-label="Alle Portfolio-Galerien von Artbild-Fotografie ansehen">Alle Galerien</a>
+    </section>
+
+    <section class="info-band" id="standesamt">
+      <div class="section-heading">
+        <p class="eyebrow">Wichtige Informationen</p>
+        <h2>Standesamt Hamburg</h2>
+        <p>Wer in Hamburg heiraten will, meldet sich beim zuständigen Standesamt an. Heiraten darf man danach in jedem Standesamt in Deutschland.</p>
+      </div>
+      <div class="info-cards">
+        <article>
+          <img src="/images/standesamt-bergedorf.jpg" width="150" height="150" alt="Standesamt Hamburg-Bergedorf">
+          <h3>Standesamt Bergedorf</h3>
+          <p>Umgebungsbilder und wichtige Kontaktinfos.</p>
+        </article>
+        <article>
+          <img src="/images/standesamt-altona.jpg" width="150" height="150" alt="Standesamt Hamburg Altona">
+          <h3>Standesamt Altona</h3>
+          <p>Umgebungs- und Kontaktinformationen.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="journal" id="journal">
+      <div class="section-heading">
+        <p class="eyebrow">Tips & Resources</p>
+        <h2>Aktuelle Artikel</h2>
+      </div>
+      <div class="journal-grid">
+        <article>
+          <img src="/images/post-geld-sparen.jpg" width="150" height="150" alt="Hochzeitsreportage Hamburg - So spart Ihr richtig viel Geld">
+          <p>23. Mai 2025</p>
+          <h3>Hochzeitsreportage Hamburg - So spart Ihr richtig viel Geld!</h3>
+          <a href="#">Weiterlesen</a>
+        </article>
+        <article>
+          <img src="/images/post-preise.jpg" width="150" height="150" alt="Hochzeitsreportage Hamburg Preise">
+          <p>13. Mai 2025</p>
+          <h3>Braut Fotoshooting Fraser Suites Hamburg</h3>
+          <a href="#">Weiterlesen</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="testimonials">
+      <article>
+        <h2>The photos are absolutely stunning!</h2>
+        <p>We cannot recommend Nadia enough! She truly captured the essence of our special day and every photo is a cherished memory.</p>
+        <strong>James & Amelia</strong>
+      </article>
+      <article>
+        <h2>Delighted with the whole day</h2>
+        <p>She was so attentive to our vision and made sure to capture every moment of our intimate ceremony.</p>
+        <strong>William & Sophia</strong>
+      </article>
+      <article>
+        <h2>Couldn’t be more pleased</h2>
+        <p>The photos turned out better than we ever could have imagined.</p>
+        <strong>Ben & Isabella</strong>
+      </article>
+    </section>
+
+    <section class="guide section-grid" id="guide">
+      <figure class="image-panel">
+        <img src="/images/portrait-riverside.jpg" width="520" height="780" alt="Eleganter Mann am Flussufer, modernes Portrait">
+      </figure>
+      <div class="text-block">
+        <p class="eyebrow">Hochzeitsguide</p>
+        <h2>Tipps & Tricks</h2>
+        <p>Über viele Jahre in der Hochzeitsfotografie habe ich erkannt: Es sind die entscheidenden Details, die eure Bilder zeitlos schön machen.</p>
+        <form class="signup">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="E-Mail-Adresse">
+          <button type="submit">Geschenk sichern</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="featured">
+      <p class="eyebrow">Featured In</p>
+      <div class="logo-row">
+        <img src="/images/logo-malvie.png" width="1000" height="326" alt="Malvie Magazine">
+        <img src="/images/logo-moevir.png" width="700" height="229" alt="Moevir Paris">
+        <img src="/images/logo-artego.png" width="1000" height="283" alt="Artego">
+        <img src="/images/logo-rebel.png" width="1024" height="683" alt="Rebel Magazine">
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" id="kontakt">
+    <div>
+      <h2>Contact</h2>
+      <p><a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a></p>
+    </div>
+    <nav aria-label="Footer">
+      <a href="#">Datenschutz</a>
+      <a href="#">AGB</a>
+      <a href="#">Kontakt</a>
+    </nav>
+    <p>© 2026 Artbild-Fotografie - Alle Rechte vorbehalten.</p>
+  </footer>
+
+  <noscript>
+    <section aria-label="Hero Slider Bilder">
+      <img src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="hochzeitsreportage hamburg festpreis">
+      <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="paris braut fotoshooting 17 Hochzeitsfotograf Hamburg">
+      <img src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="paris braut fotoshooting 25 Hochzeitsfotograf Hamburg">
+      <img src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="paris braut fotoshooting 16 Hochzeitsfotograf Hamburg">
+      <img src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="paris braut fotoshooting 31 Hochzeitsfotograf Hamburg">
+    </section>
+  </noscript>
+</body>
 </html>

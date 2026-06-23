@@ -1,0 +1,520 @@
+---
+import "../../../styles/global.css";
+import { Image } from "astro:assets";
+
+import img0 from "../../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
+import img1 from "../../../assets/hochzeitsfotos-hamburg/96bedd5324b86db5.jpg";
+import img2 from "../../../assets/hochzeitsfotos-hamburg/ff9af8435a08e944.jpg";
+import img3 from "../../../assets/hochzeitsfotos-hamburg/215d8c71c322e3b0.jpg";
+import img4 from "../../../assets/hochzeitsfotos-hamburg/d1d877960c7a66d0.jpg";
+import img5 from "../../../assets/hochzeitsfotos-hamburg/d903b55f3efe9784.jpg";
+import img6 from "../../../assets/hochzeitsfotos-hamburg/555b999643b90697.jpg";
+import img7 from "../../../assets/hochzeitsfotos-hamburg/c527a2e37545a1e4.jpg";
+import img8 from "../../../assets/hochzeitsfotos-hamburg/fde30dc54e7f8b96.jpg";
+import img9 from "../../../assets/hochzeitsfotos-hamburg/47c0bf17b288100a.jpg";
+import img10 from "../../../assets/hochzeitsfotos-hamburg/f1e9eceb70da709b.jpg";
+import img11 from "../../../assets/hochzeitsfotos-hamburg/5e02af00ed8dc76f.jpg";
+import img12 from "../../../assets/hochzeitsfotos-hamburg/823a3be48672cb17.jpg";
+import img13 from "../../../assets/hochzeitsfotos-hamburg/3899e9231061cbe0.jpg";
+import img14 from "../../../assets/hochzeitsfotos-hamburg/17a861985849e013.jpg";
+import img15 from "../../../assets/hochzeitsfotos-hamburg/36ec87e5a79a8d8d.jpg";
+import img16 from "../../../assets/hochzeitsfotos-hamburg/f1c69b8ed66ea780.jpg";
+import img17 from "../../../assets/hochzeitsfotos-hamburg/3691ac3cba332a72.jpg";
+import img18 from "../../../assets/hochzeitsfotos-hamburg/2befbf371e08237f.jpg";
+import img19 from "../../../assets/hochzeitsfotos-hamburg/277d94e2e9189c16.jpg";
+import img20 from "../../../assets/hochzeitsfotos-hamburg/80f1e2e5b135c9db.jpg";
+import img21 from "../../../assets/hochzeitsfotos-hamburg/bb7e8e2710a9768f.jpg";
+import img22 from "../../../assets/hochzeitsfotos-hamburg/aeab941d817656e6.jpg";
+import img23 from "../../../assets/hochzeitsfotos-hamburg/436d629024c6eb47.jpg";
+import img24 from "../../../assets/hochzeitsfotos-hamburg/1c0c2dd1c328df68.jpg";
+import img25 from "../../../assets/hochzeitsfotos-hamburg/4a1c4be388ee88da.jpg";
+import img26 from "../../../assets/hochzeitsfotos-hamburg/2cf7ca5fbb071b4d.jpg";
+import img27 from "../../../assets/hochzeitsfotos-hamburg/2f89e6a94004dc66.jpg";
+import img28 from "../../../assets/hochzeitsfotos-hamburg/e67b1f9d22527396.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/hochzeitsfotos-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Hochzeitsfotos Hamburg - Artbild-Fotografie";
+const heading = "Hochzeitsfotos Hamburg";
+const description = "Entdecke elegante Hochzeitsfotos Hamburg aus einem exklusiven Brautkleid-Shooting in den Fraser Suites Hamburg, ideal für stilvolle Getting-Ready-Momente bei jedem Wetter. Tipps & Inspiration vom Hochzeitsfotografen.";
+const ogImage = "https://artbild-fotografie.de/wp-content/uploads/2025/04/hochzeitsreportage_hamburg_preise.jpg";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const galleryImages = [
+  { id: "img0", image: img0, alt: "Brautportrait in den Fraser Suites Hamburg" },
+  { id: "img1", image: img1, alt: "Braut in elegantem Kleid beim Getting Ready in Hamburg" },
+  { id: "img2", image: img2, alt: "Elegantes Hochzeitsfoto in den Fraser Suites Hamburg" },
+  { id: "img3", image: img3, alt: "Braut am Fenster in den Fraser Suites Hamburg" },
+  { id: "img4", image: img4, alt: "Brautportrait mit feinem Licht in Hamburg" },
+  { id: "img5", image: img5, alt: "Editoriales Brautfoto im Hotel in Hamburg" },
+  { id: "img6", image: img6, alt: "Fraser Suites Hamburg Braut Hochzeit" },
+  { id: "img7", image: img7, alt: "Brautbild mit klassischer Architektur in Hamburg" },
+  { id: "img8", image: img8, alt: "Braut Fotoshooting in den Fraser Suites Hamburg" },
+  { id: "img9", image: img9, alt: "Hochzeitsfoto einer Braut im Hotelzimmer" },
+  { id: "img10", image: img10, alt: "Getting Ready Brautfoto in Hamburg" },
+  { id: "img11", image: img11, alt: "Detailaufnahme aus einem Brautshooting in Hamburg" },
+  { id: "img12", image: img12, alt: "Brautportrait mit elegantem Kleid in Hamburg" },
+  { id: "img13", image: img13, alt: "Hochzeitsfoto einer Braut in ruhigem Licht" },
+  { id: "img14", image: img14, alt: "Braut im Hotel beim Fotoshooting in Hamburg" },
+  { id: "img15", image: img15, alt: "Klassisches Brautportrait in Hamburg" },
+  { id: "img16", image: img16, alt: "Braut vor einer Hochzeit in den Fraser Suites" },
+  { id: "img17", image: img17, alt: "Elegantes Hochzeitsdetail in Hamburg" },
+  { id: "img18", image: img18, alt: "Brautshooting im Hotel in Hamburg" },
+  { id: "img19", image: img19, alt: "Hochzeitsfoto mit Brautkleid in Hamburg" },
+  { id: "img20", image: img20, alt: "Brautportrait im Innenraum der Fraser Suites" },
+  { id: "img21", image: img21, alt: "Editoriales Hochzeitsfoto einer Braut" },
+  { id: "img22", image: img22, alt: "Brautbild mit Tageslicht in Hamburg" },
+  { id: "img23", image: img23, alt: "Braut beim Getting Ready in Hamburg" },
+  { id: "img24", image: img24, alt: "Stilvolle Hochzeitsfotografie in den Fraser Suites" },
+  { id: "img25", image: img25, alt: "Brautportrait im Hotelambiente" },
+  { id: "img26", image: img26, alt: "Braut Foto in klassischer Hamburger Location" },
+  { id: "img27", image: img27, alt: "Hochzeitsfoto einer Braut im eleganten Innenraum" },
+  { id: "img28", image: img28, alt: "Brautshooting als Inspiration für Hochzeitsfotos Hamburg" },
+];
+
+const galleryColumns = [
+  ["img0", "img4", "img8", "img11", "img13", "img16", "img20", "img23", "img26"],
+  ["img1", "img5", "img7", "img10", "img14", "img17", "img19", "img21", "img24", "img27"],
+  ["img2", "img3", "img6", "img9", "img12", "img15", "img18", "img22", "img25", "img28"],
+].map((column) => column.map((id) => galleryImages.find((item) => item.id === id)).filter(Boolean));
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: title,
+      name: title,
+      description,
+      keywords: "Hochzeitsfotos Hamburg",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      datePublished: "2025-05-15T16:03:30+02:00",
+      dateModified: "2025-06-11T18:26:25+02:00",
+      image: {
+        "@id": `${pageUrl}#primaryimage`,
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: heading,
+      description,
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+      })),
+    },
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild Fotografie Hochzeitsfotograf Hamburg",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      sameAs: [
+        "https://www.facebook.com/artbildfotografie/",
+        "https://twitter.com/artbild",
+        "https://www.instagram.com/artbild/",
+      ],
+      email: "info@artbild-fotografie.de",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        addressLocality: "Rahlstedt",
+        addressRegion: "Hamburg",
+        postalCode: "22143",
+        addressCountry: "Deutschland",
+      },
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+        inLanguage: "de",
+      },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": pageUrl,
+            name: heading,
+          },
+        },
+      ],
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${pageUrl}#primaryimage`,
+      url: ogImage,
+      width: "924",
+      height: "924",
+      caption: "Hochzeitsreportage Hamburg Preise",
+      inLanguage: "de",
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2025-05-15T16:03:30+02:00",
+      dateModified: "2025-06-11T18:26:25+02:00",
+      primaryImageOfPage: {
+        "@id": `${pageUrl}#primaryimage`,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2025-05-15T16:03:30+02:00">
+  <meta property="article:modified_time" content="2025-06-11T18:26:25+02:00">
+  <meta property="og:image" content={ogImage}>
+  <meta property="og:image:width" content="924">
+  <meta property="og:image:height" content="924">
+  <meta property="og:image:alt" content="Hochzeitsreportage Hamburg Preise">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={ogImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template wedding-gallery-page">
+  <header class="gallery-header">
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="wedding-gallery">
+      <header class="wedding-hero">
+        <h1>{heading}</h1>
+        <h2>{heading}</h2>
+        <p>Hier zeige ich Euch die Bilder aus dem Shooting für die Braut, die bei einer tollen Gelegenheit in den Fraser Suites in Hamburg entstanden sind.</p>
+      </header>
+
+      <section class="wedding-masonry" aria-label="Hochzeitsfotos Hamburg Galerie">
+        {galleryColumns.map((column) => (
+          <div class="wedding-masonry__column">
+            {column.map((item) => (
+              <figure class="wedding-masonry__item" data-reveal>
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  widths={[360, 620, 920, 1200]}
+                  sizes="(max-width: 700px) calc(100vw - 58px), (max-width: 1100px) 45vw, 31vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            ))}
+          </div>
+        ))}
+      </section>
+
+      <section class="wedding-copy">
+        <div class="wedding-copy__inner">
+          <h3>Kurz zur Geschichte der Fraser Suites Hamburg</h3>
+          <p>Das über hundert Jahre alte Gebäude wurde zwischen 1907 und 1910 im neobarocken Stil erbaut und ist eines der wenigen erhaltenen Vorkriegsgebäude in der Hamburger Altstadt, die es zu einem besonderen Ort macht.</p>
+
+          <h3>Der Ort für das Getting Ready am Hochzeitsmorgen und nach der Trauung</h3>
+          <p>Wer auf Nummer sicher gehen will, sucht sich einen schönen Ort für das Brautpaarshooting. Die Fraser Suites Hamburg bieten dafür ruhige Räume, klassisches Licht und eine elegante Atmosphäre.</p>
+          <p>Bei schönem Wetter geht man an die frische Luft. Bei Regen, Wind oder hartem Licht ist ein hochwertiger Innenraum aber Gold wert, weil die Hochzeitsfotos trotzdem ruhig, edel und zeitlos wirken.</p>
+
+          <h3>Aber was tun bei Regen?</h3>
+          <p>Es muss nicht zwingend ein Fünf-Sterne-Superiorhotel sein, aber die Location macht einen Unterschied. Gute Räume geben Euren Bildern Tiefe und lassen den Moment hochwertig wirken.</p>
+          <p>Hier geht es nicht darum, möglichst wenig Geld auszugeben, sondern um eine Liebeserklärung an den Moment und um Erinnerungen, die auch nach vielen Jahren noch Bedeutung haben.</p>
+
+          <h3>Gibt es Alternativen oder sogar Empfehlungen?</h3>
+          <p>Ja, die gibt es. Besprecht am besten alles mit Eurem Hochzeitsfotografen. Er kennt Licht, Wege, Wetteroptionen und Locations, die zu Eurem Hochzeitstag passen.</p>
+
+          <h3>Mehr Locations und mehr Bilder von Artbild-Fotografie entdecken.</h3>
+          <div class="wedding-links">
+            <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Getting Ready in Hamburg ansehen</a>
+            <a href="/portfolio/">Portfolio ansehen</a>
+            <a href="https://artbild-fotografie.de/kontakt/">Verfügbarkeit anfragen</a>
+          </div>
+        </div>
+      </section>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+
+  <script is:inline>
+    (() => {
+      const items = [...document.querySelectorAll("[data-reveal]")];
+      if (!items.length) return;
+
+      const reveal = (item) => item.classList.add("is-visible");
+
+      if (!("IntersectionObserver" in window)) {
+        items.forEach(reveal);
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          reveal(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, {
+        rootMargin: "0px 0px -8% 0px",
+        threshold: 0.12,
+      });
+
+      items.forEach((item) => observer.observe(item));
+    })();
+  </script>
+</body>
+</html>
+
+<style>
+  .wedding-gallery {
+    padding-top: clamp(74px, 7.4vw, 104px);
+  }
+
+  .wedding-hero {
+    width: min(920px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .wedding-hero h1 {
+    margin: 0;
+    color: #252832;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(42px, 5.6vw, 78px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .wedding-hero h2 {
+    margin: clamp(92px, 9vw, 126px) 0 0;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 3.8vw, 55px);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .wedding-hero p {
+    width: min(760px, 100%);
+    margin: 28px auto 0;
+    color: #6b655f;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.65;
+  }
+
+  .wedding-masonry {
+    --tile-pad: clamp(14px, 1.35vw, 18px);
+    width: min(1176px, calc(100% - 104px));
+    margin: clamp(98px, 10vw, 132px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .wedding-masonry__column {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wedding-masonry__item {
+    margin: 0;
+    padding: var(--tile-pad);
+    overflow: hidden;
+    background: #fff;
+    opacity: 0;
+    transform: translateY(18px);
+    will-change: opacity, transform;
+  }
+
+  .wedding-masonry__item.is-visible {
+    animation: weddingReveal 760ms ease forwards;
+  }
+
+  .wedding-masonry__item :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  @keyframes weddingReveal {
+    0% {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .wedding-copy {
+    width: min(960px, calc(100% - 92px));
+    margin: clamp(105px, 11vw, 160px) auto clamp(100px, 10vw, 150px);
+  }
+
+  .wedding-copy__inner {
+    width: min(760px, 100%);
+    margin: 0 auto;
+  }
+
+  .wedding-copy h3 {
+    margin: 70px 0 20px;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 3vw, 43px);
+    font-weight: 400;
+    line-height: 1.16;
+  }
+
+  .wedding-copy h3:first-child {
+    margin-top: 0;
+  }
+
+  .wedding-copy p {
+    margin: 0 0 22px;
+    color: #68625c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .wedding-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 28px;
+    margin-top: 36px;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .wedding-links a {
+    color: #2f323c;
+    text-decoration: none;
+    border-bottom: 1px solid #cfc8bf;
+  }
+
+  @media (max-width: 980px) {
+    .wedding-masonry {
+      width: min(100% - 44px, 760px);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 620px) {
+    .wedding-gallery {
+      padding-top: 48px;
+    }
+
+    .wedding-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .wedding-hero h2 {
+      margin-top: 74px;
+    }
+
+    .wedding-masonry {
+      --tile-pad: 12px;
+      width: min(100% - 24px, 460px);
+      grid-template-columns: 1fr;
+      margin-top: 72px;
+    }
+
+    .wedding-copy {
+      width: min(100% - 28px, 560px);
+      margin-top: 86px;
+    }
+
+    .wedding-links {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wedding-masonry__item {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>

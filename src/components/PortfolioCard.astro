@@ -1,0 +1,123 @@
+---
+import { Image } from "astro:assets";
+import type { PortfolioEntry } from "../data/portfolio";
+
+type Props = {
+  entry: PortfolioEntry;
+  priority?: boolean;
+};
+
+const { entry, priority = false } = Astro.props;
+---
+
+<article class={`portfolio-overview-card portfolio-overview-card--${entry.aspect}`}>
+  <a href={entry.href} class="portfolio-overview-card__link" aria-label={`${entry.title} ansehen`}>
+    <figure class="portfolio-overview-card__figure">
+      <Image
+        src={entry.image}
+        alt={entry.alt}
+        widths={[320, 520, 760]}
+        sizes="(max-width: 720px) 100vw, (max-width: 1100px) 45vw, 31vw"
+        loading={priority ? "eager" : "lazy"}
+        fetchpriority={priority ? "high" : "auto"}
+        decoding="async"
+      />
+    </figure>
+    <div class="portfolio-overview-card__body">
+      <p class="portfolio-overview-card__meta">
+        <span>{entry.category}</span>
+        <span aria-hidden="true">×</span>
+        <time datetime={entry.date.split(".").reverse().join("-")}>{entry.date}</time>
+      </p>
+      <h2>{entry.title}</h2>
+    </div>
+  </a>
+</article>
+
+<style>
+  .portfolio-overview-card {
+    min-width: 0;
+  }
+
+  .portfolio-overview-card__link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .portfolio-overview-card__figure {
+    margin: 0;
+    background: #ece8e2;
+    overflow: hidden;
+  }
+
+  .portfolio-overview-card__figure :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 700ms ease, filter 700ms ease;
+  }
+
+  .portfolio-overview-card--square .portfolio-overview-card__figure {
+    aspect-ratio: 1 / 1;
+  }
+
+  .portfolio-overview-card--portrait .portfolio-overview-card__figure {
+    aspect-ratio: 2 / 3;
+  }
+
+  .portfolio-overview-card--landscape .portfolio-overview-card__figure {
+    aspect-ratio: 3 / 2;
+  }
+
+  .portfolio-overview-card__body {
+    padding-top: 22px;
+  }
+
+  .portfolio-overview-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 11px;
+    color: #827b73;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .portfolio-overview-card h2 {
+    margin: 0;
+    color: #1f232c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(25px, 2vw, 34px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .portfolio-overview-card__link:hover .portfolio-overview-card__figure :global(img),
+  .portfolio-overview-card__link:focus-visible .portfolio-overview-card__figure :global(img) {
+    filter: brightness(.92);
+    transform: scale(1.018);
+  }
+
+  .portfolio-overview-card__link:focus-visible {
+    outline: 1px solid #827b73;
+    outline-offset: 8px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-overview-card__figure :global(img) {
+      transition: none;
+    }
+
+    .portfolio-overview-card__link:hover .portfolio-overview-card__figure :global(img),
+    .portfolio-overview-card__link:focus-visible .portfolio-overview-card__figure :global(img) {
+      transform: none;
+    }
+  }
+</style>

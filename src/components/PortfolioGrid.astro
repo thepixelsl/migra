@@ -1,0 +1,58 @@
+---
+import PortfolioCard from "./PortfolioCard.astro";
+import type { PortfolioEntry } from "../data/portfolio";
+
+type Props = {
+  entries: PortfolioEntry[];
+};
+
+const { entries } = Astro.props;
+---
+
+<div class="portfolio-overview-grid">
+  {entries.map((entry, index) => (
+    <PortfolioCard entry={entry} priority={index === 0} />
+  ))}
+</div>
+
+<style>
+  .portfolio-overview-grid {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(96px, 14vw, 205px) auto 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 72px;
+  }
+
+  @media (min-width: 720px) {
+    .portfolio-overview-grid {
+      width: min(1060px, calc(100% - 72px));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 112px 72px;
+    }
+
+    .portfolio-overview-grid > :nth-child(even) {
+      transform: translateY(38px);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .portfolio-overview-grid {
+      width: min(1040px, calc(100% - 160px));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 138px 78px;
+    }
+
+    .portfolio-overview-grid > :nth-child(even) {
+      transform: none;
+    }
+
+    .portfolio-overview-grid > :nth-child(3n + 2) {
+      transform: translateY(-33px);
+    }
+
+    .portfolio-overview-grid > :nth-child(3n + 3) {
+      transform: translateY(35px);
+    }
+  }
+</style>

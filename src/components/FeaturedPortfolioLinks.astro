@@ -1,0 +1,259 @@
+---
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+import barberhouseHamburg from "../assets/portfolio/barberhouse-hamburg.jpg";
+import lovebirdsElbstrand from "../assets/portfolio/lovebirds-elbstrand.jpg";
+import paarshootingMallorca from "../assets/portfolio/paarshooting-mallorca.jpg";
+import standesamtAltona from "../assets/portfolio/standesamt-altona.jpg";
+import traumhochzeitHamburg from "../assets/portfolio/traumhochzeit-hamburg.jpg";
+
+type FeaturedPortfolioLink = {
+  title: string;
+  href: string;
+  location: string;
+  image: ImageMetadata;
+  alt: string;
+  imagePosition?: string;
+  serviceType: string;
+};
+
+const siteUrl = "https://artbild-fotografie.de";
+const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
+
+const links: FeaturedPortfolioLink[] = [
+  {
+    title: "Lovebirds am Elbstrand",
+    href: "/gallery/lovebirds-am-elbstrand/",
+    location: "Hamburg, Elbstrand",
+    image: lovebirdsElbstrand,
+    alt: "Verlobungsshooting am Elbstrand in Hamburg",
+    imagePosition: "center center",
+    serviceType: "Verlobungsshooting",
+  },
+  {
+    title: "Paarshooting Mallorca",
+    href: "https://artbild-fotografie.de/gallery/paarshooting-mallorca/",
+    location: "Mallorca",
+    image: paarshootingMallorca,
+    alt: "Paarshooting auf Mallorca",
+    imagePosition: "center center",
+    serviceType: "Paarshooting",
+  },
+  {
+    title: "Standesamtliche Trauung in Altona",
+    href: "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    location: "Hamburg-Altona",
+    image: standesamtAltona,
+    alt: "Standesamtliche Trauung im Standesamt Hamburg-Altona",
+    imagePosition: "center center",
+    serviceType: "Standesamtliche Hochzeitsfotografie",
+  },
+  {
+    title: "Traumhochzeit in Hamburg",
+    href: "https://artbild-fotografie.de/gallery/hochzeit-hotel-atlantic-kempinski-hotel-atlantic/",
+    location: "Hamburg",
+    image: traumhochzeitHamburg,
+    alt: "Hochzeitsportrait einer Braut im Hotel Atlantic Hamburg",
+    imagePosition: "center center",
+    serviceType: "Hochzeitsreportage",
+  },
+  {
+    title: "Bräutigam im Barberhouse Hamburg",
+    href: "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/",
+    location: "Hamburg",
+    image: barberhouseHamburg,
+    alt: "Bräutigam beim Getting Ready im Barberhouse Hamburg",
+    imagePosition: "center center",
+    serviceType: "Getting Ready Hochzeitsfotografie",
+  },
+];
+
+const absoluteUrl = (href: string) => href.startsWith("http") ? href : `${siteUrl}${href}`;
+
+const placeSchema = (entry: FeaturedPortfolioLink) => {
+  if (entry.location.includes("Mallorca")) {
+    return {
+      "@type": "Place",
+      "name": entry.location,
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Balearische Inseln",
+        "addressCountry": "ES",
+      },
+    };
+  }
+
+  return {
+    "@type": "Place",
+    "name": entry.location,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hamburg",
+      "addressRegion": "Hamburg",
+      "addressCountry": "DE",
+    },
+  };
+};
+
+const visibleLocation = (entry: FeaturedPortfolioLink) => (
+  entry.title.toLowerCase().includes(entry.location.toLowerCase()) ? "" : entry.location
+);
+
+const imageWidths = [360, 520, 760, 1040, 1320];
+const linksWithImages = await Promise.all(links.map(async (entry) => {
+  const usableWidths = [...new Set([
+    ...imageWidths.filter((width) => width <= entry.image.width),
+    entry.image.width,
+  ])].sort((a, b) => a - b);
+
+  const images = await Promise.all(usableWidths.map((width) => getImage({
+    src: entry.image,
+    width,
+    format: "webp",
+  })));
+  const fallback = images[images.length - 1];
+  const srcset = images.map((image) => `${image.src} ${image.options.width}w`).join(", ");
+
+  return {
+    ...entry,
+    absoluteHref: absoluteUrl(entry.href),
+    imageAspect: entry.image.width / entry.image.height,
+    imageFallback: fallback.src,
+    imageSrcset: srcset,
+    orientationClass: entry.image.width >= entry.image.height
+      ? "flo-featured-links-1__image--landscape"
+      : "flo-featured-links-1__image--portrait",
+  };
+}));
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  "@id": `${siteUrl}/#portfolio-featured`,
+  "name": "Ausgewählte Portfolio-Galerien von Artbild-Fotografie",
+  "description": "Ausgewählte Hochzeits-, Paar- und Getting-Ready-Galerien von Artbild-Fotografie aus Hamburg, Altona, dem Elbstrand und Mallorca.",
+  "publisher": {
+    "@type": "ProfessionalService",
+    "@id": `${siteUrl}/#organization`,
+    "name": "Artbild-Fotografie",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Rahlstedter Bahnhofstraße 27",
+      "postalCode": "22143",
+      "addressLocality": "Hamburg",
+      "addressRegion": "Hamburg",
+      "addressCountry": "DE",
+    },
+    "areaServed": [
+      { "@type": "City", "name": "Hamburg" },
+      { "@type": "AdministrativeArea", "name": "Norddeutschland" },
+      { "@type": "Place", "name": "Mallorca" },
+    ],
+  },
+  "itemListElement": linksWithImages.map((entry, index) => ({
+    "@type": "ListItem",
+    "position": index + 1,
+    "name": entry.title,
+    "url": entry.absoluteHref,
+    "item": {
+      "@type": "ImageGallery",
+      "name": entry.title,
+      "url": entry.absoluteHref,
+      "description": `${entry.serviceType} von Artbild-Fotografie in ${entry.location}.`,
+      "provider": {
+        "@id": `${siteUrl}/#organization`,
+      },
+      "contentLocation": placeSchema(entry),
+      "image": {
+        "@type": "ImageObject",
+        "contentUrl": `${siteUrl}${entry.image.src}`,
+        "thumbnailUrl": `${siteUrl}${entry.imageFallback}`,
+        "caption": entry.alt,
+      },
+      "about": [
+        { "@type": "Thing", "name": entry.serviceType },
+        { "@type": "Thing", "name": "Hochzeitsfotografie" },
+      ],
+    },
+  })),
+};
+---
+
+<div id="desktop_featured_links" class="flo-block flo-block--8074 visible" data-id="8074" data-onready="flo_featured_links_1">
+  <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+  <div class="flo-block__container">
+    <section class="flo-featured-links-1 flo-featured-links-1--420" data-featured-links aria-labelledby="featured-portfolio-title" aria-describedby="featured-portfolio-copy">
+      <div class="flo-featured-links-1__links-wrap">
+        <div class="flo-featured-links-1__image-wrap" aria-hidden="true">
+          {linksWithImages.map((entry, index) => (
+            <figure
+              class:list={[
+                "flo-featured-links-1__image",
+                entry.orientationClass,
+                index === 0 && "is-active",
+              ]}
+              data-featured-media={String(index)}
+              style={`--image-position: ${entry.imagePosition ?? "center center"}; --image-aspect: ${entry.imageAspect}`}
+            >
+              <img
+                src={transparentPixel}
+                data-src={entry.imageFallback}
+                data-srcset={entry.imageSrcset}
+                sizes="50vw"
+                alt=""
+                width={entry.image.width}
+                height={entry.image.height}
+                loading={index === 0 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </figure>
+          ))}
+        </div>
+        <div class="flo-featured-links-1__links-title-wrap">
+          <p class="flo-featured-links-1__title" id="featured-portfolio-title">Portfolio</p>
+          <p class="visually-hidden" id="featured-portfolio-copy">
+            Ausgewählte Galerien von Artbild-Fotografie mit Hochzeitsfotografie und Paarshootings in Hamburg, Altona, am Elbstrand und auf Mallorca.
+          </p>
+          <ul class="flo-featured-links-1__list">
+            {linksWithImages.map((entry, index) => {
+              const location = visibleLocation(entry);
+
+              return (
+                <li>
+                  <a
+                    class:list={[
+                      "flo-featured-links-1__link",
+                      index === 0 && "hovered",
+                    ]}
+                  href={entry.href}
+                  data-featured-link
+                  data-featured-index={String(index)}
+                >
+                    <picture class="flo-featured-links-1__mobile-thumb">
+                      <source
+                        media="(max-width: 900px)"
+                        srcset={entry.imageSrcset}
+                        sizes="calc(100vw - 56px)"
+                      />
+                      <img
+                        src={transparentPixel}
+                        width={entry.image.width}
+                        height={entry.image.height}
+                        alt={entry.alt}
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </picture>
+                    <span>{entry.title}</span>
+                    {location && <small>{location}</small>}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

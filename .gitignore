@@ -1,5 +1,10 @@
 dist/
 node_modules/
 .astro/
+.wrangler/
+playwright-report/
+test-results/
+screenshots/**/*.png
+!screenshots/**/.gitkeep
 .DS_Store
 npm-debug.log*
