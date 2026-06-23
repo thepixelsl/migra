@@ -1,10 +1,179 @@
 ---
 import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
-import HomePortfolioCards from "../components/HomePortfolioCards.astro";
-import { portfolioEntries } from "../data/portfolio";
 
-const homePortfolioEntries = portfolioEntries.slice(0, 3);
+const destinationLinks = [
+  { label: "Venedig", href: "https://artbild-fotografie.de/gallery-category/venedig/" },
+  { label: "Mallorca", href: "https://artbild-fotografie.de/gallery-category/mallorca/" },
+  { label: "Hannover im Herbst", href: "https://artbild-fotografie.de/gallery-category/hannover/" },
+  { label: "Paris", href: "https://artbild-fotografie.de/gallery/paris/" },
+  { label: "Hamburg", href: "https://artbild-fotografie.de/gallery-category/hamburg-travel/" },
+];
+
+const storyCards = [
+  {
+    title: "Hochzeit von Steffi & Dominik",
+    kicker: "Hochzeitsfotografie Hamburg",
+    text: "Eine elegante Hochzeit in Hamburg mit authentischen Momenten, Reportagebildern und viel Nähe zum Brautpaar.",
+    href: "https://artbild-fotografie.de/gallery/steffi-dominik/",
+    linkLabel: "Hochzeit von Steffi & Dominik ansehen",
+    image: "/images/wedding-couple-bouquet.jpg",
+    width: 360,
+    height: 540,
+    alt: "Brautpaar bei einer Hochzeitsreportage in Hamburg",
+  },
+  {
+    title: "Paarshooting Mallorca",
+    kicker: "Destination Paarshooting",
+    text: "Xenia und Simon wurden in der Nähe von Porto Cristo auf Mallorca begleitet, natürlich, ruhig und mit mediterranem Licht.",
+    href: "https://artbild-fotografie.de/gallery/paarshooting-mallorca/",
+    linkLabel: "Paarshooting Mallorca ansehen",
+    image: "/images/wedding-art-1916.jpg",
+    width: 360,
+    height: 541,
+    alt: "Paarshooting mit warmer Abendstimmung",
+  },
+];
+
+const articleCards = [
+  {
+    title: "Das perfekte Getting Ready für deine Hochzeit in Hamburg",
+    text: "Was ist die beste Location, wer sollte dabei sein und worauf kommt es fotografisch beim Brautstyling wirklich an?",
+    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+    image: "/images/getting-ready-hamburg-hero.jpg",
+    width: 924,
+    height: 1384,
+    alt: "Braut beim Getting Ready in Hamburg",
+  },
+  {
+    title: "Hochzeitsfotograf Hamburg Preise",
+    text: "Antworten auf die wichtigsten Fragen zu Festpreisen, enthaltenen Leistungen und planbaren Kosten für Hochzeitsfotos.",
+    href: "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
+    image: "/images/post-preise.jpg",
+    width: 150,
+    height: 150,
+    alt: "Hochzeitsfotografie Hamburg Preise",
+  },
+];
+
+const relatedLinks = [
+  { label: "Editorial Traumhochzeit in Paris", href: "https://artbild-fotografie.de/gallery/paris/" },
+  { label: "Hochzeit im Hotel Atlantic Hamburg", href: "https://artbild-fotografie.de/gallery/hochzeit-hotel-atlantic-kempinski-hotel-atlantic/" },
+  { label: "Lovebirds am Elbstrand", href: "/gallery/lovebirds-am-elbstrand/" },
+  { label: "Getting Ready Hamburg", href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/" },
+];
+
+const miniPortfolio = [
+  {
+    title: "Engagement Shooting Conny & Alex",
+    category: "Portfolio",
+    href: "https://artbild-fotografie.de/gallery/engagement-shooting-in-hamburg/",
+    image: "/images/wedding-lauenbrueck.jpg",
+    width: 360,
+    height: 539,
+    alt: "Engagement Shooting in Norddeutschland",
+  },
+  {
+    title: "Groom Getting Ready Barber House Hamburg",
+    category: "Portfolio",
+    href: "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/",
+    image: "/images/portrait-riverside.jpg",
+    width: 520,
+    height: 780,
+    alt: "Elegantes Portrait eines Bräutigams in Hamburg",
+  },
+  {
+    title: "Florale Portraits",
+    category: "Florals",
+    href: "https://artbild-fotografie.de/gallery/floral-art/",
+    image: "/images/art_4265-bearbeitet-2_web.jpg",
+    width: 1386,
+    height: 924,
+    alt: "Florales Editorial Portraitshooting",
+  },
+];
+
+const vendors = [
+  {
+    name: "Katharina Seidl",
+    text: "Botanical Art, Designstudio und florale Gestaltung für moderne Hochzeiten.",
+    href: "https://www.instagram.com/katharina.seidl/",
+    cta: "Instagram Profil",
+  },
+  {
+    name: "Foboxy",
+    text: "Fotobox für Hochzeiten in Hamburg mit Bildern zum Ausdrucken oder als Online-Galerie.",
+    href: "https://foboxy.de/",
+    cta: "Jetzt reservieren",
+  },
+  {
+    name: "Ella Deck Couture",
+    text: "Maßgeschneiderte und individuell angefertigte Modekonzepte für Hochzeiten.",
+    href: "https://elladeck.de/",
+    cta: "Jetzt ansehen",
+  },
+  {
+    name: "Visagistin Manija Biebow",
+    text: "Friseurmeisterin und Dipl.-Visagistin für hochwertiges Brautstyling in Hamburg.",
+    href: "https://artbild-fotografie.de/brautstyling-hamburg/",
+    cta: "Über Manija Biebow",
+  },
+];
+
+const homepageSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://artbild-fotografie.de/#organization",
+      name: "Artbild-Fotografie",
+      url: "https://artbild-fotografie.de/",
+      image: "https://artbild-fotografie.de/images/logo-artbild-black.png",
+      email: "info@artbild-fotografie.de",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+        { "@type": "Place", name: "Mallorca" },
+        { "@type": "Place", name: "Venedig" },
+        { "@type": "Place", name: "Paris" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Standesamtliche Trauung",
+        "Paarshooting",
+        "Getting Ready Fotografie",
+      ],
+    },
+    {
+      "@type": "ItemList",
+      "@id": "https://artbild-fotografie.de/#home-lower-sections",
+      name: "Hochzeitsfotografie Hamburg, Destination Wedding und Empfehlungen",
+      itemListElement: [
+        ...storyCards.map((item, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          name: item.title,
+          url: item.href,
+        })),
+        ...articleCards.map((item, index) => ({
+          "@type": "ListItem",
+          position: storyCards.length + index + 1,
+          name: item.title,
+          url: item.href.startsWith("http") ? item.href : `https://artbild-fotografie.de${item.href}`,
+        })),
+      ],
+    },
+  ],
+};
 ---
 <!doctype html>
 <html lang="de">
@@ -15,9 +184,10 @@ const homePortfolioEntries = portfolioEntries.slice(0, 3);
   <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
   <link rel="canonical" href="https://artbild-fotografie.de/">
   <title>Hochzeitsfotograf Hamburg</title>
+  <script type="application/ld+json" set:html={JSON.stringify(homepageSchema)}></script>
   <script src="/js/hero-slider.js" defer></script>
 </head>
-<body>
+<body id="top">
   <header class="site-header">
     <a class="booking-strip" href="#kontakt">Jetzt für 2026/2027 buchen</a>
     <div class="nav-shell">
@@ -194,137 +364,171 @@ const homePortfolioEntries = portfolioEntries.slice(0, 3);
       <FeaturedPortfolioLinks />
     </section>
 
-    <section class="about section-grid" id="about">
-      <div class="text-block">
-        <p class="eyebrow">Hi, ich bin York</p>
-        <h2>Der Fotograf hinter der Kamera</h2>
-        <p>Ich bin York Augustin, Euer Hochzeitsfotograf aus Hamburg. Mit Liebe zum Detail, zum Spiel mit dem Licht und einem feinen Gespür für Emotionen halte ich das fest, was bleibt.</p>
-        <p>Seit der Gründung ist Artbild-Fotografie als eingetragener Handwerksbetrieb in der Handwerkskammer Hamburg geführt.</p>
+    <section class="home-editorial home-lower-section" id="editorial" aria-labelledby="editorial-title">
+      <div class="home-editorial__copy">
+        <p class="eyebrow">Editorial</p>
+        <h2 id="editorial-title">Hamburg Bilder aus Editorial Fotoshootings</h2>
+        <p>Als Hochzeitsfotograf bin ich nicht nur in Hamburg, Niedersachsen und Schleswig-Holstein unterwegs, sondern auch in Spanien, Italien und Frankreich.</p>
+        <p>Wenn Du Dir Bilder wünschst, die in Erinnerung bleiben, egal ob in den Dörfern Mallorcas, an den Kanälen Venedigs, an der Großen Elbstraße, den Landungsbrücken oder beim Römischen Garten in Blankenese, bist Du bei Artbild-Fotografie richtig.</p>
+        <a class="button ghost" href="https://artbild-fotografie.de/gallery/editorial/" aria-label="Editorial Fotoshootings von Artbild-Fotografie ansehen">Editorial ansehen</a>
       </div>
-      <figure class="image-panel portrait-panel">
-        <img src="/images/york-augustin-portrait.png" width="1024" height="683" alt="York Augustin Portrait">
-      </figure>
+      <div class="home-editorial__media" role="group" aria-label="Editorial und Destination Hochzeitsfotografie">
+        <img src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Editorial Fotoshooting mit Brautjungfer im Schlossgarten" loading="lazy" decoding="async">
+        <img src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Brautportrait bei einem Destination Shooting in Paris" loading="lazy" decoding="async">
+      </div>
     </section>
 
-    <section class="services section-narrow">
-      <p class="eyebrow">Leistungsübersicht</p>
-      <h2>Artbild-Fotografie bietet</h2>
-      <ul class="service-list">
-        <li>Hochzeitsreportagen</li>
-        <li>Fotos von Hochzeitsfeiern</li>
-        <li>Standesamtliche Trauungen</li>
-        <li>Portraitfotoshootings</li>
+    <section class="destination-section home-lower-section" aria-labelledby="destination-title">
+      <div class="section-heading">
+        <p class="eyebrow">Destinations</p>
+        <h2 id="destination-title">Hochzeitsfotografie in Hamburg, Mallorca, Venedig und Paris</h2>
+        <p>Artbild-Fotografie begleitet Hochzeiten, Paarshootings und Editorials lokal in Hamburg sowie europaweit an Orten, die zur Geschichte des Paares passen.</p>
+      </div>
+      <ul class="destination-links" aria-label="Destination Portfolio Orte">
+        {destinationLinks.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
       </ul>
-      <p>Für Hochzeitsfotografie biete ich Euch die Möglichkeit eines kostenlosen und unverbindlichen Kennenlernshootings vor der Buchung an.</p>
+      <div class="destination-actions">
+        <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Hochzeitsfotograf Preise ansehen</a>
+        <a href="https://artbild-fotografie.de/gallery-category/hamburg-travel/">Mein schönes Hamburg ansehen</a>
+        <a href="https://artbild-fotografie.de/gallery/floral-art/">Florale Styled Shootings ansehen</a>
+      </div>
     </section>
 
-    <section class="portfolio-section" id="portfolio">
+    <section class="story-section home-lower-section" aria-labelledby="stories-title">
       <div class="section-heading">
-        <p class="eyebrow">Echte Hochzeiten</p>
-        <h2>Portfolio</h2>
-        <p>Diese Paare haben mir erlaubt, einige ihrer Hochzeitsmomente zu zeigen.</p>
+        <p class="eyebrow">Hochzeitsgeschichten</p>
+        <h2 id="stories-title">Reportagen, Paarshootings und echte Momente</h2>
+        <p>Ich erzähle Eure Geschichte in Bildern: natürlich, unverfälscht und mit Blick für die großen und kleinen Gänsehaut-Momente.</p>
       </div>
-      <HomePortfolioCards entries={homePortfolioEntries} />
-      <a class="button ghost" href="/portfolio/" aria-label="Alle Portfolio-Galerien von Artbild-Fotografie ansehen">Alle Galerien</a>
+      <div class="story-grid">
+        {storyCards.map((story) => (
+          <article class="story-card">
+            <a href={story.href} aria-label={story.linkLabel}>
+              <img src={story.image} width={story.width} height={story.height} alt={story.alt} loading="lazy" decoding="async">
+              <div>
+                <p class="eyebrow">{story.kicker}</p>
+                <h3>{story.title}</h3>
+                <p>{story.text}</p>
+                <span>Jetzt ansehen</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
     </section>
 
-    <section class="info-band" id="standesamt">
+    <section class="planning-section home-lower-section" aria-labelledby="planning-title">
+      <div class="planning-section__intro">
+        <p class="eyebrow">Planung & Preise</p>
+        <h2 id="planning-title">Hilfen für Eure Hochzeitsplanung in Hamburg</h2>
+        <p>Die wichtigsten Einstiege für Paare, die gerade Getting Ready, Ablauf, Budget oder fotografische Begleitung planen.</p>
+      </div>
+      <div class="planning-grid">
+        {articleCards.map((article, index) => (
+          <article class:list={["planning-card", index === 0 && "planning-card--large"]}>
+            <a href={article.href}>
+              <img src={article.image} width={article.width} height={article.height} alt={article.alt} loading="lazy" decoding="async">
+              <div>
+                <h3>{article.title}</h3>
+                <p>{article.text}</p>
+                <span>{index === 0 ? "Tipps ansehen" : "Preise ansehen"}</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="related-section home-lower-section" aria-labelledby="related-title">
       <div class="section-heading">
-        <p class="eyebrow">Wichtige Informationen</p>
-        <h2>Standesamt Hamburg</h2>
-        <p>Wer in Hamburg heiraten will, meldet sich beim zuständigen Standesamt an. Heiraten darf man danach in jedem Standesamt in Deutschland.</p>
+        <p class="eyebrow">Vielleicht gefällt Dir auch</p>
+        <h2 id="related-title">Weitere Galerien und Geschichten</h2>
       </div>
-      <div class="info-cards">
-        <article>
-          <img src="/images/standesamt-bergedorf.jpg" width="150" height="150" alt="Standesamt Hamburg-Bergedorf">
-          <h3>Standesamt Bergedorf</h3>
-          <p>Umgebungsbilder und wichtige Kontaktinfos.</p>
-        </article>
-        <article>
-          <img src="/images/standesamt-altona.jpg" width="150" height="150" alt="Standesamt Hamburg Altona">
-          <h3>Standesamt Altona</h3>
-          <p>Umgebungs- und Kontaktinformationen.</p>
-        </article>
+      <nav class="related-links" aria-label="Weitere empfohlene Galerien">
+        {relatedLinks.map((item) => (
+          <a href={item.href}>{item.label}</a>
+        ))}
+      </nav>
+      <a class="button ghost" href="/portfolio/" aria-label="Gesamtes Portfolio von Artbild-Fotografie ansehen">Portfolio ansehen</a>
+    </section>
+
+    <section class="social-section home-lower-section" aria-labelledby="social-title">
+      <p class="eyebrow">Folge mir auf Social Media</p>
+      <h2 id="social-title">Aktuelle Arbeiten, freie Termine und TFP-Shootings</h2>
+      <div class="social-links" aria-label="Social Media Profile von Artbild-Fotografie">
+        <a href="https://www.facebook.com/artbildfotografie/" rel="me">Facebook</a>
+        <a href="https://instagram.com/artbild" rel="me">Instagram</a>
+        <a href="https://www.pinterest.de/artbild/" rel="me">Pinterest</a>
       </div>
     </section>
 
-    <section class="journal" id="journal">
+    <section class="mini-portfolio-section home-lower-section" aria-labelledby="mini-portfolio-title">
       <div class="section-heading">
-        <p class="eyebrow">Tips & Resources</p>
-        <h2>Aktuelle Artikel</h2>
+        <p class="eyebrow">Portfolio</p>
+        <h2 id="mini-portfolio-title">Ausgewählte weitere Arbeiten</h2>
       </div>
-      <div class="journal-grid">
-        <article>
-          <img src="/images/post-geld-sparen.jpg" width="150" height="150" alt="Hochzeitsreportage Hamburg - So spart Ihr richtig viel Geld">
-          <p>23. Mai 2025</p>
-          <h3>Hochzeitsreportage Hamburg - So spart Ihr richtig viel Geld!</h3>
-          <a href="#">Weiterlesen</a>
-        </article>
-        <article>
-          <img src="/images/post-preise.jpg" width="150" height="150" alt="Hochzeitsreportage Hamburg Preise">
-          <p>13. Mai 2025</p>
-          <h3>Braut Fotoshooting Fraser Suites Hamburg</h3>
-          <a href="#">Weiterlesen</a>
-        </article>
+      <div class="mini-portfolio-grid">
+        {miniPortfolio.map((item) => (
+          <article>
+            <a href={item.href} aria-label={`${item.title} ansehen`}>
+              <img src={item.image} width={item.width} height={item.height} alt={item.alt} loading="lazy" decoding="async">
+              <p>{item.category}</p>
+              <h3>{item.title}</h3>
+            </a>
+          </article>
+        ))}
       </div>
     </section>
 
-    <section class="testimonials">
-      <article>
-        <h2>The photos are absolutely stunning!</h2>
-        <p>We cannot recommend Nadia enough! She truly captured the essence of our special day and every photo is a cherished memory.</p>
-        <strong>James & Amelia</strong>
-      </article>
-      <article>
-        <h2>Delighted with the whole day</h2>
-        <p>She was so attentive to our vision and made sure to capture every moment of our intimate ceremony.</p>
-        <strong>William & Sophia</strong>
-      </article>
-      <article>
-        <h2>Couldn’t be more pleased</h2>
-        <p>The photos turned out better than we ever could have imagined.</p>
-        <strong>Ben & Isabella</strong>
-      </article>
-    </section>
-
-    <section class="guide section-grid" id="guide">
-      <figure class="image-panel">
-        <img src="/images/portrait-riverside.jpg" width="520" height="780" alt="Eleganter Mann am Flussufer, modernes Portrait">
-      </figure>
-      <div class="text-block">
-        <p class="eyebrow">Hochzeitsguide</p>
-        <h2>Tipps & Tricks</h2>
-        <p>Über viele Jahre in der Hochzeitsfotografie habe ich erkannt: Es sind die entscheidenden Details, die eure Bilder zeitlos schön machen.</p>
-        <form class="signup">
-          <label for="email">Email</label>
-          <input id="email" type="email" placeholder="E-Mail-Adresse">
-          <button type="submit">Geschenk sichern</button>
-        </form>
+    <section class="vendor-section home-lower-section" aria-labelledby="vendor-title">
+      <div class="section-heading">
+        <p class="eyebrow">Empfehlungen für Eure Hochzeit</p>
+        <h2 id="vendor-title">Dienstleister in Hamburg und Umgebung</h2>
+        <p>Eine kuratierte Auswahl hilfreicher Kontakte für Hochzeiten, Brautstyling, Floristik, Mode und Gästefotos.</p>
+      </div>
+      <div class="vendor-grid">
+        {vendors.map((vendor) => (
+          <article>
+            <h3>{vendor.name}</h3>
+            <p>{vendor.text}</p>
+            <a href={vendor.href}>{vendor.cta}</a>
+          </article>
+        ))}
       </div>
     </section>
 
-    <section class="featured">
-      <p class="eyebrow">Featured In</p>
-      <div class="logo-row">
-        <img src="/images/logo-malvie.png" width="1000" height="326" alt="Malvie Magazine">
-        <img src="/images/logo-moevir.png" width="700" height="229" alt="Moevir Paris">
-        <img src="/images/logo-artego.png" width="1000" height="283" alt="Artego">
-        <img src="/images/logo-rebel.png" width="1024" height="683" alt="Rebel Magazine">
+    <section class="contact-note home-lower-section" id="kontakt" aria-labelledby="contact-note-title">
+      <div>
+        <p class="eyebrow">Kontakt</p>
+        <h2 id="contact-note-title">Kurzfristige Hochzeitsanfragen</h2>
+        <p>Für sehr kurzfristige Hochzeitsanfragen bin ich über WhatsApp sowie über Instagram schnell erreichbar. Für Anfragen für 2027 und 2028 sowie für alle weiteren Fragen könnt Ihr natürlich auch das Kontaktformular nutzen.</p>
+      </div>
+      <div class="contact-note__actions">
+        <a href="https://ig.me/m/artbild" aria-label="Artbild-Fotografie per Instagram kontaktieren">Instagram</a>
+        <a href="https://artbild-fotografie.de/kontakt/" aria-label="Kontaktformular von Artbild-Fotografie öffnen">Kontaktformular</a>
+        <a href="mailto:info@artbild-fotografie.de" aria-label="Artbild-Fotografie per E-Mail kontaktieren">E-Mail</a>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer" id="kontakt">
+  <footer class="site-footer">
     <div>
-      <h2>Contact</h2>
+      <h2>Artbild-Fotografie</h2>
       <p><a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a></p>
+      <p>Rahlstedter Bahnhofstraße 27, 22143 Hamburg</p>
     </div>
     <nav aria-label="Footer">
-      <a href="#">Datenschutz</a>
-      <a href="#">AGB</a>
-      <a href="#">Kontakt</a>
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutz</a>
+      <a href="#top">Nach oben</a>
     </nav>
-    <p>© 2026 Artbild-Fotografie - Alle Rechte vorbehalten.</p>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
   </footer>
 
   <noscript>
