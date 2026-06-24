@@ -1,0 +1,685 @@
+---
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/standesamt-altona/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Standesamtliche Trauung im Standesamt Altona | Artbild-Fotografie";
+const heading = "Standesamtliche Trauung in Hamburg-Altona";
+const description = "Hochzeitsreportage von Roberta und Daniel im Standesamt Altona, am Altonaer Balkon und bei ihrer Feier in Ottensen. Hochzeitsfotografie aus Hamburg.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByNumber: Record<string, string> = {
+  "0157": "Brautfrisur während der standesamtlichen Trauung im Standesamt Altona",
+  "0172": "Braut und Gast vor der Trauung im Standesamt Hamburg-Altona",
+  "0213": "Brautpaar vor der Standesbeamtin im Trauzimmer Altona",
+  "0218": "Brautpaar mit rotem Brautstrauß im Standesamt Altona",
+  "0221": "Traugesellschaft während der standesamtlichen Hochzeit in Altona",
+  "0224": "Standesamtliche Trauung von Roberta und Daniel in Hamburg-Altona",
+  "0259": "Ringtausch bei der standesamtlichen Trauung in Altona",
+  "0291": "Roberta und Daniel bei der Eheschließung im Standesamt Altona",
+  "0312": "Brautpaar beim Gespräch mit der Standesbeamtin in Hamburg-Altona",
+  "0317": "Braut mit Brautstrauß neben dem Bräutigam im Trauzimmer",
+  "0324": "Roberta und Daniel während ihrer standesamtlichen Trauung",
+  "0325": "Lächelndes Brautpaar bei der Trauung im Standesamt Altona",
+  "0327": "Bräutigam und Braut im historischen Trauzimmer in Altona",
+  "0356": "Gratulation nach der standesamtlichen Trauung in Hamburg",
+  "0360": "Umarmung der Braut nach der Eheschließung in Altona",
+  "0374": "Braut mit rotem Brautstrauß nach der Trauung",
+  "0401": "Gast fotografiert das Brautpaar im Standesamt Altona",
+  "0439": "Erster Kuss des Brautpaares nach der standesamtlichen Hochzeit",
+  "0471": "Brautpaar verlässt gemeinsam das Standesamt Hamburg-Altona",
+  "0576": "Gruppenfoto der Hochzeitsgesellschaft am Altonaer Balkon",
+  "0615": "Brautpaar am Altonaer Balkon mit Blick auf den Hamburger Hafen",
+  "0621": "Familienfoto nach der standesamtlichen Trauung in Altona",
+  "0686": "Roberta und Daniel auf dem Weg zum Paarshooting am Altonaer Balkon",
+  "0746": "Kuss des Brautpaares im Gegenlicht am Altonaer Balkon",
+  "0833": "Braut mit Gästen beim Spaziergang durch Hamburg-Altona",
+  "0983": "Natürliche Hochzeitsreportage des Brautpaares in Ottensen",
+  "0987": "Bräutigam im Gespräch während der Hochzeitsreportage in Ottensen",
+  "1001": "Brautpaar mit Brautstrauß auf dem Weg zur Feier in Ottensen",
+  "1013": "Fröhliches Gruppenfoto mit Roberta und Daniel in Hamburg",
+  "1015": "Braut Roberta bei der Hochzeitsfeier in Ottensen",
+  "1070": "Brautpaar stößt bei der Hochzeitsfeier im Eaton Place an",
+  "1108": "Detailaufnahme der Eheringe bei der Feier in Hamburg-Ottensen",
+  "1140": "Kuss des Brautpaares bei der Hochzeitsfeier in Ottensen",
+  "1143": "Portrait von Roberta und Daniel während ihrer Hochzeitsfeier",
+  "1236": "Detail der Hochzeitsfeier im Eaton Place in Ottensen",
+  "1243": "Hochzeitstorte wird bei der Feier in Ottensen serviert",
+  "1245": "Braut mit rotem Brautstrauß bei der Feier in Hamburg",
+  "1261": "Herzliche Umarmung während der Hochzeitsfeier in Ottensen",
+  "1266": "Dessert bei der Hochzeitsfeier von Roberta und Daniel",
+  "1287": "Brautpaar bei seiner Hochzeitsfeier im Eaton Place",
+  "1291": "Roberta und Daniel halten sich bei der Hochzeitsfeier an den Händen",
+  "1298": "Anschnitt der Hochzeitstorte bei der Feier in Ottensen",
+};
+
+const galleryImages = Object.entries(imageModules)
+  .map(([path, image]) => {
+    const fileName = path.split("/").pop() ?? "";
+    const number = fileName.match(/hamburg(\d{4})/)?.[1] ?? fileName;
+
+    return {
+      id: number,
+      image,
+      alt: altByNumber[number] ?? "Standesamtliche Trauung in Hamburg-Altona",
+      aspect: "natural" as const,
+    };
+  })
+  .sort((a, b) => Number(a.id) - Number(b.id))
+  .map((item, index) => ({ ...item, eager: index === 0 }));
+
+const itemsPerColumn = Math.ceil(galleryImages.length / 3);
+const galleryColumns = [
+  galleryImages.slice(0, itemsPerColumn),
+  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
+  galleryImages.slice(itemsPerColumn * 2),
+];
+
+const primaryImage = new URL(
+  galleryImages.find((item) => item.id === "0746")?.image.src ?? galleryImages[0].image.src,
+  siteUrl,
+).href;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Standesamtliche Trauung Hamburg",
+        "Standesamt Altona",
+        "Hochzeitsfotograf Hamburg",
+        "Hochzeitsreportage Altona",
+      ],
+      datePublished: "2019-12-04T03:10:01+01:00",
+      dateModified: "2026-06-24T21:00:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Standesamtliche Trauung von Roberta und Daniel in Hamburg-Altona",
+      description,
+      contentLocation: [
+        { "@id": `${pageUrl}#standesamt` },
+        { "@id": `${pageUrl}#altonaer-balkon` },
+        { "@id": `${pageUrl}#ottensen` },
+      ],
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "CivicStructure",
+      "@id": `${pageUrl}#standesamt`,
+      name: "Standesamt Hamburg-Altona",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Platz der Republik 1",
+        postalCode: "22765",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "TouristAttraction",
+      "@id": `${pageUrl}#altonaer-balkon`,
+      name: "Altonaer Balkon",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg-Altona",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "Place",
+      "@id": `${pageUrl}#ottensen`,
+      name: "Ottensen",
+      containedInPlace: {
+        "@type": "City",
+        name: "Hamburg",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Standesamtliche Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Paarshooting",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={heading}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2019-12-04T03:10:01+01:00">
+  <meta property="article:modified_time" content="2026-06-24T21:00:00+02:00">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:alt" content="Standesamtliche Trauung in Hamburg-Altona">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={heading}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template altona-wedding-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="altona-wedding">
+      <header class="altona-hero">
+        <p class="altona-hero__script">Roberta &amp; Daniel</p>
+        <p class="altona-hero__kicker">Hochzeitsreportage Hamburg</p>
+        <h1>{heading}</h1>
+        <p class="altona-hero__intro">
+          Für ihre standesamtliche Trauung im Standesamt Altona und die
+          anschließende Feier im Eaton Place in Ottensen durfte ich Roberta und
+          Daniel fotografisch begleiten.
+        </p>
+      </header>
+
+      <section class="altona-story" aria-labelledby="altona-story-title">
+        <p>Hamburg · Altona · Ottensen</p>
+        <h2 id="altona-story-title">Eine standesamtliche Hochzeit zwischen Rathaus, Elbe und Ottensen</h2>
+        <div>
+          <p>
+            Die Reportage beginnt im historischen Trauzimmer des Standesamts
+            Hamburg-Altona: leise Blicke, der Ringtausch und die ersten
+            Gratulationen nach dem Ja-Wort.
+          </p>
+          <p>
+            Danach ging es mit Familie und Freunden zum Altonaer Balkon. Das
+            weite Licht über dem Hamburger Hafen bot den ruhigen Rahmen für
+            natürliche Paar- und Gruppenbilder.
+          </p>
+          <p>
+            Den Abschluss bildete die persönliche Feier in Ottensen. So erzählt
+            die Galerie den gesamten Tag als zusammenhängende Hochzeitsreportage.
+          </p>
+        </div>
+      </section>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="standesamt-altona"
+        label="Standesamtliche Trauung im Standesamt Hamburg-Altona"
+        dialogLabel="Hochzeitsreportage Standesamt Altona in Vollansicht"
+      />
+
+      <aside class="altona-meta" aria-label="Galerie teilen und Themen">
+        <div>
+          <span>Themen:</span>
+          <a href="https://artbild-fotografie.de/gallery-tag/altona/">Altona</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/standesamt/">Standesamt</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/standesamtliche-trauung/">Standesamtliche Trauung</a>
+        </div>
+        <div>
+          <span>Teilen:</span>
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fstandesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg%2F"
+            aria-label="Standesamtliche Trauung in Altona auf Facebook teilen"
+          >f</a>
+          <a
+            href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fstandesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg%2F"
+            aria-label="Standesamtliche Trauung in Altona auf Pinterest teilen"
+          >p</a>
+        </div>
+      </aside>
+
+      <section class="altona-offer" aria-labelledby="altona-offer-title">
+        <p class="altona-offer__kicker">Planbar heiraten</p>
+        <h2 id="altona-offer-title">Festpreisangebote für Eure standesamtliche Hochzeit</h2>
+        <p>
+          Vergleicht Leistungen und Preise in Ruhe. Transparente Pakete helfen
+          Euch, die fotografische Begleitung ohne versteckte Zusatzkosten zu
+          planen.
+        </p>
+        <div>
+          <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Preise &amp; Pakete ansehen</a>
+          <a class="is-primary" href="https://artbild-fotografie.de/kontakt/">Freien Termin anfragen</a>
+        </div>
+      </section>
+
+      <nav class="altona-related" aria-label="Weitere Hochzeitsgeschichten aus Hamburg">
+        <a href="/gallery/hochzeitsfotos-hamburg/">
+          <span>Getting Ready</span>
+          Hochzeitsfotos in den Fraser Suites Hamburg
+        </a>
+        <a href="/gallery/lovebirds-am-elbstrand/">
+          <span>Paarshooting</span>
+          Lovebirds am Elbstrand
+        </a>
+        <a href="/portfolio/">
+          <span>Portfolio</span>
+          Weitere Hochzeiten und Paarshootings
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .altona-wedding {
+    padding-top: clamp(58px, 5.5vw, 78px);
+  }
+
+  .altona-hero {
+    width: min(1080px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .altona-hero__script {
+    margin: 0;
+    color: #343842;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.3vw, 62px);
+    line-height: 1;
+  }
+
+  .altona-hero__kicker {
+    margin: clamp(64px, 7vw, 92px) 0 14px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .altona-hero h1 {
+    width: min(900px, 100%);
+    margin: 0 auto;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(38px, 5vw, 70px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .altona-hero__intro {
+    width: min(760px, 100%);
+    margin: 28px auto 0;
+    color: #69635d;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.68;
+  }
+
+  .altona-story {
+    width: min(1120px, calc(100% - 52px));
+    margin: clamp(86px, 9vw, 132px) auto 0;
+    padding: clamp(54px, 6vw, 84px);
+    background: #f4f1ed;
+  }
+
+  .altona-story > p,
+  .altona-offer__kicker {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .altona-story h2 {
+    width: min(820px, 100%);
+    margin: 20px 0 38px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(30px, 4vw, 54px);
+    font-weight: 400;
+    line-height: 1.16;
+  }
+
+  .altona-story > div {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(24px, 4vw, 56px);
+  }
+
+  .altona-story > div p {
+    margin: 0;
+    color: #68625c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .altona-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    padding-top: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .altona-meta div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 18px;
+  }
+
+  .altona-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .altona-offer {
+    width: min(900px, calc(100% - 48px));
+    margin: clamp(96px, 10vw, 148px) auto;
+    text-align: center;
+  }
+
+  .altona-offer h2 {
+    margin: 20px 0 24px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.4vw, 60px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .altona-offer > p:not(.altona-offer__kicker) {
+    width: min(720px, 100%);
+    margin: 0 auto;
+    color: #68625c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 21px);
+    line-height: 1.7;
+  }
+
+  .altona-offer > div {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .altona-offer a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .altona-offer a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .altona-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 148px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .altona-related a {
+    min-height: 164px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .altona-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .altona-related span {
+    margin-bottom: 13px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .altona-meta a:hover,
+  .altona-meta a:focus-visible,
+  .altona-related a:hover,
+  .altona-related a:focus-visible {
+    color: #8a6d5a;
+  }
+
+  .altona-related a:hover,
+  .altona-related a:focus-visible {
+    background: #f5f3ef;
+  }
+
+  .altona-meta a:focus-visible,
+  .altona-offer a:focus-visible,
+  .altona-related a:focus-visible {
+    outline: 2px solid #8a6d5a;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 900px) {
+    .altona-story > div {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .altona-wedding {
+      padding-top: 44px;
+    }
+
+    .altona-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .altona-hero__kicker {
+      margin-top: 56px;
+    }
+
+    .altona-story {
+      width: min(100% - 24px, 560px);
+      margin-top: 70px;
+      padding: 48px 22px;
+    }
+
+    .altona-meta {
+      width: min(100% - 28px, 520px);
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .altona-offer {
+      width: min(100% - 28px, 560px);
+    }
+
+    .altona-offer > div {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .altona-related {
+      width: min(100% - 28px, 560px);
+      grid-template-columns: 1fr;
+    }
+
+    .altona-related a {
+      min-height: 134px;
+    }
+
+    .altona-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+</style>

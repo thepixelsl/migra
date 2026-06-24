@@ -86,7 +86,7 @@ const entries: PortfolioEntry[] = [
     category: "Couples",
     filter: "Hochzeit",
     date: "04.12.2019",
-    href: "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
     image: standesamtAltona,
     alt: "Standesamtliche Trauung in Hamburg Altona",
     aspect: "landscape",
