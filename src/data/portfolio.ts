@@ -56,7 +56,7 @@ const entries: PortfolioEntry[] = [
     category: "Hochzeit",
     filter: "Hochzeit",
     date: "12.08.2021",
-    href: "https://artbild-fotografie.de/gallery/hochzeitsfotograf-niedersachsen/",
+    href: "/gallery/hochzeitsfotograf-niedersachsen/",
     image: hochzeitsfotografNiedersachsen,
     alt: "Hochzeitsgesellschaft bei einer Hochzeit in Niedersachsen",
     aspect: "landscape",
