@@ -5,8 +5,9 @@ import GalleryLightbox from "./GalleryLightbox.astro";
 interface GalleryImage {
   image: ImageMetadata;
   alt: string;
-  aspect?: "landscape" | "portrait" | "wide";
+  aspect?: "landscape" | "portrait" | "wide" | "natural";
   muted?: boolean;
+  eager?: boolean;
 }
 
 interface Props {
@@ -49,7 +50,8 @@ const {
               alt={item.alt}
               widths={[360, 620, 920, 1200]}
               sizes="(max-width: 700px) 100vw, (max-width: 1100px) 45vw, 31vw"
-              loading="lazy"
+              loading={item.eager ? "eager" : "lazy"}
+              fetchpriority={item.eager ? "high" : "auto"}
               decoding="async"
             />
           </button>
@@ -159,6 +161,15 @@ const {
 
   .gallery-image-grid__item.is-portrait {
     aspect-ratio: 2 / 3;
+  }
+
+  .gallery-image-grid__item.is-natural {
+    aspect-ratio: auto;
+  }
+
+  .gallery-image-grid__item.is-natural :global(img) {
+    height: auto;
+    object-fit: contain;
   }
 
   .gallery-image-grid__item.is-muted :global(img) {
