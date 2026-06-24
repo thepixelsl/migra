@@ -7,23 +7,16 @@ Alle weiteren Galerieseiten werden im Stil der Seite
 
 - Bilder werden als responsives, formatgerechtes Raster mit stabilen Seitenverhaeltnissen ausgegeben.
 - Jedes Galeriebild ist per Tastatur erreichbar und besitzt einen konkreten Alt-Text.
-- Die Vollbildansicht wird ausschliesslich mit
-  `src/components/GalleryLightbox.astro` umgesetzt.
-- Galerie-Ausloeser erhalten dieselbe `galleryId` wie die Lightbox:
+- Bildraster und Vollbildansicht werden ausschliesslich mit
+  `src/components/GalleryImageGrid.astro` umgesetzt. Die Komponente bindet
+  `src/components/GalleryLightbox.astro` automatisch ein.
+- Die Bilder werden in Spalten uebergeben:
 
 ```astro
-<button
-  type="button"
-  data-gallery-trigger="gallery-name"
-  data-full-src={item.image.src}
-  data-alt={item.alt}
-  aria-label={`Bild in Vollansicht oeffnen: ${item.alt}`}
->
-  <!-- Optimiertes Astro Image -->
-</button>
-
-<GalleryLightbox
+<GalleryImageGrid
+  columns={galleryColumns}
   galleryId="gallery-name"
+  label="Galeriename Galerie"
   dialogLabel="Galeriename in Vollansicht"
 />
 ```

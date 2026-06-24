@@ -1,0 +1,517 @@
+---
+import "../../../styles/global.css";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+import art0682 from "../../../assets/paarshooting-mallorca/ART0682-Bearbeitet_thumb.jpg";
+import art0156 from "../../../assets/paarshooting-mallorca/ART0156-Bearbeitet_thumb.jpg";
+import art0193 from "../../../assets/paarshooting-mallorca/ART0193-1-1.jpg";
+import art0874 from "../../../assets/paarshooting-mallorca/ART0874_thumb.jpg";
+import art0262 from "../../../assets/paarshooting-mallorca/ART0262-1-1.jpg";
+import art0690 from "../../../assets/paarshooting-mallorca/ART0690-1.jpg";
+import art0534 from "../../../assets/paarshooting-mallorca/ART0534-Bearbeitet_thumb.jpg";
+import art0583 from "../../../assets/paarshooting-mallorca/ART0583_thumb.jpg";
+import art0346 from "../../../assets/paarshooting-mallorca/ART0346_thumb.jpg";
+import art9903 from "../../../assets/paarshooting-mallorca/ART9903-Wiederhergestellt_thumb.jpg";
+import art9774 from "../../../assets/paarshooting-mallorca/ART9774-Bearbeitet_thumb.jpg";
+import art0759 from "../../../assets/paarshooting-mallorca/ART0759-Wiederhergestellt_thumb.jpg";
+import art0862 from "../../../assets/paarshooting-mallorca/ART0862-1.jpg";
+import art0783 from "../../../assets/paarshooting-mallorca/ART0783-1.jpg";
+import art9896 from "../../../assets/paarshooting-mallorca/ART9896-1-1.jpg";
+import art0593 from "../../../assets/paarshooting-mallorca/ART0593-1.jpg";
+import art9470 from "../../../assets/paarshooting-mallorca/ART9470-1.jpg";
+import art9910 from "../../../assets/paarshooting-mallorca/ART9910-1-1.jpg";
+import art9457 from "../../../assets/paarshooting-mallorca/ART9457-1-1.jpg";
+import art9407 from "../../../assets/paarshooting-mallorca/ART9407-1-1.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/paarshooting-mallorca/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Paarshooting Mallorca | Artbild-Fotografie";
+const pageHeading = "Paarshooting Mallorca";
+const description = "Paarshooting auf Mallorca mit natürlichen Paarportraits, mediterranem Licht sowie Stadt- und Meerblick. Fotografiert von Artbild-Fotografie.";
+const originalImageUrl = "https://artbild-fotografie.de/wp-content/uploads/2019/11/ART0682-Bearbeitet_thumb.jpg";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const galleryImages = [
+  { id: "art-0682", image: art0682, alt: "Inniges Paarportrait auf einer Dachterrasse auf Mallorca", aspect: "landscape" },
+  { id: "art-0156", image: art0156, alt: "Paar tanzt mit Meerblick auf einer Dachterrasse auf Mallorca", aspect: "landscape" },
+  { id: "art-0193", image: art0193, alt: "Lachendes Paar beim Schwarzweiß-Portrait auf Mallorca", aspect: "landscape" },
+  { id: "art-0874", image: art0874, alt: "Paar im warmen Gegenlicht beim Mallorca-Shooting", aspect: "landscape" },
+  { id: "art-0262", image: art0262, alt: "Blick über Dächer und helle Häuser auf Mallorca", aspect: "landscape" },
+  { id: "art-0690", image: art0690, alt: "Paar küsst sich über den Dächern von Mallorca", aspect: "landscape" },
+  { id: "art-0534", image: art0534, alt: "Hochformat-Portrait einer Frau im mediterranen Licht", aspect: "portrait" },
+  { id: "art-0583", image: art0583, alt: "Ruhiges Schwarzweiß-Portrait auf einer Dachterrasse", aspect: "landscape" },
+  { id: "art-0346", image: art0346, alt: "Elegantes Paarportrait mit Fliege und hellem Kleid auf Mallorca", aspect: "landscape" },
+  { id: "art-9903", image: art9903, alt: "Natürliches Paarportrait mit Blick über den Ort auf Mallorca", aspect: "landscape" },
+  { id: "art-9774", image: art9774, alt: "Spiegelung eines Paares in einem Fenster auf Mallorca", aspect: "landscape" },
+  { id: "art-0759", image: art0759, alt: "Nahes Paarportrait in mediterranem Sonnenlicht", aspect: "landscape" },
+  { id: "art-0862", image: art0862, alt: "Paar im Gegenlicht bei einem Schwarzweiß-Shooting auf Mallorca", aspect: "landscape" },
+  { id: "art-0783", image: art0783, alt: "Schwarzweiß-Portrait eines küssenden Paares", aspect: "landscape" },
+  { id: "art-9896", image: art9896, alt: "Lachendes Paar bei einem entspannten Mallorca-Shooting", aspect: "landscape" },
+  { id: "art-0593", image: art0593, alt: "Paar hält sich auf einer mallorquinischen Dachterrasse an den Händen", aspect: "landscape" },
+  { id: "art-9470", image: art9470, alt: "Paar umarmt sich ausgelassen über den Dächern Mallorcas", aspect: "landscape" },
+  { id: "art-9910", image: art9910, alt: "Portrait eines Mannes mit Meer- und Stadtblick auf Mallorca", aspect: "landscape" },
+  { id: "art-9457", image: art9457, alt: "Paar tanzt bei einem Schwarzweiß-Shooting auf Mallorca", aspect: "landscape" },
+  { id: "art-9407", image: art9407, alt: "Mediterraner Ausblick von einer Dachterrasse auf Mallorca", aspect: "landscape" },
+];
+
+const galleryColumns = [
+  ["art-0682", "art-0874", "art-0534", "art-9903", "art-0862", "art-0593", "art-9457"],
+  ["art-0156", "art-0262", "art-0583", "art-9774", "art-0783", "art-9470", "art-9407"],
+  ["art-0193", "art-0690", "art-0346", "art-0759", "art-9896", "art-9910"],
+].map((column) => column.map((id) => galleryImages.find((item) => item.id === id)).filter(Boolean));
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: pageHeading,
+      name: pageHeading,
+      description,
+      keywords: "Paarshooting Mallorca, Paarfotografie Mallorca, Fotograf Mallorca, Hochzeitsfotograf Mallorca",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      datePublished: "2019-11-24T17:45:58+01:00",
+      dateModified: "2020-05-27T13:04:50+02:00",
+      image: {
+        "@id": `${pageUrl}#primaryimage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#place`,
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: pageHeading,
+      description,
+      about: {
+        "@id": `${pageUrl}#place`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentLocation: {
+          "@id": `${pageUrl}#place`,
+        },
+      })),
+    },
+    {
+      "@type": "Place",
+      "@id": `${pageUrl}#place`,
+      name: "Mallorca",
+      address: {
+        "@type": "PostalAddress",
+        addressRegion: "Balearische Inseln",
+        addressCountry: "ES",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 39.6953,
+        longitude: 2.8931,
+      },
+      containedInPlace: {
+        "@type": "Country",
+        name: "Spanien",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: originalImageUrl,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+      },
+      areaServed: [
+        {
+          "@id": `${pageUrl}#place`,
+        },
+        {
+          "@type": "City",
+          name: "Hamburg",
+        },
+      ],
+      serviceType: [
+        "Paarshooting",
+        "Paarfotografie",
+        "Hochzeitsfotografie",
+        "Destination Wedding Photography",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": `${siteUrl}/portfolio/`,
+            name: "Portfolio",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          item: {
+            "@id": pageUrl,
+            name: pageHeading,
+          },
+        },
+      ],
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${pageUrl}#primaryimage`,
+      url: originalImageUrl,
+      contentUrl: originalImageUrl,
+      width: 1384,
+      height: 924,
+      caption: "Paarshooting auf Mallorca",
+      contentLocation: {
+        "@id": `${pageUrl}#place`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2019-11-24T17:45:58+01:00",
+      dateModified: "2020-05-27T13:04:50+02:00",
+      primaryImageOfPage: {
+        "@id": `${pageUrl}#primaryimage`,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      about: {
+        "@id": `${pageUrl}#place`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:publisher" content="https://www.facebook.com/artbildfotografie/">
+  <meta property="article:author" content="https://www.facebook.com/artbildfotografie/">
+  <meta property="article:published_time" content="2019-11-24T17:45:58+01:00">
+  <meta property="article:modified_time" content="2020-05-27T13:04:50+02:00">
+  <meta property="og:image" content={originalImageUrl}>
+  <meta property="og:image:secure_url" content={originalImageUrl}>
+  <meta property="og:image:width" content="1384">
+  <meta property="og:image:height" content="924">
+  <meta property="og:image:alt" content="Paarshooting auf Mallorca">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:site" content="@artbild">
+  <meta name="twitter:creator" content="@artbild">
+  <meta name="twitter:image" content={originalImageUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template mallorca-page">
+  <header class="gallery-header">
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="mallorca-article">
+      <header class="mallorca-hero">
+        <p class="mallorca-script">Hola a Mallorca</p>
+        <h1>{pageHeading}</h1>
+        <p class="mallorca-intro">
+          Eine Paarreportage im mediterranen Licht Mallorcas: natürliche Momente,
+          ruhige Portraits und ein weiter Blick über Dächer, Stadt und Meer.
+        </p>
+      </header>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="paarshooting-mallorca"
+        label="Paarshooting Mallorca Galerie"
+        dialogLabel="Paarshooting Mallorca in Vollansicht"
+      />
+
+      <aside class="mallorca-share" aria-label="Galerie teilen und Schlagworte">
+        <div>
+          <span>Tags:</span>
+          <a href="https://artbild-fotografie.de/gallery-tag/fotograf/">Fotograf</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hochzeit/">Hochzeit</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/mallorca/">Mallorca</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/paarshooting/">Paarshooting</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/paerchen/">Pärchen</a>
+        </div>
+        <div>
+          <span>Share:</span>
+          <a
+            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fpaarshooting-mallorca%2F"
+            aria-label="Paarshooting Mallorca auf Facebook teilen"
+          >f</a>
+          <a
+            href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fpaarshooting-mallorca%2F"
+            aria-label="Paarshooting Mallorca auf Pinterest teilen"
+          >p</a>
+        </div>
+      </aside>
+
+      <section class="mallorca-copy" aria-labelledby="mallorca-reportage-title">
+        <p class="mallorca-kicker">Destination Paarfotografie</p>
+        <h2 id="mallorca-reportage-title">Was kostet eine Hochzeitsreportage an Deinem Wunschort?</h2>
+        <p>
+          Klicke hier, um zu erfahren, was eine Hochzeitsreportage an Deinem
+          Wunschort kostet. Egal wie Du Dich entscheidest: Ich empfehle Dir ein
+          transparentes Festpreisangebot, damit Du verlässlich planen kannst.
+        </p>
+        <p>
+          Artbild-Fotografie begleitet Paare und Hochzeiten auf Mallorca sowie
+          von Hamburg aus an weiteren Reisezielen.
+        </p>
+        <a class="button ghost" href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">
+          Preise ansehen
+        </a>
+      </section>
+
+      <section class="mallorca-instagram" aria-labelledby="mallorca-instagram-title">
+        <h2 id="mallorca-instagram-title">Weitere Geschichten und aktuelle Shootings</h2>
+        <a href="https://www.instagram.com/artbild/" aria-label="Artbild-Fotografie auf Instagram folgen">@ARTBILD</a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .mallorca-article {
+    padding-top: clamp(54px, 5.2vw, 66px);
+  }
+
+  .mallorca-hero {
+    width: min(920px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .mallorca-script {
+    margin: 0;
+    color: #343842;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(32px, 3.4vw, 46px);
+    line-height: 1;
+  }
+
+  .mallorca-hero h1 {
+    margin: clamp(78px, 8vw, 108px) auto 0;
+    color: #34323a;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.4vw, 66px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .mallorca-intro {
+    width: min(720px, 100%);
+    margin: 26px auto 0;
+    color: #655f59;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.65;
+  }
+
+  .mallorca-share {
+    width: min(1140px, calc(100% - 140px));
+    margin: 36px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 22px 44px;
+    color: #555;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .mallorca-share div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    align-items: center;
+  }
+
+  .mallorca-share a {
+    color: #7e746d;
+    text-decoration: none;
+  }
+
+  .mallorca-copy {
+    width: min(820px, calc(100% - 44px));
+    margin: clamp(112px, 12vw, 170px) auto 0;
+    padding: clamp(48px, 6vw, 82px);
+    background: #f3f1ec;
+    text-align: center;
+  }
+
+  .mallorca-kicker {
+    margin: 0 0 24px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+
+  .mallorca-copy h2,
+  .mallorca-instagram h2 {
+    margin: 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(30px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .mallorca-copy > p:not(.mallorca-kicker) {
+    width: min(650px, 100%);
+    margin: 26px auto 0;
+    color: #66605b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .mallorca-copy .button {
+    margin-top: 38px;
+  }
+
+  .mallorca-instagram {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(102px, 11vw, 160px) auto clamp(96px, 10vw, 142px);
+    text-align: center;
+  }
+
+  .mallorca-instagram a {
+    display: inline-flex;
+    margin-top: 34px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-decoration: none;
+  }
+
+  @media (max-width: 980px) {
+    .mallorca-share {
+      width: min(100% - 44px, 760px);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .mallorca-article {
+      padding-top: 48px;
+    }
+
+    .mallorca-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .mallorca-hero h1 {
+      margin-top: 72px;
+    }
+
+    .mallorca-share {
+      width: min(100% - 28px, 460px);
+      justify-content: center;
+      text-align: center;
+    }
+
+    .mallorca-copy {
+      width: min(100% - 28px, 560px);
+      margin-top: 86px;
+      padding: 38px 24px;
+    }
+  }
+</style>

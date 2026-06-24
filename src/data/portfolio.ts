@@ -103,7 +103,7 @@ export const portfolioEntries: PortfolioEntry[] = [
     category: "Couples",
     filter: "Travel",
     date: "24.11.2019",
-    href: "https://artbild-fotografie.de/gallery/paarshooting-mallorca/",
+    href: "/gallery/paarshooting-mallorca/",
     image: paarshootingMallorca,
     alt: "Paarshooting auf Mallorca",
     aspect: "landscape",
