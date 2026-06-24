@@ -1,6 +1,7 @@
 ---
 import "../../../styles/global.css";
 import { Image } from "astro:assets";
+import GalleryLightbox from "../../../components/GalleryLightbox.astro";
 
 import art8413 from "../../../assets/lovebirds-am-elbstrand/art-8413.jpg";
 import art8273 from "../../../assets/lovebirds-am-elbstrand/art-8273.jpg";
@@ -267,7 +268,7 @@ const schemaGraph = {
                 <button
                   class="lovebirds-grid__button"
                   type="button"
-                  data-gallery-trigger
+                  data-gallery-trigger="lovebirds"
                   data-full-src={item.image.src}
                   data-alt={item.alt}
                   aria-label={`Bild in Vollansicht öffnen: ${item.alt}`}
@@ -287,18 +288,10 @@ const schemaGraph = {
         ))}
       </section>
 
-      <div class="lovebirds-lightbox" data-gallery-lightbox hidden>
-        <button class="lovebirds-lightbox__backdrop" type="button" data-gallery-close aria-label="Vollansicht schließen"></button>
-        <div class="lovebirds-lightbox__dialog" role="dialog" aria-modal="true" aria-label="Bild Vollansicht">
-          <button class="lovebirds-lightbox__close" type="button" data-gallery-close aria-label="Vollansicht schließen">×</button>
-          <button class="lovebirds-lightbox__nav is-prev" type="button" data-gallery-prev aria-label="Vorheriges Bild">‹</button>
-          <figure class="lovebirds-lightbox__figure">
-            <img data-gallery-image alt="">
-            <figcaption data-gallery-caption></figcaption>
-          </figure>
-          <button class="lovebirds-lightbox__nav is-next" type="button" data-gallery-next aria-label="Nächstes Bild">›</button>
-        </div>
-      </div>
+      <GalleryLightbox
+        galleryId="lovebirds"
+        dialogLabel="Lovebirds am Elbstrand in Vollansicht"
+      />
 
       <aside class="lovebirds-share" aria-label="Artikel teilen und Schlagworte">
         <div>
@@ -442,70 +435,6 @@ const schemaGraph = {
         items.forEach((item) => observer.observe(item));
       }
 
-      const triggers = [...document.querySelectorAll("[data-gallery-trigger]")];
-      const lightbox = document.querySelector("[data-gallery-lightbox]");
-      const image = document.querySelector("[data-gallery-image]");
-      const caption = document.querySelector("[data-gallery-caption]");
-      const closeButtons = [...document.querySelectorAll("[data-gallery-close]")];
-      const prevButton = document.querySelector("[data-gallery-prev]");
-      const nextButton = document.querySelector("[data-gallery-next]");
-      let activeIndex = 0;
-      let lastFocused = null;
-
-      if (!triggers.length || !lightbox || !image || !caption || !prevButton || !nextButton) return;
-
-      const slides = triggers.map((trigger) => {
-        const thumbnail = trigger.querySelector("img");
-        return {
-          button: trigger,
-          src: trigger.dataset.fullSrc || thumbnail?.currentSrc || thumbnail?.src || "",
-          alt: trigger.dataset.alt || thumbnail?.alt || "",
-        };
-      });
-
-      const show = (index) => {
-        activeIndex = (index + slides.length) % slides.length;
-        const slide = slides[activeIndex];
-        image.src = slide.src;
-        image.alt = slide.alt;
-        caption.textContent = slide.alt;
-      };
-
-      const open = (index) => {
-        lastFocused = document.activeElement;
-        show(index);
-        lightbox.hidden = false;
-        document.documentElement.classList.add("has-lightbox");
-        requestAnimationFrame(() => {
-          lightbox.classList.add("is-open");
-          nextButton.focus();
-        });
-      };
-
-      const close = () => {
-        lightbox.classList.remove("is-open");
-        document.documentElement.classList.remove("has-lightbox");
-        window.setTimeout(() => {
-          lightbox.hidden = true;
-          image.removeAttribute("src");
-          if (lastFocused && typeof lastFocused.focus === "function") lastFocused.focus();
-        }, 180);
-      };
-
-      triggers.forEach((trigger, index) => {
-        trigger.addEventListener("click", () => open(index));
-      });
-
-      closeButtons.forEach((button) => button.addEventListener("click", close));
-      prevButton.addEventListener("click", () => show(activeIndex - 1));
-      nextButton.addEventListener("click", () => show(activeIndex + 1));
-
-      document.addEventListener("keydown", (event) => {
-        if (lightbox.hidden) return;
-        if (event.key === "Escape") close();
-        if (event.key === "ArrowLeft") show(activeIndex - 1);
-        if (event.key === "ArrowRight") show(activeIndex + 1);
-      });
     })();
   </script>
 </body>
@@ -629,127 +558,6 @@ const schemaGraph = {
   .lovebirds-grid__item.is-muted .lovebirds-grid__button:hover :global(img),
   .lovebirds-grid__item.is-muted .lovebirds-grid__button:focus-visible :global(img) {
     filter: grayscale(1) brightness(.92);
-  }
-
-  .has-lightbox {
-    overflow: hidden;
-  }
-
-  .lovebirds-lightbox {
-    position: fixed;
-    z-index: 1000;
-    inset: 0;
-    display: grid;
-    place-items: center;
-    padding: clamp(18px, 4vw, 52px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
-  }
-
-  .lovebirds-lightbox[hidden] {
-    display: none;
-  }
-
-  .lovebirds-lightbox.is-open {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .lovebirds-lightbox__backdrop {
-    position: absolute;
-    inset: 0;
-    border: 0;
-    background: rgba(15, 15, 16, .88);
-    cursor: zoom-out;
-  }
-
-  .lovebirds-lightbox__dialog {
-    position: relative;
-    width: min(100%, 1380px);
-    height: min(100%, 900px);
-    display: grid;
-    grid-template-columns: minmax(44px, 70px) minmax(0, 1fr) minmax(44px, 70px);
-    align-items: center;
-    gap: clamp(10px, 2vw, 26px);
-  }
-
-  .lovebirds-lightbox__figure {
-    min-width: 0;
-    max-height: 100%;
-    margin: 0;
-    display: grid;
-    justify-items: center;
-    gap: 18px;
-  }
-
-  .lovebirds-lightbox__figure img {
-    max-width: 100%;
-    max-height: min(78vh, 780px);
-    display: block;
-    object-fit: contain;
-    box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
-  }
-
-  .lovebirds-lightbox__figure figcaption {
-    color: rgba(255, 255, 255, .78);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .18em;
-    line-height: 1.5;
-    text-align: center;
-    text-transform: uppercase;
-  }
-
-  .lovebirds-lightbox__close,
-  .lovebirds-lightbox__nav {
-    border: 0;
-    background: rgba(255, 255, 255, .08);
-    color: #fff;
-    cursor: pointer;
-    transition: background 180ms ease, transform 180ms ease;
-  }
-
-  .lovebirds-lightbox__close:hover,
-  .lovebirds-lightbox__nav:hover,
-  .lovebirds-lightbox__close:focus-visible,
-  .lovebirds-lightbox__nav:focus-visible {
-    background: rgba(255, 255, 255, .18);
-  }
-
-  .lovebirds-lightbox__close:focus-visible,
-  .lovebirds-lightbox__nav:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 4px;
-  }
-
-  .lovebirds-lightbox__close {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    width: 46px;
-    height: 46px;
-    border-radius: 50%;
-    font-size: 30px;
-    line-height: 1;
-  }
-
-  .lovebirds-lightbox__nav {
-    width: clamp(44px, 5vw, 64px);
-    height: clamp(44px, 5vw, 64px);
-    border-radius: 50%;
-    font-size: clamp(34px, 5vw, 54px);
-    line-height: 1;
-  }
-
-  .lovebirds-lightbox__nav.is-prev {
-    justify-self: end;
-  }
-
-  .lovebirds-lightbox__nav.is-next {
-    justify-self: start;
   }
 
   @keyframes lovebirdsReveal {
@@ -1029,29 +837,6 @@ const schemaGraph = {
       grid-template-columns: 1fr;
     }
 
-    .lovebirds-lightbox {
-      padding: 16px;
-    }
-
-    .lovebirds-lightbox__dialog {
-      height: 100%;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr auto;
-      gap: 14px;
-    }
-
-    .lovebirds-lightbox__figure {
-      grid-column: 1 / -1;
-    }
-
-    .lovebirds-lightbox__figure img {
-      max-height: 74vh;
-    }
-
-    .lovebirds-lightbox__nav.is-prev,
-    .lovebirds-lightbox__nav.is-next {
-      justify-self: center;
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -1061,8 +846,7 @@ const schemaGraph = {
       animation: none;
     }
 
-    .lovebirds-grid__item :global(img),
-    .lovebirds-lightbox {
+    .lovebirds-grid__item :global(img) {
       transition: none;
     }
   }

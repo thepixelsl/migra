@@ -1,0 +1,325 @@
+---
+interface Props {
+  galleryId: string;
+  dialogLabel?: string;
+}
+
+const {
+  galleryId,
+  dialogLabel = "Bildgalerie in Vollansicht",
+} = Astro.props;
+---
+
+<div class="gallery-lightbox" data-gallery-lightbox={galleryId} hidden>
+  <button
+    class="gallery-lightbox__backdrop"
+    type="button"
+    data-gallery-close
+    aria-label="Vollansicht schließen"
+  ></button>
+  <div
+    class="gallery-lightbox__dialog"
+    role="dialog"
+    aria-modal="true"
+    aria-label={dialogLabel}
+  >
+    <button
+      class="gallery-lightbox__close"
+      type="button"
+      data-gallery-close
+      aria-label="Vollansicht schließen"
+    >
+      <span aria-hidden="true"></span>
+    </button>
+    <figure class="gallery-lightbox__figure">
+      <div class="gallery-lightbox__stage">
+        <button
+          class="gallery-lightbox__nav is-prev"
+          type="button"
+          data-gallery-prev
+          aria-label="Vorheriges Bild"
+        >
+          <span aria-hidden="true"></span>
+        </button>
+        <img data-gallery-image alt="">
+        <button
+          class="gallery-lightbox__nav is-next"
+          type="button"
+          data-gallery-next
+          aria-label="Nächstes Bild"
+        >
+          <span aria-hidden="true"></span>
+        </button>
+      </div>
+      <figcaption data-gallery-caption></figcaption>
+    </figure>
+  </div>
+</div>
+
+<script is:inline define:vars={{ galleryId }}>
+  (() => {
+    const triggers = [...document.querySelectorAll(`[data-gallery-trigger="${galleryId}"]`)];
+    const lightbox = document.querySelector(`[data-gallery-lightbox="${galleryId}"]`);
+    if (!triggers.length || !lightbox) return;
+
+    const image = lightbox.querySelector("[data-gallery-image]");
+    const caption = lightbox.querySelector("[data-gallery-caption]");
+    const closeButtons = [...lightbox.querySelectorAll("[data-gallery-close]")];
+    const previousButton = lightbox.querySelector("[data-gallery-prev]");
+    const nextButton = lightbox.querySelector("[data-gallery-next]");
+    if (!image || !caption || !previousButton || !nextButton) return;
+
+    const slides = triggers.map((trigger) => {
+      const thumbnail = trigger.querySelector("img");
+      return {
+        src: trigger.dataset.fullSrc || thumbnail?.currentSrc || thumbnail?.src || "",
+        alt: trigger.dataset.alt || thumbnail?.alt || "",
+      };
+    });
+
+    let activeIndex = 0;
+    let lastFocused = null;
+
+    const show = (index) => {
+      activeIndex = (index + slides.length) % slides.length;
+      const slide = slides[activeIndex];
+      image.src = slide.src;
+      image.alt = slide.alt;
+      caption.textContent = slide.alt;
+    };
+
+    const open = (index) => {
+      lastFocused = document.activeElement;
+      show(index);
+      lightbox.hidden = false;
+      document.documentElement.classList.add("has-gallery-lightbox");
+      requestAnimationFrame(() => {
+        lightbox.classList.add("is-open");
+        nextButton.focus();
+      });
+    };
+
+    const close = () => {
+      lightbox.classList.remove("is-open");
+      document.documentElement.classList.remove("has-gallery-lightbox");
+      window.setTimeout(() => {
+        lightbox.hidden = true;
+        image.removeAttribute("src");
+        if (lastFocused instanceof HTMLElement) lastFocused.focus();
+      }, 180);
+    };
+
+    triggers.forEach((trigger, index) => {
+      trigger.addEventListener("click", () => open(index));
+    });
+    closeButtons.forEach((button) => button.addEventListener("click", close));
+    previousButton.addEventListener("click", () => show(activeIndex - 1));
+    nextButton.addEventListener("click", () => show(activeIndex + 1));
+
+    document.addEventListener("keydown", (event) => {
+      if (lightbox.hidden) return;
+      if (event.key === "Escape") close();
+      if (event.key === "ArrowLeft") show(activeIndex - 1);
+      if (event.key === "ArrowRight") show(activeIndex + 1);
+    });
+  })();
+</script>
+
+<style>
+  :global(html.has-gallery-lightbox) {
+    overflow: hidden;
+  }
+
+  .gallery-lightbox {
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: clamp(18px, 4vw, 52px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .gallery-lightbox[hidden] {
+    display: none;
+  }
+
+  .gallery-lightbox.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .gallery-lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgba(15, 15, 16, .88);
+    cursor: zoom-out;
+  }
+
+  .gallery-lightbox__dialog {
+    position: relative;
+    width: min(100%, 1480px);
+    max-height: 100%;
+  }
+
+  .gallery-lightbox__figure {
+    min-width: 0;
+    max-height: 100%;
+    margin: 0;
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+  }
+
+  .gallery-lightbox__stage {
+    --nav-size: clamp(44px, 5vw, 64px);
+    width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: var(--nav-size) minmax(0, 1fr) var(--nav-size);
+    align-items: center;
+    gap: clamp(10px, 2vw, 26px);
+  }
+
+  .gallery-lightbox__stage img {
+    min-width: 0;
+    max-width: 100%;
+    max-height: min(78vh, 780px);
+    display: block;
+    justify-self: center;
+    object-fit: contain;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, .28);
+  }
+
+  .gallery-lightbox__figure figcaption {
+    color: rgba(255, 255, 255, .78);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.5;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .gallery-lightbox__close,
+  .gallery-lightbox__nav {
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: var(--nav-size, 46px);
+    height: var(--nav-size, 46px);
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+  }
+
+  .gallery-lightbox__close:hover,
+  .gallery-lightbox__nav:hover,
+  .gallery-lightbox__close:focus-visible,
+  .gallery-lightbox__nav:focus-visible {
+    background: rgba(255, 255, 255, .18);
+  }
+
+  .gallery-lightbox__close:focus-visible,
+  .gallery-lightbox__nav:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 4px;
+  }
+
+  .gallery-lightbox__close {
+    --nav-size: 46px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  .gallery-lightbox__close span,
+  .gallery-lightbox__close span::after {
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background: currentColor;
+    content: "";
+  }
+
+  .gallery-lightbox__close span {
+    transform: rotate(45deg);
+  }
+
+  .gallery-lightbox__close span::after {
+    left: 0;
+    transform: rotate(90deg);
+  }
+
+  .gallery-lightbox__nav span {
+    width: 14px;
+    height: 14px;
+    border-block-start: 3px solid currentColor;
+    border-inline-start: 3px solid currentColor;
+  }
+
+  .gallery-lightbox__nav.is-prev {
+    justify-self: end;
+  }
+
+  .gallery-lightbox__nav.is-prev span {
+    transform: translateX(2px) rotate(-45deg);
+  }
+
+  .gallery-lightbox__nav.is-next {
+    justify-self: start;
+  }
+
+  .gallery-lightbox__nav.is-next span {
+    transform: translateX(-2px) rotate(135deg);
+  }
+
+  @media (max-width: 620px) {
+    .gallery-lightbox {
+      padding: 16px;
+    }
+
+    .gallery-lightbox__stage {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
+    }
+
+    .gallery-lightbox__stage img {
+      max-height: 74vh;
+    }
+
+    .gallery-lightbox__nav {
+      --nav-size: 48px;
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(15, 15, 16, .48);
+    }
+
+    .gallery-lightbox__nav.is-prev {
+      left: 8px;
+    }
+
+    .gallery-lightbox__nav.is-next {
+      right: 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gallery-lightbox {
+      transition: none;
+    }
+  }
+</style>
