@@ -1,0 +1,705 @@
+---
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/braut-fotoshooting-hamburg/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/hochzeit-braut-fotoshooting-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Braut Fotoshooting Hamburg";
+const title = "Braut Fotoshooting Hamburg im Hotel Atlantic | Artbild-Fotografie";
+const description =
+  "Editoriales Braut Fotoshooting und Getting Ready im Hotel Atlantic Hamburg: Brautkleider, Styling und zeitlose Hochzeitsfotografie an der Alster.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "ART_8686-Bearbeitet-2-scaled.jpg": "Braut Marica mit Schleier beim Fotoshooting im Hotel Atlantic Hamburg",
+  "ART_0005-scaled.jpg": "Elegantes Brautportrait im Hotelzimmer des Hotel Atlantic Hamburg",
+  "ART_9987-Bearbeitet-scaled.jpg": "Braut in weißem Kleid auf dem Bett einer Hotelsuite in Hamburg",
+  "ART_9546-Verbessert-RR-Bearbeitet-scaled.jpg": "Braut im modernen Hochzeitskleid bei einem Bridal Shooting in Hamburg",
+  "ART_9290-Bearbeitet-scaled.jpg": "Klassisches Brautportrait mit rotem Lippenstift im Hotel Atlantic",
+  "ART_8902-Bearbeitet-scaled.jpg": "Braut mit Perlenkette und Haarschmuck am Fenster einer Hamburger Suite",
+  "ART_8855-Bearbeitet-scaled.jpg": "Nachdenkliche Braut im Spitzenkleid am Fenster des Hotel Atlantic",
+  "ART_9808-scaled.jpg": "Braut mit Schleier beim editorialen Hochzeitsshooting in Hamburg",
+  "ART_9664-scaled.jpg": "Brautkleid mit langer Schleppe in einer Suite des Hotel Atlantic",
+  "ART_0011-Bearbeitet-scaled.jpg": "Portrait einer Braut mit elegantem Haarstyling und rotem Lippenstift",
+  "ART_9644-Bearbeitet-scaled.jpg": "Braut im Hochzeitskleid vor der klassischen Tür einer Hotelsuite",
+  "ART_9985-Bearbeitet-scaled.jpg": "Braut sitzt im weißen Kleid auf einem Hotelbett in Hamburg",
+  "ART_0102-Bearbeitet-scaled.jpg": "Brautportrait im natürlichen Fensterlicht des Hotel Atlantic",
+  "ART_9996-Bearbeitet-1024x683.jpg": "Nahaufnahme der Braut mit Blumen im Haar in einer Hamburger Suite",
+  "ART_0023-Bearbeitet-scaled.jpg": "Schwarz-Weiß-Portrait einer Braut mit kunstvoller Hochsteckfrisur",
+  "ART_0021-Bearbeitet-scaled.jpg": "Nahaufnahme der Braut mit natürlichem Make-up und roten Lippen",
+  "ART_0096-Bearbeitet-Bearbeitet-scaled.jpg": "Braut im weißen Kleid vor einem großen Fenster in Hamburg",
+  "ART_0007-Bearbeitet-scaled.jpg": "Braut mit luftiger Hochsteckfrisur und modernem Hochzeitskleid",
+  "ART_9978-Bearbeitet-1024x683.jpg": "Braut mit rosa Blumen im Haar vor dem Bett einer Hotelsuite",
+  "ART_9984-Bearbeitet-scaled.jpg": "Romantisches Brautportrait auf einem Bett im Hotel Atlantic Hamburg",
+  "ART_8886-Bearbeitet-scaled.jpg": "Braut mit Perlenhaarschmuck im weichen Fensterlicht einer Suite",
+  "ART_9842-Bearbeitet-scaled.jpg": "Braut unter einem Tüllschleier beim Fotoshooting in Hamburg",
+  "ART_9972-Bearbeitet-scaled.jpg": "Braut mit Blumen im Haar sitzt auf einem Hotelbett",
+  "ART_8882-Bearbeitet-scaled.jpg": "Zeitloses Brautportrait mit Perlenkette im natürlichen Licht",
+  "ART_9306-Bearbeitet-scaled.jpg": "Braut im eleganten Kleid vor dem Fenster des Hotel Atlantic",
+  "ART_9170-Bearbeitet-1024x683.jpg": "Editoriales Brautportrait in einer stilvollen Hamburger Hotelsuite",
+  "ART_8851-Bearbeitet-scaled.jpg": "Braut blickt vor der Hochzeit aus dem Fenster ihrer Suite",
+  "ART_8691-Bearbeitet-scaled.jpg": "Strahlende Braut im Spitzenkleid mit langem Schleier",
+  "ART_8608-Bearbeitet-Bearbeitet-scaled.jpg": "Braut im Spitzenkleid während des Getting Ready im Hotel Atlantic",
+  "ART_9463-Bearbeitet-1-scaled.jpg": "Braut im fließenden Hochzeitskleid auf einem Hotelbett",
+  "ART_9477-Bearbeitet-1-scaled.jpg": "Portrait einer Braut mit Schleier im Hotel Atlantic Hamburg",
+  "ART_9793-Verbessert-RR-Bearbeitet-1-scaled.jpg": "Braut im weißen Kleid mit Schleier in einer Hamburger Suite",
+  "ART_9816-1-scaled.jpg": "Braut spielt beim Fotoshooting mit ihrem langen Tüllschleier",
+  "ART_8286-Bearbeitet-1-1024x683.jpg": "Willkommensdesserts des Hotel Atlantic für das Brautshooting",
+  "ART_9808-Verbessert-RR-Bearbeitet-1-scaled.jpg": "Braut zeigt die Rückansicht ihres Hochzeitskleides im Hotelzimmer",
+  "ART_9474-Bearbeitet-1-scaled.jpg": "Braut mit Schleier sitzt auf dem Bett einer eleganten Hotelsuite",
+  "ART_9814-Bearbeitet-1-819x1024.jpg": "Brautportrait unter einem feinen Schleier im Hotel Atlantic",
+  "ART_9456-Bearbeitet-1-scaled.jpg": "Braut im modernen Kleid vor dem Bett einer Hamburger Suite",
+  "ART_8704-Bearbeitet-1-scaled.jpg": "Braut im Spitzenkleid und Schleier beim Getting Ready",
+  "ART_8427-Bearbeitet-2-1024x683.jpg": "Stylistin arbeitet am Make-up der Braut im Hotel Atlantic",
+  "ART_8802-Verbessert-RR-1-scaled.jpg": "Braut sitzt im Spitzenkleid auf dem Bett ihrer Hotelsuite",
+  "ART_8791-Bearbeitet-2-1-scaled.jpg": "Professionelles Brautstyling vor dem Fotoshooting in Hamburg",
+  "ART_8700-Bearbeitet-1-scaled.jpg": "Braut steht mit Schleier und Spitzenkleid im Hotelzimmer",
+  "ART_8242-Bearbeitet-1-scaled.jpg": "Braut vor dem Styling im gepunkteten Morgenmantel",
+  "ART_8619-Bearbeitet-2-1-scaled.jpg": "Rückansicht der Braut mit Schleier und Spitzenkleid",
+  "ART_8686-Bearbeitet-1-scaled.jpg": "Braut mit Schleier und Spitzenkleid im Hotel Atlantic Hamburg",
+  "ART_8434-2-scaled.jpg": "Braut wartet im Morgenmantel auf das Styling im Hotelzimmer",
+  "ART_8324-1024x683.jpg": "Friseurin formt die Brautfrisur beim Getting Ready in Hamburg",
+  "ART_8308-Bearbeitet-1024x683.jpg": "Schwarz-Weiß-Aufnahme des Haarstylings vor der Hochzeit",
+  "ART_8546-2-1024x683.jpg": "Braut während des Make-ups in einer Suite des Hotel Atlantic",
+  "ART_8426-2-1024x683.jpg": "Braut schaut während des Stylings in einen Spiegel",
+  "ART_8452-2-scaled.jpg": "Braut im Morgenmantel während der Hochzeitsvorbereitungen",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const itemsPerColumn = Math.ceil(galleryImages.length / 3);
+const galleryColumns = [
+  galleryImages.slice(0, itemsPerColumn),
+  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
+  galleryImages.slice(itemsPerColumn * 2),
+];
+
+const primaryImage = new URL(galleryImages[0].image.src, siteUrl).href;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Braut Fotoshooting Hamburg",
+        "Getting Ready Hamburg",
+        "Hotel Atlantic Hochzeit",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      datePublished: "2024-09-19T10:49:12+02:00",
+      dateModified: "2026-06-24T22:00:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#hotel-atlantic`,
+      },
+      mentions: [
+        {
+          "@type": "Organization",
+          name: "LILLY Brautkleider",
+          url: "https://www.lilly.de/",
+        },
+        {
+          "@type": "Person",
+          name: "Manija Biebow",
+          jobTitle: "Diplom-Visagistin und Friseurmeisterin",
+          url: "https://www.salon-manija-hamburg.de/",
+        },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Braut Fotoshooting und Getting Ready im Hotel Atlantic Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#hotel-atlantic`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "Hotel",
+      "@id": `${pageUrl}#hotel-atlantic`,
+      name: "Hotel Atlantic Hamburg",
+      url: "https://brhhh.com/atlantic-hamburg/",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "An der Alster 72-79",
+        postalCode: "20099",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      containedInPlace: {
+        "@type": "City",
+        name: "Hamburg",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Braut Fotoshooting",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2024-09-19T10:49:12+02:00",
+      dateModified: "2026-06-24T22:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: galleryImages[0].alt,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2024-09-19T10:49:12+02:00">
+  <meta property="article:modified_time" content="2026-06-24T22:00:00+02:00">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:width" content={galleryImages[0].image.width}>
+  <meta property="og:image:height" content={galleryImages[0].image.height}>
+  <meta property="og:image:alt" content={galleryImages[0].alt}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template bridal-gallery-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="bridal-gallery">
+      <header class="bridal-hero">
+        <p class="bridal-hero__script" aria-hidden="true">Marica im Hotel Atlantic</p>
+        <p class="bridal-hero__kicker">Getting Ready · Hamburg an der Alster</p>
+        <h1>{heading}</h1>
+        <p>
+          Der Hochzeitsmorgen lebt von Vorfreude, leisen Handgriffen und den
+          ersten emotionalen Momenten des Tages. Dieses Bridal Editorial zeigt
+          Marica in einer Suite des Hotel Atlantic Hamburg.
+        </p>
+      </header>
+
+      <section class="bridal-story" aria-labelledby="bridal-story-title">
+        <div class="bridal-story__heading">
+          <p>Hochzeitsmorgen in Hamburg</p>
+          <h2 id="bridal-story-title">Brautstyling, Kleider und zeitlose Portraits</h2>
+        </div>
+        <div class="bridal-story__copy">
+          <div>
+            <h3>Getting Ready in einer Suite</h3>
+            <p>
+              Eine großzügige Hotelsuite schafft Ruhe für das Anziehen des
+              Brautkleides, das Anlegen des Schleiers und die letzten
+              Handgriffe der Stylistin. Natürliches Fensterlicht lässt dabei
+              persönliche und ästhetische Hochzeitsfotos entstehen.
+            </p>
+          </div>
+          <div>
+            <h3>Brautkleider und Styling</h3>
+            <p>
+              Für das Fotoshooting kamen zwei Brautkleider von
+              <a href="https://www.lilly.de/">LILLY</a> zum Einsatz. Das Styling
+              von Marica übernahm Diplom-Visagistin und Friseurmeisterin
+              <a href="https://www.salon-manija-hamburg.de/">Manija Biebow</a>.
+            </p>
+          </div>
+          <div>
+            <h3>Hotel Atlantic Hamburg</h3>
+            <p>
+              Die klassische Suite an der Außenalster bietet einen
+              wetterunabhängigen Rahmen für Getting-Ready-Bilder und
+              Brautportraits. Vielen Dank an das
+              <a href="https://brhhh.com/atlantic-hamburg/">Hotel Atlantic</a>
+              für die liebevolle Überraschung in der Suite.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="braut-fotoshooting-hamburg"
+        label="Braut Fotoshooting und Getting Ready im Hotel Atlantic Hamburg"
+        dialogLabel="Braut Fotoshooting Hamburg in Vollansicht"
+      />
+
+      <aside class="bridal-meta" aria-label="Galeriethemen">
+        <span>Themen:</span>
+        <a href="https://artbild-fotografie.de/gallery-tag/getting-ready/">Getting Ready</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/braut/">Braut</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hochzeitsfotos/">Hochzeitsfotos</a>
+      </aside>
+
+      <section class="bridal-cta" aria-labelledby="bridal-cta-title">
+        <p class="bridal-cta__kicker">Euer Hochzeitsmorgen</p>
+        <h2 id="bridal-cta-title">Getting Ready und Hochzeitsreportage in Hamburg</h2>
+        <p>
+          Gerne begleite ich Eure Geschichte von den ersten Vorbereitungen bis
+          zum großen Finale. Gemeinsam planen wir Licht, Zeit und einen Ort,
+          der zu Euch und Eurem Hochzeitstag passt.
+        </p>
+        <div>
+          <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Preise & Pakete ansehen</a>
+          <a class="is-primary" href="https://artbild-fotografie.de/kontakt/">Freien Termin anfragen</a>
+        </div>
+      </section>
+
+      <nav class="bridal-related" aria-label="Weitere Hochzeitsinspiration aus Hamburg">
+        <a href="/gallery/hochzeitsfotos-hamburg/">
+          <span>Fraser Suites</span>
+          Hochzeitsfotos Hamburg
+        </a>
+        <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+          <span>Planung</span>
+          Das perfekte Getting Ready
+        </a>
+        <a href="/portfolio/">
+          <span>Portfolio</span>
+          Weitere Hochzeiten und Shootings
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .bridal-gallery {
+    padding-top: clamp(74px, 7.4vw, 104px);
+  }
+
+  .bridal-hero {
+    width: min(1040px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .bridal-hero__script {
+    margin: 0;
+    color: #31343d;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    line-height: 1;
+  }
+
+  .bridal-hero__kicker {
+    margin: clamp(72px, 7vw, 98px) 0 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .bridal-hero h1 {
+    margin: 20px 0 0;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(42px, 5.4vw, 76px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .bridal-hero > p:last-child {
+    width: min(780px, 100%);
+    margin: 30px auto 0;
+    color: #6b655f;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.68;
+  }
+
+  .bridal-story {
+    width: min(1220px, calc(100% - 92px));
+    margin: clamp(92px, 9vw, 138px) auto 0;
+    padding: clamp(68px, 7vw, 102px) clamp(34px, 6vw, 86px);
+    background: #f5f3ef;
+  }
+
+  .bridal-story__heading {
+    width: min(780px, 100%);
+  }
+
+  .bridal-story__heading p,
+  .bridal-cta__kicker {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .bridal-story__heading h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .bridal-story__copy {
+    margin-top: clamp(50px, 6vw, 78px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(30px, 4vw, 60px);
+  }
+
+  .bridal-story__copy h3 {
+    margin: 0 0 18px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .bridal-story__copy p,
+  .bridal-cta > p:not(.bridal-cta__kicker) {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .bridal-story a {
+    color: inherit;
+    text-decoration-color: #b7a99d;
+    text-underline-offset: 4px;
+  }
+
+  .bridal-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .bridal-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .bridal-meta a:hover,
+  .bridal-meta a:focus-visible {
+    color: #8a6d5a;
+  }
+
+  .bridal-cta {
+    width: min(850px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    text-align: center;
+  }
+
+  .bridal-cta h2 {
+    margin: 20px 0 26px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .bridal-cta > p:not(.bridal-cta__kicker) {
+    width: min(690px, 100%);
+    margin-inline: auto;
+  }
+
+  .bridal-cta div {
+    margin-top: 38px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .bridal-cta a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .bridal-cta a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .bridal-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .bridal-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .bridal-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .bridal-related span {
+    margin-bottom: 14px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .bridal-related a:hover,
+  .bridal-related a:focus-visible {
+    background: #f5f3ef;
+  }
+
+  .bridal-meta a:focus-visible,
+  .bridal-story a:focus-visible,
+  .bridal-cta a:focus-visible,
+  .bridal-related a:focus-visible {
+    outline: 2px solid #8a6d5a;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 880px) {
+    .bridal-story__copy {
+      grid-template-columns: 1fr;
+    }
+
+    .bridal-story__copy div {
+      max-width: 680px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .bridal-gallery {
+      padding-top: 48px;
+    }
+
+    .bridal-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .bridal-hero__kicker {
+      margin-top: 60px;
+    }
+
+    .bridal-story {
+      width: min(100% - 24px, 560px);
+      margin-top: 72px;
+      padding: 54px 22px;
+    }
+
+    .bridal-meta,
+    .bridal-cta,
+    .bridal-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .bridal-cta div {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .bridal-related {
+      grid-template-columns: 1fr;
+    }
+
+    .bridal-related a {
+      min-height: 138px;
+    }
+
+    .bridal-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+</style>

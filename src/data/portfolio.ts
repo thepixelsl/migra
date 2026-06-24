@@ -46,7 +46,7 @@ const entries: PortfolioEntry[] = [
     category: "Hochzeit",
     filter: "Hochzeit",
     date: "19.09.2024",
-    href: "https://artbild-fotografie.de/gallery/hochzeit-braut-fotoshooting-hamburg/",
+    href: "/gallery/hochzeit-braut-fotoshooting-hamburg/",
     image: brautFotoshootingHamburg,
     alt: "Braut beim Fotoshooting in Hamburg",
     aspect: "portrait",
