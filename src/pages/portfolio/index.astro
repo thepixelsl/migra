@@ -58,6 +58,7 @@ const collectionSchema = {
       "url": entry.href.startsWith("http") ? entry.href : `${siteUrl}${entry.href}`,
       "name": entry.title,
       "description": `${entry.category} Portfolio vom ${entry.date}`,
+      "image": `${siteUrl}${entry.image.src}`,
     })),
   },
 };
@@ -122,16 +123,7 @@ const collectionSchema = {
       </p>
     </section>
 
-    <section class="portfolio-filter" aria-label="Portfolio Kategorien">
-      <p>Thema</p>
-      <div>
-        {portfolioFilters.map((filter) => (
-          <a href={filter === "All" ? "/portfolio/" : `/portfolio/?cat=${filter.toLowerCase()}`} aria-current={filter === "All" ? "page" : undefined}>{filter}</a>
-        ))}
-      </div>
-    </section>
-
-    <PortfolioGrid entries={portfolioEntries} />
+    <PortfolioGrid entries={portfolioEntries} filters={portfolioFilters} />
 
     <section class="portfolio-funnel" aria-label="Nächste Schritte">
       <a href="https://artbild-fotografie.de/gallery-category/hochzeit/">
@@ -147,14 +139,6 @@ const collectionSchema = {
         Verfügbarkeit anfragen
       </a>
     </section>
-
-    <nav class="portfolio-pagination" aria-label="Portfolio Seiten">
-      <div>
-        <a aria-current="page" href="/portfolio/">1</a>
-        <a href="https://artbild-fotografie.de/portfolio/page/2/">2</a>
-      </div>
-      <a class="portfolio-pagination__next" href="https://artbild-fotografie.de/portfolio/page/2/">Weiter</a>
-    </nav>
 
     <section class="portfolio-instagram">
       <p>Folgt mir auf Instagram für kostenlose TFP-Shootings!</p>
@@ -232,42 +216,6 @@ const collectionSchema = {
     line-height: 1.72;
   }
 
-  .portfolio-filter {
-    width: min(760px, calc(100% - 44px));
-    margin: clamp(70px, 7vw, 118px) auto 0;
-    text-align: center;
-  }
-
-  .portfolio-filter p {
-    margin: 0 0 22px;
-    color: #8a837b;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .34em;
-    text-transform: uppercase;
-  }
-
-  .portfolio-filter div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px 30px;
-  }
-
-  .portfolio-filter a {
-    color: #2a2a2a;
-    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: 18px;
-    text-decoration: none;
-  }
-
-  .portfolio-filter a:hover,
-  .portfolio-filter a:focus,
-  .portfolio-filter a[aria-current="page"] {
-    color: #9b6f4f;
-  }
-
   .portfolio-funnel {
     width: min(1040px, calc(100% - 44px));
     margin: clamp(120px, 13vw, 210px) auto 0;
@@ -302,34 +250,6 @@ const collectionSchema = {
     font-size: 10px;
     font-weight: 700;
     letter-spacing: .24em;
-  }
-
-  .portfolio-pagination {
-    width: min(1040px, calc(100% - 44px));
-    margin: clamp(82px, 9vw, 130px) auto 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: #24242a;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-  }
-
-  .portfolio-pagination div {
-    display: flex;
-    gap: 24px;
-  }
-
-  .portfolio-pagination a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .portfolio-pagination a[aria-current="page"] {
-    color: #9b6f4f;
   }
 
   .portfolio-instagram {

@@ -30,14 +30,7 @@ export type PortfolioEntry = {
   aspect: "square" | "portrait" | "landscape";
 };
 
-export const portfolioFilters: PortfolioFilter[] = [
-  "All",
-  "Travel",
-  "Hochzeit",
-  "Peoplefotografie",
-];
-
-export const portfolioEntries: PortfolioEntry[] = [
+const entries: PortfolioEntry[] = [
   {
     title: "Hochzeitsfotos Hamburg",
     category: "Hochzeit",
@@ -199,3 +192,35 @@ export const portfolioEntries: PortfolioEntry[] = [
     aspect: "landscape",
   },
 ];
+
+const preferredFilterOrder: Exclude<PortfolioFilter, "All">[] = [
+  "Travel",
+  "Hochzeit",
+  "Peoplefotografie",
+];
+
+const discoveredFilters = new Set(entries.map((entry) => entry.filter));
+
+export const portfolioFilters: PortfolioFilter[] = [
+  "All",
+  ...preferredFilterOrder.filter((filter) => discoveredFilters.has(filter)),
+];
+
+const parseGermanDate = (date: string) => {
+  const [day, month, year] = date.split(".").map(Number);
+  return Date.UTC(year, month - 1, day);
+};
+
+export const portfolioEntries = [...entries].sort(
+  (left, right) => parseGermanDate(right.date) - parseGermanDate(left.date),
+);
+
+export const portfolioFilterSlug = (filter: PortfolioFilter) =>
+  filter === "All"
+    ? "all"
+    : filter
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");

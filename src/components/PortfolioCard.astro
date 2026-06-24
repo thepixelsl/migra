@@ -10,7 +10,12 @@ type Props = {
 const { entry, priority = false } = Astro.props;
 ---
 
-<article class={`portfolio-overview-card portfolio-overview-card--${entry.aspect}`}>
+<article
+  class={`portfolio-overview-card portfolio-overview-card--${entry.aspect}`}
+  role="listitem"
+  data-portfolio-entry
+  data-portfolio-category={entry.filter.toLowerCase()}
+>
   <a href={entry.href} class="portfolio-overview-card__link" aria-label={`${entry.title} ansehen`}>
     <figure class="portfolio-overview-card__figure">
       <Image

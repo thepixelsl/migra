@@ -1,27 +1,275 @@
 ---
 import PortfolioCard from "./PortfolioCard.astro";
-import type { PortfolioEntry } from "../data/portfolio";
+import {
+  portfolioFilterSlug,
+  type PortfolioEntry,
+  type PortfolioFilter,
+} from "../data/portfolio";
 
 type Props = {
   entries: PortfolioEntry[];
+  filters: PortfolioFilter[];
+  initialVisible?: number;
 };
 
-const { entries } = Astro.props;
+const {
+  entries,
+  filters,
+  initialVisible = 9,
+} = Astro.props;
 ---
 
-<div class="portfolio-overview-grid">
-  {entries.map((entry, index) => (
-    <PortfolioCard entry={entry} priority={index === 0} />
-  ))}
-</div>
+<section
+  class="portfolio-browser"
+  data-portfolio-browser
+  data-page-size={initialVisible}
+  aria-labelledby="portfolio-filter-title"
+>
+  <header class="portfolio-filter">
+    <p id="portfolio-filter-title">Thema</p>
+    <div role="group" aria-labelledby="portfolio-filter-title">
+      {filters.map((filter) => (
+        <button
+          type="button"
+          data-portfolio-filter={portfolioFilterSlug(filter)}
+          aria-pressed={filter === "All" ? "true" : "false"}
+        >
+          {filter === "All" ? "Alle" : filter}
+        </button>
+      ))}
+    </div>
+  </header>
+
+  <p class="portfolio-browser__status" data-portfolio-status aria-live="polite"></p>
+
+  <div class="portfolio-overview-grid" id="portfolio-gallery-list" role="list">
+    {entries.map((entry, index) => (
+      <PortfolioCard entry={entry} priority={index === 0} />
+    ))}
+  </div>
+
+  <div class="portfolio-browser__actions">
+    <button
+      class="portfolio-browser__more"
+      type="button"
+      data-portfolio-more
+      aria-controls="portfolio-gallery-list"
+    >
+      Mehr Galerien anzeigen
+    </button>
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const root = document.querySelector("[data-portfolio-browser]");
+    if (!root) return;
+
+    const entries = [...root.querySelectorAll("[data-portfolio-entry]")];
+    const filterButtons = [...root.querySelectorAll("[data-portfolio-filter]")];
+    const moreButton = root.querySelector("[data-portfolio-more]");
+    const status = root.querySelector("[data-portfolio-status]");
+    const pageSize = Number(root.dataset.pageSize) || 9;
+    const validFilters = new Set(filterButtons.map((button) => button.dataset.portfolioFilter));
+    const requestedFilter = new URLSearchParams(window.location.search).get("category");
+
+    let activeFilter = validFilters.has(requestedFilter) ? requestedFilter : "all";
+    let visibleLimit = pageSize;
+
+    root.classList.add("is-enhanced");
+
+    const render = () => {
+      const matchingEntries = entries.filter((entry) => {
+        return activeFilter === "all"
+          || entry.dataset.portfolioCategory === activeFilter;
+      });
+
+      entries.forEach((entry) => {
+        const matchingIndex = matchingEntries.indexOf(entry);
+        entry.hidden = matchingIndex === -1 || matchingIndex >= visibleLimit;
+        entry.classList.remove("is-layout-even", "is-layout-1", "is-layout-2", "is-layout-3");
+        if (!entry.hidden) {
+          if (matchingIndex % 2 === 1) entry.classList.add("is-layout-even");
+          entry.classList.add(`is-layout-${(matchingIndex % 3) + 1}`);
+        }
+      });
+
+      filterButtons.forEach((button) => {
+        button.setAttribute(
+          "aria-pressed",
+          String(button.dataset.portfolioFilter === activeFilter),
+        );
+      });
+
+      const visibleCount = Math.min(visibleLimit, matchingEntries.length);
+      status.textContent = `${visibleCount} von ${matchingEntries.length} Galerien angezeigt`;
+      moreButton.hidden = visibleCount >= matchingEntries.length;
+    };
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        activeFilter = button.dataset.portfolioFilter;
+        visibleLimit = pageSize;
+
+        const url = new URL(window.location.href);
+        if (activeFilter === "all") {
+          url.searchParams.delete("category");
+        } else {
+          url.searchParams.set("category", activeFilter);
+        }
+        window.history.replaceState({}, "", url);
+        render();
+      });
+    });
+
+    moreButton.addEventListener("click", () => {
+      visibleLimit += pageSize;
+      render();
+    });
+
+    render();
+  })();
+</script>
 
 <style>
+  .portfolio-browser {
+    width: 100%;
+  }
+
+  .portfolio-filter {
+    width: min(900px, calc(100% - 44px));
+    margin: clamp(70px, 7vw, 118px) auto 0;
+    display: none;
+    text-align: center;
+  }
+
+  .portfolio-browser.is-enhanced .portfolio-filter {
+    display: block;
+  }
+
+  .portfolio-filter p {
+    margin: 0 0 22px;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-filter div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 28px;
+  }
+
+  .portfolio-filter button {
+    position: relative;
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #2a2a2a;
+    cursor: pointer;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: 18px;
+  }
+
+  .portfolio-filter button::after {
+    position: absolute;
+    right: 0;
+    bottom: 5px;
+    left: 0;
+    height: 1px;
+    background: #9b6f4f;
+    content: "";
+    opacity: 0;
+    transform: scaleX(.3);
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .portfolio-filter button:hover,
+  .portfolio-filter button:focus-visible,
+  .portfolio-filter button[aria-pressed="true"] {
+    color: #9b6f4f;
+  }
+
+  .portfolio-filter button[aria-pressed="true"]::after {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+
+  .portfolio-filter button:focus-visible {
+    outline: 1px solid #9b6f4f;
+    outline-offset: 5px;
+  }
+
+  .portfolio-browser__status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
   .portfolio-overview-grid {
     width: min(1040px, calc(100% - 44px));
     margin: clamp(96px, 14vw, 205px) auto 0;
     display: grid;
     grid-template-columns: 1fr;
     gap: 72px;
+  }
+
+  .portfolio-overview-grid > [hidden] {
+    display: none;
+  }
+
+  .portfolio-browser__actions {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(82px, 9vw, 130px) auto 0;
+    display: none;
+    justify-content: center;
+  }
+
+  .portfolio-browser.is-enhanced .portfolio-browser__actions {
+    display: flex;
+  }
+
+  .portfolio-browser__more {
+    min-height: 46px;
+    padding: 10px 0;
+    border: 0;
+    border-bottom: 1px solid #8a837b;
+    border-radius: 0;
+    background: transparent;
+    color: #24242a;
+    cursor: pointer;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .portfolio-browser__more:hover,
+  .portfolio-browser__more:focus-visible {
+    color: #9b6f4f;
+    border-color: #9b6f4f;
+  }
+
+  .portfolio-browser__more:focus-visible {
+    outline: 1px solid #9b6f4f;
+    outline-offset: 6px;
+  }
+
+  .portfolio-browser__more[hidden] {
+    display: none;
   }
 
   @media (min-width: 720px) {
@@ -31,7 +279,7 @@ const { entries } = Astro.props;
       gap: 112px 72px;
     }
 
-    .portfolio-overview-grid > :nth-child(even) {
+    .portfolio-overview-grid > .is-layout-even {
       transform: translateY(38px);
     }
   }
@@ -43,16 +291,22 @@ const { entries } = Astro.props;
       gap: 138px 78px;
     }
 
-    .portfolio-overview-grid > :nth-child(even) {
+    .portfolio-overview-grid > .is-layout-even {
       transform: none;
     }
 
-    .portfolio-overview-grid > :nth-child(3n + 2) {
+    .portfolio-overview-grid > .is-layout-2 {
       transform: translateY(-33px);
     }
 
-    .portfolio-overview-grid > :nth-child(3n + 3) {
+    .portfolio-overview-grid > .is-layout-3 {
       transform: translateY(35px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .portfolio-filter button::after {
+      transition: none;
     }
   }
 </style>
