@@ -1,5 +1,6 @@
 ---
 import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
 import PortfolioGrid from "../../components/PortfolioGrid.astro";
 import { portfolioEntries, portfolioFilters } from "../../data/portfolio";
 
@@ -89,6 +90,7 @@ const collectionSchema = {
 </head>
 <body class="gallery-template portfolio-template">
   <header class="gallery-header">
+    <MobileNavigation />
     <nav class="gallery-nav" aria-label="Hauptnavigation">
       <ul class="gallery-nav__group">
         <li><a href="/">Start</a></li>

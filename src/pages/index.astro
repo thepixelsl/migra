@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
+import MobileNavigation from "../components/MobileNavigation.astro";
 
 const destinationLinks = [
   { label: "Venedig", href: "https://artbild-fotografie.de/gallery-category/venedig/" },
@@ -190,6 +191,7 @@ const homepageSchema = {
 <body id="top">
   <header class="site-header">
     <a class="booking-strip" href="#kontakt">Jetzt für 2026/2027 buchen</a>
+    <MobileNavigation />
     <div class="nav-shell">
       <a class="brand" href="#" aria-label="Artbild-Fotografie Startseite">
         <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie Logo">
@@ -355,7 +357,7 @@ const homepageSchema = {
       </div>
     </section>
 
-    <section class="intro section-narrow">
+    <section class="intro section-narrow" id="hochzeitsfotograf-hamburg">
       <div class="intro-title">
         <p class="eyebrow">ARTBILD-FOTOGRAFIE</p>
         <h1>Hochzeitsfotograf</h1>

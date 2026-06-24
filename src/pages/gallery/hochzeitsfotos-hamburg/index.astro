@@ -1,5 +1,6 @@
 ---
 import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
 import { Image } from "astro:assets";
 
 import img0 from "../../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
@@ -225,6 +226,7 @@ const schemaGraph = {
 </head>
 <body class="gallery-template wedding-gallery-page">
   <header class="gallery-header">
+    <MobileNavigation />
     <nav class="gallery-nav" aria-label="Hauptnavigation">
       <ul class="gallery-nav__group">
         <li><a href="/">Start</a></li>

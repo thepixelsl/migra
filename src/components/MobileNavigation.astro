@@ -1,0 +1,207 @@
+---
+import {
+  mobileNavigationGroups,
+  mobileSearchItem,
+  type NavigationItem,
+} from "../data/navigation";
+
+const currentPath = Astro.url.pathname;
+
+const isCurrent = (item: NavigationItem) => {
+  if (item.href === "/") return currentPath === "/";
+  if (!item.href.startsWith("/")) return false;
+
+  return currentPath === item.href.split("#")[0];
+};
+---
+
+<div class="mobile-navigation" data-mobile-navigation>
+  <div class="mobile-navigation__bar">
+    <a class="mobile-navigation__brand" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img
+        src="/images/logo-artbild-black.png"
+        width="1200"
+        height="480"
+        alt="Artbild Fotografie"
+      >
+    </a>
+
+    <button
+      class="mobile-navigation__toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-navigation-panel"
+      aria-label="Menü öffnen"
+      data-mobile-navigation-toggle
+    >
+      <span class="mobile-navigation__toggle-icon" aria-hidden="true">
+        <span></span>
+        <span></span>
+      </span>
+      <span>Menü</span>
+    </button>
+  </div>
+
+  <div
+    class="mobile-navigation__panel"
+    id="mobile-navigation-panel"
+    data-mobile-navigation-panel
+    hidden
+  >
+    <button
+      class="mobile-navigation__backdrop"
+      type="button"
+      aria-hidden="true"
+      data-mobile-navigation-close
+      tabindex="-1"
+    ></button>
+
+    <div class="mobile-navigation__drawer">
+      <header class="mobile-navigation__drawer-header">
+        <div>
+          <p>Artbild-Fotografie</p>
+          <span>Hochzeitsfotograf Hamburg</span>
+        </div>
+        <button
+          class="mobile-navigation__close"
+          type="button"
+          aria-label="Menü schließen"
+          data-mobile-navigation-close
+        >
+          <span aria-hidden="true"></span>
+        </button>
+      </header>
+
+      <nav class="mobile-navigation__content" aria-label="Mobile Hauptnavigation">
+        {mobileNavigationGroups.map((group) => (
+          <section
+            class:list={[
+              "mobile-navigation__group",
+              { "is-secondary": group.secondary },
+            ]}
+            aria-labelledby={`mobile-navigation-${group.label.toLowerCase()}`}
+          >
+            <h2 id={`mobile-navigation-${group.label.toLowerCase()}`}>{group.label}</h2>
+            <ul>
+              {group.items.map((item) => (
+                <li>
+                  <a
+                    class:list={[
+                      "mobile-navigation__link",
+                      item.emphasis && `is-${item.emphasis}`,
+                      { "is-external": item.external },
+                    ]}
+                    href={item.href}
+                    aria-current={isCurrent(item) ? "page" : undefined}
+                    data-topic={item.seoContext}
+                  >
+                    <span class="mobile-navigation__link-copy">
+                      <span class="mobile-navigation__link-title">
+                        {item.label}
+                        {item.badge && <span class="mobile-navigation__badge">{item.badge}</span>}
+                      </span>
+                      {item.description && (
+                        <span class="mobile-navigation__description">{item.description}</span>
+                      )}
+                    </span>
+                    <span class="mobile-navigation__arrow" aria-hidden="true">
+                      {item.external ? "↗" : "→"}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))}
+
+        <div class="mobile-navigation__utility">
+          <a href={mobileSearchItem.href} aria-label="Website durchsuchen">
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5"></circle>
+              <path d="m16 16 4 4"></path>
+            </svg>
+            <span>{mobileSearchItem.label}</span>
+          </a>
+          <span>Hamburg · Norddeutschland · Europa</span>
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>
+
+<script>
+  const navigationRoots = document.querySelectorAll("[data-mobile-navigation]");
+
+  navigationRoots.forEach((root) => {
+    const toggle = root.querySelector("[data-mobile-navigation-toggle]");
+    const panel = root.querySelector("[data-mobile-navigation-panel]");
+    const closeButtons = root.querySelectorAll("[data-mobile-navigation-close]");
+
+    if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
+
+    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const closeMenu = () => {
+      panel.classList.remove("is-open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-label", "Menü öffnen");
+      document.body.classList.remove("has-mobile-navigation-open");
+
+      window.setTimeout(() => {
+        panel.hidden = true;
+        toggle.focus();
+      }, 240);
+    };
+
+    const openMenu = () => {
+      panel.hidden = false;
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.setAttribute("aria-label", "Menü schließen");
+      document.body.classList.add("has-mobile-navigation-open");
+
+      window.requestAnimationFrame(() => {
+        panel.classList.add("is-open");
+        const firstFocusable = panel.querySelector(focusableSelector);
+        if (firstFocusable instanceof HTMLElement) firstFocusable.focus();
+      });
+    };
+
+    toggle.addEventListener("click", () => {
+      if (toggle.getAttribute("aria-expanded") === "true") closeMenu();
+      else openMenu();
+    });
+
+    closeButtons.forEach((button) => button.addEventListener("click", closeMenu));
+
+    panel.querySelectorAll("a[href]").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.body.classList.remove("has-mobile-navigation-open");
+      });
+    });
+
+    panel.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        closeMenu();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = [...panel.querySelectorAll(focusableSelector)].filter(
+        (element) => element instanceof HTMLElement && !element.hasAttribute("hidden"),
+      );
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (!(first instanceof HTMLElement) || !(last instanceof HTMLElement)) return;
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    });
+  });
+</script>

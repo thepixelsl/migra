@@ -1,5 +1,6 @@
 ---
 import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
 
 import art8413 from "../../../assets/lovebirds-am-elbstrand/art-8413.jpg";
@@ -233,6 +234,7 @@ const schemaGraph = {
 </head>
 <body class="gallery-template lovebirds-page">
   <header class="gallery-header">
+    <MobileNavigation />
     <nav class="gallery-nav" aria-label="Hauptnavigation">
       <ul class="gallery-nav__group">
         <li><a href="/">Start</a></li>

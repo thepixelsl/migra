@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import MobileNavigation from "../components/MobileNavigation.astro";
 
 const siteUrl = "https://artbild-fotografie.de";
 const pagePath = "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/";
@@ -203,6 +204,7 @@ const faqSchema = {
 </head>
 <body class="gallery-template">
   <header class="gallery-header">
+    <MobileNavigation />
     <nav class="gallery-nav" aria-label="Hauptnavigation">
       <ul class="gallery-nav__group">
         <li><a href="/">Start</a></li>
