@@ -1,0 +1,731 @@
+---
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
+import { Image } from "astro:assets";
+
+const imageModules = import.meta.glob(
+  "../../assets/brautpaar-zuerich/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/brautpaar-in-zuerich/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Brautpaar in Zürich";
+const title = "Brautpaar in Zürich | Styled Elopement Fotoshooting";
+const description =
+  "Natürlich, elegant und editorial: Styled Elopement Fotoshooting mit Stephanie und Laurin in Zürich an der Limmat, mit Brautstyling, Maßanzügen und Schweizer Hochzeitsinspiration.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const heroImage = modulesByFile["ART_8515-Bearbeitet-scaled.jpg"];
+const heroAlt =
+  "Stephanie und Laurin als Brautpaar bei einem eleganten Elopement Fotoshooting in Zürich";
+
+const galleryDefinitions = [
+  ["ART_6708-1024x683.jpg", "Stephanie und Laurin beim Styled Elopement in Zürich an der Limmat"],
+  ["ART_8601-819x1024.jpg", "Brautportrait von Stephanie in Zürich mit natürlichem Styling"],
+  ["ART_8690-Bearbeitet-scaled.jpg", "Elegantes Portrait des Bräutigams Laurin im Maßanzug in Zürich"],
+  ["ART_8578-Bearbeitet-scaled.jpg", "Braut Stephanie mit modernem Hochzeitslook in der Schweiz"],
+  ["ART_6879-819x1024.jpg", "Brautpaarshooting mit Stephanie und Laurin in der Züricher Altstadt"],
+  ["ART_8647-Bearbeitet-scaled.jpg", "Bräutigam Portrait im eleganten Anzug bei einem Elopement Editorial"],
+  ["ART_7146-Bearbeitet-2-scaled.jpg", "Stephanie und Laurin bei einem ruhigen Paarmoment in Zürich"],
+  ["ART_7275-Bearbeitet-scaled.jpg", "Natürliches Brautpaarportrait bei einem Styled Shooting in der Schweiz"],
+  ["ART_7306-Bearbeitet-819x1024.jpg", "Brautpaar unterwegs durch Zürich mit eleganter Hochzeitsinspiration"],
+  ["ART_7338-Bearbeitet-819x1024.jpg", "Stephanie und Laurin lächeln beim Paarshooting in Zürich"],
+  ["ART_7355-Bearbeitet-819x1024.jpg", "Editorial Hochzeitsfoto eines Brautpaares in Zürich"],
+  ["ART_7378-Bearbeitet-1024x683.jpg", "Brautpaar in Zürich vor urbaner Architektur der Schweiz"],
+  ["ART_7391-Bearbeitet-scaled.jpg", "Inniger Moment von Stephanie und Laurin beim Elopement Shooting"],
+  ["ART_7538-Bearbeitet-Bearbeitet-scaled.jpg", "Brautpaarportrait mit ruhiger Eleganz in Zürich"],
+  ["ART_7571-scaled.jpg", "Stephanie und Laurin beim Spaziergang durch Zürich"],
+  ["ART_7711-Bearbeitet-1024x576.jpg", "Weiter Blick auf das Brautpaarshooting in Zürich"],
+  ["ART_7815-Bearbeitet-2-819x1024.jpg", "Braut und Bräutigam bei einem natürlichen Moment an der Limmat"],
+  ["ART_7890-scaled.jpg", "Elegantes Bräutigam Portrait aus dem Zürich Editorial"],
+  ["ART_7922-2-scaled.jpg", "Brautpaar in Zürich mit modernem Hochzeitsstyling"],
+  ["ART_7924-Bearbeitet-scaled.jpg", "Stephanie und Laurin als Inspiration für ein Elopement in der Schweiz"],
+  ["ART_7926-Bearbeitet-819x1024.jpg", "Natürliches Hochzeitsfoto eines Brautpaares in Zürich"],
+  ["ART_7961-Bearbeitet-1024x576.jpg", "Cinematischer Moment von Stephanie und Laurin beim Zürich Shooting"],
+  ["ART_7972-Bearbeitet-scaled.jpg", "Brautportrait mit elegantem Styling in Zürich"],
+  ["ART_7985-Bearbeitet-scaled.jpg", "Laurin im Maßanzug beim Styled Elopement Fotoshooting"],
+  ["ART_7999-scaled.jpg", "Brautpaarportrait mit natürlicher Nähe in der Schweiz"],
+  ["ART_8090-Bearbeitet-scaled.jpg", "Stephanie und Laurin bei einer urbanen Hochzeitsszene in Zürich"],
+  ["ART_8096-Bearbeitet-scaled.jpg", "Elegantes Paarfoto beim Elopement Editorial in Zürich"],
+  ["ART_8121-819x1024.jpg", "Brautpaarshooting mit weichem Licht in Zürich"],
+  ["ART_8129-scaled.jpg", "Stephanie und Laurin nah beieinander beim Styled Shooting"],
+  ["ART_8155-819x1024.jpg", "Hochzeitsinspiration mit Brautkleid und Maßanzug in Zürich"],
+  ["ART_8187-scaled.jpg", "Brautpaarportrait im eleganten Editorial Stil"],
+  ["ART_8278-Bearbeitet-819x1024.jpg", "Stephanie und Laurin als Brautpaar in der Züricher Kulisse"],
+  ["ART_8293-Bearbeitet-819x1024.jpg", "Natürliches Lächeln beim Brautpaarshooting in Zürich"],
+  ["ART_8496-Bearbeitet-scaled.jpg", "Braut Stephanie bei einem eleganten Portrait in Zürich"],
+  ["ART_8508-Bearbeitet-819x1024.jpg", "Stephanie und Laurin während eines Styled Elopements in der Schweiz"],
+  ["ART_8515-Bearbeitet-scaled.jpg", "Elegantes Brautpaarfoto von Stephanie und Laurin in Zürich"],
+  ["ART_8539-Bearbeitet-scaled.jpg", "Brautportrait mit natürlicher Eleganz in der Züricher Altstadt"],
+  ["ART_8551-scaled.jpg", "Laurin im Maßanzug bei einem Editorial Paarshooting"],
+  ["ART_8713-Bearbeitet-819x1024.jpg", "Brautpaar in Zürich mit ruhigem hochwertigem Look"],
+  ["ART_8803-819x1024.jpg", "Stephanie und Laurin bei einem modernen Elopement Fotoshooting"],
+  ["ART_8817-Bearbeitet-819x1024.jpg", "Hochzeitsinspiration in Zürich mit eleganter Paarfotografie"],
+  ["ART_8823-Bearbeitet-scaled.jpg", "Natürliches Portrait des Brautpaares in der Schweiz"],
+  ["ART_9040-Bearbeitet-2-819x1024.jpg", "Stephanie und Laurin bei einem Paarmoment in Zürich"],
+  ["ART_9118-Bearbeitet-scaled.jpg", "Brautpaarshooting in Zürich mit editorialem Charakter"],
+  ["ART_9153-Bearbeitet-scaled.jpg", "Elegantes Hochzeitsfoto von Stephanie und Laurin"],
+  ["ART_9288-scaled.jpg", "Brautpaarportrait als Elopement Inspiration in Zürich"],
+  ["ART_9304-Bearbeitet-scaled.jpg", "Stephanie und Laurin beim Styled Elopement in der Schweiz"],
+  ["ART_9354-Bearbeitet-scaled.jpg", "Abschlussbild des Brautpaarshootings mit Stephanie und Laurin in Zürich"],
+] as const;
+
+const galleryImages = galleryDefinitions.map(([file, alt]) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+}));
+
+const itemsPerColumn = Math.ceil(galleryImages.length / 3);
+const galleryColumns = [
+  galleryImages.slice(0, itemsPerColumn),
+  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
+  galleryImages.slice(itemsPerColumn * 2),
+];
+
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Brautpaar in Zürich",
+        "Elopement Zürich",
+        "Hochzeitsfotos Schweiz",
+        "Styled Elopement",
+        "Destination Hochzeitsfotograf",
+      ],
+      datePublished: "2026-06-03T08:00:00+02:00",
+      dateModified: "2026-06-25T14:00:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#zuerich`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Styled Elopement Fotoshooting mit Stephanie und Laurin in Zürich",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#zuerich`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "City",
+      "@id": `${pageUrl}#zuerich`,
+      name: "Zürich",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Zürich",
+        addressRegion: "Kanton Zürich",
+        addressCountry: "CH",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 47.3769,
+        longitude: 8.5417,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "City", name: "Zürich" },
+        { "@type": "Country", name: "Schweiz" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Elopement Fotografie",
+        "Brautpaarshooting",
+        "Destination Wedding Fotografie",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: `${siteUrl}/blog/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2026-06-03T08:00:00+02:00",
+      dateModified: "2026-06-25T14:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: heroAlt,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2026-06-03T08:00:00+02:00">
+  <meta property="article:modified_time" content="2026-06-25T14:00:00+02:00">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:width" content={heroImage.width}>
+  <meta property="og:image:height" content={heroImage.height}>
+  <meta property="og:image:alt" content={heroAlt}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template zurich-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="zurich-article">
+      <header class="zurich-hero">
+        <div class="zurich-hero__copy">
+          <p class="zurich-kicker">Peoplefotografie · Hochzeit · Schweiz</p>
+          <h1>{heading}</h1>
+          <p>Braut Paar in Zürich - natürlich, elegant</p>
+          <p>
+            Ein styled Elopement Fotoshooting mit Stephanie und Laurin, von
+            Connection-of-Us und Yildiz von
+            <a href="https://hamburgbrautstyling.com/" rel="noopener">Hamburg Brautstyling</a>.
+          </p>
+        </div>
+        <figure>
+          <Image
+            src={heroImage}
+            alt={heroAlt}
+            widths={[640, 920, 1200, 1386]}
+            sizes="(max-width: 880px) calc(100vw - 28px), 48vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+          <figcaption>Styled Elopement mit Stephanie und Laurin in Zürich</figcaption>
+        </figure>
+      </header>
+
+      <section class="zurich-intro" aria-labelledby="zurich-intro-title">
+        <div>
+          <p class="zurich-kicker">Editorial in Zürich</p>
+          <h2 id="zurich-intro-title">Hochzeitsfotos in der Schweiz - natürlich und elegant</h2>
+        </div>
+        <div class="zurich-intro__copy">
+          <p>
+            Wir hatten den Wunsch, ein schönes Editorial in der Schweiz,
+            genauer in Zürich an der Limmat und an ein paar wundervollen Orten
+            in Zürich zu machen. Laurin erschien perfekt gestyled in zwei
+            Maßanzügen von
+            <a href="https://appointment.whitecollar.ch/" rel="noopener">White Collar</a>
+            aus Basel, die wirklich elegant waren. Stephanie hatte gerade ihr
+            Lieblingskleid entdeckt.
+          </p>
+          <p>
+            Für Stephanie und Laurin sollte das Shooting nicht wie eine
+            klassische Hochzeitsreportage wirken, sondern wie ein liebevoll
+            geplantes Editorial. Zürich bietet dafür eine wundervolle Bühne:
+            stilvoll, aber nicht aufdringlich, hochwertig und mit viel Raum für
+            Brautkleid, Anzug, Styling und die Verbindung zwischen zwei Menschen.
+          </p>
+          <p>
+            Kleine Bewegungen, kurze Blicke, ein Lächeln zwischendurch, ein
+            Moment an der Limmat oder ein ruhiger Spaziergang durch Zürich -
+            genau daraus entstehen Bilder, die bleiben.
+          </p>
+        </div>
+      </section>
+
+      <section class="zurich-section" aria-labelledby="zurich-elopement-title">
+        <div>
+          <p class="zurich-kicker">Elopement Inspiration</p>
+          <h2 id="zurich-elopement-title">Elopement Inspiration für Paare in Zürich</h2>
+        </div>
+        <div class="zurich-section__copy">
+          <p>
+            Ein Elopement steht für Intimität, Freiheit und die Entscheidung,
+            den Tag ganz bewusst miteinander zu erleben. Auch wenn dieses
+            Shooting als Styled Editorial geplant war, erzählt es genau von
+            diesem Gefühl.
+          </p>
+          <p>
+            Für Paare, die über ein Elopement in Zürich, ein
+            After-Wedding-Shooting in der Schweiz oder besondere Brautpaarfotos
+            außerhalb des Hochzeitstages nachdenken, ist diese Bildstrecke eine
+            ruhige, elegante Inspiration.
+          </p>
+        </div>
+      </section>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="brautpaar-zuerich"
+        label="Styled Elopement Fotoshooting mit Stephanie und Laurin in Zürich"
+        dialogLabel="Brautpaar in Zürich in Vollansicht"
+      />
+
+      <aside class="zurich-meta" aria-label="Galeriethemen">
+        <span>Themen:</span>
+        <a href="https://artbild-fotografie.de/gallery-category/hochzeit/">Hochzeit</a>
+        <a href="https://artbild-fotografie.de/gallery-category/travel/">Travel</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/brautpaar/">Brautpaar</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/elopement/">Elopement</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/schweiz/">Schweiz</a>
+      </aside>
+
+      <section class="zurich-section is-final" aria-labelledby="zurich-service-title">
+        <div>
+          <p class="zurich-kicker">Hochzeitsfotografie in Zürich und der Schweiz</p>
+          <h2 id="zurich-service-title">Destination Hochzeitsfotos mit ruhiger Eleganz</h2>
+        </div>
+        <div class="zurich-section__copy">
+          <p>
+            Als Hochzeitsfotograf liebe ich Orte, die nicht nur schön aussehen,
+            sondern eine Stimmung tragen. Zürich hat uns genau das gegeben: die
+            Limmat, die Stadt, die Speisen in der Wirtschaft Degenried und die
+            vielen kleinen Wege dazwischen.
+          </p>
+          <p>
+            Dieses Styled Elopement Fotoshooting mit Stephanie und Laurin war
+            eine kleine Reise. Danke für drei Tage Schweiz, zwei wundervolle
+            Abende, elegante Kleidung, liebevolle Details und ein Team, das mit
+            viel Gefühl und Freude zusammengearbeitet hat.
+          </p>
+          <div class="zurich-actions">
+            <a href="https://artbild-fotografie.de/kontakt/">Hochzeit anfragen</a>
+            <a class="is-primary" href="/portfolio/">Portfolio ansehen</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="zurich-related" aria-label="Weitere Inspirationen">
+        <a href="/gallery/paarshooting-mallorca/">
+          <span>Destination</span>
+          Paarshooting Mallorca
+        </a>
+        <a href="/gallery/lovebirds-am-elbstrand/">
+          <span>Hamburg</span>
+          Lovebirds am Elbstrand
+        </a>
+        <a href="/gallery/traumhochzeit-in-hamburg/">
+          <span>Hochzeit</span>
+          Traumhochzeit in Hamburg
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .zurich-article {
+    padding-top: clamp(72px, 7.2vw, 104px);
+  }
+
+  .zurich-hero,
+  .zurich-intro,
+  .zurich-section {
+    width: min(1140px, calc(100% - 72px));
+    margin-inline: auto;
+  }
+
+  .zurich-hero {
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    gap: clamp(44px, 7vw, 96px);
+    align-items: center;
+  }
+
+  .zurich-kicker,
+  .zurich-hero figcaption {
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .zurich-kicker {
+    margin: 0;
+  }
+
+  .zurich-hero h1 {
+    margin: 22px 0 0;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(48px, 6vw, 92px);
+    font-weight: 400;
+    line-height: .98;
+  }
+
+  .zurich-hero__copy > p:nth-of-type(2) {
+    margin: 32px 0 0;
+    color: #2d3039;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.6vw, 38px);
+    line-height: 1.16;
+  }
+
+  .zurich-hero__copy > p:last-child,
+  .zurich-intro__copy p,
+  .zurich-section__copy p {
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.72;
+  }
+
+  .zurich-hero__copy > p:last-child {
+    margin: 28px 0 0;
+  }
+
+  .zurich-hero a,
+  .zurich-intro a {
+    color: #2f323c;
+    text-decoration-thickness: 1px;
+    text-underline-offset: .22em;
+  }
+
+  .zurich-hero figure {
+    margin: 0;
+  }
+
+  .zurich-hero img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background: #eee9e3;
+  }
+
+  .zurich-hero figcaption {
+    margin-top: 16px;
+    color: #7b746e;
+    text-align: center;
+  }
+
+  .zurich-intro,
+  .zurich-section {
+    margin-top: clamp(92px, 9vw, 138px);
+    display: grid;
+    grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+    gap: clamp(42px, 7vw, 96px);
+    align-items: start;
+  }
+
+  .zurich-intro h2,
+  .zurich-section h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.3vw, 62px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .zurich-intro__copy p,
+  .zurich-section__copy p {
+    margin: 0;
+  }
+
+  .zurich-intro__copy p + p,
+  .zurich-section__copy p + p {
+    margin-top: 24px;
+  }
+
+  .zurich-page .gallery-image-grid {
+    max-width: 1140px;
+  }
+
+  .zurich-meta {
+    width: min(1140px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .zurich-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .zurich-section.is-final {
+    margin-bottom: clamp(88px, 9vw, 132px);
+    padding-top: clamp(68px, 7vw, 98px);
+    border-top: 1px solid #dedad4;
+  }
+
+  .zurich-actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .zurich-actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .zurich-actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .zurich-related {
+    width: min(1140px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .zurich-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .zurich-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .zurich-related span {
+    margin-bottom: 14px;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .zurich-related a:hover,
+  .zurich-related a:focus-visible {
+    background: #f3f1ed;
+  }
+
+  .zurich-page :is(a, button):focus-visible {
+    outline: 2px solid #846b58;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 880px) {
+    .zurich-hero,
+    .zurich-intro,
+    .zurich-section {
+      grid-template-columns: 1fr;
+    }
+
+    .zurich-hero__copy,
+    .zurich-intro > div,
+    .zurich-section > div {
+      max-width: 720px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .zurich-article {
+      padding-top: 48px;
+    }
+
+    .zurich-hero,
+    .zurich-intro,
+    .zurich-section {
+      width: min(100% - 28px, 560px);
+    }
+
+    .zurich-hero h1 {
+      font-size: clamp(44px, 14vw, 62px);
+    }
+
+    .zurich-hero__copy > p:nth-of-type(2) {
+      font-size: clamp(23px, 7vw, 30px);
+    }
+
+    .zurich-intro,
+    .zurich-section {
+      margin-top: 76px;
+    }
+
+    .zurich-meta,
+    .zurich-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .zurich-actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .zurich-related {
+      grid-template-columns: 1fr;
+    }
+
+    .zurich-related a {
+      min-height: 138px;
+    }
+
+    .zurich-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+</style>
