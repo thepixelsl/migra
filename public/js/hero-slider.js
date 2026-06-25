@@ -296,6 +296,12 @@
         .sort((a, b) => a.distance - b.distance)
         .map((item) => item.slide);
 
+      if (this.mode === "mobile") {
+        neighbors.forEach((slide) => this.loadImage(slide, false));
+        this.neighborQueue = [];
+        return;
+      }
+
       this.neighborQueue = neighbors;
       this.scheduleNextNeighborImage();
     }

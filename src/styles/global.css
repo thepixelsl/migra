@@ -227,8 +227,8 @@ a {
 }
 
 .hero-slider--mobile {
-  --slider-height: clamp(180px, 48vw, 270px);
-  --slide-width: clamp(150px, 40vw, 225px);
+  --slider-height: clamp(232px, 62vw, 340px);
+  --slide-width: clamp(138px, 38vw, 210px);
   display: none;
 }
 
@@ -276,6 +276,10 @@ a {
   height: 100%;
   object-fit: cover;
   object-position: var(--focus-x, 50%) var(--focus-y, 50%);
+}
+
+.hero-slider__slide img:not([src]) {
+  visibility: hidden;
 }
 
 .hero-slider__controls {
@@ -1706,6 +1710,10 @@ h3 {
     overflow: hidden;
   }
 
+  .booking-strip {
+    display: none;
+  }
+
   .mobile-navigation {
     display: block;
     width: 100%;
@@ -1714,8 +1722,9 @@ h3 {
   }
 
   .mobile-navigation__bar {
+    position: relative;
     width: min(100% - 32px, 720px);
-    min-height: 82px;
+    min-height: 145px;
     margin: 0 auto;
     display: flex;
     align-items: center;
@@ -1724,28 +1733,31 @@ h3 {
   }
 
   .mobile-navigation__brand {
+    position: absolute;
+    left: 50%;
     display: inline-flex;
     align-items: center;
     min-width: 0;
+    transform: translateX(-50%);
   }
 
   .mobile-navigation__brand img {
     display: block;
-    width: min(176px, 48vw);
+    width: min(150px, 44vw);
     height: auto;
   }
 
   .mobile-navigation__toggle {
-    min-width: 76px;
+    margin-left: auto;
+    min-width: 48px;
     min-height: 48px;
-    padding: 0 2px;
+    padding: 0;
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
     border: 0;
     background: transparent;
-    color: #1d2027;
+    color: #2c739c;
     font: 700 11px/1 Arial, sans-serif;
     letter-spacing: .16em;
     text-transform: uppercase;
@@ -1753,8 +1765,8 @@ h3 {
   }
 
   .mobile-navigation__toggle-icon {
-    width: 24px;
-    height: 14px;
+    width: 26px;
+    height: 20px;
     display: grid;
     align-content: space-between;
   }
@@ -1762,7 +1774,7 @@ h3 {
   .mobile-navigation__toggle-icon span {
     display: block;
     width: 100%;
-    height: 1px;
+    height: 2px;
     background: currentColor;
   }
 

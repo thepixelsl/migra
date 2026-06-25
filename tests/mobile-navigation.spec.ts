@@ -11,6 +11,12 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   const toggle = page.getByRole("button", { name: "Menü öffnen" });
   const toggleState = page.locator("[data-mobile-navigation-toggle]");
   await expect(toggle).toBeVisible();
+  await expect(page.locator(".mobile-navigation__toggle-icon span")).toHaveCount(3);
+
+  const toggleBox = await toggle.boundingBox();
+  expect(toggleBox?.width).toBeGreaterThanOrEqual(48);
+  expect(toggleBox?.height).toBeGreaterThanOrEqual(48);
+
   await toggle.click();
 
   const navigation = page.getByRole("navigation", { name: "Mobile Hauptnavigation" });
