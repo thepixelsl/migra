@@ -16,6 +16,7 @@ import barberhouseHamburg from "../assets/portfolio/barberhouse-hamburg.jpg";
 import nordenKueste from "../assets/portfolio/norden-kueste.jpg";
 import paris from "../assets/portfolio/paris.jpg";
 import lovebirdsElbstrand from "../assets/portfolio/lovebirds-elbstrand.jpg";
+import traumhochzeitHamburg from "../assets/portfolio/traumhochzeit-hamburg.jpg";
 
 export type PortfolioFilter = "All" | "Travel" | "Hochzeit" | "Peoplefotografie";
 
@@ -170,6 +171,16 @@ const entries: PortfolioEntry[] = [
     image: nordenKueste,
     alt: "Landschaftsfotografie an der norddeutschen Küste",
     aspect: "landscape",
+  },
+  {
+    title: "Traumhochzeit in Hamburg",
+    category: "Hochzeit",
+    filter: "Hochzeit",
+    date: "05.07.2019",
+    href: "/gallery/traumhochzeit-in-hamburg/",
+    image: traumhochzeitHamburg,
+    alt: "Brautpaar bei einer Hochzeit im Hotel Atlantic Hamburg",
+    aspect: "portrait",
   },
   {
     title: "Paris",

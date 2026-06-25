@@ -1,0 +1,687 @@
+---
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/traumhochzeit-hamburg/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/traumhochzeit-in-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Traumhochzeit in Hamburg";
+const title = "Traumhochzeit im Hotel Atlantic Hamburg | Artbild-Fotografie";
+const description =
+  "Hochzeitsreportage im Hotel Atlantic Hamburg: Getting Ready, Brautpaarshooting an der Alster und Hochzeitstorte mit zeitloser Hochzeitsfotografie.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "ART_0074-Bearbeitet_print-768x1151.jpg":
+    "Brautpaar bei einem innigen Portrait an der Alster in Hamburg",
+  "ART_8441_web_1-1024x684.jpg":
+    "Elegante Hotelsuite im Hotel Atlantic vor dem Getting Ready",
+  "ART_8494-Bearbeitet_web_1-1024x684.jpg":
+    "Friseurin stylt die Braut vor ihrer Hochzeit im Hotel Atlantic",
+  "ART_8671-Bearbeitet_web_1.jpg":
+    "Bräutigam beim Anlegen der Manschettenknöpfe in seiner Hotelsuite",
+  "ART_8716-Bearbeitet_web_1.jpg":
+    "Schwarz-Weiß-Portrait des Bräutigams am Fenster des Hotel Atlantic",
+  "ART_8755-Bearbeitet_web_1-1.jpg":
+    "Bräutigam richtet sein Hemd vor der Hochzeit in Hamburg",
+  "ART_8791-Bearbeitet_web_1-1-1024x684.jpg":
+    "Braut nach dem professionellen Styling im Hotel Atlantic Hamburg",
+  "ART_8835-Bearbeitet_web_1-1024x684.jpg":
+    "Schuhe, Fliege und Manschettenknöpfe des Bräutigams",
+  "ART_8973_print.jpg":
+    "Brautkleid hängt in einer Suite des Hotel Atlantic Hamburg",
+  "ART_9124-Bearbeitet_web_1-1024x684.jpg":
+    "Bräutigam bindet seine Fliege beim Getting Ready",
+  "ART_9148_web_1.jpg":
+    "Persönliche Nachricht an den Bräutigam mit Eukalyptuszweig",
+  "ART_9156-Bearbeitet_web_1-1.jpg":
+    "Braut in ihrem Spitzenkleid nach dem Getting Ready",
+  "ART_9180-Bearbeitet_web_1-1.jpg":
+    "Bräutigam mit Briefen vor der Hochzeit im Hotel Atlantic",
+  "ART_9230_web_1-1-1024x684.jpg":
+    "Bräutigam öffnet persönliche Hochzeitsbriefe",
+  "ART_9234-Bearbeitet_print.jpg":
+    "Portrait des Bräutigams mit Fliege und Hosenträgern",
+  "ART_9278-Bearbeitet_web_1.jpg":
+    "Braut blickt im natürlichen Fensterlicht über die Alster",
+  "ART_9294-Bearbeitet_web_1.jpg":
+    "Seitliches Brautportrait im Hotel Atlantic Hamburg",
+  "ART_9311-Bearbeitet-Bearbeitet_web_1.jpg":
+    "Braut im Spitzenkleid während des Getting Ready",
+  "ART_9315-Bearbeitet_web-1024x684.jpg":
+    "Nahaufnahme der Brautfrisur und des natürlichen Braut-Make-ups",
+  "ART_9323_web_1.jpg":
+    "Braut betrachtet ihr Hochzeitskleid im Spiegel der Hotelsuite",
+  "ART_9421-Bearbeitet_web-768x1151.jpg":
+    "Portrait der Braut im weichen Fensterlicht des Hotel Atlantic",
+  "ART_9474-Bearbeitet_web_1-768x1151.jpg":
+    "Brautpaar bei einem ruhigen Portrait in der Hotelsuite",
+  "ART_9527-2_print.jpg":
+    "Braut und Bräutigam gemeinsam in ihrer Suite im Hotel Atlantic",
+  "ART_9623_web-1024x1024.jpg":
+    "Hochzeitstorte und weiße Tischblumen im Hotel Atlantic Hamburg",
+  "ART_9766-Bearbeitet_print.jpg":
+    "Brautpaar schneidet gemeinsam die Hochzeitstorte an",
+  "ART_9875_print-1024x684.jpg":
+    "Schwarz-Weiß-Portrait des Brautpaares an der Hamburger Alster",
+  "ART_9955_print-1024x684.jpg":
+    "Lachendes Brautpaar mit Tortenstück an der Alster",
+  "ART_9960_print-1024x684.jpg":
+    "Bräutigam küsst die Braut beim Hochzeitsshooting in Hamburg",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const itemsPerColumn = Math.ceil(galleryImages.length / 3);
+const galleryColumns = [
+  galleryImages.slice(0, itemsPerColumn),
+  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
+  galleryImages.slice(itemsPerColumn * 2),
+];
+
+const primaryImage = new URL(galleryImages[0].image.src, siteUrl).href;
+const hotelAtlantic = {
+  "@type": "Hotel",
+  "@id": `${pageUrl}#hotel-atlantic`,
+  name: "Hotel Atlantic Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "An der Alster 72-79",
+    postalCode: "20099",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+  containedInPlace: {
+    "@type": "City",
+    name: "Hamburg",
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Traumhochzeit Hamburg",
+        "Hotel Atlantic Hochzeit",
+        "Hochzeitsfotograf Hamburg",
+        "Hochzeitsreportage Alster",
+      ],
+      datePublished: "2019-07-05T12:52:02+02:00",
+      dateModified: "2026-06-25T08:00:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#hotel-atlantic`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Traumhochzeit im Hotel Atlantic Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#hotel-atlantic`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    hotelAtlantic,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Getting Ready Fotografie",
+        "Brautpaarshooting",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2019-07-05T12:52:02+02:00",
+      dateModified: "2026-06-25T08:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Brautpaar bei seiner Hochzeit im Hotel Atlantic Hamburg",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2019-07-05T12:52:02+02:00">
+  <meta property="article:modified_time" content="2026-06-25T08:00:00+02:00">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:width" content={galleryImages[0].image.width}>
+  <meta property="og:image:height" content={galleryImages[0].image.height}>
+  <meta property="og:image:alt" content={galleryImages[0].alt}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template atlantic-gallery-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="atlantic-gallery">
+      <header class="atlantic-hero">
+        <p class="atlantic-hero__script" aria-hidden="true">Hotel Atlantic</p>
+        <p class="atlantic-hero__kicker">Hochzeitsreportage · Hamburg an der Alster</p>
+        <h1>{heading}</h1>
+        <p>
+          Eine elegante Hochzeit beginnt in den Zimmern des Hotel Atlantic und
+          führt das Brautpaar für natürliche Portraits an die Hamburger Alster.
+        </p>
+      </header>
+
+      <section class="atlantic-story" aria-labelledby="atlantic-story-title">
+        <div class="atlantic-story__heading">
+          <p>Hochzeit im Hotel Atlantic</p>
+          <h2 id="atlantic-story-title">Vom Getting Ready bis zum Brautpaarshooting an der Alster</h2>
+        </div>
+        <div class="atlantic-story__copy">
+          <div>
+            <h3>Vorbereitungen im Hotel</h3>
+            <p>
+              Die Reportage begleitet Braut und Bräutigam getrennt beim Getting
+              Ready. Styling, Kleid, Fliege und persönliche Briefe erzählen die
+              leisen Momente vor der Hochzeit.
+            </p>
+          </div>
+          <div>
+            <h3>Zeitlose Portraits</h3>
+            <p>
+              Fensterlicht, Spiegel und die klassische Atmosphäre des Hotel
+              Atlantic bilden einen eleganten Rahmen für moderne Braut- und
+              Bräutigamportraits.
+            </p>
+          </div>
+          <div>
+            <h3>Hamburger Alster</h3>
+            <p>
+              Draußen entstehen natürliche Paarbilder mit Blick auf das Wasser.
+              Der Anschnitt der Hochzeitstorte schließt die Bildgeschichte
+              persönlich und ungezwungen ab.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="traumhochzeit-hamburg"
+        label="Hochzeitsreportage im Hotel Atlantic und an der Alster in Hamburg"
+        dialogLabel="Traumhochzeit in Hamburg in Vollansicht"
+      />
+
+      <aside class="atlantic-meta" aria-label="Galeriethemen">
+        <span>Themen:</span>
+        <a href="https://artbild-fotografie.de/gallery-tag/hotel-atlantic/">Hotel Atlantic</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hochzeit/">Hochzeit</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/brautpaar/">Brautpaar</a>
+      </aside>
+
+      <section class="atlantic-service" aria-labelledby="atlantic-service-title">
+        <div>
+          <p class="atlantic-service__kicker">Preise transparent vergleichen</p>
+          <h2 id="atlantic-service-title">Hochzeitsfotografie als planbarer Festpreis</h2>
+        </div>
+        <div>
+          <p>
+            Eine Hochzeit im Hotel Atlantic darf außergewöhnlich sein, die
+            Kalkulation sollte trotzdem übersichtlich bleiben. Deshalb werden
+            Dauer, Leistungen und Bildbearbeitung vorab klar vereinbart.
+          </p>
+          <p>
+            So könnt Ihr Pakete und enthaltene Leistungen in Ruhe vergleichen,
+            ohne nach der Hochzeit von versteckten Zusatzkosten überrascht zu
+            werden.
+          </p>
+          <div class="atlantic-service__actions">
+            <a href="https://artbild-fotografie.de/hochzeitsfotograf-preise/">Preise & Pakete ansehen</a>
+            <a class="is-primary" href="https://artbild-fotografie.de/kontakt/">Hochzeit anfragen</a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="atlantic-related" aria-label="Weitere Hochzeitsreportagen">
+        <a href="/gallery/hochzeit-braut-fotoshooting-hamburg/">
+          <span>Hotel Atlantic</span>
+          Braut Fotoshooting Hamburg
+        </a>
+        <a href="/gallery/hochzeitsfotos-hamburg/">
+          <span>Hamburg</span>
+          Hochzeitsfotos in der Hansestadt
+        </a>
+        <a href="/portfolio/">
+          <span>Portfolio</span>
+          Weitere Hochzeiten und Paarshootings
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="https://artbild-fotografie.de/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .atlantic-gallery {
+    padding-top: clamp(74px, 7.4vw, 104px);
+  }
+
+  .atlantic-hero {
+    width: min(1050px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .atlantic-hero__script {
+    margin: 0;
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(38px, 4.8vw, 66px);
+    line-height: 1;
+  }
+
+  .atlantic-hero__kicker,
+  .atlantic-story__heading p,
+  .atlantic-service__kicker {
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .atlantic-hero__kicker {
+    margin: clamp(72px, 7vw, 98px) 0 0;
+  }
+
+  .atlantic-hero h1 {
+    margin: 20px 0 0;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(44px, 5.5vw, 78px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .atlantic-hero > p:last-child {
+    width: min(780px, 100%);
+    margin: 30px auto 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.68;
+  }
+
+  .atlantic-story {
+    width: min(1220px, calc(100% - 92px));
+    margin: clamp(92px, 9vw, 138px) auto 0;
+    padding: clamp(68px, 7vw, 102px) clamp(34px, 6vw, 86px);
+    background: #f3f1ed;
+  }
+
+  .atlantic-story__heading {
+    width: min(820px, 100%);
+  }
+
+  .atlantic-story__heading p,
+  .atlantic-service__kicker {
+    margin: 0;
+  }
+
+  .atlantic-story h2,
+  .atlantic-service h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .atlantic-story__copy {
+    margin-top: clamp(50px, 6vw, 78px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(30px, 4vw, 60px);
+  }
+
+  .atlantic-story h3 {
+    margin: 0 0 18px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .atlantic-story__copy p,
+  .atlantic-service > div:last-child > p {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .atlantic-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .atlantic-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .atlantic-service {
+    width: min(1110px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 8vw, 110px);
+    align-items: start;
+  }
+
+  .atlantic-service > div:last-child {
+    padding-top: 8px;
+  }
+
+  .atlantic-service > div:last-child > p + p {
+    margin-top: 22px;
+  }
+
+  .atlantic-service__actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .atlantic-service__actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .atlantic-service__actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .atlantic-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .atlantic-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .atlantic-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .atlantic-related span {
+    margin-bottom: 14px;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .atlantic-related a:hover,
+  .atlantic-related a:focus-visible {
+    background: #f3f1ed;
+  }
+
+  .atlantic-meta a:focus-visible,
+  .atlantic-service a:focus-visible,
+  .atlantic-related a:focus-visible {
+    outline: 2px solid #846b58;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 880px) {
+    .atlantic-story__copy,
+    .atlantic-service {
+      grid-template-columns: 1fr;
+    }
+
+    .atlantic-story__copy div,
+    .atlantic-service > div {
+      max-width: 690px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .atlantic-gallery {
+      padding-top: 48px;
+    }
+
+    .atlantic-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .atlantic-hero__kicker {
+      margin-top: 60px;
+    }
+
+    .atlantic-story {
+      width: min(100% - 24px, 560px);
+      margin-top: 72px;
+      padding: 54px 22px;
+    }
+
+    .atlantic-meta,
+    .atlantic-service,
+    .atlantic-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .atlantic-service__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .atlantic-related {
+      grid-template-columns: 1fr;
+    }
+
+    .atlantic-related a {
+      min-height: 138px;
+    }
+
+    .atlantic-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+</style>
