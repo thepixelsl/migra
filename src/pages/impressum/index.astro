@@ -1,0 +1,582 @@
+---
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import "../../styles/global.css";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}/impressum/`;
+const title = "Impressum | Artbild-Fotografie Hamburg";
+const description =
+  "Impressum und Anbieterkennzeichnung von Artbild-Fotografie, York Augustin, Hochzeitsfotograf in Hamburg.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      logo: logoUrl,
+      email: "info@artbild-fotografie.de",
+      telephone: "+49 151 61438120",
+      founder: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      description:
+        "Freiberuflicher Hochzeitsfotograf in Hamburg für standesamtliche Hochzeiten und Hochzeitsreportagen.",
+      sameAs: ["https://www.instagram.com/artbild/"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": pageUrl,
+            name: "Impressum",
+          },
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      about: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={logoUrl}>
+    <meta property="og:image:alt" content="Logo von Artbild-Fotografie">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template legal-template">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+          <li>
+            <a
+              class="gallery-search"
+              href="https://artbild-fotografie.de/?s="
+              aria-label="Suche"
+            >⌕</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <nav class="legal-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Startseite</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Impressum</span>
+      </nav>
+
+      <header class="legal-hero">
+        <div>
+          <p class="legal-kicker">Anbieterkennzeichnung</p>
+          <h1>Impressum</h1>
+        </div>
+        <p>
+          Rechtliche Informationen und Kontaktdaten von Artbild-Fotografie in Hamburg.
+        </p>
+      </header>
+
+      <div class="legal-layout">
+        <aside class="legal-contact" aria-labelledby="legal-contact-title">
+          <p class="legal-section-number" aria-hidden="true">01</p>
+          <h2 id="legal-contact-title">Artbild-Fotografie</h2>
+          <address>
+            <strong>York Augustin</strong><br>
+            Rahlstedter Bahnhofstraße 27<br>
+            22143 Hamburg<br>
+            Deutschland
+          </address>
+
+          <dl>
+            <div>
+              <dt>Telefon</dt>
+              <dd>
+                <a href="tel:+4915161438120">+49 151 614 38 120</a>
+                <small>nach vorheriger Terminvereinbarung</small>
+              </dd>
+            </div>
+            <div>
+              <dt>E-Mail</dt>
+              <dd>
+                <a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a>
+              </dd>
+            </div>
+            <div>
+              <dt>Umsatzsteuer-ID</dt>
+              <dd>gemäß § 27a Umsatzsteuergesetz:<br>DE 428 737 74 9</dd>
+            </div>
+          </dl>
+        </aside>
+
+        <article class="legal-content">
+          <section aria-labelledby="responsible-title">
+            <p class="legal-section-number" aria-hidden="true">02</p>
+            <h2 id="responsible-title">Verantwortlich</h2>
+            <p>
+              York Augustin<br>
+              Rahlstedter Bahnhofstraße 27<br>
+              22143 Hamburg
+            </p>
+          </section>
+
+          <section aria-labelledby="craft-title">
+            <h2 id="craft-title">Eintragung in die Handwerksrolle</h2>
+            <p>
+              York Augustin ist mit seinem Unternehmen in die Handwerksrolle der
+              Handwerkskammer der Freien und Hansestadt Hamburg eingetragen.
+            </p>
+          </section>
+
+          <section aria-labelledby="privacy-title">
+            <h2 id="privacy-title">Datenschutzerklärung</h2>
+            <p>
+              Unsere Datenschutzerklärung finden Sie unter
+              <a href="https://artbild-fotografie.de/datenschutzerklaerung/">
+                artbild-fotografie.de/datenschutzerklaerung/
+              </a>.
+            </p>
+            <p>
+              <strong>Datenschutzbeauftragter:</strong><br>
+              York Augustin<br>
+              Rahlstedter Bahnhofstraße 27<br>
+              22143 Hamburg
+            </p>
+          </section>
+
+          <section aria-labelledby="content-liability-title">
+            <p class="legal-section-number" aria-hidden="true">03</p>
+            <h2 id="content-liability-title">Haftung für Inhalte</h2>
+            <p>
+              Wir sind als Diensteanbieter nach § 7 Abs. 1 DDG für eigene Inhalte auf
+              diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach den §§ 8
+              bis 10 DDG sind wir jedoch nicht verpflichtet, übermittelte oder
+              gespeicherte fremde Informationen zu überwachen oder nach Umständen zu
+              forschen, die auf eine rechtswidrige Tätigkeit hinweisen.
+            </p>
+            <p>
+              Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen
+              nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche
+              Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten
+              Rechtsverletzung möglich. Bei Bekanntwerden entsprechender
+              Rechtsverletzungen entfernen wir diese Inhalte umgehend.
+            </p>
+          </section>
+
+          <section aria-labelledby="link-liability-title">
+            <h2 id="link-liability-title">Haftung für Links</h2>
+            <p>
+              Unser Angebot enthält Links zu externen Websites, auf deren Inhalte wir
+              keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der
+              jeweilige Anbieter oder Betreiber verantwortlich. Rechtswidrige Inhalte
+              waren zum Zeitpunkt der Verlinkung nicht erkennbar.
+            </p>
+            <p>
+              Eine permanente Kontrolle der verlinkten Seiten ist ohne konkrete
+              Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von
+              Rechtsverletzungen entfernen wir derartige Links umgehend.
+            </p>
+          </section>
+
+          <section aria-labelledby="copyright-title">
+            <h2 id="copyright-title">Urheberrecht</h2>
+            <p>
+              Die auf dieser Website erstellten Inhalte und Werke unterliegen dem
+              deutschen Urheberrecht. Vervielfältigung, Bearbeitung, Verbreitung und jede
+              Art der Verwertung außerhalb der Grenzen des Urheberrechts bedürfen der
+              vorherigen schriftlichen Zustimmung des jeweiligen Autors oder Erstellers.
+            </p>
+            <p>
+              Soweit Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden
+              die Urheberrechte Dritter beachtet und entsprechende Inhalte als solche
+              gekennzeichnet. Sollten Sie dennoch eine Urheberrechtsverletzung
+              feststellen, bitten wir um einen Hinweis. Bei Bekanntwerden von
+              Rechtsverletzungen entfernen wir derartige Inhalte umgehend.
+            </p>
+          </section>
+
+          <section aria-labelledby="dispute-title">
+            <p class="legal-section-number" aria-hidden="true">04</p>
+            <h2 id="dispute-title">Hinweis zur Verbraucherstreitbeilegung</h2>
+            <p>
+              Wir sind weder verpflichtet noch bereit, an einem Streitbeilegungsverfahren
+              vor einer Verbraucherschlichtungsstelle teilzunehmen.
+            </p>
+          </section>
+
+          <section aria-labelledby="contact-use-title">
+            <h2 id="contact-use-title">Hinweis zur Nutzung der Kontaktdaten</h2>
+            <p>
+              Der Nutzung der im Impressum veröffentlichten Kontaktdaten durch Dritte zur
+              Übersendung von nicht ausdrücklich angeforderter Werbung und
+              Informationsmaterialien wird hiermit ausdrücklich widersprochen.
+            </p>
+            <p>
+              Wir behalten uns rechtliche Schritte im Falle der unverlangten Zusendung
+              von Werbeinformationen, etwa durch Spam-E-Mails oder Postsendungen, vor.
+            </p>
+          </section>
+        </article>
+      </div>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/impressum/" aria-current="page">Impressum</a>
+        <a href="https://artbild-fotografie.de/datenschutzerklaerung/">
+          Datenschutzerklärung
+        </a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .legal-template {
+    background: #faf9f7;
+  }
+
+  .legal-template main {
+    padding-bottom: clamp(80px, 10vw, 150px);
+  }
+
+  .legal-breadcrumb,
+  .legal-hero,
+  .legal-layout {
+    width: min(1120px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .legal-breadcrumb {
+    margin-top: clamp(48px, 6vw, 84px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .legal-breadcrumb a {
+    text-decoration: none;
+  }
+
+  .legal-breadcrumb a:hover,
+  .legal-breadcrumb a:focus-visible {
+    color: #2c739c;
+  }
+
+  .legal-hero {
+    padding: clamp(52px, 8vw, 110px) 0 clamp(56px, 8vw, 104px);
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+    gap: clamp(44px, 8vw, 130px);
+    align-items: end;
+    border-bottom: 1px solid #ddd7cf;
+  }
+
+  .legal-kicker,
+  .legal-section-number {
+    margin: 0;
+    color: #2c739c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .legal-hero h1 {
+    margin: 12px 0 0;
+    font-size: clamp(58px, 9vw, 126px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: .9;
+  }
+
+  .legal-hero > p {
+    max-width: 430px;
+    margin: 0 0 4px;
+    color: #645f58;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.65;
+  }
+
+  .legal-layout {
+    padding-top: clamp(58px, 8vw, 108px);
+    display: grid;
+    grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr);
+    gap: clamp(56px, 9vw, 138px);
+    align-items: start;
+  }
+
+  .legal-contact {
+    position: sticky;
+    top: 32px;
+    min-width: 0;
+    padding: 38px;
+    background: #f0ece6;
+    border-top: 3px solid #2c739c;
+  }
+
+  .legal-contact h2,
+  .legal-content h2 {
+    margin: 12px 0 20px;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+
+  .legal-contact h2 {
+    font-size: clamp(32px, 3.2vw, 46px);
+  }
+
+  .legal-contact address,
+  .legal-contact dl,
+  .legal-content {
+    color: #5f5a54;
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .legal-contact address {
+    font-style: normal;
+  }
+
+  .legal-contact address strong {
+    color: #202020;
+    font-weight: 400;
+  }
+
+  .legal-contact dl {
+    margin: 32px 0 0;
+  }
+
+  .legal-contact dl > div {
+    padding: 20px 0;
+    border-top: 1px solid #d6cec4;
+  }
+
+  .legal-contact dt {
+    margin-bottom: 4px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .legal-contact dd {
+    margin: 0;
+  }
+
+  .legal-contact small {
+    display: block;
+    color: #777168;
+    font-size: 13px;
+  }
+
+  .legal-contact a,
+  .legal-content a {
+    overflow-wrap: anywhere;
+    text-decoration-color: #9baab2;
+    text-underline-offset: 4px;
+  }
+
+  .legal-contact a:hover,
+  .legal-contact a:focus-visible,
+  .legal-content a:hover,
+  .legal-content a:focus-visible {
+    color: #2c739c;
+  }
+
+  .legal-content section {
+    padding: 0 0 54px;
+  }
+
+  .legal-content {
+    min-width: 0;
+  }
+
+  .legal-content section + section {
+    padding-top: 54px;
+    border-top: 1px solid #ddd7cf;
+  }
+
+  .legal-content h2 {
+    color: #202020;
+    font-size: clamp(30px, 3vw, 43px);
+  }
+
+  .legal-content p {
+    margin: 0 0 20px;
+  }
+
+  .legal-content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .legal-content strong {
+    color: #292929;
+    font-weight: 400;
+  }
+
+  .legal-template :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .legal-hero,
+    .legal-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .legal-hero {
+      gap: 28px;
+    }
+
+    .legal-contact {
+      position: static;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .legal-breadcrumb,
+    .legal-hero,
+    .legal-layout {
+      width: min(100% - 32px, 1120px);
+    }
+
+    .legal-breadcrumb {
+      margin-top: 34px;
+    }
+
+    .legal-hero {
+      padding: 42px 0 52px;
+    }
+
+    .legal-hero h1 {
+      font-size: clamp(48px, 16vw, 64px);
+    }
+
+    .legal-layout {
+      padding-top: 44px;
+      gap: 56px;
+    }
+
+    .legal-contact {
+      padding: 28px 24px;
+    }
+
+    .legal-contact address,
+    .legal-contact dl,
+    .legal-content {
+      font-size: 15px;
+    }
+
+    .legal-content section {
+      padding-bottom: 42px;
+    }
+
+    .legal-content section + section {
+      padding-top: 42px;
+    }
+  }
+</style>
