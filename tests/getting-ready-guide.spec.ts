@@ -31,6 +31,9 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
       const bounds = element.getBoundingClientRect();
       return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
     };
+    const heroFigures = [...document.querySelectorAll<HTMLElement>(".gr-guide-hero__images figure")]
+      .map((figure) => figure.getBoundingClientRect())
+      .sort((a, b) => a.left - b.left);
 
     return {
       canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href,
@@ -40,6 +43,9 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
         hero: centerDelta(".gr-guide-hero"),
         intro: centerDelta(".gr-guide-section"),
       },
+      heroImageGaps: heroFigures.slice(1).map((figure, index) =>
+        Math.round(figure.left - heroFigures[index].right),
+      ),
       missingAlt: [...document.images].filter((image) => !image.alt).length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
@@ -53,6 +59,7 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
   expect(metadata.centers.nav).toBe(0);
   expect(metadata.centers.hero).toBe(0);
   expect(metadata.centers.intro).toBe(0);
+  expect(Math.min(...metadata.heroImageGaps)).toBeGreaterThanOrEqual(14);
   expect(metadata.missingAlt).toBe(0);
   expect(metadata.overflow).toBe(0);
   expect(metadata.schemaTypes).toEqual(
@@ -93,27 +100,36 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
-  const mobileLayout = await page.evaluate(() => ({
-    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    mobileNavVisible: getComputedStyle(document.querySelector(".mobile-navigation")!).display !== "none",
-    desktopNavVisible: getComputedStyle(document.querySelector(".gallery-nav")!).display !== "none",
-    centers: (() => {
-      const viewportCenter = document.documentElement.clientWidth / 2;
-      const centerDelta = (selector: string) => {
-        const element = document.querySelector<HTMLElement>(selector);
-        if (!element) return null;
+  const mobileLayout = await page.evaluate(() => {
+    const heroFigures = [...document.querySelectorAll<HTMLElement>(".gr-guide-hero__images figure")]
+      .map((figure) => figure.getBoundingClientRect())
+      .sort((a, b) => a.left - b.left);
 
-        const bounds = element.getBoundingClientRect();
-        return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
-      };
+    return {
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      mobileNavVisible: getComputedStyle(document.querySelector(".mobile-navigation")!).display !== "none",
+      desktopNavVisible: getComputedStyle(document.querySelector(".gallery-nav")!).display !== "none",
+      heroImageGaps: heroFigures.slice(1).map((figure, index) =>
+        Math.round(figure.left - heroFigures[index].right),
+      ),
+      centers: (() => {
+        const viewportCenter = document.documentElement.clientWidth / 2;
+        const centerDelta = (selector: string) => {
+          const element = document.querySelector<HTMLElement>(selector);
+          if (!element) return null;
 
-      return {
-        mobileBar: centerDelta(".mobile-navigation__bar"),
-        hero: centerDelta(".gr-guide-hero"),
-        gallery: centerDelta(".gr-guide-gallery .gallery-image-grid"),
-      };
-    })(),
-  }));
+          const bounds = element.getBoundingClientRect();
+          return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
+        };
+
+        return {
+          mobileBar: centerDelta(".mobile-navigation__bar"),
+          hero: centerDelta(".gr-guide-hero"),
+          gallery: centerDelta(".gr-guide-gallery .gallery-image-grid"),
+        };
+      })(),
+    };
+  });
 
   expect(mobileLayout.overflow).toBe(0);
   expect(mobileLayout.mobileNavVisible).toBe(true);
@@ -121,6 +137,7 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
   expect(mobileLayout.centers.mobileBar).toBe(0);
   expect(mobileLayout.centers.hero).toBe(0);
   expect(mobileLayout.centers.gallery).toBe(0);
+  expect(Math.min(...mobileLayout.heroImageGaps)).toBeGreaterThanOrEqual(8);
 
   await page.screenshot({
     path: `${screenshotDirectory}/mobile-hero.png`,
