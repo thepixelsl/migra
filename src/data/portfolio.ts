@@ -77,7 +77,7 @@ const entries: PortfolioEntry[] = [
     category: "Couples",
     filter: "Hochzeit",
     date: "20.12.2019",
-    href: "https://artbild-fotografie.de/gallery/steffi-dominik/",
+    href: "/gallery/steffi-dominik/",
     image: steffiDominik,
     alt: "Brautpaar Steffi und Dominik in eleganter Hochzeitsreportage",
     aspect: "portrait",
