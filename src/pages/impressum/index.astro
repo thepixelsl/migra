@@ -1,5 +1,7 @@
 ---
+import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import anchorSignet from "../../assets/impressum/anker-york-augustin.jpg";
 import "../../styles/global.css";
 
 const siteUrl = "https://artbild-fotografie.de";
@@ -20,7 +22,6 @@ const schemaGraph = {
       url: siteUrl,
       logo: logoUrl,
       email: "info@artbild-fotografie.de",
-      telephone: "+49 151 61438120",
       founder: {
         "@type": "Person",
         name: "York Augustin",
@@ -153,9 +154,20 @@ const schemaGraph = {
           <p class="legal-kicker">Anbieterkennzeichnung</p>
           <h1>Impressum</h1>
         </div>
-        <p>
-          Rechtliche Informationen und Kontaktdaten von Artbild-Fotografie in Hamburg.
-        </p>
+        <div class="legal-hero__aside">
+          <Image
+            src={anchorSignet}
+            width={229}
+            height={300}
+            format="webp"
+            quality={90}
+            loading="eager"
+            alt="Historisches Anker-Signet von York Augustin Hamburg"
+          />
+          <p>
+            Rechtliche Informationen und Kontaktdaten von Artbild-Fotografie in Hamburg.
+          </p>
+        </div>
       </header>
 
       <div class="legal-layout">
@@ -172,9 +184,14 @@ const schemaGraph = {
           <dl>
             <div>
               <dt>Telefon</dt>
-              <dd>
-                <a href="tel:+4915161438120">+49 151 614 38 120</a>
+              <dd data-phone-reveal>
+                <button type="button" class="phone-reveal" data-phone-reveal-button>
+                  Telefonnummer anzeigen
+                </button>
                 <small>nach vorheriger Terminvereinbarung</small>
+                <noscript>
+                  <small>Die Telefonnummer erhalten Sie per E-Mail.</small>
+                </noscript>
               </dd>
             </div>
             <div>
@@ -320,6 +337,36 @@ const schemaGraph = {
       </nav>
       <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
     </footer>
+
+    <script>
+      const revealButtons = document.querySelectorAll("[data-phone-reveal-button]");
+
+      revealButtons.forEach((button) => {
+        if (!(button instanceof HTMLButtonElement)) return;
+
+        button.addEventListener(
+          "click",
+          () => {
+            const wrapper = button.closest("[data-phone-reveal]");
+            if (!(wrapper instanceof HTMLElement)) return;
+
+            const visibleParts = [43, 52, 57, 32, 49, 53, 49, 32, 54, 49, 52, 32, 51, 56, 32, 49, 50, 48];
+            const dialParts = [43, 52, 57, 49, 53, 49, 54, 49, 52, 51, 56, 49, 50, 48];
+            const visibleNumber = String.fromCharCode(...visibleParts);
+            const dialNumber = String.fromCharCode(...dialParts);
+            const link = document.createElement("a");
+
+            link.href = `tel:${dialNumber}`;
+            link.textContent = visibleNumber;
+            link.className = "phone-reveal__link";
+            link.setAttribute("aria-label", `Artbild-Fotografie anrufen: ${visibleNumber}`);
+            button.replaceWith(link);
+            link.focus();
+          },
+          { once: true },
+        );
+      });
+    </script>
   </body>
 </html>
 
@@ -389,7 +436,20 @@ const schemaGraph = {
     line-height: .9;
   }
 
-  .legal-hero > p {
+  .legal-hero__aside {
+    display: grid;
+    grid-template-columns: 112px minmax(0, 1fr);
+    gap: 24px;
+    align-items: end;
+  }
+
+  .legal-hero__aside :global(img) {
+    width: 112px;
+    height: auto;
+    mix-blend-mode: multiply;
+  }
+
+  .legal-hero__aside p {
     max-width: 430px;
     margin: 0 0 4px;
     color: #645f58;
@@ -466,6 +526,27 @@ const schemaGraph = {
     margin: 0;
   }
 
+  .phone-reveal {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid #9baab2;
+    border-radius: 0;
+    background: transparent;
+    color: #292929;
+    font: inherit;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .phone-reveal:hover,
+  .phone-reveal:focus-visible,
+  .phone-reveal__link:hover,
+  .phone-reveal__link:focus-visible {
+    color: #2c739c;
+  }
+
   .legal-contact small {
     display: block;
     color: #777168;
@@ -532,6 +613,15 @@ const schemaGraph = {
       gap: 28px;
     }
 
+    .legal-hero__aside {
+      grid-template-columns: 96px minmax(0, 1fr);
+      align-items: center;
+    }
+
+    .legal-hero__aside :global(img) {
+      width: 96px;
+    }
+
     .legal-contact {
       position: static;
     }
@@ -554,6 +644,20 @@ const schemaGraph = {
 
     .legal-hero h1 {
       font-size: clamp(48px, 16vw, 64px);
+    }
+
+    .legal-hero__aside {
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 18px;
+    }
+
+    .legal-hero__aside :global(img) {
+      width: 78px;
+    }
+
+    .legal-hero__aside p {
+      font-size: 15px;
+      line-height: 1.55;
     }
 
     .legal-layout {

@@ -13,10 +13,23 @@ test("impressum contains complete provider details and legal sections", async ({
   await expect(page.getByRole("heading", { level: 1, name: "Impressum" })).toBeVisible();
   const mainText = await page.locator("main").innerText();
   expect(mainText.match(/Rahlstedter Bahnhofstraße 27/g)).toHaveLength(3);
-  await expect(page.getByRole("link", { name: "+49 151 614 38 120" })).toHaveAttribute(
-    "href",
-    "tel:+4915161438120",
-  );
+  await expect(
+    page.getByRole("img", { name: "Historisches Anker-Signet von York Augustin Hamburg" }),
+  ).toBeVisible();
+  await expect(page.getByText("+49 151 614 38 120", { exact: true })).toHaveCount(0);
+  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
+  expect(await page.content()).not.toContain("+4915161438120");
+
+  mkdirSync(screenshotDirectory, { recursive: true });
+  await page.screenshot({
+    path: `${screenshotDirectory}/desktop.png`,
+    fullPage: true,
+  });
+
+  await page.getByRole("button", { name: "Telefonnummer anzeigen" }).click();
+  await expect(
+    page.getByRole("link", { name: "Artbild-Fotografie anrufen: +49 151 614 38 120" }),
+  ).toHaveAttribute("href", "tel:+4915161438120");
   await expect(
     page.getByRole("link", { name: "info@artbild-fotografie.de" }),
   ).toHaveAttribute("href", "mailto:info@artbild-fotografie.de");
@@ -35,12 +48,7 @@ test("impressum contains complete provider details and legal sections", async ({
   expect(metadata.canonical).toBe("https://artbild-fotografie.de/impressum/");
   expect(metadata.schema).toContain("ProfessionalService");
   expect(metadata.schema).toContain("PostalAddress");
-
-  mkdirSync(screenshotDirectory, { recursive: true });
-  await page.screenshot({
-    path: `${screenshotDirectory}/desktop.png`,
-    fullPage: true,
-  });
+  expect(metadata.schema).not.toContain("telephone");
 });
 
 test("mobile impressum remains readable without horizontal overflow", async ({ page }) => {
