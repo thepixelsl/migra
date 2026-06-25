@@ -1,326 +1,931 @@
 ---
+import { Image } from "astro:assets";
 import "../styles/global.css";
+import GalleryImageGrid from "../components/GalleryImageGrid.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
+import {
+  gettingReadyGalleryColumns,
+  gettingReadyGalleryImages,
+  gettingReadyHeroImage,
+} from "../data/gettingReadyGallery";
 
 const siteUrl = "https://artbild-fotografie.de";
 const pagePath = "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Das perfekte Getting Ready für deine Hochzeit in Hamburg";
-const socialTitle = "Das perfekte Getting Ready für Deine Hochzeit";
-const description = "\"Es ist eben nicht egal, wo das Getting Ready stattfindet, denn...\" - Darauf musst Du unbedingt achten wenn Du Dein Getting Ready planst...";
-const socialDescription = "3. Die perfekte Location für Dein Getting Ready\n\nIch bin der Meinung, dass es nicht völlig egal ist, wo dein Getting Ready stattfindet. Denn die Location sollte zum einen... Jetzt weiterlesen...!";
-const imageUrl = `${siteUrl}/images/getting-ready-gallery-2.jpg`;
+const description =
+  "Getting Ready Hamburg: Tipps zu Location, Timing, Outfit und Begleitung am Hochzeitsmorgen, damit natürliche Hochzeitsfotos beim Brautstyling entstehen.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const primaryImage = new URL(gettingReadyHeroImage.src, siteUrl).href;
+const heroImages = [
+  gettingReadyGalleryImages[0],
+  gettingReadyGalleryImages[4],
+  gettingReadyGalleryImages[11],
+];
+
+const faqItems = [
+  {
+    question: "Wann sollte das Getting Ready fotografisch begleitet werden?",
+    answer:
+      "Ideal ist der Zeitraum vom letzten Teil des Stylings bis zum Ankleiden. So entstehen ruhige Details, Portraits und echte Momente vor der Trauung.",
+  },
+  {
+    question: "Welche Location eignet sich für ein Getting Ready in Hamburg?",
+    answer:
+      "Gut geeignet sind helle Hotelzimmer, ruhige Wohnungen oder großzügige Räume mit Tageslicht. Wichtig sind Platz, Ordnung, gutes Licht und eine entspannte Atmosphäre.",
+  },
+  {
+    question: "Wer sollte beim Getting Ready dabei sein?",
+    answer:
+      "Nur Menschen, die Ruhe geben und wirklich guttun: zum Beispiel Trauzeugin, Mutter oder enge Freundinnen. Zu viele Personen machen den Morgen oft unruhig.",
+  },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Article",
-      "@id": `${pageUrl}#schema-685600`,
-      "headline": title,
-      "name": title,
-      "description": description,
-      "keywords": "Getting Ready für deine Hochzeit,Hamburg",
-      "author": {
+      "@id": `${pageUrl}#article`,
+      headline: title,
+      name: title,
+      description,
+      datePublished: "2020-11-08T07:36:02+01:00",
+      dateModified: "2026-06-25T15:00:00+02:00",
+      author: {
         "@type": "Person",
-        "name": "York Augustin"
+        name: "York Augustin",
       },
-      "datePublished": "2020-11-08T07:36:02+01:00",
-      "dateModified": "2025-08-08T22:16:31+02:00",
-      "image": {
-        "@id": `${imageUrl}#primaryimage`
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
       },
-      "isPartOf": {
-        "@id": `${pageUrl}#webpage`
-      },
-      "publisher": {
-        "@id": `${siteUrl}/#organization`
-      },
-      "inLanguage": "de",
-      "mainEntityOfPage": {
-        "@id": `${pageUrl}#webpage`
-      }
-    },
-    {
-      "@type": "Place",
-      "@id": `${siteUrl}/#place`,
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Rahlstedter Bahnhofstraße 27",
-        "addressLocality": "Rahlstedt",
-        "addressRegion": "Hamburg",
-        "postalCode": "22143",
-        "addressCountry": "Deutschland"
-      }
-    },
-    {
-      "@type": "Organization",
-      "@id": `${siteUrl}/#organization`,
-      "name": "Artbild Fotografie Hochzeitsfotograf Hamburg",
-      "legalName": "Artbild-Fotografie",
-      "url": siteUrl,
-      "sameAs": [
-        "https://www.facebook.com/artbildfotografie/",
-        "https://twitter.com/artbild"
+      image: primaryImage,
+      keywords: [
+        "Getting Ready Hamburg",
+        "Getting Ready Hochzeit",
+        "Brautstyling Hamburg",
+        "Hochzeitsfotograf Hamburg",
+        "Hochzeitsreportage Hamburg",
       ],
-      "email": "info@artbild-fotografie.de",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Rahlstedter Bahnhofstraße 27",
-        "addressLocality": "Rahlstedt",
-        "addressRegion": "Hamburg",
-        "postalCode": "22143",
-        "addressCountry": "Deutschland"
+      articleSection: [
+        "Hochzeitsplanung",
+        "Getting Ready",
+        "Hochzeitsfotografie Hamburg",
+      ],
+      about: [
+        { "@type": "Thing", name: "Getting Ready Hochzeit" },
+        { "@type": "Thing", name: "Brautstyling" },
+        { "@type": "Thing", name: "Hochzeitsreportage" },
+      ],
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
       },
-      "logo": {
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#image-gallery`,
+      name: "Getting Ready Bilder Hamburg",
+      description: "Beispielbilder für Brautstyling und Getting Ready in Hamburg.",
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      image: gettingReadyGalleryImages.map((item, index) => ({
         "@type": "ImageObject",
-        "@id": `${siteUrl}/#logo`,
-        "url": logoUrl,
-        "contentUrl": logoUrl,
-        "caption": "Artbild-Fotografie",
-        "inLanguage": "de",
-        "width": "1200",
-        "height": "480"
-      },
-      "description": "Freiberuflicher Hochzeitsfotograf in Hamburg für standesamtliche Hochzeiten und Hochzeitsreportagen in Hamburg, Altona, Eimsbüttel, Eppendorf, Winterhude, Barmbek, Wandsbek, Rahlstedt, Norderstedt, Uhlenhorst, Pöseldorf und Harvestehude.",
-      "location": {
-        "@id": `${siteUrl}/#place`
-      }
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
     },
     {
-      "@type": "WebSite",
-      "@id": `${siteUrl}/#website`,
-      "url": siteUrl,
-      "name": "Artbild-Fotografie",
-      "publisher": {
-        "@id": `${siteUrl}/#organization`
+      "@type": "City",
+      "@id": `${pageUrl}#hamburg`,
+      name: "Hamburg",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
       },
-      "inLanguage": "de"
     },
     {
-      "@type": "ImageObject",
-      "@id": `${imageUrl}#primaryimage`,
-      "url": imageUrl,
-      "width": "924",
-      "height": "1384",
-      "caption": "Getting Ready für deine Hochzeit",
-      "inLanguage": "de"
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Brautstyling Reportage",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
     },
     {
       "@type": "BreadcrumbList",
       "@id": `${pageUrl}#breadcrumb`,
-      "itemListElement": [
+      itemListElement: [
         {
           "@type": "ListItem",
-          "position": "1",
-          "item": {
-            "@id": siteUrl,
-            "name": "Startseite"
-          }
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
         },
         {
           "@type": "ListItem",
-          "position": "2",
-          "item": {
-            "@id": pageUrl,
-            "name": title
-          }
-        }
-      ]
+          position: 2,
+          name: "Ratgeber",
+          item: `${siteUrl}/blog/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: title,
+          item: pageUrl,
+        },
+      ],
     },
     {
       "@type": "WebPage",
       "@id": `${pageUrl}#webpage`,
-      "url": pageUrl,
-      "name": title,
-      "datePublished": "2020-11-08T07:36:02+01:00",
-      "dateModified": "2025-08-08T22:16:31+02:00",
-      "isPartOf": {
-        "@id": `${siteUrl}/#website`
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2020-11-08T07:36:02+01:00",
+      dateModified: "2026-06-25T15:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Getting Ready für eine Hochzeit in Hamburg",
       },
-      "primaryImageOfPage": {
-        "@id": `${imageUrl}#primaryimage`
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
       },
-      "inLanguage": "de",
-      "breadcrumb": {
-        "@id": `${pageUrl}#breadcrumb`
-      }
-    }
-  ]
-};
-
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Getting Ready",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Darauf musst Du unbedingt in Deiner Hochzeitsplanung achten, wenn Du Dein Getting Ready fotografieren lassen möchtest..."
-      }
-    }
-  ]
+      inLanguage: "de",
+    },
+  ],
 };
 ---
+
 <!doctype html>
 <html lang="de">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{title}</title>
-  <meta name="description" content={description}>
-  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
-  <link rel="canonical" href={pageUrl}>
-  <meta property="og:locale" content="de_DE">
-  <meta property="og:type" content="article">
-  <meta property="og:title" content={socialTitle}>
-  <meta property="og:description" content={socialDescription}>
-  <meta property="og:url" content={pageUrl}>
-  <meta property="og:site_name" content="Artbild-Fotografie">
-  <meta property="article:publisher" content="https://www.facebook.com/artbildfotografie/">
-  <meta property="article:author" content="https://web.facebook.com/artbildfotografie/">
-  <meta property="article:published_time" content="2020-11-08T07:36:02+01:00">
-  <meta property="article:modified_time" content="2025-08-08T22:16:31+02:00">
-  <meta property="og:updated_time" content="2025-08-08T22:16:31+02:00">
-  <meta property="og:image" content={imageUrl}>
-  <meta property="og:image:secure_url" content={imageUrl}>
-  <meta property="og:image:width" content="924">
-  <meta property="og:image:height" content="1384">
-  <meta property="og:image:alt" content="Getting Ready für deine Hochzeit">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content={socialTitle}>
-  <meta name="twitter:description" content={socialDescription}>
-  <meta name="twitter:site" content="@artbild">
-  <meta name="twitter:creator" content="@artbild">
-  <meta name="twitter:image" content={imageUrl}>
-  <meta name="twitter:label1" content="Lesedauer">
-  <meta name="twitter:data1" content="Weniger als eine Minute">
-  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)}></script>
-</head>
-<body class="gallery-template">
-  <header class="gallery-header">
-    <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="https://artbild-fotografie.de/portfolio/">Portfolio</a></li>
-        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
-      </ul>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2020-11-08T07:36:02+01:00">
+    <meta property="article:modified_time" content="2026-06-25T15:00:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={gettingReadyHeroImage.width}>
+    <meta property="og:image:height" content={gettingReadyHeroImage.height}>
+    <meta property="og:image:alt" content="Getting Ready Details für eine Hochzeit in Hamburg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template getting-ready-guide-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="gr-guide">
+        <header class="gr-guide-hero">
+          <div class="gr-guide-hero__copy">
+            <p class="gr-kicker">Ratgeber · Hochzeitsmorgen in Hamburg</p>
+            <h1>{title}</h1>
+            <p>
+              Das Getting Ready ist der leise Anfang der Hochzeitsreportage:
+              Styling, Vorfreude, kleine Details und Menschen, die dir Ruhe
+              geben, bevor der Tag Fahrt aufnimmt.
+            </p>
+          </div>
+          <div class="gr-guide-hero__images" aria-label="Getting Ready Bildauswahl">
+            {heroImages.map((item, index) => (
+              <figure class:list={[{ "is-featured": index === 1 }]}>
+                <Image
+                  src={item.image}
+                  widths={[420, 620, 920]}
+                  sizes="(max-width: 760px) 42vw, 22vw"
+                  format="webp"
+                  quality={86}
+                  loading={index === 1 ? "eager" : "lazy"}
+                  fetchpriority={index === 1 ? "high" : "auto"}
+                  alt={item.alt}
+                />
+              </figure>
+            ))}
+          </div>
+        </header>
+
+        <nav class="gr-guide-toc" aria-label="Inhaltsübersicht">
+          <a href="#warum">Warum fotografieren?</a>
+          <a href="#location">Location</a>
+          <a href="#menschen">Begleitung</a>
+          <a href="#outfit">Outfit</a>
+          <a href="#bilder">Bilder</a>
+        </nav>
+
+        <section class="gr-guide-section is-intro" aria-labelledby="intro-title">
+          <p class="gr-kicker">Getting Ready Hamburg</p>
+          <h2 id="intro-title">Aus Vorbereitung wird Erinnerung</h2>
+          <div class="gr-copy">
+            <p>
+              Beim feierlichen Getting Ready wird aus einem normalen Morgen der
+              erste Teil eurer Hochzeit. Haare, Make-up, Kleid, Parfum und die
+              Gespräche zwischendurch erzählen viel über die Stimmung des Tages.
+            </p>
+            <p>
+              Damit diese Bilder in Hamburg natürlich und hochwertig wirken,
+              braucht es keine große Inszenierung. Wichtiger sind Licht,
+              Ruhe, genügend Platz und ein Ablauf, der euch nicht hetzt.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-split" id="warum" aria-labelledby="why-title">
+          <div>
+            <p class="gr-kicker">1 · Der Moment davor</p>
+            <h2 id="why-title">Warum solltest du dein Getting Ready festhalten?</h2>
+          </div>
+          <div class="gr-copy">
+            <p>
+              Viele Hochzeitsmomente erleben alle Gäste gemeinsam. Das Getting
+              Ready bleibt dagegen oft intim: ein Blick in den Spiegel, eine
+              helfende Hand am Kleid, ein kurzer Moment mit der Trauzeugin.
+            </p>
+            <p>
+              Genau deshalb gehört es zur Hochzeitsreportage. Der Bräutigam
+              sieht später, was am Morgen passiert ist, und ihr bekommt Bilder,
+              die den Tag vollständig erzählen.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-split" id="kennenlernshooting" aria-labelledby="shooting-title">
+          <div>
+            <p class="gr-kicker">2 · Sicherheit vor der Kamera</p>
+            <h2 id="shooting-title">Ein Kennenlernshooting hilft bei der Vorbereitung</h2>
+          </div>
+          <div class="gr-copy">
+            <p>
+              Ein Kennenlernshooting vor der Hochzeit nimmt Druck aus dem Tag.
+              Du merkst, wie sich die fotografische Begleitung anfühlt und
+              kannst einschätzen, ob Stil, Tempo und Kommunikation passen.
+            </p>
+            <p>
+              Am Hochzeitstag kommt dann kein fremder Mensch ins Zimmer,
+              sondern jemand, dem du bereits vertraust. Das sieht man später
+              in den Bildern.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-image-band" aria-label="Getting Ready Details">
+          <figure>
+            <Image
+              src={gettingReadyGalleryImages[79].image}
+              widths={[520, 760, 1040]}
+              sizes="(max-width: 760px) 100vw, 48vw"
+              format="webp"
+              quality={86}
+              loading="lazy"
+              alt={gettingReadyGalleryImages[79].alt}
+            />
+          </figure>
+          <figure>
+            <Image
+              src={gettingReadyGalleryImages[63].image}
+              widths={[520, 760, 1040]}
+              sizes="(max-width: 760px) 100vw, 48vw"
+              format="webp"
+              quality={86}
+              loading="lazy"
+              alt={gettingReadyGalleryImages[63].alt}
+            />
+          </figure>
+        </section>
+
+        <section class="gr-guide-split" id="location" aria-labelledby="location-title">
+          <div>
+            <p class="gr-kicker">3 · Licht und Ruhe</p>
+            <h2 id="location-title">Was ist die beste Location für das Braut-Getting-Ready?</h2>
+          </div>
+          <div class="gr-copy">
+            <p>
+              Es ist nicht egal, wo dein Getting Ready stattfindet. Die
+              Location sollte ausreichend Platz bieten und gleichzeitig
+              visuell ruhig sein. Große Fenster, helle Wände und wenige
+              störende Gegenstände helfen enorm.
+            </p>
+            <p>
+              In Hamburg funktionieren Hotelsuiten, private Wohnungen oder
+              ein Atelier besonders gut, wenn sie Tageslicht und Rückzug
+              ermöglichen. Je entspannter der Raum, desto entspannter wirken
+              auch die Fotos.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-split" id="menschen" aria-labelledby="people-title">
+          <div>
+            <p class="gr-kicker">4 · Die richtigen Menschen</p>
+            <h2 id="people-title">Getting Ready alleine oder mit Freunden und Familie?</h2>
+          </div>
+          <div class="gr-copy">
+            <p>
+              Bedenke, dass du in sehr persönlichen Momenten fotografiert
+              wirst. Deshalb sollten nur Menschen dabei sein, die dir guttun:
+              Trauzeugin, Mutter, Schwester oder enge Freundinnen.
+            </p>
+            <p>
+              Zu viele Stimmen machen den Morgen schnell hektisch. Eine kleine,
+              vertraute Runde sorgt für Nähe und lässt echte Emotionen zu.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-split" id="outfit" aria-labelledby="outfit-title">
+          <div>
+            <p class="gr-kicker">5 · Outfit und Details</p>
+            <h2 id="outfit-title">Was ziehe ich beim Getting Ready an?</h2>
+          </div>
+          <div class="gr-copy">
+            <p>
+              Klassiker sind ein Morgenmantel aus Satin, ein weißer Kimono,
+              ein schlichtes Hemd oder feine Loungewear. Wichtig ist, dass
+              nichts über den Kopf ausgezogen werden muss, wenn Haare und
+              Make-up fertig sind.
+            </p>
+            <p>
+              Lege außerdem Schmuck, Schuhe, Parfum, Einladung und Ringe
+              bereit. Diese Details helfen, die Geschichte eures
+              Hochzeitsmorgens elegant und vollständig zu erzählen.
+            </p>
+          </div>
+        </section>
+
+        <section class="gr-guide-checklist" aria-labelledby="checklist-title">
+          <div>
+            <p class="gr-kicker">Kurz vor der Hochzeit</p>
+            <h2 id="checklist-title">Kleine Checkliste für entspannte Getting-Ready-Bilder</h2>
+          </div>
+          <ul>
+            <li>Genügend Tageslicht und einen aufgeräumten Bereich einplanen.</li>
+            <li>Styling, Kleid und Fotografie zeitlich nicht zu eng takten.</li>
+            <li>Accessoires und Papeterie vorab an einem Ort sammeln.</li>
+            <li>Nur Menschen einladen, die dir am Hochzeitsmorgen Ruhe geben.</li>
+          </ul>
+        </section>
+
+        <section class="gr-guide-gallery" id="bilder" aria-labelledby="gallery-title">
+          <p class="gr-kicker">Bildstrecke</p>
+          <h2 id="gallery-title">Getting Ready Bilder aus Hamburg</h2>
+          <p>
+            Die Galerie zeigt natürliche Portraits, Stylingdetails und ruhige
+            Momente rund um das Brautstyling in Hamburg.
+          </p>
+          <GalleryImageGrid
+            columns={gettingReadyGalleryColumns}
+            galleryId="getting-ready-guide"
+            label="Getting Ready Bilder und Brautstyling in Hamburg"
+            dialogLabel="Getting Ready Ratgeber in Vollansicht"
+          />
+        </section>
+
+        <section class="gr-guide-faq" aria-labelledby="faq-title">
+          <div>
+            <p class="gr-kicker">Häufige Fragen</p>
+            <h2 id="faq-title">Getting Ready in Hamburg planen</h2>
+          </div>
+          <div class="gr-guide-faq__items">
+            {faqItems.map((item) => (
+              <details>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="gr-guide-cta" aria-labelledby="cta-title">
+          <p class="gr-kicker">Hochzeitsreportage Hamburg</p>
+          <h2 id="cta-title">Soll euer Hochzeitstag schon beim Styling beginnen?</h2>
+          <p>
+            Wenn ihr euer Getting Ready in Hamburg fotografisch begleiten
+            lassen möchtet, fragt unverbindlich freie Termine an.
+          </p>
+          <div>
+            <a class="button" href="https://artbild-fotografie.de/kontakt/">
+              Freie Termine anfragen
+            </a>
+            <a class="button is-secondary" href="/gallery/getting-ready-hamburg/">
+              Ganze Getting-Ready-Galerie ansehen
+            </a>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
       <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
       </a>
-      <ul class="gallery-nav__group">
-        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
-        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
-        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
-        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <article class="gallery-article">
-      <h1 class="gallery-script-title">Das perfekte Getting Ready für deine Hochzeit in Hamburg</h1>
-
-      <section class="gallery-triptych" aria-label="Getting Ready Galerie Einstieg">
-        <img class="is-muted" src="/images/getting-ready-gallery-2.jpg" width="924" height="1384" alt="Brautportrait mit Schleier beim Getting Ready" loading="eager" fetchpriority="high" decoding="async">
-        <img src="/images/getting-ready-gallery-3.jpg" width="924" height="1384" alt="Brautportrait am Hochzeitsmorgen" loading="eager" decoding="async">
-        <img class="is-muted" src="/images/getting-ready-gallery-1.jpg" width="924" height="1384" alt="Braut unter dem Schleier vor der Hochzeit" loading="eager" decoding="async">
-      </section>
-
-      <div class="gallery-share" aria-label="Artikel teilen">
-        <span>Teilen:</span>
-        <a href="https://www.facebook.com/sharer/sharer.php?u=https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/" aria-label="Auf Facebook teilen">f</a>
-        <a href="https://www.pinterest.com/pin/create/button/" aria-label="Auf Pinterest teilen">p</a>
-      </div>
-
-      <section class="gallery-text-block">
-        <h2 class="gallery-script-title gallery-script-title--small">Das perfekte Getting Ready für deine Hochzeit in Hamburg</h2>
-        <div class="gallery-copy-columns">
-          <p>Beim feierlichen Getting Ready wird aus einer „normalen Frau“ eine märchenhafte Braut. Diesen Moment der Vorfreude auf die Trauung solltet ihr zelebrieren und unbedingt auf tollen Bildern festhalten.</p>
-          <p>Da das Brautstyling am Hochzeitsmorgen etwas sehr Persönliches ist, habe ich mich mit <a href="https://www.elladeck.de/">Ella Deck Couture</a> und <a href="https://www.salon-manija-hamburg.de/">Manija Biebow</a> zusammengefunden. Gemeinsam gestalten wir dein individuelles und ganz persönliches Getting Ready.</p>
-        </div>
-      </section>
-
-      <section class="gallery-text-block" id="warum">
-        <h2 class="gallery-script-title gallery-script-title--small">1. Warum solltest du dein Getting Ready auf Bildern festhalten?</h2>
-        <div class="gallery-copy-columns">
-          <p>Für mich ist klar, dass die einmalig schönen und vor allem intimen Momente der Brautvorbereitung unbedingt bildlich festgehalten werden müssen. Das freudige Getting Ready mit Sektempfang und jeder Menge Spaß erleben nur diejenigen, die anwesend sind.</p>
-          <p>Umso wichtiger ist es, das Brautstyling fotografisch zu begleiten. Wie sonst erfährt der Bräutigam später, was sich am Hochzeitsmorgen abgespielt hat und welche schönen emotionalen Momente die Braut erlebt hat?</p>
-        </div>
-      </section>
-
-      <section class="gallery-triptych" aria-label="Brautstyling Galerie">
-        <img class="is-muted" src="/images/getting-ready-gallery-2.jpg" width="924" height="1384" alt="Braut beim Getting Ready in Schwarzweiß" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-gallery-3.jpg" width="924" height="1384" alt="Braut mit Schleier beim Getting Ready" loading="lazy" decoding="async">
-        <img class="is-muted" src="/images/getting-ready-gallery-1.jpg" width="924" height="1384" alt="Brautportrait in ruhigem Licht" loading="lazy" decoding="async">
-      </section>
-
-      <section class="gallery-text-block" id="kennenlernshooting">
-        <h2 class="gallery-script-title gallery-script-title--small">2. Kennenlernshooting zur Vorbereitung</h2>
-        <div class="gallery-copy-columns">
-          <p>Ein Kennenlernshooting mit dem Fotografen sollte unbedingt in der Hochzeitsplanung stehen. Nur durch einen Probetermin kannst du feststellen, ob dir diese Art der Hochzeitsfotografie gefällt und ob du dich vor der Kamera sicher fühlst.</p>
-          <p>Am Tag der Hochzeit kommt dann kein völlig fremder Mensch zu dir, sondern jemand, den du bereits kennst und dem du vertrauen kannst.</p>
-        </div>
-      </section>
-
-      <section class="gallery-text-block" id="location">
-        <h2 class="gallery-script-title gallery-script-title--small">3. Was ist die beste Location für das Braut Getting Ready?</h2>
-        <div class="gallery-copy-columns">
-          <p>Es ist nicht egal, wo dein Getting Ready stattfindet. Die Location sollte ausreichend Platz für alle Anwesenden bieten und gleichzeitig für das Auge ansprechend sein.</p>
-          <p>Die Raumqualität spielt beim Brautstyling eine wichtige Rolle. Sie soll Ruhe und Wohlgefühl schaffen und natürlich auch etwas Nervosität nehmen.</p>
-        </div>
-      </section>
-
-      <section class="gallery-mosaic" aria-label="Getting Ready Bilder">
-        <img src="/images/getting-ready-hamburg-hero.jpg" width="924" height="1384" alt="Braut beim Getting Ready vor der Hochzeit in Hamburg" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-detail-1.jpg" width="924" height="1384" alt="Braut wird am Hochzeitsmorgen gestylt" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-detail-2.jpg" width="924" height="1384" alt="Detailaufnahme beim Brautstyling" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-gallery-4.jpg" width="924" height="1384" alt="Ruhiger Moment beim Brautstyling" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-gallery-5.jpg" width="924" height="1384" alt="Getting Ready Detail einer Braut" loading="lazy" decoding="async">
-        <img src="/images/getting-ready-gallery-6.jpg" width="924" height="1384" alt="Braut wird vor der Hochzeit vorbereitet" loading="lazy" decoding="async">
-      </section>
-
-      <section class="gallery-text-block" id="begleitung">
-        <h2 class="gallery-script-title gallery-script-title--small">4. Getting Ready alleine oder mit Freunden und Familie?</h2>
-        <div class="gallery-copy-columns">
-          <p>Bedenke, dass du beim Brautstyling auch in sehr persönlichen Momenten fotografiert wirst. Deshalb solltest du nur Menschen um dich haben, denen du vertraust und die du wirklich bei dir haben möchtest.</p>
-          <p>Brautmutter, beste Freundinnen und Brautjungfern können für eine heitere Stimmung sorgen. Unerwünschte Personen bewirken dagegen oft das Gegenteil.</p>
-        </div>
-      </section>
-
-      <section class="gallery-text-block" id="outfit">
-        <h2 class="gallery-script-title gallery-script-title--small">5. Was ziehe ich bei meinem Getting Ready an?</h2>
-        <div class="gallery-copy-columns">
-          <p>Klassiker sind ein kurzer Morgenmantel aus Satin, ein bequemer Bademantel oder ein weißer Kimono mit eleganter Spitze.</p>
-          <p>Gemütliche Pantoffeln, kuschelige Socken oder verzierte Flip-Flops sorgen für Entspannung und ein angenehmes Gefühl, bevor der positive Hochzeitsstress startet.</p>
-        </div>
-      </section>
-
-      <section class="gallery-cta">
-        <h2 class="gallery-script-title gallery-script-title--small">Jetzt Kontakt aufnehmen</h2>
-        <p>Wenn ihr euer Getting Ready in Hamburg fotografisch begleiten lassen möchtet, schreibt mir unverbindlich.</p>
-        <a class="button ghost" href="https://artbild-fotografie.de/kontakt/">Jetzt Termin anfragen</a>
-      </section>
-    </article>
-  </main>
-
-  <footer class="gallery-footer">
-    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-    </a>
-    <nav aria-label="Footer">
-      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
-      <a href="https://artbild-fotografie.de/blog/">Blog</a>
-      <a href="/impressum/">Impressum</a>
-      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
-    </nav>
-    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
-  </footer>
-</body>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
 </html>
+
+<style>
+  .gr-guide {
+    padding: clamp(52px, 6vw, 92px) 0 0;
+  }
+
+  .gr-kicker {
+    margin: 0;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .gr-guide-hero,
+  .gr-guide-section,
+  .gr-guide-split,
+  .gr-guide-image-band,
+  .gr-guide-checklist,
+  .gr-guide-gallery,
+  .gr-guide-faq,
+  .gr-guide-cta,
+  .gr-guide-toc {
+    width: min(1180px, calc(100% - 72px));
+    margin-inline: auto;
+  }
+
+  .gr-guide-hero {
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 7vw, 100px);
+    align-items: center;
+  }
+
+  .gr-guide-hero h1 {
+    margin: 18px 0 0;
+    color: #24262d;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(50px, 6.3vw, 90px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .gr-guide-hero__copy > p:last-child {
+    margin: 30px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .gr-guide-hero__images {
+    min-height: clamp(440px, 48vw, 700px);
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    align-items: center;
+  }
+
+  .gr-guide-hero__images figure {
+    margin: 0;
+    overflow: hidden;
+    background: #eee9e3;
+    box-shadow: 0 22px 58px rgba(31, 27, 23, .08);
+  }
+
+  .gr-guide-hero__images figure:nth-child(1) {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    z-index: 1;
+    transform: translateY(12%);
+  }
+
+  .gr-guide-hero__images figure:nth-child(2) {
+    grid-column: 3 / 6;
+    grid-row: 1;
+    z-index: 3;
+  }
+
+  .gr-guide-hero__images figure:nth-child(3) {
+    grid-column: 5 / 7;
+    grid-row: 1;
+    z-index: 2;
+    transform: translateY(-14%);
+  }
+
+  .gr-guide-hero__images img {
+    width: 100%;
+    height: clamp(320px, 38vw, 580px);
+    object-fit: cover;
+  }
+
+  .gr-guide-hero__images figure:nth-child(3) img {
+    height: clamp(260px, 31vw, 470px);
+  }
+
+  .gr-guide-toc {
+    margin-top: clamp(58px, 6vw, 86px);
+    padding: 18px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 26px;
+    justify-content: center;
+    border-top: 1px solid #ded8d0;
+    border-bottom: 1px solid #ded8d0;
+    color: #625c56;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+  }
+
+  .gr-guide-toc a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .gr-guide-section,
+  .gr-guide-split,
+  .gr-guide-checklist,
+  .gr-guide-faq {
+    margin-top: clamp(74px, 8vw, 124px);
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
+    gap: clamp(40px, 7vw, 96px);
+  }
+
+  .gr-guide-section.is-intro {
+    padding: clamp(54px, 6vw, 84px);
+    background: #f3f1ed;
+  }
+
+  .gr-guide h2 {
+    margin: 18px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.3vw, 62px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+
+  .gr-copy {
+    display: grid;
+    gap: 24px;
+  }
+
+  .gr-copy p,
+  .gr-guide-gallery > p,
+  .gr-guide-cta > p,
+  .gr-guide-faq p,
+  .gr-guide-checklist li {
+    margin: 0;
+    color: #68615b;
+    font-size: 17px;
+    line-height: 1.78;
+  }
+
+  .gr-guide-split {
+    padding-bottom: clamp(62px, 7vw, 96px);
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .gr-guide-image-band {
+    margin-top: clamp(72px, 7vw, 110px);
+    display: grid;
+    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+    gap: clamp(24px, 4vw, 54px);
+    align-items: end;
+  }
+
+  .gr-guide-image-band figure {
+    margin: 0;
+    background: #eee9e3;
+    overflow: hidden;
+  }
+
+  .gr-guide-image-band figure:first-child {
+    margin-bottom: clamp(34px, 5vw, 86px);
+  }
+
+  .gr-guide-image-band img {
+    width: 100%;
+    height: auto;
+  }
+
+  .gr-guide-checklist {
+    padding: clamp(54px, 6vw, 82px);
+    background: #f3f1ed;
+  }
+
+  .gr-guide-checklist ul {
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 18px;
+    list-style: none;
+  }
+
+  .gr-guide-checklist li {
+    position: relative;
+    padding-left: 28px;
+  }
+
+  .gr-guide-checklist li::before {
+    content: "";
+    position: absolute;
+    top: .78em;
+    left: 0;
+    width: 12px;
+    height: 1px;
+    background: #846b58;
+  }
+
+  .gr-guide-gallery {
+    margin-top: clamp(82px, 9vw, 136px);
+    text-align: center;
+  }
+
+  .gr-guide-gallery > p {
+    width: min(720px, 100%);
+    margin: 22px auto 0;
+  }
+
+  .gr-guide-gallery :global(.gallery-image-grid) {
+    width: min(1756px, calc(100vw - clamp(48px, 10.8vw, 214px)));
+  }
+
+  .gr-guide-faq__items {
+    display: grid;
+    gap: 12px;
+  }
+
+  .gr-guide-faq details {
+    border-top: 1px solid #ded8d0;
+  }
+
+  .gr-guide-faq details:last-child {
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .gr-guide-faq summary {
+    min-height: 58px;
+    padding: 18px 0;
+    color: #292c35;
+    cursor: pointer;
+    font-size: 24px;
+    line-height: 1.28;
+  }
+
+  .gr-guide-faq summary:focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  .gr-guide-faq p {
+    padding-bottom: 22px;
+  }
+
+  .gr-guide-cta {
+    margin-top: clamp(86px, 9vw, 138px);
+    padding: clamp(58px, 7vw, 92px);
+    background: #292c35;
+    color: #fff;
+    text-align: center;
+  }
+
+  .gr-guide-cta h2 {
+    color: #fff;
+  }
+
+  .gr-guide-cta > p {
+    width: min(720px, 100%);
+    margin: 24px auto 0;
+    color: rgba(255, 255, 255, .78);
+  }
+
+  .gr-guide-cta > div {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .gr-guide-cta .button {
+    min-height: 48px;
+    padding: 14px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #fff;
+    background: #fff;
+    color: #292c35;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .gr-guide-cta .button.is-secondary {
+    background: transparent;
+    color: #fff;
+  }
+
+  .getting-ready-guide-page :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .gr-guide-hero,
+    .gr-guide-section,
+    .gr-guide-split,
+    .gr-guide-checklist,
+    .gr-guide-faq {
+      grid-template-columns: 1fr;
+    }
+
+    .gr-guide-hero__copy {
+      text-align: center;
+    }
+
+    .gr-guide-hero__copy > p:last-child {
+      width: min(700px, 100%);
+      margin-inline: auto;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .gr-guide {
+      padding-top: 34px;
+    }
+
+    .gr-guide-hero,
+    .gr-guide-section,
+    .gr-guide-split,
+    .gr-guide-image-band,
+    .gr-guide-checklist,
+    .gr-guide-gallery,
+    .gr-guide-faq,
+    .gr-guide-cta,
+    .gr-guide-toc {
+      width: min(100% - 32px, 1180px);
+    }
+
+    .gr-guide-hero {
+      gap: 40px;
+    }
+
+    .gr-guide-hero h1 {
+      font-size: clamp(42px, 13vw, 58px);
+    }
+
+    .gr-guide-hero__images {
+      min-height: 360px;
+      order: -1;
+    }
+
+    .gr-guide-hero__images img {
+      height: 310px;
+    }
+
+    .gr-guide-hero__images figure:nth-child(3) img {
+      height: 250px;
+    }
+
+    .gr-guide-toc {
+      justify-content: flex-start;
+    }
+
+    .gr-guide-section.is-intro,
+    .gr-guide-checklist,
+    .gr-guide-cta {
+      padding: 42px 24px;
+    }
+
+    .gr-guide h2 {
+      font-size: clamp(33px, 10vw, 46px);
+    }
+
+    .gr-guide-image-band {
+      grid-template-columns: 1fr;
+    }
+
+    .gr-guide-image-band figure:first-child {
+      margin-bottom: 0;
+    }
+
+    .gr-guide-gallery :global(.gallery-image-grid) {
+      width: min(100% - 24px, 460px);
+    }
+
+    .gr-guide-faq summary {
+      font-size: 21px;
+    }
+
+    .gr-guide-cta > div {
+      align-items: stretch;
+      flex-direction: column;
+    }
+  }
+</style>
