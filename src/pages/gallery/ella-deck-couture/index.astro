@@ -1,0 +1,736 @@
+---
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/ella-deck-couture/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/ella-deck-couture/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Über Ella Deck Couture";
+const title = "Über Ella Deck Couture Hamburg-Eppendorf | Artbild-Fotografie";
+const description =
+  "Warum ich Ella Deck Couture aus Hamburg-Eppendorf für Brautkleider empfehle: Portraits, Ladenimpressionen und Hochzeitsinspiration für Bräute in Hamburg.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "ella_deck_couture-scaled.jpg": "Ella Deck in ihrem Couture-Laden in Hamburg-Eppendorf",
+  "ART_0281-scaled.jpg": "Blick in den Laden von Ella Deck Couture in Hamburg",
+  "ART_0289-scaled.jpg": "Ella Deck zeigt einen eleganten Mund-Nasen-Schutz",
+  "ART_0222-scaled.jpg": "Hochzeitskleider bei Ella Deck Couture Hamburg",
+  "ART_0247-scaled.jpg": "Ella Deck im Atelier und Laden in Hamburg-Eppendorf",
+  "ART_0211-scaled.jpg": "Empfangsbereich für Bräute bei Ella Deck Couture Hamburg",
+  "ART_0236-scaled.jpg": "Pressemappe und Details von Ella Deck Couture Hamburg",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const galleryColumns = [[], [], []] as typeof galleryImages[];
+galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+
+const heroImage = galleryImages[0].image;
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const hamburgPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#hamburg`,
+  name: "Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+};
+const eppendorfPlace = {
+  "@type": "Place",
+  "@id": `${pageUrl}#eppendorf`,
+  name: "Hamburg-Eppendorf",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+  containedInPlace: {
+    "@id": `${pageUrl}#hamburg`,
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Ella Deck Couture",
+        "Brautkleid Hamburg",
+        "Brautkleider Hamburg-Eppendorf",
+        "Getting Ready Hamburg",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      datePublished: "2020-11-08T07:44:37+01:00",
+      dateModified: "2026-06-25T19:20:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#eppendorf`,
+      },
+      about: {
+        "@id": `${pageUrl}#ella-deck-couture`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Ella Deck Couture Hamburg-Eppendorf",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#eppendorf`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "ClothingStore",
+      "@id": `${pageUrl}#ella-deck-couture`,
+      name: "Ella Deck Couture",
+      description: "Couture und Brautkleider in Hamburg-Eppendorf.",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@id": `${pageUrl}#hamburg` },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+    },
+    hamburgPlace,
+    eppendorfPlace,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Brautportrait",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2020-11-08T07:44:37+01:00",
+      dateModified: "2026-06-25T19:20:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Ella Deck in ihrem Couture-Laden in Hamburg-Eppendorf",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2020-11-08T07:44:37+01:00">
+    <meta property="article:modified_time" content="2026-06-25T19:20:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={galleryImages[0].alt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template couture-gallery-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="couture-gallery">
+        <header class="couture-hero">
+          <div class="couture-hero__copy">
+            <p class="couture-hero__script" aria-hidden="true">Couture</p>
+            <p class="couture-kicker">Brautkleider · Hamburg-Eppendorf</p>
+            <h1>{heading}</h1>
+            <p>
+              Ein ruhiger Blick in den Laden von Ella Deck Couture: Brautkleider,
+              Beratung, Details und Portraits einer Hamburger Designerin mit
+              feinem Gespür für den Hochzeitstag.
+            </p>
+          </div>
+          <figure class="couture-hero__portrait">
+            <Image
+              src={heroImage}
+              widths={[460, 720, 924]}
+              sizes="(max-width: 760px) 74vw, 34vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              alt={galleryImages[0].alt}
+            />
+            <figcaption>Ella Deck Couture in Hamburg-Eppendorf</figcaption>
+          </figure>
+        </header>
+
+        <section class="couture-story" aria-labelledby="couture-story-title">
+          <div class="couture-story__heading">
+            <p class="couture-kicker">Empfehlung für Bräute</p>
+            <h2 id="couture-story-title">Brautkleider, die zum Menschen vor der Kamera passen</h2>
+          </div>
+          <div class="couture-story__copy">
+            <div>
+              <h3>Hamburger Handschrift</h3>
+              <p>
+                Ella Deck Couture steht für Brautmode aus Hamburg-Eppendorf:
+                persönlich, detailbewusst und nah an der Frau, die das Kleid
+                später trägt.
+              </p>
+            </div>
+            <div>
+              <h3>Für das Getting Ready</h3>
+              <p>
+                Ein Kleid wirkt nicht erst bei der Trauung. Stoff, Silhouette und
+                letzte Handgriffe erzählen bereits am Hochzeitsmorgen viel von
+                Stil und Vorfreude.
+              </p>
+            </div>
+            <div>
+              <h3>Fotografisch gedacht</h3>
+              <p>
+                Gute Brautmode bewegt sich schön, lässt Raum für echte Momente
+                und bleibt auf Bildern auch nach Jahren elegant und klar.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="ella-deck-couture"
+          label="Ella Deck Couture in Hamburg-Eppendorf mit Brautkleidern und Ladenimpressionen"
+          dialogLabel="Ella Deck Couture in Vollansicht"
+        />
+
+        <aside class="couture-meta" aria-label="Galeriethemen">
+          <span>Themen:</span>
+          <a href="https://artbild-fotografie.de/gallery-tag/getting-ready/">Getting Ready</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/brautkleid/">Brautkleid Hamburg</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg-Eppendorf</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hochzeit/">Hochzeit</a>
+        </aside>
+
+        <section class="couture-service" aria-labelledby="couture-service-title">
+          <div>
+            <p class="couture-kicker">Hochzeitspartner in Hamburg</p>
+            <h2 id="couture-service-title">Ein stimmiger Dienstleister-Kreis macht den Tag ruhiger</h2>
+          </div>
+          <div>
+            <p>
+              Für hochwertige Hochzeitsbilder zählt nicht nur die Kamera. Kleid,
+              Styling, Licht und Ablauf greifen ineinander. Deshalb sind
+              verlässliche Empfehlungen aus Hamburg für viele Paare eine echte
+              Erleichterung.
+            </p>
+            <p>
+              Artbild-Fotografie begleitet das Getting Ready, Portraits und die
+              Reportage so, dass Kleid und Atmosphäre sichtbar bleiben, ohne die
+              echten Momente zu überdecken.
+            </p>
+            <div class="couture-service__actions">
+              <a href="/gallery/getting-ready-hamburg/">Getting Ready ansehen</a>
+              <a class="is-primary" href="https://artbild-fotografie.de/kontakt/">Hochzeit anfragen</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="couture-related" aria-label="Weitere Galerien und Ratgeber">
+          <a href="/gallery/getting-ready-hamburg/">
+            <span>Brautstyling</span>
+            Getting Ready Hamburg
+          </a>
+          <a href="/gallery/hochzeit-braut-fotoshooting-hamburg/">
+            <span>Brautportrait</span>
+            Hochzeit Braut Fotoshooting Hamburg
+          </a>
+          <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+            <span>Planung</span>
+            Getting-Ready-Ratgeber
+          </a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .couture-gallery {
+    padding-top: clamp(62px, 6.2vw, 96px);
+  }
+
+  .couture-hero {
+    width: min(1240px, calc(100% - 72px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(260px, .62fr);
+    gap: clamp(46px, 8vw, 112px);
+    align-items: center;
+  }
+
+  .couture-hero__script {
+    margin: 0 0 clamp(28px, 4vw, 54px);
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(50px, 6vw, 92px);
+    line-height: 1;
+  }
+
+  .couture-kicker {
+    margin: 0;
+    color: #866b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .couture-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 6.3vw, 92px);
+    font-weight: 400;
+    line-height: .98;
+  }
+
+  .couture-hero__copy > p:last-child {
+    width: min(690px, 100%);
+    margin: 32px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.7;
+  }
+
+  .couture-hero__portrait {
+    margin: 0;
+  }
+
+  .couture-hero__portrait :global(img) {
+    width: min(100%, 430px);
+    height: auto;
+    display: block;
+    margin-left: auto;
+  }
+
+  .couture-hero__portrait figcaption {
+    margin-top: 14px;
+    color: #817a72;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .couture-story {
+    width: min(1220px, calc(100% - 92px));
+    margin: clamp(90px, 9vw, 136px) auto 0;
+    padding: clamp(66px, 7vw, 100px) clamp(34px, 6vw, 86px);
+    background: #f4f0ed;
+  }
+
+  .couture-story__heading {
+    width: min(850px, 100%);
+  }
+
+  .couture-story h2,
+  .couture-service h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .couture-story__copy {
+    margin-top: clamp(50px, 6vw, 78px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(30px, 4vw, 60px);
+  }
+
+  .couture-story h3 {
+    margin: 0 0 18px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .couture-story__copy p,
+  .couture-service > div:last-child > p {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .couture-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .couture-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .couture-service {
+    width: min(1110px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 8vw, 110px);
+    align-items: start;
+  }
+
+  .couture-service > div:last-child {
+    padding-top: 8px;
+  }
+
+  .couture-service > div:last-child > p + p {
+    margin-top: 22px;
+  }
+
+  .couture-service__actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .couture-service__actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .couture-service__actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .couture-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .couture-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .couture-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .couture-related span {
+    margin-bottom: 14px;
+    color: #8d6e5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .couture-related a:hover,
+  .couture-related a:focus-visible {
+    background: #f4f0ed;
+  }
+
+  .couture-meta a:focus-visible,
+  .couture-service a:focus-visible,
+  .couture-related a:focus-visible {
+    outline: 2px solid #8d6e5a;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 920px) {
+    .couture-hero,
+    .couture-service {
+      grid-template-columns: 1fr;
+    }
+
+    .couture-hero__copy {
+      text-align: center;
+    }
+
+    .couture-hero__copy > p:last-child {
+      margin-inline: auto;
+    }
+
+    .couture-hero__portrait {
+      order: -1;
+    }
+
+    .couture-hero__portrait :global(img) {
+      margin-inline: auto;
+    }
+
+    .couture-hero__portrait figcaption {
+      text-align: center;
+    }
+
+    .couture-story__copy {
+      grid-template-columns: 1fr;
+    }
+
+    .couture-related {
+      grid-template-columns: 1fr;
+    }
+
+    .couture-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .couture-gallery {
+      padding-top: 36px;
+    }
+
+    .couture-hero,
+    .couture-story,
+    .couture-meta,
+    .couture-service,
+    .couture-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .couture-hero {
+      gap: 44px;
+    }
+
+    .couture-hero__portrait :global(img) {
+      width: min(78vw, 340px);
+    }
+
+    .couture-hero h1 {
+      font-size: clamp(45px, 14vw, 62px);
+    }
+
+    .couture-story {
+      margin-top: 72px;
+      padding: 54px 22px;
+    }
+
+    .couture-service {
+      grid-template-columns: 1fr;
+    }
+
+    .couture-service__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .couture-related a {
+      min-height: 146px;
+    }
+  }
+</style>
