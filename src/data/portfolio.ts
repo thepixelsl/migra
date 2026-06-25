@@ -17,6 +17,7 @@ import nordenKueste from "../assets/portfolio/norden-kueste.jpg";
 import paris from "../assets/portfolio/paris.jpg";
 import lovebirdsElbstrand from "../assets/portfolio/lovebirds-elbstrand.jpg";
 import traumhochzeitHamburg from "../assets/portfolio/traumhochzeit-hamburg.jpg";
+import brautpaarZuerich from "../assets/brautpaar-zuerich/ART_8515-Bearbeitet-scaled.jpg";
 
 export type PortfolioFilter = "All" | "Travel" | "Hochzeit" | "Peoplefotografie";
 
@@ -32,6 +33,16 @@ export type PortfolioEntry = {
 };
 
 const entries: PortfolioEntry[] = [
+  {
+    title: "Brautpaar in Zürich",
+    category: "Hochzeit",
+    filter: "Hochzeit",
+    date: "03.06.2026",
+    href: "/brautpaar-in-zuerich/",
+    image: brautpaarZuerich,
+    alt: "Stephanie und Laurin beim eleganten Styled Elopement Fotoshooting in Zürich",
+    aspect: "landscape",
+  },
   {
     title: "Hochzeitsfotos Hamburg",
     category: "Hochzeit",
