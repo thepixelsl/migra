@@ -1,0 +1,295 @@
+---
+import { Image } from "astro:assets";
+import MobileNavigation from "../components/MobileNavigation.astro";
+import museumScene from "../assets/404-museum-york-augustin.png";
+import "../styles/global.css";
+
+const pageTitle = "404 – Seite nicht gefunden | Artbild-Fotografie";
+const pageDescription =
+  "Diese Seite ist nicht Teil der Sammlung. Zurück zu Artbild-Fotografie, dem Portfolio oder zur Anfrage.";
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, follow">
+    <meta name="description" content={pageDescription}>
+    <title>{pageTitle}</title>
+  </head>
+  <body class="error-page">
+    <header class="error-header">
+      <MobileNavigation />
+      <nav class="error-desktop-nav" aria-label="Navigation der Fehlerseite">
+        <a class="error-brand" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <div>
+          <a href="/">Start</a>
+          <a href="/portfolio/">Portfolio</a>
+          <a href="https://artbild-fotografie.de/kontakt/">Anfrage</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <figure class="error-artwork">
+        <Image
+          src={museumScene}
+          widths={[640, 960, 1440, 2048]}
+          sizes="100vw"
+          format="webp"
+          quality={86}
+          loading="eager"
+          fetchpriority="high"
+          alt="Fotograf York Augustin betrachtet in einem Museum ein zeitgenössisches Gemälde mit der Aufschrift 404 Not Found"
+        />
+        <figcaption>
+          <span>Ohne Titel, 404</span>
+          <span>Digitale Irrwege auf Leinwand</span>
+        </figcaption>
+      </figure>
+
+      <section class="error-copy" aria-labelledby="error-title">
+        <div>
+          <p class="error-eyebrow">Nicht Teil der Sammlung</p>
+          <h1 id="error-title">Diese Seite hat sich wohl im Museum verlaufen.</h1>
+        </div>
+        <div class="error-copy__body">
+          <p>
+            Das gesuchte Werk ist leider nicht auffindbar. Die guten Bilder hängen aber noch da,
+            wo sie hingehören.
+          </p>
+          <nav class="error-actions" aria-label="Weiterführende Links">
+            <a class="error-action error-action--primary" href="/">Zur Startseite</a>
+            <a class="error-action" href="/portfolio/">Portfolio ansehen</a>
+          </nav>
+        </div>
+      </section>
+    </main>
+
+    <footer class="error-footer">
+      <span>Artbild-Fotografie</span>
+      <span>Hochzeitsfotograf Hamburg</span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(.error-page) {
+    min-height: 100svh;
+    background: #f7f5f1;
+    color: #171717;
+  }
+
+  .error-header {
+    background: #fff;
+    border-bottom: 1px solid rgba(23, 23, 23, .12);
+  }
+
+  .error-desktop-nav {
+    width: min(1360px, calc(100% - 64px));
+    min-height: 122px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .error-brand img {
+    width: 186px;
+    height: auto;
+  }
+
+  .error-desktop-nav > div {
+    display: flex;
+    gap: 38px;
+    align-items: center;
+  }
+
+  .error-desktop-nav > div a {
+    color: #252525;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .error-desktop-nav a:focus-visible,
+  .error-action:focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  .error-artwork {
+    margin: 0;
+    background: #ded8ce;
+  }
+
+  .error-artwork > :global(img) {
+    display: block;
+    width: 100%;
+    height: min(70svh, 820px);
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .error-artwork figcaption {
+    width: min(1360px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 14px 0 16px;
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+    color: #5f5a53;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .14em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .error-copy {
+    width: min(1160px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 78px 0 92px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(280px, .7fr);
+    gap: clamp(48px, 8vw, 130px);
+    align-items: start;
+  }
+
+  .error-eyebrow {
+    margin: 0 0 18px;
+    color: #2c739c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .error-copy h1 {
+    max-width: 760px;
+    font-size: clamp(40px, 5vw, 76px);
+    line-height: 1.02;
+  }
+
+  .error-copy__body > p {
+    max-width: 490px;
+    margin: 6px 0 34px;
+    color: #625d56;
+    font-size: 18px;
+    line-height: 1.65;
+  }
+
+  .error-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .error-action {
+    min-height: 48px;
+    padding: 13px 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #262626;
+    color: #262626;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 160ms ease, color 160ms ease;
+  }
+
+  .error-action--primary,
+  .error-action:hover {
+    background: #262626;
+    color: #fff;
+  }
+
+  .error-action--primary:hover {
+    background: #2c739c;
+    border-color: #2c739c;
+  }
+
+  .error-footer {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-top: 1px solid rgba(23, 23, 23, .12);
+    color: #716b64;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 900px) {
+    .error-desktop-nav {
+      display: none;
+    }
+
+    .error-artwork > :global(img) {
+      height: auto;
+      aspect-ratio: 3 / 2;
+      object-fit: contain;
+    }
+
+    .error-copy {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .error-artwork figcaption,
+    .error-copy {
+      width: min(100% - 32px, 1160px);
+    }
+
+    .error-artwork figcaption {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .error-copy {
+      padding: 54px 0 68px;
+    }
+
+    .error-copy h1 {
+      font-size: clamp(36px, 11vw, 52px);
+    }
+
+    .error-copy__body > p {
+      font-size: 17px;
+    }
+
+    .error-actions,
+    .error-action {
+      width: 100%;
+    }
+
+    .error-footer {
+      align-items: flex-start;
+      flex-direction: column;
+      padding-inline: 16px;
+    }
+  }
+</style>
