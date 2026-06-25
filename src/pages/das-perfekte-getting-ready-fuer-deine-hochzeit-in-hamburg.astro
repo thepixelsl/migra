@@ -546,15 +546,16 @@ const schemaGraph = {
   .gr-guide-faq,
   .gr-guide-cta,
   .gr-guide-toc {
-    width: min(1180px, calc(100% - 72px));
+    width: min(1140px, calc(100% - 72px));
     margin-inline: auto;
   }
 
   .gr-guide-hero {
     display: grid;
-    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
-    gap: clamp(46px, 7vw, 100px);
+    grid-template-columns: minmax(0, 1fr);
+    gap: clamp(44px, 6vw, 82px);
     align-items: center;
+    text-align: center;
   }
 
   .gr-guide-hero h1 {
@@ -568,13 +569,17 @@ const schemaGraph = {
   }
 
   .gr-guide-hero__copy > p:last-child {
+    width: min(760px, 100%);
     margin: 30px 0 0;
+    margin-inline: auto;
     color: #69635e;
     font-size: clamp(18px, 1.45vw, 22px);
     line-height: 1.72;
   }
 
   .gr-guide-hero__images {
+    width: min(760px, 100%);
+    margin-inline: auto;
     min-height: clamp(440px, 48vw, 700px);
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -750,7 +755,9 @@ const schemaGraph = {
   }
 
   .gr-guide-gallery :global(.gallery-image-grid) {
-    width: min(1756px, calc(100vw - clamp(48px, 10.8vw, 214px)));
+    width: 100%;
+    max-width: 1140px;
+    margin-inline: auto;
   }
 
   .gr-guide-faq__items {
@@ -869,7 +876,7 @@ const schemaGraph = {
     .gr-guide-faq,
     .gr-guide-cta,
     .gr-guide-toc {
-      width: min(100% - 32px, 1180px);
+      width: min(100% - 32px, 1140px);
     }
 
     .gr-guide-hero {

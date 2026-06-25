@@ -23,10 +23,23 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
     const schema = JSON.parse(
       document.querySelector('script[type="application/ld+json"]')?.textContent ?? "{}",
     );
+    const viewportCenter = document.documentElement.clientWidth / 2;
+    const centerDelta = (selector: string) => {
+      const element = document.querySelector<HTMLElement>(selector);
+      if (!element) return null;
+
+      const bounds = element.getBoundingClientRect();
+      return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
+    };
 
     return {
       canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href,
       description: document.querySelector<HTMLMetaElement>('meta[name="description"]')?.content,
+      centers: {
+        nav: centerDelta(".gallery-nav"),
+        hero: centerDelta(".gr-guide-hero"),
+        intro: centerDelta(".gr-guide-section"),
+      },
       missingAlt: [...document.images].filter((image) => !image.alt).length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
@@ -37,6 +50,9 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
     "https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
   );
   expect(metadata.description).toContain("Getting Ready Hamburg");
+  expect(metadata.centers.nav).toBe(0);
+  expect(metadata.centers.hero).toBe(0);
+  expect(metadata.centers.intro).toBe(0);
   expect(metadata.missingAlt).toBe(0);
   expect(metadata.overflow).toBe(0);
   expect(metadata.schemaTypes).toEqual(
@@ -57,6 +73,16 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
   });
 
   await page.locator("#bilder").scrollIntoViewIfNeeded();
+  const galleryAlignment = await page.evaluate(() => {
+    const viewportCenter = document.documentElement.clientWidth / 2;
+    const element = document.querySelector<HTMLElement>(".gr-guide-gallery .gallery-image-grid");
+    if (!element) return null;
+
+    const bounds = element.getBoundingClientRect();
+    return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
+  });
+  expect(galleryAlignment).toBe(0);
+
   await page.screenshot({
     path: `${screenshotDirectory}/desktop-gallery.png`,
     fullPage: false,
@@ -71,11 +97,30 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     mobileNavVisible: getComputedStyle(document.querySelector(".mobile-navigation")!).display !== "none",
     desktopNavVisible: getComputedStyle(document.querySelector(".gallery-nav")!).display !== "none",
+    centers: (() => {
+      const viewportCenter = document.documentElement.clientWidth / 2;
+      const centerDelta = (selector: string) => {
+        const element = document.querySelector<HTMLElement>(selector);
+        if (!element) return null;
+
+        const bounds = element.getBoundingClientRect();
+        return Math.round((bounds.left + bounds.width / 2) - viewportCenter);
+      };
+
+      return {
+        mobileBar: centerDelta(".mobile-navigation__bar"),
+        hero: centerDelta(".gr-guide-hero"),
+        gallery: centerDelta(".gr-guide-gallery .gallery-image-grid"),
+      };
+    })(),
   }));
 
   expect(mobileLayout.overflow).toBe(0);
   expect(mobileLayout.mobileNavVisible).toBe(true);
   expect(mobileLayout.desktopNavVisible).toBe(false);
+  expect(mobileLayout.centers.mobileBar).toBe(0);
+  expect(mobileLayout.centers.hero).toBe(0);
+  expect(mobileLayout.centers.gallery).toBe(0);
 
   await page.screenshot({
     path: `${screenshotDirectory}/mobile-hero.png`,
