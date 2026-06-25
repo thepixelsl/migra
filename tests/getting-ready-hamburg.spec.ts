@@ -12,7 +12,7 @@ test("desktop Getting Ready gallery preserves portraits and opens the lightbox",
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("heading", { level: 1, name: "Getting Ready Hamburg" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid__item")).toHaveCount(6);
+  await expect(page.locator(".gallery-image-grid__item")).toHaveCount(84);
   await expect
     .poll(() =>
       page
@@ -26,7 +26,8 @@ test("desktop Getting Ready gallery preserves portraits and opens the lightbox",
       Number(image.getAttribute("width")) / Number(image.getAttribute("height")),
     ),
   );
-  expect(ratios.every((ratio) => ratio < 0.8)).toBe(true);
+  expect(ratios.some((ratio) => ratio < 0.8)).toBe(true);
+  expect(ratios.some((ratio) => ratio > 1.35)).toBe(true);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({
@@ -35,7 +36,7 @@ test("desktop Getting Ready gallery preserves portraits and opens the lightbox",
   });
 
   const triggers = page.locator("[data-gallery-trigger='getting-ready-hamburg']");
-  expect(await triggers.count()).toBe(6);
+  expect(await triggers.count()).toBe(84);
   await triggers.first().click();
 
   const dialog = page.getByRole("dialog", {
@@ -62,6 +63,13 @@ test("desktop Getting Ready gallery preserves portraits and opens the lightbox",
   await page.waitForTimeout(900);
   await page.screenshot({
     path: `${screenshotDirectory}/desktop-gallery.png`,
+    fullPage: false,
+  });
+
+  await page.locator(".gallery-image-grid__item").nth(60).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(900);
+  await page.screenshot({
+    path: `${screenshotDirectory}/desktop-gallery-late.png`,
     fullPage: false,
   });
 });
