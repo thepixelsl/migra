@@ -1,0 +1,664 @@
+---
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+import heroImage from "../../../assets/getting-ready-hamburg/getting_ready_hochzeitsfotograf_hamburg1567-2-scaled.jpg";
+
+const imageModules = import.meta.glob(
+  "../../../assets/getting-ready-hamburg/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/getting-ready-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Getting Ready Hamburg";
+const title = "Getting Ready Hamburg – Brautstyling | Artbild-Fotografie";
+const description =
+  "Getting-Ready-Fotografie in Hamburg mit Leoni Mecklenburg, Ella Deck Couture und Manija Biebow: natürliche Portraits vom Brautstyling am Hochzeitsmorgen.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "getting_ready_hochzeitsfotograf_hamburg1564-scaled.jpg":
+    "Braut Leoni sitzt mit frisch gelegten Locken beim Getting Ready in Hamburg",
+  "getting_ready_hochzeitsfotograf_hamburg1530-scaled.jpg":
+    "Stylistin formt die Brautfrisur beim Getting Ready in Hamburg",
+  "getting_ready_hochzeitsfotograf_hamburg1776-scaled.jpg":
+    "Lachende Braut in weißer Hochzeitswäsche nach dem Styling",
+  "getting_ready_hochzeitsfotograf_hamburg1659-scaled.jpg":
+    "Stylistin richtet die Locken der Braut am Hochzeitsmorgen",
+  "getting_ready_hochzeitsfotograf_hamburg1664-scaled.jpg":
+    "Natürliches Brautportrait während des Getting Ready in Hamburg",
+  "getting_ready_hochzeitsfotograf_hamburg1671-2-scaled.jpg":
+    "Braut wird durch eine Fensterscheibe beim Make-up fotografiert",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const galleryColumns = [
+  [galleryImages[0], galleryImages[3]],
+  [galleryImages[1], galleryImages[4]],
+  [galleryImages[2], galleryImages[5]],
+];
+
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const hamburgPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#hamburg`,
+  name: "Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Getting Ready Hamburg",
+        "Brautstyling Hamburg",
+        "Hochzeitsmorgen Hamburg",
+        "Getting Ready Fotografie",
+      ],
+      datePublished: "2020-11-08T07:44:37+01:00",
+      dateModified: "2026-06-25T13:00:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Getting Ready und Brautstyling in Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      image: [
+        {
+          "@type": "ImageObject",
+          position: 1,
+          caption: "Styling-Produkte für das Getting Ready in Hamburg",
+          contentUrl: primaryImage,
+          width: heroImage.width,
+          height: heroImage.height,
+        },
+        ...galleryImages.map((item, index) => ({
+          "@type": "ImageObject",
+          position: index + 2,
+          caption: item.alt,
+          contentUrl: new URL(item.image.src, siteUrl).href,
+          width: item.image.width,
+          height: item.image.height,
+        })),
+      ],
+    },
+    hamburgPlace,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Brautstyling Reportage",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2020-11-08T07:44:37+01:00",
+      dateModified: "2026-06-25T13:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Getting Ready und Brautstyling in Hamburg",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2020-11-08T07:44:37+01:00">
+    <meta property="article:modified_time" content="2026-06-25T13:00:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Styling-Produkte für ein Getting Ready in Hamburg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template getting-ready-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="getting-ready-gallery">
+        <header class="getting-ready-hero">
+          <div class="getting-ready-hero__copy">
+            <p class="getting-ready-kicker">Hochzeitsmorgen · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Ruhige Portraits und echte Zwischentöne beim Brautstyling mit
+              Leoni Mecklenburg, Ella Deck Couture und Manija Biebow.
+            </p>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[720, 1080, 1384]}
+              sizes="(max-width: 760px) 100vw, 58vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              alt="Kosmetik, Pinsel und Styling-Produkte für ein Getting Ready in Hamburg"
+            />
+            <figcaption>Vorbereitung für das Brautstyling</figcaption>
+          </figure>
+        </header>
+
+        <section class="getting-ready-intro" aria-labelledby="getting-ready-intro-title">
+          <div>
+            <p class="getting-ready-kicker">Die Geschichte vor dem Ja-Wort</p>
+            <h2 id="getting-ready-intro-title">
+              Das Getting Ready gehört bereits zur Hochzeitsreportage
+            </h2>
+          </div>
+          <div class="getting-ready-intro__copy">
+            <p>
+              Bevor das Kleid angezogen wird, entstehen beim Styling leise und
+              persönliche Bilder. Locken, Make-up und kleine Pausen erzählen
+              von der Vorfreude auf den Hochzeitstag.
+            </p>
+            <p>
+              Helles Licht, genügend Platz und eine ruhige Umgebung geben der
+              Vorbereitung den passenden Rahmen. So bleibt Raum für natürliche
+              Portraits, Details und die Zusammenarbeit aller Beteiligten.
+            </p>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="getting-ready-hamburg"
+          label="Getting Ready und Brautstyling mit Leoni Mecklenburg in Hamburg"
+          dialogLabel="Getting Ready Hamburg in Vollansicht"
+        />
+
+        <aside class="getting-ready-meta" aria-label="Galeriethemen">
+          <span>Themen:</span>
+          <a href="https://artbild-fotografie.de/gallery-tag/getting-ready/">Getting Ready</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/brautstyling/">Brautstyling</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hochzeit/">Hochzeit</a>
+        </aside>
+
+        <section class="getting-ready-guide" aria-labelledby="getting-ready-guide-title">
+          <div>
+            <p class="getting-ready-kicker">Planung & Inspiration</p>
+            <h2 id="getting-ready-guide-title">
+              Darauf solltest Du bei Deinem Getting Ready achten
+            </h2>
+          </div>
+          <div>
+            <p>
+              Welche Location eignet sich, wer sollte dabei sein und wie bleibt
+              der Hochzeitsmorgen entspannt? Der ausführliche Ratgeber bündelt
+              die wichtigsten fotografischen und organisatorischen Hinweise.
+            </p>
+            <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+              Getting-Ready-Ratgeber lesen
+            </a>
+          </div>
+        </section>
+
+        <nav class="getting-ready-related" aria-label="Weitere Hochzeitsgalerien">
+          <a href="/gallery/hochzeit-braut-fotoshooting-hamburg/">
+            <span>Brautportrait</span>
+            Hochzeit Braut Fotoshooting Hamburg
+          </a>
+          <a href="/gallery/traumhochzeit-in-hamburg/">
+            <span>Hochzeitsreportage</span>
+            Traumhochzeit in Hamburg
+          </a>
+          <a href="/portfolio/">
+            <span>Portfolio</span>
+            Weitere Hochzeiten und Portraits
+          </a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .getting-ready-gallery {
+    padding-top: clamp(60px, 6vw, 92px);
+  }
+
+  .getting-ready-hero {
+    width: min(1260px, calc(100% - 72px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
+    gap: clamp(50px, 8vw, 120px);
+    align-items: center;
+  }
+
+  .getting-ready-kicker {
+    margin: 0;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .getting-ready-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 6.4vw, 92px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: .98;
+  }
+
+  .getting-ready-hero__copy > p:last-child {
+    margin: 32px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.68;
+  }
+
+  .getting-ready-hero figure {
+    margin: 0;
+  }
+
+  .getting-ready-hero figure :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  .getting-ready-hero figcaption {
+    margin-top: 12px;
+    color: #817a72;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .getting-ready-intro {
+    width: min(1140px, calc(100% - 92px));
+    margin: clamp(92px, 9vw, 142px) auto 0;
+    padding: clamp(62px, 7vw, 92px);
+    display: grid;
+    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+    gap: clamp(48px, 7vw, 104px);
+    background: #f3f1ed;
+  }
+
+  .getting-ready-intro h2,
+  .getting-ready-guide h2 {
+    margin: 18px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .getting-ready-intro__copy {
+    display: grid;
+    gap: 26px;
+  }
+
+  .getting-ready-intro__copy p,
+  .getting-ready-guide > div:last-child p {
+    margin: 0;
+    color: #66605a;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .getting-ready-meta {
+    width: min(1140px, calc(100% - 92px));
+    margin: 44px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px 20px;
+    color: #77716b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .getting-ready-meta a {
+    text-decoration: none;
+  }
+
+  .getting-ready-meta a:hover,
+  .getting-ready-meta a:focus-visible {
+    color: #846b58;
+  }
+
+  .getting-ready-guide {
+    width: min(1140px, calc(100% - 92px));
+    margin: clamp(100px, 10vw, 152px) auto 0;
+    padding: clamp(58px, 7vw, 92px) 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .72fr);
+    gap: clamp(48px, 9vw, 130px);
+    border-top: 1px solid #ded8d0;
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .getting-ready-guide > div:last-child {
+    align-self: end;
+  }
+
+  .getting-ready-guide a {
+    min-height: 48px;
+    margin-top: 30px;
+    padding: 13px 18px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #292c35;
+    background: #292c35;
+    color: #fff;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .getting-ready-guide a:hover,
+  .getting-ready-guide a:focus-visible {
+    border-color: #846b58;
+    background: #846b58;
+  }
+
+  .getting-ready-related {
+    width: min(1140px, calc(100% - 92px));
+    margin: 70px auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #ded8d0;
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .getting-ready-related a {
+    min-height: 152px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #292c35;
+    font-size: clamp(20px, 2vw, 29px);
+    line-height: 1.18;
+    text-decoration: none;
+  }
+
+  .getting-ready-related a + a {
+    border-left: 1px solid #ded8d0;
+  }
+
+  .getting-ready-related span {
+    margin-bottom: 13px;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+
+  .getting-ready-related a:hover,
+  .getting-ready-related a:focus-visible {
+    background: #f3f1ed;
+  }
+
+  .getting-ready-page :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .getting-ready-hero,
+    .getting-ready-intro,
+    .getting-ready-guide {
+      grid-template-columns: 1fr;
+    }
+
+    .getting-ready-hero__copy {
+      text-align: center;
+    }
+
+    .getting-ready-hero__copy > p:last-child {
+      width: min(680px, 100%);
+      margin-inline: auto;
+    }
+
+    .getting-ready-hero figure {
+      order: -1;
+    }
+
+    .getting-ready-related {
+      grid-template-columns: 1fr;
+    }
+
+    .getting-ready-related a + a {
+      border-top: 1px solid #ded8d0;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .getting-ready-gallery {
+      padding-top: 34px;
+    }
+
+    .getting-ready-hero,
+    .getting-ready-intro,
+    .getting-ready-meta,
+    .getting-ready-guide,
+    .getting-ready-related {
+      width: min(100% - 32px, 1140px);
+    }
+
+    .getting-ready-hero {
+      gap: 44px;
+    }
+
+    .getting-ready-hero h1 {
+      font-size: clamp(48px, 15vw, 64px);
+    }
+
+    .getting-ready-hero figcaption {
+      text-align: left;
+    }
+
+    .getting-ready-intro {
+      margin-top: 72px;
+      padding: 44px 24px;
+      gap: 36px;
+    }
+
+    .getting-ready-intro h2,
+    .getting-ready-guide h2 {
+      font-size: clamp(34px, 10vw, 46px);
+    }
+
+    .getting-ready-meta {
+      justify-content: flex-start;
+    }
+
+    .getting-ready-guide {
+      margin-top: 86px;
+      gap: 34px;
+    }
+
+    .getting-ready-related a {
+      min-height: 128px;
+      padding: 24px 4px;
+    }
+  }
+</style>

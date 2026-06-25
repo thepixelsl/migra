@@ -67,7 +67,7 @@ const entries: PortfolioEntry[] = [
     category: "Couples",
     filter: "Hochzeit",
     date: "08.11.2020",
-    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+    href: "/gallery/getting-ready-hamburg/",
     image: gettingReadyHamburg,
     alt: "Braut beim Getting Ready vor der Hochzeit in Hamburg",
     aspect: "portrait",
