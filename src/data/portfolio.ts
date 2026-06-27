@@ -128,7 +128,7 @@ const entries: PortfolioEntry[] = [
     category: "Editorial",
     filter: "Peoplefotografie",
     date: "08.07.2019",
-    href: "https://artbild-fotografie.de/gallery/editorial/",
+    href: "/gallery/editorial/",
     image: editorial,
     alt: "Editorial Portraitfotografie",
     aspect: "portrait",

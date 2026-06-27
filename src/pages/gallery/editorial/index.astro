@@ -1,0 +1,767 @@
+---
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/editorial/*.{jpg,jpeg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/editorial/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Editorial Portraits Hamburg";
+const title = "Editorial Portraits Hamburg | Artbild-Fotografie";
+const description =
+  "Editoriale Portraitfotografie in Hamburg: natürliche Portraits von Hamburgerinnen und Hamburgern, teils zum ersten Mal vor der Kamera, ruhig und magazinartig fotografiert.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const featuredFiles = [
+  "ART_9706-Bearbeitet-Bearbeitet.jpg",
+  "ART_9806-Bearbeitet.jpg",
+];
+const originalFiles = Object.keys(modulesByFile)
+  .filter((file) => /^\d{3}-/.test(file))
+  .sort((a, b) => a.localeCompare(b, "de"));
+const galleryFiles = [
+  ...featuredFiles.filter((file) => modulesByFile[file]),
+  ...originalFiles,
+];
+
+const altByFile: Record<string, string> = {
+  "ART_9706-Bearbeitet-Bearbeitet.jpg":
+    "Editorial Portrait einer Frau in weißem Top vor urbaner Architektur in Hamburg",
+  "ART_9806-Bearbeitet.jpg":
+    "Nahes Editorial Portrait einer Frau in weißem Top bei einem urbanen Fotoshooting in Hamburg",
+  "001-ART0921-Bearbeitet_web-684x1024.jpg":
+    "Editorial Portrait einer Frau im roten Outfit vor der Kamera in Hamburg",
+  "002-schwerin_schloss-820x1024.jpg":
+    "Editorial Portrait mit historischer Architektur und Schlosskulisse",
+  "003-ART_7105-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Natürliches Portrait einer Hamburgerin im Editorial-Stil",
+  "004-ART_7174-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Portrait einer Frau mit ruhigem Blick bei einem Editorial Shooting",
+  "005-ART_7135-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait in weichem Licht und urbanem Umfeld",
+  "006-ART_7180-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Ausdrucksstarkes Portrait einer Hamburgerin in natürlicher Pose",
+  "007-ART_7075-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait einer Frau mit dezenter Bildsprache",
+  "008-ART_6970-Verbessert-RR-Bearbeitet-819x1024.jpg":
+    "Portraitaufnahme in Hamburg mit ruhiger, magazinartiger Ästhetik",
+  "009-ART_6921-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Hamburger Editorial Portrait mit natürlichem Ausdruck",
+  "010-ART_6840-Verbessert-RR-Bearbeitet-683x1024.jpg":
+    "Portrait einer Frau vor urbaner Kulisse in Hamburg",
+  "011-ART_7890-Bearbeitet-683x1024.jpg":
+    "Portrait von York Augustin am Wasser in Hamburg",
+  "012-ART_9706-Bearbeitet-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait einer Frau vor heller Stadtkulisse",
+  "013-ART_9618-Bearbeitet-683x1024.jpg":
+    "Portrait einer Frau mit schwarzer Kleidung im urbanen Licht",
+  "014-ART_9441-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait einer Hamburgerin an einer Fassade",
+  "015-ART_9625-Bearbeitet-819x1024.jpg":
+    "Portrait einer Frau mit klarem Blick im Editorial-Stil",
+  "016-ART_9601-Bearbeitet-Bearbeitet-683x1024.jpg":
+    "Natürliches Editorial Portrait mit weicher Lichtstimmung",
+  "017-ART_9672-Bearbeitet-683x1024.jpg":
+    "Hamburger Portraitshooting mit urbaner Architektur",
+  "018-ART_9372-Bearbeitet-Bearbeitet-Bearbeitet-1024x683.jpg":
+    "Editorial Portrait im Querformat mit natürlicher Pose",
+  "019-ART_9810-Bearbeitet-683x1024.jpg":
+    "Portrait einer Frau bei einem urbanen Editorial Shooting",
+  "020-ART_9477-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait mit heller Architektur und ruhiger Haltung",
+  "021-ART_9202-Bearbeitet-683x1024.jpg":
+    "Portrait einer Hamburgerin mit natürlicher Bildsprache",
+  "022-ART_9224-Bearbeitet-683x1024.jpg":
+    "Editorial Portrait vor städtischem Hintergrund in Hamburg",
+  "023-ART_9816-Bearbeitet-819x1024.jpg":
+    "Portrait einer Frau im urbanen Editorial Look",
+  "024-ART_9452-Bearbeitet-683x1024.jpg":
+    "Natürliches Portrait mit klarem Ausdruck und hellem Licht",
+};
+
+const fallbackAlt = (index: number) =>
+  `Editorial Portrait aus der Artbild-Serie, Bild ${index + 1}`;
+
+const galleryImages = galleryFiles.map((file, index) => ({
+  id: file.replace(/\.(jpe?g)$/i, ""),
+  image: modulesByFile[file],
+  alt: altByFile[file] ?? fallbackAlt(index),
+  aspect: "natural" as const,
+  eager: false,
+}));
+
+const galleryColumns = [[], [], []] as typeof galleryImages[];
+galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+
+const heroImage = modulesByFile["ART_9706-Bearbeitet-Bearbeitet.jpg"] ?? galleryImages[0].image;
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const hamburgPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#hamburg`,
+  name: "Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Editorial Fotoshooting Hamburg",
+        "Portraitfotografie Hamburg",
+        "Peoplefotografie Hamburg",
+        "TFP Shooting Hamburg",
+        "Portraits Hamburg",
+      ],
+      datePublished: "2019-07-08T09:26:18+02:00",
+      dateModified: "2026-06-26T18:45:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      about: [
+        { "@type": "Thing", name: "Editorial Portraitfotografie" },
+        { "@type": "Thing", name: "Peoplefotografie Hamburg" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Editorial Portraits Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    hamburgPlace,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Editorial Portraitfotografie",
+        "Peoplefotografie",
+        "Portraitshooting",
+        "Hochzeitsfotografie",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2019-07-08T09:26:18+02:00",
+      dateModified: "2026-06-26T18:45:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: altByFile["ART_9706-Bearbeitet-Bearbeitet.jpg"],
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2019-07-08T09:26:18+02:00">
+    <meta property="article:modified_time" content="2026-06-26T18:45:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={altByFile["ART_9706-Bearbeitet-Bearbeitet.jpg"]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template editorial-gallery-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="editorial-gallery">
+        <header class="editorial-hero">
+          <div class="editorial-hero__copy">
+            <p class="editorial-hero__script" aria-hidden="true">Editorial</p>
+            <p class="editorial-kicker">Peoplefotografie · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Portraits von Menschen, die nicht jeden Tag vor der Kamera stehen:
+              Hamburgerinnen, Hamburger und persönliche Geschichten, fotografiert
+              mit Ruhe, Licht und einer klaren editorialen Bildsprache.
+            </p>
+          </div>
+          <figure class="editorial-hero__portrait">
+            <Image
+              src={heroImage}
+              widths={[460, 720, 920, 1200]}
+              sizes="(max-width: 760px) 78vw, 36vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt={altByFile["ART_9706-Bearbeitet-Bearbeitet.jpg"]}
+            />
+            <figcaption>Editorial Portraitfotografie in Hamburg</figcaption>
+          </figure>
+        </header>
+
+        <section class="editorial-story" aria-labelledby="editorial-story-title">
+          <div class="editorial-story__heading">
+            <p class="editorial-kicker">Portraitserie</p>
+            <h2 id="editorial-story-title">Wenn ein Portrait nicht posiert wirken muss</h2>
+          </div>
+          <div class="editorial-story__copy">
+            <div>
+              <h3>Hamburger Menschen</h3>
+              <p>
+                Die Serie zeigt ganz unterschiedliche Charaktere aus Hamburg:
+                mal urban, mal weich, mal direkt, aber immer mit einem ruhigen
+                Blick auf die Person vor der Kamera.
+              </p>
+            </div>
+            <div>
+              <h3>Editorial statt Bewerbung</h3>
+              <p>
+                Es geht nicht um standardisierte Businessportraits. Die Bilder
+                dürfen persönlicher, modischer und erzählerischer sein, ohne
+                künstlich zu wirken.
+              </p>
+            </div>
+            <div>
+              <h3>Erstes Shooting möglich</h3>
+              <p>
+                Viele Menschen standen hier zum ersten Mal vor der Kamera. Genau
+                deshalb ist ein klarer, ruhiger Ablauf wichtiger als laute Posen.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="editorial"
+          label="Editorial Portraits und Peoplefotografie in Hamburg"
+          dialogLabel="Editorial Portraits Hamburg in Vollansicht"
+        />
+
+        <aside class="editorial-meta" aria-label="Galeriethemen">
+          <span>Themen:</span>
+          <a href="https://artbild-fotografie.de/gallery-tag/editorial/">Editorial Fotoshooting</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/portrait/">Portraitfotografie</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg</a>
+          <a href="https://artbild-fotografie.de/gallery-tag/peoplefotografie/">Peoplefotografie</a>
+        </aside>
+
+        <section class="editorial-service" aria-labelledby="editorial-service-title">
+          <div>
+            <p class="editorial-kicker">Portraitfotografie Hamburg</p>
+            <h2 id="editorial-service-title">Ruhige Portraits mit Raum für Persönlichkeit</h2>
+          </div>
+          <div>
+            <p>
+              Editoriale Portraits funktionieren besonders gut, wenn Umgebung,
+              Kleidung, Licht und Haltung zusammen gedacht werden. So entstehen
+              Bilder, die persönlicher sind als klassische Bewerbungsfotos und
+              zugleich hochwertig und klar bleiben.
+            </p>
+            <p>
+              Artbild-Fotografie verbindet diese ruhige Portraitsprache mit der
+              Erfahrung aus Hochzeitsreportagen in Hamburg: aufmerksam, präzise
+              und nah am Menschen.
+            </p>
+            <div class="editorial-service__actions">
+              <a href="/portfolio/">Portfolio ansehen</a>
+              <a class="is-primary" href="https://artbild-fotografie.de/kontakt/">Shooting anfragen</a>
+            </div>
+          </div>
+        </section>
+
+        <nav class="editorial-related" aria-label="Weitere Galerien und Portrait-Inspirationen">
+          <a href="/gallery/ella-deck-couture/">
+            <span>Editorial</span>
+            Ella Deck Couture
+          </a>
+          <a href="/gallery/hochzeit-braut-fotoshooting-hamburg/">
+            <span>Brautportrait</span>
+            Hochzeit Braut Fotoshooting Hamburg
+          </a>
+          <a href="/portfolio/">
+            <span>Übersicht</span>
+            Portfolio Artbild-Fotografie
+          </a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .editorial-gallery {
+    padding-top: clamp(62px, 6.2vw, 96px);
+  }
+
+  .editorial-hero {
+    width: min(1240px, calc(100% - 72px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(260px, .66fr);
+    gap: clamp(46px, 8vw, 112px);
+    align-items: center;
+  }
+
+  .editorial-hero__script {
+    margin: 0 0 clamp(28px, 4vw, 54px);
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(50px, 6vw, 92px);
+    line-height: 1;
+  }
+
+  .editorial-kicker {
+    margin: 0;
+    color: #866b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .editorial-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 6.3vw, 92px);
+    font-weight: 400;
+    line-height: .98;
+  }
+
+  .editorial-hero__copy > p:last-child {
+    width: min(690px, 100%);
+    margin: 32px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.7;
+  }
+
+  .editorial-hero__portrait {
+    margin: 0;
+  }
+
+  .editorial-hero__portrait :global(img) {
+    width: min(100%, 440px);
+    height: auto;
+    display: block;
+    margin-left: auto;
+  }
+
+  .editorial-hero__portrait figcaption {
+    margin-top: 14px;
+    color: #817a72;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .editorial-story {
+    width: min(1220px, calc(100% - 92px));
+    margin: clamp(90px, 9vw, 136px) auto 0;
+    padding: clamp(66px, 7vw, 100px) clamp(34px, 6vw, 86px);
+    background: #f4f0ed;
+  }
+
+  .editorial-story__heading {
+    width: min(850px, 100%);
+  }
+
+  .editorial-story h2,
+  .editorial-service h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .editorial-story__copy {
+    margin-top: clamp(50px, 6vw, 78px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(30px, 4vw, 60px);
+  }
+
+  .editorial-story h3 {
+    margin: 0 0 18px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .editorial-story__copy p,
+  .editorial-service > div:last-child > p {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .editorial-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .editorial-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .editorial-service {
+    width: min(1110px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 8vw, 110px);
+    align-items: start;
+  }
+
+  .editorial-service > div:last-child {
+    padding-top: 8px;
+  }
+
+  .editorial-service > div:last-child > p + p {
+    margin-top: 22px;
+  }
+
+  .editorial-service__actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .editorial-service__actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .editorial-service__actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .editorial-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .editorial-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .editorial-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .editorial-related span {
+    margin-bottom: 14px;
+    color: #8d6e5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .editorial-related a:hover,
+  .editorial-related a:focus-visible {
+    background: #f4f0ed;
+  }
+
+  .editorial-meta a:focus-visible,
+  .editorial-service a:focus-visible,
+  .editorial-related a:focus-visible {
+    outline: 2px solid #8d6e5a;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 920px) {
+    .editorial-hero,
+    .editorial-service {
+      grid-template-columns: 1fr;
+    }
+
+    .editorial-hero__copy {
+      text-align: center;
+    }
+
+    .editorial-hero__copy > p:last-child {
+      margin-inline: auto;
+    }
+
+    .editorial-hero__portrait {
+      order: -1;
+    }
+
+    .editorial-hero__portrait :global(img) {
+      margin-inline: auto;
+    }
+
+    .editorial-hero__portrait figcaption {
+      text-align: center;
+    }
+
+    .editorial-story__copy {
+      grid-template-columns: 1fr;
+    }
+
+    .editorial-related {
+      grid-template-columns: 1fr;
+    }
+
+    .editorial-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .editorial-gallery {
+      padding-top: 36px;
+    }
+
+    .editorial-hero,
+    .editorial-story,
+    .editorial-meta,
+    .editorial-service,
+    .editorial-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .editorial-hero {
+      gap: 44px;
+    }
+
+    .editorial-hero__portrait :global(img) {
+      width: min(78vw, 340px);
+    }
+
+    .editorial-hero h1 {
+      font-size: clamp(44px, 13vw, 62px);
+    }
+
+    .editorial-story {
+      margin-top: 72px;
+      padding: 54px 22px;
+    }
+
+    .editorial-service {
+      grid-template-columns: 1fr;
+    }
+
+    .editorial-service__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .editorial-related a {
+      min-height: 146px;
+    }
+  }
+</style>
