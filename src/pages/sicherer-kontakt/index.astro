@@ -1,0 +1,652 @@
+---
+import { Image } from "astro:assets";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import secureHero from "../../assets/sicherer-kontakt/ART_8206-Bearbeitet.jpg";
+import "../../styles/global.css";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}/sicherer-kontakt/`;
+const title = "Sicherer Kontakt per E-Mail | Artbild-Fotografie Hamburg";
+const description =
+  "Sicherer E-Mail-Kontakt mit Artbild-Fotografie in Hamburg: Hinweise zu S/MIME, PGP-Schlüssel und datensparsamer Übermittlung sensibler Veranstaltungsinformationen.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const primaryImage = new URL(secureHero.src, siteUrl).href;
+const pgpDownload = "/downloads/York-Augustin-2C86E0AD-Oeffentlich.asc";
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ContactPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2022-03-30T08:02:48+02:00",
+      dateModified: "2026-06-27T12:00:00+02:00",
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      about: [
+        {
+          "@type": "Thing",
+          name: "Sicherer E-Mail-Kontakt",
+        },
+        {
+          "@type": "Thing",
+          name: "PGP-Schlüssel",
+        },
+        {
+          "@type": "Thing",
+          name: "S/MIME-Zertifikat",
+        },
+      ],
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: secureHero.width,
+        height: secureHero.height,
+        caption: "Sicherer E-Mail-Kontakt mit Artbild-Fotografie in Hamburg",
+      },
+      contentLocation: {
+        "@type": "City",
+        name: "Hamburg",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Hamburg",
+          addressRegion: "Hamburg",
+          addressCountry: "DE",
+        },
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      email: "info@artbild-fotografie.de",
+      founder: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Sicherer E-Mail-Kontakt",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Sicherer Kontakt",
+          item: pageUrl,
+        },
+      ],
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={secureHero.width}>
+    <meta property="og:image:height" content={secureHero.height}>
+    <meta property="og:image:alt" content="Sicherer E-Mail-Kontakt mit Artbild-Fotografie">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template secure-contact-template">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+          <li>
+            <a
+              class="gallery-search"
+              href="https://artbild-fotografie.de/?s="
+              aria-label="Suche"
+            >⌕</a>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <nav class="secure-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Startseite</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">Sicherer Kontakt</span>
+      </nav>
+
+      <article class="secure-contact" aria-labelledby="secure-contact-title">
+        <header class="secure-hero">
+          <div class="secure-hero__copy">
+            <p class="secure-kicker">Vertrauliche Informationen</p>
+            <h1 id="secure-contact-title">Sicherer Mail-Kontakt</h1>
+            <p>
+              Artbild-Fotografie in Hamburg arbeitet mit Ihnen zusammen, um
+              geschützte Informationen sicher zu übermitteln, wenn Ort, Zeit
+              oder weitere personenbezogene Daten besonderen Schutz benötigen.
+            </p>
+            <div class="secure-hero__actions" aria-label="Schnelle Aktionen">
+              <a class="secure-button" href="mailto:info@artbild-fotografie.de?subject=Sicherer%20Kontakt%20mit%20Artbild-Fotografie">
+                Erstkontakt per E-Mail
+              </a>
+              <a
+                class="secure-button secure-button--ghost"
+                href={pgpDownload}
+                download
+                rel="nofollow"
+                aria-label="Öffentlichen PGP-Schlüssel von York Augustin herunterladen"
+              >
+                PGP-Schlüssel
+              </a>
+            </div>
+          </div>
+          <figure class="secure-hero__image">
+            <Image
+              src={secureHero}
+              widths={[520, 760, 1040, 1385]}
+              sizes="(max-width: 760px) 100vw, 48vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt="Ruhiges Portraitmotiv für sicheren E-Mail-Kontakt mit Artbild-Fotografie"
+            />
+          </figure>
+        </header>
+
+        <section class="secure-intro" aria-labelledby="secure-intro-title">
+          <p class="secure-section-number" aria-hidden="true">01</p>
+          <h2 id="secure-intro-title">
+            Sicherer E-Mail-Kontakt für Behörden, Organisationen und Privatpersonen
+            mit besonderem Sicherheitsbedarf.
+          </h2>
+          <p>
+            Generell kann jede Privatperson Informationen geschützt übermitteln,
+            wenn Sicherheitsinteressen für die Veranstaltung von Bedeutung sind.
+            Bitte senden Sie sensible Details erst, nachdem der gewünschte Termin
+            grundsätzlich verfügbar ist.
+          </p>
+        </section>
+
+        <section class="secure-grid" aria-label="Hinweise zum sicheren Kontakt">
+          <article class="secure-card">
+            <p class="secure-section-number" aria-hidden="true">02</p>
+            <h2>S/MIME und signierte E-Mails</h2>
+            <p>
+              Normale E-Mails von Artbild-Fotografie sind mit einem offiziellen
+              S/MIME-DigiCert-Zertifikat signiert. Dieses Zertifikat können Sie
+              verwenden, um Ihre E-Mail an mich zu verschlüsseln.
+            </p>
+            <p>
+              Wenn Sie selbst ein S/MIME-Zertifikat einer vertrauenswürdigen
+              Zertifizierungsstelle verwenden, achten Sie bitte darauf, dass es als
+              gültig ausgewiesen wird. Anfragen mit ungültigen Zertifikaten können
+              leider nicht beantwortet werden.
+            </p>
+          </article>
+
+          <article class="secure-card secure-card--accent">
+            <p class="secure-section-number" aria-hidden="true">03</p>
+            <h2>PGP-Schlüssel</h2>
+            <p>
+              Für die sichere Übermittlung geschützter Informationen wird ein
+              öffentlicher PGP-Schlüssel bereitgestellt.
+            </p>
+            <a
+              class="secure-download"
+              href={pgpDownload}
+              download
+              rel="nofollow"
+              aria-label="York-Augustin-2C86E0AD-Oeffentlich.asc herunterladen"
+            >
+              York-Augustin-2C86E0AD-Oeffentlich.asc
+            </a>
+          </article>
+
+          <article class="secure-card">
+            <p class="secure-section-number" aria-hidden="true">04</p>
+            <h2>Kurznachrichten vermeiden</h2>
+            <p>
+              Von SMS, MMS, iMessage oder RCS für sensible Veranstaltungsdetails rate
+              ich ab. Nutzen Sie bitte die angebotenen Ende-zu-Ende-verschlüsselten
+              Methoden und denken Sie an Datensparsamkeit.
+            </p>
+          </article>
+
+          <article class="secure-card">
+            <p class="secure-section-number" aria-hidden="true">05</p>
+            <h2>Erst Verfügbarkeit klären</h2>
+            <p>
+              Zunächst prüfe ich, ob ich an Ihrem Wunschtermin verfügbar bin. Erst
+              danach sollten weitere Informationen zu Ort, Zeit, beteiligten Personen
+              oder Abläufen mitgeteilt werden.
+            </p>
+            <p>
+              Der Informationsaustausch kann auch über Ihren öffentlich
+              bereitgestellten, sicheren E-Mailserver erfolgen. Die Bitte zur
+              Erstkontaktaufnahme erfolgt dann über meine E-Mail-Adresse.
+            </p>
+          </article>
+        </section>
+
+        <section class="secure-cta" aria-labelledby="secure-cta-title">
+          <div>
+            <p class="secure-kicker">Sicherer E-Mail-Kontakt</p>
+            <h2 id="secure-cta-title">Erstkontakt mit Artbild-Fotografie</h2>
+            <p>
+              Für eine erste Anfrage reicht eine kurze Nachricht mit Datum und
+              grobem Anlass. Weitere sensible Informationen können anschließend
+              geschützt abgestimmt werden.
+            </p>
+          </div>
+          <a class="secure-button" href="mailto:info@artbild-fotografie.de?subject=Sicherer%20Kontakt%20mit%20Artbild-Fotografie">
+            Kontakt aufnehmen
+          </a>
+        </section>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/sicherer-kontakt/" aria-current="page">Sicherer Kontakt</a>
+        <a href="/impressum/">Impressum</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .secure-contact-template {
+    background: #fbfaf8;
+  }
+
+  .secure-contact-template main {
+    overflow: hidden;
+    padding-bottom: clamp(84px, 10vw, 150px);
+  }
+
+  .secure-breadcrumb,
+  .secure-contact {
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .secure-breadcrumb {
+    margin-top: clamp(44px, 6vw, 82px);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .secure-breadcrumb a {
+    text-decoration: none;
+  }
+
+  .secure-breadcrumb a:hover,
+  .secure-breadcrumb a:focus-visible {
+    color: #2c739c;
+  }
+
+  .secure-hero {
+    min-height: clamp(520px, 62vw, 760px);
+    padding: clamp(42px, 7vw, 92px) 0 clamp(58px, 8vw, 112px);
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(360px, 1.1fr);
+    gap: clamp(34px, 7vw, 96px);
+    align-items: center;
+    border-bottom: 1px solid #ddd7cf;
+  }
+
+  .secure-hero__copy {
+    position: relative;
+    z-index: 1;
+  }
+
+  .secure-kicker,
+  .secure-section-number {
+    margin: 0;
+    color: #2c739c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .secure-hero h1 {
+    max-width: 760px;
+    margin: 14px 0 26px;
+    font-size: clamp(56px, 8.2vw, 118px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: .9;
+  }
+
+  .secure-hero__copy > p:last-of-type,
+  .secure-intro p,
+  .secure-card p,
+  .secure-cta p {
+    color: #5f5a54;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.72;
+  }
+
+  .secure-hero__copy > p:last-of-type {
+    max-width: 560px;
+    margin: 0;
+  }
+
+  .secure-hero__actions {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .secure-button,
+  .secure-download {
+    min-height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    line-height: 1.3;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .secure-button {
+    padding: 15px 20px;
+    border: 1px solid #202020;
+    background: #202020;
+    color: #fff;
+  }
+
+  .secure-button--ghost,
+  .secure-download {
+    background: transparent;
+    color: #202020;
+  }
+
+  .secure-button--ghost {
+    border-color: #9d9389;
+  }
+
+  .secure-button:hover,
+  .secure-button:focus-visible {
+    border-color: #2c739c;
+    background: #2c739c;
+    color: #fff;
+  }
+
+  .secure-button--ghost:hover,
+  .secure-button--ghost:focus-visible {
+    color: #fff;
+  }
+
+  .secure-hero__image {
+    margin: 0;
+    justify-self: stretch;
+  }
+
+  .secure-hero__image :global(img) {
+    width: 100%;
+    aspect-ratio: 1385 / 924;
+    object-fit: cover;
+  }
+
+  .secure-intro {
+    max-width: 980px;
+    padding: clamp(56px, 8vw, 110px) 0 clamp(48px, 7vw, 92px);
+  }
+
+  .secure-intro h2,
+  .secure-card h2,
+  .secure-cta h2 {
+    margin: 12px 0 20px;
+    color: #202020;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.06;
+  }
+
+  .secure-intro h2 {
+    font-size: clamp(38px, 5vw, 72px);
+  }
+
+  .secure-intro p {
+    max-width: 780px;
+    margin: 0;
+  }
+
+  .secure-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: #ddd7cf;
+    border: 1px solid #ddd7cf;
+  }
+
+  .secure-card {
+    min-width: 0;
+    padding: clamp(30px, 5vw, 56px);
+    background: #fbfaf8;
+  }
+
+  .secure-card--accent {
+    background: #f0ece6;
+  }
+
+  .secure-card h2 {
+    font-size: clamp(30px, 3.2vw, 46px);
+  }
+
+  .secure-card p {
+    margin: 0 0 18px;
+    font-size: clamp(16px, 1.35vw, 19px);
+  }
+
+  .secure-card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .secure-download {
+    justify-content: flex-start;
+    min-height: 44px;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    border-bottom: 1px solid #9baab2;
+  }
+
+  .secure-download:hover,
+  .secure-download:focus-visible {
+    color: #2c739c;
+  }
+
+  .secure-cta {
+    margin-top: clamp(56px, 8vw, 112px);
+    padding: clamp(34px, 5vw, 58px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: center;
+    background: #f0ece6;
+    border-top: 3px solid #2c739c;
+  }
+
+  .secure-cta h2 {
+    font-size: clamp(34px, 4.4vw, 62px);
+  }
+
+  .secure-cta p {
+    max-width: 720px;
+    margin: 0;
+  }
+
+  .secure-contact-template :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .secure-hero,
+    .secure-cta {
+      grid-template-columns: 1fr;
+    }
+
+    .secure-hero {
+      min-height: 0;
+    }
+
+    .secure-hero__image {
+      order: -1;
+    }
+
+    .secure-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .secure-breadcrumb,
+    .secure-contact {
+      width: min(100% - 28px, 1180px);
+    }
+
+    .secure-breadcrumb {
+      margin-top: 30px;
+      font-size: 9px;
+      letter-spacing: .14em;
+    }
+
+    .secure-hero {
+      padding-top: 30px;
+      gap: 28px;
+    }
+
+    .secure-hero h1 {
+      font-size: clamp(48px, 16vw, 70px);
+    }
+
+    .secure-hero__actions,
+    .secure-button,
+    .secure-download {
+      width: 100%;
+    }
+
+    .secure-button,
+    .secure-download {
+      justify-content: center;
+      text-align: center;
+      letter-spacing: .13em;
+    }
+
+    .secure-card,
+    .secure-cta {
+      padding: 28px 22px;
+    }
+
+    .secure-intro h2,
+    .secure-card h2,
+    .secure-cta h2 {
+      line-height: 1.12;
+    }
+  }
+</style>

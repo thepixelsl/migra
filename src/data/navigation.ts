@@ -81,6 +81,12 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         description: "Direkter Kontakt zu Artbild-Fotografie in Hamburg",
         external: true,
       },
+      {
+        label: "Sicherer Kontakt",
+        href: "/sicherer-kontakt/",
+        description: "PGP, S/MIME und datensparsame Kontaktaufnahme",
+        seoContext: "Sicherer E-Mail-Kontakt Hamburg",
+      },
     ],
   },
   {
