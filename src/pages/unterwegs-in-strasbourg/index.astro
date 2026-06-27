@@ -1,0 +1,763 @@
+---
+import { Image } from "astro:assets";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
+import "../../styles/global.css";
+
+const imageModules = import.meta.glob(
+  "../../assets/unterwegs-in-strasbourg/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/unterwegs-in-strasbourg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Unterwegs in Strasbourg";
+const title = "Unterwegs in Strasbourg | Reisefotografie von Artbild-Fotografie";
+const description =
+  "Reisefotografie aus Strasbourg: ein grauer Februartag zwischen Kehl, Paulskirche, Ponts Couverts, Kanälen und stillen Details der elsässischen Altstadt.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const galleryDefinitions = [
+  [
+    "ART_9955-Bearbeitet-Bearbeitet-Bearbeitet-scaled.jpg",
+    "Paulskirche in Strasbourg an einem grauen Februartag",
+  ],
+  [
+    "ART_0087-Pano-Bearbeitet-Bearbeitet-scaled.jpg",
+    "Panorama der Ponts Couverts in Strasbourg am Wasser",
+  ],
+  [
+    "ART_0086-Verbessert-RR-scaled.jpg",
+    "Historische Brücken und Fassaden in Strasbourg",
+  ],
+  [
+    "ART_0008-Verbessert-RR-Bearbeitet-scaled.jpg",
+    "Städtische Szene am Kanal in Strasbourg",
+  ],
+  [
+    "ART_0030-scaled.jpg",
+    "Architektonische Details der Altstadt von Strasbourg",
+  ],
+  [
+    "ART_0031-Verbessert-RR-Bearbeitet-scaled.jpg",
+    "Blick entlang eines Kanals in Strasbourg",
+  ],
+  [
+    "ART_0035-Verbessert-RR-scaled.jpg",
+    "Stilles Reisefoto aus dem historischen Strasbourg",
+  ],
+  [
+    "ART_0036-Bearbeitet-Bearbeitet-scaled.jpg",
+    "Holztür und Fassadendetail in der Altstadt von Strasbourg",
+  ],
+  [
+    "ART_9962-Verbessert-RR-scaled.jpg",
+    "Portraitformat einer Straßburger Fassade mit historischem Detail",
+  ],
+  [
+    "ART_9967-Bearbeitet-Bearbeitet-scaled.jpg",
+    "Urbane Reisefotografie in Strasbourg mit ruhigem Licht",
+  ],
+  [
+    "ART_9968-Bearbeitet-scaled.jpg",
+    "Detailaufnahme einer alten Tür in Strasbourg",
+  ],
+  [
+    "ART_0041-Verbessert-RR-scaled.jpg",
+    "Albert-Schweitzer-Statue in Strasbourg",
+  ],
+  [
+    "ART_0040-Bearbeitet-scaled.jpg",
+    "Historisches Relief Protection des Mineurs in Strasbourg",
+  ],
+] as const;
+
+const galleryImages = galleryDefinitions.map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const galleryColumns = [[], [], []] as typeof galleryImages[];
+galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+
+const heroImage = modulesByFile["ART_9955-Bearbeitet-Bearbeitet-Bearbeitet-scaled.jpg"];
+const heroAlt = "Paulskirche in Strasbourg als Auftakt einer fotografischen Reise";
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const articleSections = [
+  {
+    eyebrow: "Anreise",
+    title: "Von Kehl nach Strasbourg",
+    text:
+      "Die kurze Reise begann in Kehl. Von dort ging es mit der Bahn und einem Euroticket für 5,10 EUR hinüber nach Strasbourg. An- und Abfahrt waren pünktlich, die Wege unkompliziert und das Licht passend zurückhaltend für eine ruhige Fotostrecke.",
+  },
+  {
+    eyebrow: "Église Saint-Paul",
+    title: "Paulskirche - ein Denkmal zwischen Deutschland und Frankreich",
+    text:
+      "Die Paulskirche wurde Ende des 19. Jahrhunderts unter deutscher Herrschaft erbaut und diente zunächst als Garnisonskirche. Mit ihren Doppeltürmen wirkt sie fast norddeutsch und erzählt damit viel über die wechselvolle Geschichte der Stadt.",
+  },
+  {
+    eyebrow: "Ponts Couverts",
+    title: "Brücken ohne Dächer",
+    text:
+      "Der Name der Ponts Couverts erinnert an die hölzernen Überdachungen des Mittelalters. Heute sind die Dächer verschwunden, doch die Wehrtürme, das Wasser und die Spiegelungen machen diesen Ort weiterhin zu einem der stärksten Motive in Strasbourg.",
+  },
+  {
+    eyebrow: "Stadtdetails",
+    title: "Reliefs, Kanäle und hölzerne Türen",
+    text:
+      "Neben den bekannten Ansichten sind es oft die kleinen Dinge, die hängen bleiben: ein Relief mit der Inschrift Protection des Mineurs, alte Holztüren, Katzenklappen, Fassaden und die Kanäle, die früher Handelswege und Lebensadern der Stadt waren.",
+  },
+  {
+    eyebrow: "Humanismus",
+    title: "Albert Schweitzer als stiller Bezugspunkt",
+    text:
+      "Auch Albert Schweitzer gehört zu dieser elsässischen Spurensuche. Der Arzt, Theologe, Philosoph und Musiker wurde unweit von Strasbourg geboren. Seine Idee der Ehrfurcht vor dem Leben passt zu einer Stadt, die immer wieder zwischen Kulturen vermittelt.",
+  },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Strasbourg Reisefotografie",
+        "Straßburg Fotografie",
+        "Ponts Couverts Strasbourg",
+        "Paulskirche Strasbourg",
+        "Travel Fotografie Elsass",
+      ],
+      datePublished: "2025-02-28T18:17:35+01:00",
+      dateModified: "2026-06-27T23:55:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#strasbourg`,
+      },
+      about: [
+        { "@type": "Thing", name: "Reisefotografie" },
+        { "@type": "Place", name: "Strasbourg" },
+        { "@type": "Place", name: "Elsass" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Reisefotografie aus Strasbourg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#strasbourg`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "City",
+      "@id": `${pageUrl}#strasbourg`,
+      name: "Strasbourg",
+      alternateName: "Straßburg",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Strasbourg",
+        addressRegion: "Grand Est",
+        addressCountry: "FR",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 48.5734,
+        longitude: 7.7521,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "City", name: "Strasbourg" },
+        { "@type": "AdministrativeArea", name: "Elsass" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Reisefotografie",
+        "Editorial Fotografie",
+        "Hochzeitsfotografie",
+        "Destination Fotografie",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: `${siteUrl}/blog/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2025-02-28T18:17:35+01:00",
+      dateModified: "2026-06-27T23:55:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: heroAlt,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2025-02-28T18:17:35+01:00">
+    <meta property="article:modified_time" content="2026-06-27T23:55:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={heroAlt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template strasbourg-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <article class="strasbourg-article">
+        <nav class="strasbourg-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Startseite</a>
+          <span aria-hidden="true">/</span>
+          <a href="https://artbild-fotografie.de/blog/">Blog</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Unterwegs in Strasbourg</span>
+        </nav>
+
+        <header class="strasbourg-hero">
+          <div class="strasbourg-hero__copy">
+            <p class="strasbourg-kicker">Reisefotografie · Elsass</p>
+            <h1>{heading}</h1>
+            <p>
+              Ein grauer Februartag in Strasbourg: leise Stadtbilder, Wege von
+              Kehl aus, historische Brücken, Kirchen, Kanäle und die kleinen
+              Details, die eine Reise fotografisch interessant machen.
+            </p>
+          </div>
+          <figure class="strasbourg-hero__image">
+            <Image
+              src={heroImage}
+              alt={heroAlt}
+              widths={[640, 920, 1200, 1386]}
+              sizes="(max-width: 860px) calc(100vw - 28px), 52vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <figcaption>Paulskirche in Strasbourg</figcaption>
+          </figure>
+        </header>
+
+        <section class="strasbourg-intro" aria-labelledby="strasbourg-intro-title">
+          <p class="strasbourg-section-number" aria-hidden="true">01</p>
+          <h2 id="strasbourg-intro-title">Zwischen Grenze, Wasser und Geschichte</h2>
+          <p>
+            Strasbourg ist nah an Deutschland und wirkt doch sofort anders:
+            elsässisch, französisch, europäisch. Diese Fotostrecke folgt weniger
+            einer klassischen Sehenswürdigkeiten-Liste als einem ruhigen Gang
+            durch die Stadt.
+          </p>
+        </section>
+
+        <section class="strasbourg-story" aria-label="Stationen des Reiseberichts">
+          {articleSections.map((section, index) => (
+            <article>
+              <p class="strasbourg-section-number" aria-hidden="true">
+                {String(index + 2).padStart(2, "0")}
+              </p>
+              <p class="strasbourg-kicker">{section.eyebrow}</p>
+              <h2>{section.title}</h2>
+              <p>{section.text}</p>
+            </article>
+          ))}
+        </section>
+
+        <section class="strasbourg-gallery-intro" aria-labelledby="strasbourg-gallery-title">
+          <div>
+            <p class="strasbourg-kicker">Fotogalerie</p>
+            <h2 id="strasbourg-gallery-title">Strasbourg in Bildern</h2>
+          </div>
+          <p>
+            Die Galerie lädt nach dem ersten sichtbaren Bereich lazy und bleibt
+            formatgerecht: Panorama, Querformat und Hochformat behalten ihren
+            eigenen Rhythmus.
+          </p>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="unterwegs-in-strasbourg"
+          label="Reisefotografie aus Strasbourg"
+          dialogLabel="Strasbourg Fotogalerie in Vollansicht"
+        />
+
+        <nav class="strasbourg-related" aria-label="Weitere Inspirationen">
+          <a href="/gallery/traumhochzeit-in-paris/">
+            <span>Frankreich</span>
+            Traumhochzeit in Paris
+          </a>
+          <a href="/brautpaar-in-zuerich/">
+            <span>Travel</span>
+            Brautpaar in Zürich
+          </a>
+          <a href="/gallery/editorial/">
+            <span>Editorial</span>
+            Portraits Hamburg
+          </a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+        <a href="/impressum/">Impressum</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .strasbourg-page {
+    background: #fbfaf8;
+  }
+
+  .strasbourg-page main {
+    overflow: hidden;
+    padding-bottom: clamp(86px, 10vw, 150px);
+  }
+
+  .strasbourg-article {
+    padding-top: clamp(44px, 5.8vw, 82px);
+  }
+
+  .strasbourg-breadcrumb,
+  .strasbourg-hero,
+  .strasbourg-intro,
+  .strasbourg-story,
+  .strasbourg-gallery-intro,
+  .strasbourg-related {
+    width: min(1180px, calc(100% - 56px));
+    margin-inline: auto;
+  }
+
+  .strasbourg-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .strasbourg-breadcrumb a {
+    text-decoration: none;
+  }
+
+  .strasbourg-breadcrumb a:hover,
+  .strasbourg-breadcrumb a:focus-visible {
+    color: #2c739c;
+  }
+
+  .strasbourg-hero {
+    min-height: clamp(560px, 66vw, 790px);
+    padding: clamp(44px, 7vw, 92px) 0 clamp(58px, 8vw, 112px);
+    display: grid;
+    grid-template-columns: minmax(520px, .95fr) minmax(0, .85fr);
+    gap: clamp(36px, 5.8vw, 80px);
+    align-items: center;
+    border-bottom: 1px solid #ddd7cf;
+  }
+
+  .strasbourg-kicker,
+  .strasbourg-section-number {
+    margin: 0;
+    color: #2c739c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .strasbourg-hero h1 {
+    max-width: 620px;
+    margin: 14px 0 28px;
+    font-size: clamp(56px, 7vw, 108px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: .9;
+  }
+
+  .strasbourg-hero__copy > p:last-child,
+  .strasbourg-intro p,
+  .strasbourg-story p,
+  .strasbourg-gallery-intro p {
+    color: #5f5a54;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.72;
+  }
+
+  .strasbourg-hero__copy > p:last-child {
+    max-width: 540px;
+    margin: 0;
+  }
+
+  .strasbourg-hero__image {
+    margin: 0;
+  }
+
+  .strasbourg-hero__image :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .strasbourg-hero__image figcaption {
+    margin-top: 12px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .strasbourg-intro {
+    max-width: 980px;
+    padding: clamp(56px, 8vw, 110px) 0 clamp(46px, 7vw, 84px);
+  }
+
+  .strasbourg-intro h2,
+  .strasbourg-story h2,
+  .strasbourg-gallery-intro h2 {
+    margin: 12px 0 20px;
+    color: #202020;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.06;
+  }
+
+  .strasbourg-intro h2 {
+    font-size: clamp(38px, 5.2vw, 74px);
+  }
+
+  .strasbourg-intro p {
+    max-width: 760px;
+    margin: 0;
+  }
+
+  .strasbourg-story {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: #ddd7cf;
+    border: 1px solid #ddd7cf;
+  }
+
+  .strasbourg-story article {
+    min-width: 0;
+    padding: clamp(30px, 5vw, 56px);
+    background: #fbfaf8;
+  }
+
+  .strasbourg-story article:nth-child(2),
+  .strasbourg-story article:nth-child(5) {
+    background: #f0ece6;
+  }
+
+  .strasbourg-story article:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .strasbourg-story article:last-child p:last-child {
+    max-width: 780px;
+  }
+
+  .strasbourg-story h2 {
+    font-size: clamp(30px, 3.2vw, 46px);
+  }
+
+  .strasbourg-story p {
+    margin: 0 0 16px;
+    font-size: clamp(16px, 1.35vw, 19px);
+  }
+
+  .strasbourg-story p:last-child {
+    margin-bottom: 0;
+  }
+
+  .strasbourg-gallery-intro {
+    margin-top: clamp(66px, 9vw, 120px);
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(280px, .7fr);
+    gap: clamp(28px, 6vw, 86px);
+    align-items: end;
+  }
+
+  .strasbourg-gallery-intro h2 {
+    font-size: clamp(40px, 5.4vw, 78px);
+  }
+
+  .strasbourg-gallery-intro p {
+    margin: 0 0 8px;
+    font-size: clamp(16px, 1.35vw, 19px);
+  }
+
+  .strasbourg-related {
+    margin-top: clamp(70px, 9vw, 126px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #ddd7cf;
+    border-bottom: 1px solid #ddd7cf;
+  }
+
+  .strasbourg-related a {
+    min-height: 154px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    color: #202020;
+    font-size: clamp(24px, 2.4vw, 34px);
+    line-height: 1.08;
+    text-decoration: none;
+  }
+
+  .strasbourg-related a + a {
+    border-left: 1px solid #ddd7cf;
+  }
+
+  .strasbourg-related span {
+    color: #2c739c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .strasbourg-related a:hover,
+  .strasbourg-related a:focus-visible {
+    background: #f0ece6;
+    color: #2c739c;
+  }
+
+  .strasbourg-page :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .strasbourg-hero,
+    .strasbourg-gallery-intro {
+      grid-template-columns: 1fr;
+    }
+
+    .strasbourg-hero {
+      min-height: 0;
+    }
+
+    .strasbourg-hero__image {
+      order: -1;
+    }
+
+    .strasbourg-story,
+    .strasbourg-related {
+      grid-template-columns: 1fr;
+    }
+
+    .strasbourg-related a + a {
+      border-left: 0;
+      border-top: 1px solid #ddd7cf;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .strasbourg-breadcrumb,
+    .strasbourg-hero,
+    .strasbourg-intro,
+    .strasbourg-story,
+    .strasbourg-gallery-intro,
+    .strasbourg-related {
+      width: min(100% - 28px, 1180px);
+    }
+
+    .strasbourg-article {
+      padding-top: 30px;
+    }
+
+    .strasbourg-breadcrumb {
+      font-size: 9px;
+      letter-spacing: .14em;
+    }
+
+    .strasbourg-hero {
+      padding-top: 28px;
+      gap: 28px;
+    }
+
+    .strasbourg-hero h1 {
+      font-size: clamp(48px, 15vw, 70px);
+    }
+
+    .strasbourg-intro h2,
+    .strasbourg-story h2,
+    .strasbourg-gallery-intro h2 {
+      line-height: 1.12;
+    }
+
+    .strasbourg-story article {
+      padding: 28px 22px;
+    }
+
+    .strasbourg-related a {
+      min-height: 126px;
+      padding: 24px 0;
+    }
+  }
+</style>
