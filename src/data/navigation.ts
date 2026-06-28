@@ -43,10 +43,9 @@ export const mobileNavigationGroups: NavigationGroup[] = [
       },
       {
         label: "Preise & Pakete",
-        href: "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
+        href: "/hochzeitsfotograf-preise/",
         description: "Leistungen und Preise für Eure Hochzeitsreportage",
         seoContext: "Preise für Hochzeitsreportagen in Hamburg",
-        external: true,
       },
       {
         label: "Standesamtliche Trauung",

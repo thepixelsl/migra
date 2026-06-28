@@ -1,0 +1,772 @@
+---
+import { Image } from "astro:assets";
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
+import pureMomentsImage from "../../assets/hochzeitsfotograf-preise/trauung_standesamt_altona_hamburg0091.jpg";
+import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
+import reportageImage from "../../assets/hochzeitsfotograf-preise/ART_3680-Bearbeitet-Wiederhergestellt_web.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/hochzeitsfotograf-preise/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Hochzeitsfotograf Hamburg Preise";
+const description =
+  "Preise und Pakete für Hochzeitsfotografie in Hamburg: standesamtliche Trauung, Hochzeitsreportage, Bildbearbeitung, Fahrtkosten und FAQ ohne versteckte Kosten.";
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const packages = [
+  {
+    name: "Pure Moments",
+    price: "299 €",
+    priceLabel: "ab 299 €",
+    intro: "Kompakte fotografische Begleitung für eine kleine standesamtliche Hochzeit in Hamburg.",
+    image: pureMomentsImage,
+    alt: "Standesamtliche Trauung in Hamburg mit Hochzeitsfotograf",
+    features: [
+      "Persönliches Vorgespräch und Beratung",
+      "Trauung, Brautpaarshooting und Gruppenfotos",
+      "Passwortgeschützte Onlinegalerie für 3 Monate",
+      "Mindestens 30 bearbeitete Bilder",
+      "RAW-Bearbeitung aller final ausgewählten Bilder",
+      "Retusche einzelner Bilder nach Absprache",
+      "Keine Fahrtkosten innerhalb Hamburgs",
+    ],
+  },
+  {
+    name: "Standesamt Paket",
+    price: "649 €",
+    priceLabel: "649 € Festpreis",
+    intro: "Für standesamtliche Trauungen mit mehr Zeit für Getting Ready, Paarbilder und Familie.",
+    image: standesamtImage,
+    alt: "Brautportrait als Beispiel für das Standesamt Paket in Hamburg",
+    features: [
+      "2 Stunden Hochzeitsreportage",
+      "Persönliches Vorgespräch und Beratung",
+      "Kennenlernshooting",
+      "Getting Ready",
+      "Trauung, Brautpaarshooting und Gruppenfotos",
+      "Passwortgeschützte Onlinegalerie für 3 Monate",
+      "Mindestens 100 bearbeitete Bilder",
+      "Keine Extra- oder versteckten Kosten",
+    ],
+  },
+  {
+    name: "Rundum-Sorglos-Paket",
+    price: "249 €",
+    priceLabel: "249 € pro Stunde",
+    intro: "Für längere Hochzeitsreportagen vom Getting Ready bis zur Feier.",
+    image: reportageImage,
+    alt: "Hochzeitsreportage in Hamburg für ein Rundum-Sorglos-Paket",
+    features: [
+      "Mindestens 3 bis höchstens 10 Stunden",
+      "Persönliches Vorgespräch und Beratung",
+      "Kennenlernshooting",
+      "Getting Ready auf Wunsch",
+      "Trauung, Brautpaarshooting und Gruppenfotos",
+      "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
+      "Passwortgeschützte Onlinegalerie für 6 Monate",
+      "Mindestens 300 bearbeitete Bilder",
+      "Fahrtkosten innerhalb Hamburgs inklusive",
+    ],
+  },
+];
+
+const faqItems = [
+  {
+    question: "Was berechnest du für die Anfahrt in Hamburg?",
+    answer: "Innerhalb Hamburgs ist die Anfahrt in den genannten Paketen inklusive.",
+  },
+  {
+    question: "Welche Fahrtkosten entstehen außerhalb Hamburgs?",
+    answer:
+      "Außerhalb Hamburgs berechne ich nur tatsächlich angefallene Kosten. Eine pauschale Reisekosten-Gebühr gibt es nicht.",
+  },
+  {
+    question: "Berechnest du die Fahrzeit als Arbeitszeit?",
+    answer:
+      "Nein. Die Fahrzeit wird nicht als fotografische Arbeitszeit berechnet.",
+  },
+  {
+    question: "Sind Bildbearbeitung und Retusche enthalten?",
+    answer:
+      "Ja. Die dezente RAW-Bearbeitung der finalen Bilder ist enthalten. Einzelne ausgewählte Bilder können nach Absprache zusätzlich retuschiert werden.",
+  },
+  {
+    question: "Gibt es versteckte Kosten oder einen Preis pro Bild?",
+    answer:
+      "Nein. Artbild-Fotografie arbeitet mit klaren Paketen. Auf versteckte Kosten und Preis-pro-Bild-Modelle verzichte ich bewusst.",
+  },
+  {
+    question: "Ab wie vielen Stunden kann ich dich buchen?",
+    answer:
+      "Die passende Buchungsdauer hängt vom Paket und vom Ablauf ab. Für standesamtliche Trauungen sind kurze Begleitungen möglich, längere Reportagen beginnen ab mehreren Stunden.",
+  },
+  {
+    question: "Was passiert, wenn du erkrankst?",
+    answer:
+      "Ich bin mit professionellen Fotografen vernetzt und unterstütze euch dabei, im Notfall eine geeignete Vertretung zu finden.",
+  },
+  {
+    question: "Was kostet ein Hochzeitsfotograf?",
+    answer:
+      "Bei Artbild-Fotografie liegen die Kosten je nach Umfang und Paket zwischen einer kompakten Festpreis-Begleitung und einer längeren Reportage mit Stundenpreis.",
+  },
+];
+
+const relatedLinks = [
+  {
+    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+    label: "Getting Ready in Hamburg planen",
+  },
+  {
+    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    label: "Standesamtliche Trauung in Altona ansehen",
+  },
+  {
+    href: "/gallery/traumhochzeit-in-hamburg/",
+    label: "Hochzeit im Hotel Atlantic ansehen",
+  },
+  {
+    href: "/portfolio/",
+    label: "Portfolio ansehen",
+  },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2019-08-14T09:37:40+02:00",
+      dateModified: "2026-06-28T09:30:00+02:00",
+      inLanguage: "de",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+        caption: "Hochzeitsfotograf Hamburg Preise",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+    },
+    {
+      "@type": "Service",
+      "@id": `${pageUrl}#service`,
+      name: "Hochzeitsfotografie Hamburg Preise",
+      description,
+      serviceType: "Hochzeitsfotografie",
+      provider: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      offers: {
+        "@type": "OfferCatalog",
+        name: "Pakete für Hochzeitsfotografie in Hamburg",
+        itemListElement: packages.map((item) => ({
+          "@type": "Offer",
+          name: item.name,
+          priceCurrency: "EUR",
+          price: item.price.replace(/[^\d]/g, ""),
+          category: "Hochzeitsfotografie",
+          url: pageUrl,
+          availability: "https://schema.org/InStock",
+        })),
+      },
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: `${siteUrl}/images/logo-artbild-black.png`,
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+        { "@type": "Place", name: "Mallorca" },
+        { "@type": "Place", name: "Italien" },
+      ],
+      serviceType: ["Hochzeitsfotografie", "Hochzeitsreportage", "Standesamtliche Trauung"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: title,
+          item: pageUrl,
+        },
+      ],
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Hochzeitsfotograf Hamburg Preise">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template pricing-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="pricing">
+        <header class="pricing-hero">
+          <div class="pricing-hero__copy">
+            <p class="pricing-kicker">Hochzeitsfotograf Hamburg · Preise & Pakete</p>
+            <h1>{title}</h1>
+            <p>
+              Klare Festpreise, transparente Leistungen und keine versteckten
+              Kosten: Hier findet ihr die wichtigsten Pakete für eure
+              Hochzeitsreportage in Hamburg.
+            </p>
+            <div class="pricing-hero__actions" aria-label="Preis-Seite Aktionen">
+              <a href="#pakete">Pakete ansehen</a>
+              <a href="https://artbild-fotografie.de/kontakt/">Termin anfragen</a>
+            </div>
+          </div>
+          <figure class="pricing-hero__image">
+            <Image
+              src={heroImage}
+              widths={[520, 760, 1040, 1384]}
+              sizes="(max-width: 760px) 100vw, 48vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              alt="Braut bei einer Hochzeitsreportage in Hamburg"
+            />
+          </figure>
+        </header>
+
+        <nav class="pricing-toc" aria-label="Inhaltsübersicht Hochzeitsfotograf Preise">
+          <a href="#pakete">Pakete</a>
+          <a href="#enthalten">Enthaltene Leistungen</a>
+          <a href="#kosten">Kosten verstehen</a>
+          <a href="#faq">FAQ</a>
+          <a href="#anfrage">Anfrage</a>
+        </nav>
+
+        <section class="pricing-intro" aria-labelledby="pricing-intro-title">
+          <p class="pricing-kicker">Planbare Hochzeitsfotografie</p>
+          <h2 id="pricing-intro-title">Was ist im Preis enthalten?</h2>
+          <div class="pricing-copy">
+            <p>
+              Alle Preise sind Kundenendpreise. Sie beinhalten die fotografische
+              Begleitung, ein persönliches Vorgespräch, die Auswahl und
+              dezente Bearbeitung der finalen Bilder sowie die Bereitstellung
+              in einer passwortgeschützten Onlinegalerie.
+            </p>
+            <p>
+              Innerhalb Hamburgs fallen bei den genannten Paketen keine
+              zusätzlichen Fahrtkosten an. Außerhalb Hamburgs werden nur
+              tatsächlich entstandene Reise- oder Übernachtungskosten berechnet.
+            </p>
+          </div>
+        </section>
+
+        <section class="pricing-packages" id="pakete" aria-labelledby="packages-title">
+          <div class="pricing-section-heading">
+            <p class="pricing-kicker">Pakete</p>
+            <h2 id="packages-title">Hochzeitsreportage in Hamburg ab 299 €</h2>
+          </div>
+          <div class="pricing-package-grid">
+            {packages.map((item, index) => (
+              <article class="pricing-package">
+                <figure>
+                  <Image
+                    src={item.image}
+                    widths={[360, 520, 760]}
+                    sizes="(max-width: 760px) 100vw, 31vw"
+                    format="webp"
+                    quality={88}
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchpriority={index === 0 ? "high" : "auto"}
+                    alt={item.alt}
+                  />
+                </figure>
+                <div class="pricing-package__body">
+                  <p>{item.name}</p>
+                  <h3>{item.priceLabel}</h3>
+                  <p>{item.intro}</p>
+                  <ul>
+                    {item.features.map((feature) => <li>{feature}</li>)}
+                  </ul>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section class="pricing-split" id="enthalten" aria-labelledby="included-title">
+          <div>
+            <p class="pricing-kicker">Leistungen</p>
+            <h2 id="included-title">Keine Extra- oder versteckten Kosten</h2>
+          </div>
+          <div class="pricing-copy">
+            <p>
+              Bei Artbild-Fotografie gibt es keinen Preis pro Bild und keine
+              überraschenden Zusatzkosten für die Basisbearbeitung. Die
+              Bildauswahl, die natürliche Farb- und Tonwertbearbeitung und die
+              Onlinegalerie sind bereits Teil der Pakete.
+            </p>
+            <p>
+              Einzelne Retuschen stimmen wir vorab ab. So bleibt die Planung
+              nachvollziehbar und ihr wisst vor der Hochzeit, womit ihr rechnen
+              könnt.
+            </p>
+          </div>
+        </section>
+
+        <section class="pricing-split" id="kosten" aria-labelledby="cost-title">
+          <div>
+            <p class="pricing-kicker">Kosten verstehen</p>
+            <h2 id="cost-title">Warum kostet ein Hochzeitsfotograf so viel?</h2>
+          </div>
+          <div class="pricing-copy">
+            <p>
+              Eine Hochzeitsreportage endet nicht mit dem letzten Foto vor Ort.
+              Nach der Hochzeit folgen Sicherung, Auswahl, RAW-Bearbeitung,
+              Export, Galerieerstellung und oft einzelne Retuschen. Diese
+              Arbeitszeit ist in professionellen Preisen enthalten.
+            </p>
+            <p>
+              Gute Hochzeitsfotografie deckt außerdem Erfahrung, zuverlässige
+              Technik, Datensicherung, Kommunikation und die Verantwortung ab,
+              einmalige Momente sicher festzuhalten.
+            </p>
+          </div>
+        </section>
+
+        <section class="pricing-faq" id="faq" aria-labelledby="faq-title">
+          <div class="pricing-section-heading">
+            <p class="pricing-kicker">Fragen & Antworten</p>
+            <h2 id="faq-title">Häufige Fragen zu Hochzeitsfotograf Preisen</h2>
+          </div>
+          <div class="pricing-faq__list">
+            {faqItems.map((item) => (
+              <details>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="pricing-related" aria-labelledby="related-title">
+          <p class="pricing-kicker">Weiter planen</p>
+          <h2 id="related-title">Hilfreiche Seiten für eure Hochzeit</h2>
+          <div>
+            {relatedLinks.map((item) => <a href={item.href}>{item.label}</a>)}
+          </div>
+        </section>
+
+        <section class="pricing-cta" id="anfrage" aria-labelledby="cta-title">
+          <p class="pricing-kicker">Ist euer Termin noch frei?</p>
+          <h2 id="cta-title">Fragt euren Hochzeitstermin unverbindlich an</h2>
+          <p>
+            Erzählt mir kurz, wann und wo ihr heiratet, welche Begleitung ihr
+            euch wünscht und ob bereits eine Location feststeht.
+          </p>
+          <div>
+            <a href="https://artbild-fotografie.de/kontakt/">Jetzt Termin anfragen</a>
+            <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+          </div>
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
+
+<style>
+  .pricing {
+    width: min(var(--max), calc(100% - 48px));
+    margin: 0 auto;
+    padding: clamp(48px, 7vw, 96px) 0 clamp(72px, 9vw, 132px);
+    overflow-x: clip;
+  }
+
+  .pricing-hero {
+    display: grid;
+    grid-template-columns: minmax(0, .86fr) minmax(320px, 1fr);
+    gap: clamp(30px, 5vw, 82px);
+    align-items: center;
+  }
+
+  .pricing-hero__copy {
+    min-width: 0;
+  }
+
+  .pricing-kicker {
+    margin: 0 0 14px;
+    color: var(--muted);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .28em;
+    line-height: 1.45;
+    text-transform: uppercase;
+  }
+
+  .pricing h1,
+  .pricing h2,
+  .pricing h3 {
+    margin: 0;
+    color: var(--ink);
+    font-weight: 400;
+    line-height: .98;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  .pricing h1 {
+    max-width: 780px;
+    font-size: clamp(58px, 7vw, 118px);
+  }
+
+  .pricing h2 {
+    font-size: clamp(38px, 5vw, 76px);
+  }
+
+  .pricing h3 {
+    font-size: clamp(34px, 3.4vw, 52px);
+  }
+
+  .pricing-hero__copy > p:not(.pricing-kicker),
+  .pricing-copy,
+  .pricing-package__body > p,
+  .pricing-faq p,
+  .pricing-cta p {
+    color: var(--muted);
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.55;
+  }
+
+  .pricing-hero__actions,
+  .pricing-cta div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 32px;
+  }
+
+  .pricing-hero__actions a,
+  .pricing-cta a,
+  .pricing-related a {
+    min-height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px 18px;
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .22em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .pricing-hero__actions a:first-child,
+  .pricing-cta a:first-child {
+    background: #202633;
+    border-color: #202633;
+    color: #fff;
+  }
+
+  .pricing-hero__image {
+    margin: 0;
+    background: var(--soft);
+  }
+
+  .pricing-hero__image :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .pricing-toc {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin: clamp(42px, 6vw, 88px) 0;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pricing-toc a {
+    padding: 8px 12px;
+    color: var(--muted);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .pricing-intro,
+  .pricing-split,
+  .pricing-packages,
+  .pricing-faq,
+  .pricing-related,
+  .pricing-cta {
+    margin-top: clamp(58px, 8vw, 120px);
+  }
+
+  .pricing-intro,
+  .pricing-split {
+    display: grid;
+    grid-template-columns: minmax(0, .82fr) minmax(0, 1fr);
+    gap: clamp(24px, 5vw, 72px);
+    align-items: start;
+  }
+
+  .pricing-copy p {
+    margin: 0 0 1em;
+  }
+
+  .pricing-section-heading {
+    max-width: 840px;
+    margin-bottom: clamp(26px, 4vw, 48px);
+  }
+
+  .pricing-package-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(18px, 2.2vw, 30px);
+  }
+
+  .pricing-package {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .pricing-package figure {
+    margin: 0;
+    background: var(--soft);
+  }
+
+  .pricing-package figure :global(img) {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .pricing-package__body {
+    padding: clamp(18px, 2.2vw, 30px);
+  }
+
+  .pricing-package__body > p:first-child {
+    margin: 0 0 10px;
+    color: var(--accent);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .pricing-package__body > p:not(:first-child) {
+    margin: 16px 0 22px;
+    font-size: 19px;
+  }
+
+  .pricing-package ul {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding-left: 20px;
+    color: var(--muted);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .pricing-faq__list {
+    display: grid;
+    gap: 12px;
+  }
+
+  .pricing-faq details {
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .pricing-faq summary {
+    cursor: pointer;
+    padding: 20px 22px;
+    color: var(--ink);
+    font-size: clamp(22px, 2.6vw, 34px);
+    line-height: 1.1;
+  }
+
+  .pricing-faq details p {
+    margin: 0;
+    padding: 0 22px 22px;
+    font-size: clamp(18px, 1.8vw, 24px);
+  }
+
+  .pricing-related {
+    text-align: center;
+  }
+
+  .pricing-related div {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .pricing-cta {
+    padding: clamp(34px, 5vw, 64px);
+    background: #f5f2ed;
+    text-align: center;
+  }
+
+  .pricing-cta div {
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    .pricing-hero,
+    .pricing-intro,
+    .pricing-split,
+    .pricing-package-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .pricing-package-grid {
+      gap: 22px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    :global(html),
+    :global(body) {
+      overflow-x: clip;
+    }
+
+    .pricing {
+      width: min(100% - 28px, var(--max));
+      padding-top: 36px;
+    }
+
+    .pricing h1 {
+      font-size: clamp(40px, 11vw, 50px);
+      line-height: 1.04;
+    }
+
+    .pricing h2 {
+      font-size: clamp(34px, 11vw, 52px);
+    }
+
+    .pricing-hero__actions,
+    .pricing-cta div,
+    .pricing-related div {
+      display: grid;
+    }
+
+    .pricing-hero__actions a,
+    .pricing-cta a,
+    .pricing-related a {
+      width: 100%;
+    }
+
+    .pricing-toc {
+      justify-content: stretch;
+    }
+
+    .pricing-toc a {
+      flex: 1 1 calc(50% - 12px);
+      text-align: center;
+    }
+  }
+</style>
