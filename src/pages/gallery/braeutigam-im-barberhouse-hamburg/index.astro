@@ -1,0 +1,610 @@
+---
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/braeutigam-im-barberhouse-hamburg/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/braeutigam-im-barberhouse-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Bräutigam im Barberhouse Hamburg";
+const title = "Bräutigam im Barberhouse Hamburg | Getting Ready";
+const description =
+  "Wie trägt man seinen Bart zur Hochzeit? Groom Getting Ready beim Barbier im Barberhouse Hamburg mit stilvollen Herrenportraits von Artbild-Fotografie.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "ART_4935-Bearbeitet-1.jpg": "Bräutigam beim Getting Ready im Barberhouse Hamburg",
+  "ART_4938-1.jpg": "Herrenportrait eines Bräutigams im Barberhouse Hamburg",
+  "ART_4999-Bearbeitet.jpg": "Barbier bereitet den Bart des Bräutigams vor der Hochzeit vor",
+  "ART_5043.jpg": "Detailaufnahme beim Bartstyling für den Bräutigam",
+  "ART_5462-Bearbeitet-Bearbeitet.jpg": "Bräutigam mit Fliege und gepflegtem Bart in Hamburg",
+  "ART_5071.jpg": "Ruhiger Moment beim Groom Getting Ready im Barberhouse",
+  "ART_5114-Bearbeitet.jpg": "Hochformat Portrait des Bräutigams vor der Hochzeit",
+  "ART_5120-Bearbeitet.jpg": "Barbier rasiert den Bräutigam vor der Hochzeit",
+  "ART_5174-Bearbeitet.jpg": "Elegantes Bräutigam Portrait im Barberhouse Hamburg",
+  "ART_5262-Bearbeitet.jpg": "Bartpflege und Styling des Bräutigams in Hamburg",
+  "ART_5646-Bearbeitet.jpg": "Bräutigam Portrait mit dunklem Anzug und Fliege",
+  "ART_5651-Bearbeitet.jpg": "Stilvolles Herrenportrait beim Getting Ready",
+  "ART_5654-Bearbeitet.jpg": "Bräutigam mit Bart beim Hochzeitsstyling in Hamburg",
+  "ART_5888-Bearbeitet.jpg": "Barberhouse Hamburg als Location für Groom Getting Ready",
+  "ART_5962-Bearbeitet-Bearbeitet.jpg": "Bräutigam richtet seinen Look vor der Hochzeit",
+  "ART_5994-Bearbeitet-Bearbeitet.jpg": "Hochformat Bräutigamportrait mit klassischem Styling",
+  "ART_6016.jpg": "Natürliche Hochzeitsreportage beim Barberhouse Hamburg",
+  "ART_6042-Bearbeitet.jpg": "Portrait des Bräutigams nach Bartpflege und Styling",
+  "ART_6116.jpg": "Bräutigam beim Verlassen des Barberhouse Hamburg",
+  "ART_5382-Bearbeitet.jpg": "Detail einer gepflegten Herrenrasur vor der Hochzeit",
+  "ART_5376.jpg": "Barbier und Bräutigam beim finalen Styling in Hamburg",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const itemsPerColumn = Math.ceil(galleryImages.length / 3);
+const galleryColumns = [
+  galleryImages.slice(0, itemsPerColumn),
+  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
+  galleryImages.slice(itemsPerColumn * 2),
+];
+
+const primary = modulesByFile["ART_4935-Bearbeitet-1.jpg"];
+const primaryImage = new URL(primary.src, siteUrl).href;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Bräutigam im Barberhouse Hamburg",
+        "Getting Ready Bräutigam",
+        "Hochzeitsfotograf Hamburg",
+        "Groom Getting Ready",
+        "Barberhouse Hamburg",
+      ],
+      datePublished: "2019-07-06T08:50:33+02:00",
+      dateModified: "2026-06-28T10:20:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      contentLocation: {
+        "@id": `${pageUrl}#barberhouse`,
+      },
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Groom Getting Ready im Barberhouse Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#barberhouse`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "LocalBusiness",
+      "@id": `${pageUrl}#barberhouse`,
+      name: "Barberhouse Hamburg",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Hochzeitsreportage",
+        "Bräutigam Portraits",
+        "Groom Getting Ready",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Portfolio",
+          item: `${siteUrl}/portfolio/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2019-07-06T08:50:33+02:00",
+      dateModified: "2026-06-28T10:20:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: primary.width,
+        height: primary.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content={heading}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="article:published_time" content="2019-07-06T08:50:33+02:00">
+  <meta property="article:modified_time" content="2026-06-28T10:20:00+02:00">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:width" content={primary.width}>
+  <meta property="og:image:height" content={primary.height}>
+  <meta property="og:image:alt" content="Bräutigam im Barberhouse Hamburg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={heading}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template barberhouse-gallery-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article class="barberhouse-gallery">
+      <header class="barberhouse-hero">
+        <p class="barberhouse-hero__script" aria-hidden="true">Groom Getting Ready</p>
+        <p class="barberhouse-hero__kicker">Hochzeitsfotograf Hamburg · Barberhouse</p>
+        <h1>{heading}</h1>
+        <p>
+          Echte Männer tragen Bart, Bräutigame genauso: Eine ruhige Reportage
+          über Bartpflege, Styling und stilvolle Herrenportraits vor der
+          Hochzeit in Hamburg.
+        </p>
+      </header>
+
+      <section class="barberhouse-story" aria-labelledby="barberhouse-story-title">
+        <div>
+          <p class="barberhouse-story__kicker">Planung für den Hochzeitstag</p>
+          <h2 id="barberhouse-story-title">Wie trägt man seinen Bart zur Hochzeit?</h2>
+        </div>
+        <div>
+          <p>
+            Der Bart sollte nicht erst am Hochzeitstag entschieden werden. Ein
+            erster Termin etwa vier bis acht Wochen vorher gibt Form, Pflege und
+            Länge genug Zeit, damit der endgültige Schnitt entspannt gelingt.
+          </p>
+          <p>
+            Ein paar Tage vor der Hochzeit folgt dann die finale Rasur oder
+            Pflege-Behandlung. Fotografisch entstehen dabei starke, persönliche
+            Bilder vom Bräutigam, die das klassische Getting Ready der Braut
+            sinnvoll ergänzen.
+          </p>
+        </div>
+      </section>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId="braeutigam-im-barberhouse-hamburg"
+        label="Bräutigam im Barberhouse Hamburg Galerie"
+        dialogLabel="Bräutigam im Barberhouse Hamburg in Vollansicht"
+      />
+
+      <aside class="barberhouse-meta" aria-label="Galeriethemen">
+        <span>Themen:</span>
+        <a href="https://artbild-fotografie.de/gallery-tag/barber-house/">Barber House</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/braeutigam/">Bräutigam</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/getting-ready/">Getting Ready</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hamburg/">Hamburg</a>
+        <a href="https://artbild-fotografie.de/gallery-tag/hochzeitsfotograf/">Hochzeitsfotograf</a>
+      </aside>
+
+      <section class="barberhouse-service" aria-labelledby="barberhouse-service-title">
+        <div>
+          <p class="barberhouse-service__kicker">Getting Ready Reportage</p>
+          <h2 id="barberhouse-service-title">Bräutigam-Portraits als Teil der Hochzeitsgeschichte</h2>
+        </div>
+        <div>
+          <p>
+            Die Vorbereitung des Bräutigams erzählt viel über Stil, Vorfreude
+            und Persönlichkeit. In einer Hochzeitsreportage aus Hamburg bleibt
+            dieser Teil nicht beiläufig, sondern wird als eigene Bildstrecke
+            mit Details, Portraits und stillen Momenten festgehalten.
+          </p>
+          <div class="barberhouse-service__actions">
+            <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+              Getting Ready Tipps
+            </a>
+            <a class="is-primary" href="/hochzeitsfotograf-preise/">
+              Preise ansehen
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <nav class="barberhouse-related" aria-label="Weitere passende Galerien">
+        <a href="/gallery/getting-ready-hamburg/">
+          <span>Getting Ready</span>
+          Brautstyling in Hamburg
+        </a>
+        <a href="/gallery/traumhochzeit-in-hamburg/">
+          <span>Hochzeit Hamburg</span>
+          Traumhochzeit in Hamburg
+        </a>
+        <a href="/portfolio/">
+          <span>Portfolio</span>
+          Weitere Hochzeiten und Portraits
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="https://artbild-fotografie.de/blog/">Blog</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .barberhouse-gallery {
+    padding-top: clamp(74px, 7.4vw, 104px);
+  }
+
+  .barberhouse-hero {
+    width: min(1050px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .barberhouse-hero__script {
+    margin: 0;
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.5vw, 62px);
+    line-height: 1;
+  }
+
+  .barberhouse-hero__kicker,
+  .barberhouse-story__kicker,
+  .barberhouse-service__kicker {
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .barberhouse-hero__kicker {
+    margin: clamp(72px, 7vw, 98px) 0 0;
+  }
+
+  .barberhouse-hero h1 {
+    margin: 20px 0 0;
+    color: #282b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(42px, 5.3vw, 74px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .barberhouse-hero > p:last-child {
+    width: min(780px, 100%);
+    margin: 30px auto 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.68;
+  }
+
+  .barberhouse-story {
+    width: min(1180px, calc(100% - 92px));
+    margin: clamp(92px, 9vw, 138px) auto 0;
+    padding: clamp(64px, 7vw, 96px) clamp(34px, 6vw, 82px);
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: clamp(38px, 7vw, 96px);
+    background: #f3f1ed;
+  }
+
+  .barberhouse-story__kicker,
+  .barberhouse-service__kicker {
+    margin: 0;
+  }
+
+  .barberhouse-story h2,
+  .barberhouse-service h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .barberhouse-story p:not(.barberhouse-story__kicker),
+  .barberhouse-service > div:last-child > p {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .barberhouse-story p + p {
+    margin-top: 22px;
+  }
+
+  .barberhouse-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .barberhouse-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .barberhouse-service {
+    width: min(1110px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 8vw, 110px);
+    align-items: start;
+  }
+
+  .barberhouse-service > div:last-child {
+    padding-top: 8px;
+  }
+
+  .barberhouse-service__actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .barberhouse-service__actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .barberhouse-service__actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .barberhouse-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .barberhouse-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .barberhouse-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .barberhouse-related span {
+    margin-bottom: 14px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 860px) {
+    .barberhouse-story,
+    .barberhouse-service,
+    .barberhouse-related {
+      grid-template-columns: 1fr;
+    }
+
+    .barberhouse-related a + a {
+      border-left: 0;
+      border-top: 1px solid #dedad4;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .barberhouse-gallery {
+      padding-top: 48px;
+    }
+
+    .barberhouse-hero {
+      width: min(100% - 28px, 520px);
+    }
+
+    .barberhouse-hero__script {
+      font-size: 36px;
+    }
+
+    .barberhouse-hero__kicker {
+      margin-top: 66px;
+    }
+
+    .barberhouse-hero h1 {
+      font-size: clamp(38px, 12vw, 52px);
+    }
+
+    .barberhouse-story {
+      width: min(100% - 28px, 560px);
+      margin-top: 78px;
+      padding: 40px 24px;
+    }
+
+    .barberhouse-meta,
+    .barberhouse-service,
+    .barberhouse-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .barberhouse-meta {
+      justify-content: center;
+      text-align: center;
+    }
+
+    .barberhouse-service__actions a {
+      width: 100%;
+    }
+  }
+</style>

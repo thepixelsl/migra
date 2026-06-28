@@ -168,7 +168,7 @@ const entries: PortfolioEntry[] = [
     category: "Gentlemen",
     filter: "Peoplefotografie",
     date: "06.07.2019",
-    href: "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/",
+    href: "/gallery/braeutigam-im-barberhouse-hamburg/",
     image: barberhouseHamburg,
     alt: "Bräutigam beim Styling im Barberhouse Hamburg",
     aspect: "landscape",
