@@ -40,6 +40,30 @@ test("planning heading stays inside its desktop column", async ({ page }) => {
   });
 });
 
+test("price card uses the optimized high resolution image", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
+
+  const image = page.locator(".planning-card:not(.planning-card--large) img");
+  await image.scrollIntoViewIfNeeded();
+  await expect(image).toBeVisible();
+  await expect
+    .poll(() => image.evaluate((element: HTMLImageElement) => element.complete && element.naturalWidth > 0))
+    .toBe(true);
+
+  const imageDetails = await image.evaluate((element: HTMLImageElement) => ({
+    alt: element.alt,
+    currentSrc: element.currentSrc,
+    naturalWidth: element.naturalWidth,
+    naturalHeight: element.naturalHeight,
+  }));
+
+  expect(imageDetails.alt).toContain("Hochzeitsfotograf Hamburg Preise");
+  expect(imageDetails.currentSrc).not.toContain("/images/post-preise.jpg");
+  expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(300);
+  expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(300);
+});
+
 for (const viewport of [
   { name: "tablet", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },

@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
+import priceCardImage from "../assets/home/hochzeitsreportage_hamburg_preise.jpg";
 
 const destinationLinks = [
   { label: "Venedig", href: "https://artbild-fotografie.de/gallery-category/venedig/" },
@@ -50,10 +52,10 @@ const articleCards = [
     title: "Hochzeitsfotograf Hamburg Preise",
     text: "Antworten auf die wichtigsten Fragen zu Festpreisen, enthaltenen Leistungen und planbaren Kosten für Hochzeitsfotos.",
     href: "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
-    image: "/images/post-preise.jpg",
-    width: 150,
-    height: 150,
-    alt: "Hochzeitsfotografie Hamburg Preise",
+    image: priceCardImage,
+    width: 924,
+    height: 924,
+    alt: "Braut mit Brautstrauß als Hinweis auf Hochzeitsfotograf Hamburg Preise",
   },
 ];
 
@@ -433,7 +435,20 @@ const homepageSchema = {
         {articleCards.map((article, index) => (
           <article class:list={["planning-card", index === 0 && "planning-card--large"]}>
             <a href={article.href}>
-              <img src={article.image} width={article.width} height={article.height} alt={article.alt} loading="lazy" decoding="async">
+              {typeof article.image === "string" ? (
+                <img src={article.image} width={article.width} height={article.height} alt={article.alt} loading="lazy" decoding="async">
+              ) : (
+                <Image
+                  src={article.image}
+                  alt={article.alt}
+                  widths={[320, 420, 640]}
+                  sizes="(max-width: 720px) calc(100vw - 64px), 320px"
+                  loading="lazy"
+                  decoding="async"
+                  format="webp"
+                  quality={88}
+                />
+              )}
               <div>
                 <h3>{article.title}</h3>
                 <p>{article.text}</p>
