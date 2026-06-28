@@ -441,12 +441,12 @@ const homepageSchema = {
                 <Image
                   src={article.image}
                   alt={article.alt}
-                  widths={[320, 420, 640]}
-                  sizes="(max-width: 720px) calc(100vw - 64px), 320px"
+                  widths={[420, 640, 768, 924]}
+                  sizes="(max-width: 620px) calc(100vw - 60px), (max-width: 900px) calc(100vw - 64px), 420px"
                   loading="lazy"
                   decoding="async"
                   format="webp"
-                  quality={88}
+                  quality={96}
                 />
               )}
               <div>

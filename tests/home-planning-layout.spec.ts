@@ -60,8 +60,8 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
 
   expect(imageDetails.alt).toContain("Hochzeitsfotograf Hamburg Preise");
   expect(imageDetails.currentSrc).not.toContain("/images/post-preise.jpg");
-  expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(300);
-  expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(300);
+  expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(420);
+  expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(420);
 });
 
 for (const viewport of [
