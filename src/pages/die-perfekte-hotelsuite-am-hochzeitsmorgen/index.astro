@@ -1,0 +1,1093 @@
+---
+import { Image } from "astro:assets";
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../assets/die-perfekte-hotelsuite-am-hochzeitsmorgen/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/die-perfekte-hotelsuite-am-hochzeitsmorgen/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title =
+  "Die perfekte Hotelsuite für den Hochzeitsmorgen";
+const fullTitle =
+  "Die perfekte Hotelsuite für den Hochzeitsmorgen: Was Brautpaare, Brautmodenläden und Modedesigner wissen sollten";
+const description =
+  "Ratgeber für Hochzeitspaare in Hamburg: So findet ihr eine helle Hotelsuite für den Hochzeitsmorgen, Getting Ready, Brautkleid, Styling und hochwertige Hochzeitsfotos.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const heroImage = modulesByFile["rathaus_hamburg_alsterfleet.jpg"];
+const heroAlt = "Rathaus Hamburg am Alsterfleet als Symbol für eine Hochzeit in Hamburg";
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const galleryDefinitions = [
+  [
+    "ART_6922-Bearbeitet-scaled.jpg",
+    "Brautkleid in einer hellen Hotelsuite am Hochzeitsmorgen",
+  ],
+  [
+    "ART_7479-Verbessert-RR.jpg",
+    "Brautportrait in einer Hotelsuite mit natürlichem Tageslicht",
+  ],
+  [
+    "ART_6865-Bearbeitet-scaled.jpg",
+    "Getting Ready in einer Hotelsuite mit eleganter Brautmode",
+  ],
+  [
+    "ART_6607-Bearbeitet-scaled.jpg",
+    "Brautmoden Editorial in einer hellen Suite in Hamburg",
+  ],
+  [
+    "ART_7879-Bearbeitet.jpg",
+    "Brautkleid und Styling für den Hochzeitsmorgen im Hotel",
+  ],
+  [
+    "ART_6569-Bearbeitet-scaled.jpg",
+    "Hochformat Portrait der Braut in einer Hotelsuite",
+  ],
+] as const;
+
+const galleryImages = galleryDefinitions.map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const galleryColumns = [[], [], []] as typeof galleryImages[];
+galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+
+const checklistItems = [
+  "Junior Suite oder größere Zimmerkategorie statt Standardzimmer prüfen.",
+  "Große Tageslichtfenster, helle Wände und wenig visuelle Unruhe bevorzugen.",
+  "Ausreichend Platz für Braut, Stylistin, Brautjungfern, Fotografie und ggf. Video einplanen.",
+  "Großen Spiegel, Sitzgelegenheiten und einen Bereich für Kleid und Details abklären.",
+  "Vor der Buchung Bilder der konkreten Zimmerkategorie ansehen oder bestätigen lassen.",
+];
+
+const faqItems = [
+  {
+    question: "Warum reicht ein normales Hotelzimmer am Hochzeitsmorgen oft nicht aus?",
+    answer:
+      "Ein Standardzimmer bietet meist zu wenig Platz für Styling, Kleid, Begleitpersonen und fotografische Perspektiven. Eine Junior Suite gibt dem Hochzeitsmorgen mehr Ruhe, Licht und Bewegungsfreiheit.",
+  },
+  {
+    question: "Welche Hotels in Hamburg eignen sich für Getting-Ready-Fotos?",
+    answer:
+      "Gut geeignet sind helle, großzügige Hotelsuiten. In Hamburg kommen unter anderem Hotel Atlantic, Fairmont Hotel Vier Jahreszeiten, Le Méridien, The Westin, The Fontenay, Fraser Suites oder The George in Frage.",
+  },
+  {
+    question: "Was ist für Brautmodenläden und Modedesigner wichtig?",
+    answer:
+      "Lange Brautkleider brauchen Raumhöhe, Platz und ausgewogenes Tageslicht. Eine Suite ist kein Fotostudio, wirkt dafür aber natürlicher und zeigt Brautmode in einem realistischen Hochzeitskontext.",
+  },
+];
+
+const hotelNames = [
+  "Hotel Atlantic Hamburg",
+  "Fairmont Hotel Vier Jahreszeiten",
+  "Le Méridien Hamburg",
+  "The Westin Hamburg",
+  "The Fontenay",
+  "Fraser Suites Hamburg",
+  "The George Hamburg",
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: fullTitle,
+      name: title,
+      description,
+      articleSection: [
+        "Editorial",
+        "Hochzeitsplanung",
+        "Hochzeitsmorgen",
+        "Getting Ready Hamburg",
+      ],
+      keywords: [
+        "Hotelsuite Hochzeitsmorgen",
+        "Getting Ready Hamburg",
+        "Hochzeitsplanung Hamburg",
+        "Brautstyling Hotelzimmer",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      datePublished: "2024-06-21T10:53:14+02:00",
+      dateModified: "2026-06-28T12:45:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      about: [
+        { "@type": "Thing", name: "Hochzeitsmorgen" },
+        { "@type": "Thing", name: "Getting Ready Hochzeit" },
+        { "@type": "Thing", name: "Brautmode fotografieren" },
+        ...hotelNames.map((name) => ({ "@type": "Hotel", name })),
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer,
+        },
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Hotelsuite am Hochzeitsmorgen",
+      description:
+        "Beispielbilder für Brautmode, Styling und natürliche Portraits in einer hellen Hotelsuite.",
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "City",
+      "@id": `${pageUrl}#hamburg`,
+      name: "Hamburg",
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 53.5511,
+        longitude: 9.9937,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Hochzeitsreportage",
+        "Editoriale Brautmode Fotografie",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Hochzeitsplanung",
+          item: `${siteUrl}/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: title,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: fullTitle,
+      description,
+      datePublished: "2024-06-21T10:53:14+02:00",
+      dateModified: "2026-06-28T12:45:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: heroAlt,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{fullTitle}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={fullTitle}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2024-06-21T10:53:14+02:00">
+    <meta property="article:modified_time" content="2026-06-28T12:45:00+02:00">
+    <meta property="article:section" content="EDITORIAL">
+    <meta property="article:tag" content="Hochzeitsmorgen">
+    <meta property="article:tag" content="Hochzeitsplanung">
+    <meta property="article:tag" content="Hotel">
+    <meta property="article:tag" content="Hotelzimmer">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={heroAlt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={fullTitle}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template hotel-suite-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <article class="hotel-suite-article">
+        <nav class="hotel-suite-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Startseite</a>
+          <span aria-hidden="true">/</span>
+          <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Getting Ready</a>
+          <span aria-hidden="true">/</span>
+          <span aria-current="page">Hotelsuite am Hochzeitsmorgen</span>
+        </nav>
+
+        <header class="hotel-suite-hero">
+          <div class="hotel-suite-hero__copy">
+            <p class="hotel-suite-kicker">Editorial · Hochzeitsmorgen Hamburg</p>
+            <h1>Die perfekte Hotelsuite für den Hochzeits<wbr>morgen</h1>
+            <p>
+              Was Brautpaare, Brautmodenläden und Modedesigner wissen sollten:
+              Eine gute Suite gibt dem Getting Ready Licht, Ruhe und genügend
+              Raum für Kleid, Styling und natürliche Hochzeitsfotos.
+            </p>
+          </div>
+          <figure class="hotel-suite-hero__image">
+            <Image
+              src={heroImage}
+              alt={heroAlt}
+              widths={[640, 920, 1200, 1386]}
+              sizes="(max-width: 860px) calc(100vw - 28px), 48vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+            <figcaption>Hochzeitsplanung in Hamburg</figcaption>
+          </figure>
+        </header>
+
+        <nav class="hotel-suite-toc" aria-label="Inhaltsübersicht">
+          <a href="#warum-suite">Warum Suite?</a>
+          <a href="#hotels-hamburg">Hotels in Hamburg</a>
+          <a href="#kriterien">Kriterien</a>
+          <a href="#brautmode">Brautmode</a>
+          <a href="#bilder">Bilder</a>
+        </nav>
+
+        <section class="hotel-suite-intro" aria-labelledby="intro-title">
+          <p class="hotel-suite-section-number" aria-hidden="true">01</p>
+          <h2 id="intro-title">Warum die Location am Hochzeitsmorgen so viel ausmacht</h2>
+          <div class="hotel-suite-copy">
+            <p>
+              Die Planung einer Hochzeit ist zwar kein Hexenwerk, aber die
+              meisten Paare heiraten zum ersten Mal. Wer in einer kleinen
+              Neubauwohnung in Hamburg-Barmbek, Eppendorf oder Winterhude lebt,
+              merkt schnell: Für große Brautkleider, Styling und Fotografie ist
+              oft wenig Platz.
+            </p>
+            <p>
+              Gerade kleine und dunkle Wohnungen bieten für große Brautkleider
+              nicht immer den passenden Rahmen. Eine Hotelsuite kann den
+              Hochzeitsmorgen mit Brautjungfern, Freunden oder Eltern ruhiger,
+              heller und großzügiger machen.
+            </p>
+          </div>
+        </section>
+
+        <section class="hotel-suite-feature" id="warum-suite" aria-labelledby="suite-title">
+          <div>
+            <p class="hotel-suite-kicker">Größe und Ausstattung</p>
+            <h2 id="suite-title">Warum eine Junior Suite oft die beste Wahl ist</h2>
+          </div>
+          <div class="hotel-suite-copy">
+            <p>
+              Ein Standardzimmer bietet häufig nicht genügend Platz für das
+              Getting Ready, das Ankleiden und die Vorbereitungen. Eine Junior
+              Suite ist deshalb meistens die klar bessere Wahl. Die Kosten
+              können je nach Hotel und Saison stark variieren.
+            </p>
+            <p>
+              Eine Master Suite oder eine vergleichbare Zimmerkategorie
+              empfiehlt sich vor allem dann, wenn mehr als fünf Personen beim
+              Getting Ready dabei sind. Mehr Platz, zusätzliche Sitzgelegenheiten
+              und ein ruhiger Grundriss helfen allen Beteiligten.
+            </p>
+            <p>
+              Nicht jedes Hotel nennt diese Kategorie Junior Suite. Manche
+              Häuser verwenden eigene Bezeichnungen. Lasst euch deshalb vor der
+              Buchung Zimmergröße, Licht, Ausstattung und echte Beispielbilder
+              der konkreten Kategorie bestätigen.
+            </p>
+          </div>
+        </section>
+
+        <section class="hotel-suite-checklist" aria-labelledby="checklist-title">
+          <div>
+            <p class="hotel-suite-kicker">Kurz prüfen</p>
+            <h2 id="checklist-title">Mindestanforderungen an das Hotelzimmer</h2>
+          </div>
+          <ul>
+            {checklistItems.map((item) => <li>{item}</li>)}
+          </ul>
+        </section>
+
+        <section class="hotel-suite-hotels" id="hotels-hamburg" aria-labelledby="hotels-title">
+          <p class="hotel-suite-kicker">Empfehlungen für Hamburg</p>
+          <h2 id="hotels-title">Welche Hotels in Hamburg kommen in Frage?</h2>
+          <p>
+            In Hamburg gibt es eine großartige Auswahl: klassisch hanseatisch
+            das Hotel Atlantic, prunkvoll das Fairmont Hotel Vier Jahreszeiten,
+            modern das Le Méridien an der Alster oder das Westin über der
+            Elbphilharmonie. Auch The Fontenay und die Fraser Suites sind
+            starke Optionen. Die Bilder in diesem Beitrag stammen aus dem Hotel
+            The George, ebenfalls an der Hamburger Alster.
+          </p>
+          <div class="hotel-suite-hotel-list" aria-label="Genannte Hotels in Hamburg">
+            {hotelNames.map((name) => <span>{name}</span>)}
+          </div>
+        </section>
+
+        <section class="hotel-suite-story" id="kriterien" aria-label="Wichtige Kriterien">
+          <article>
+            <p class="hotel-suite-section-number" aria-hidden="true">02</p>
+            <p class="hotel-suite-kicker">Raum</p>
+            <h2>Genug Platz für Menschen, Kleid und Perspektiven</h2>
+            <p>
+              Eine geräumige Suite bietet Platz für die Braut, ihre Stylistin
+              und möglicherweise Brautjungfern. Ein großer Spiegel,
+              Sitzgelegenheiten und Bewegungsfreiheit für Fotografie und Video
+              sind dabei keine Luxusdetails, sondern sehr praktisch.
+            </p>
+          </article>
+          <article>
+            <p class="hotel-suite-section-number" aria-hidden="true">03</p>
+            <p class="hotel-suite-kicker">Licht</p>
+            <h2>Natürliches Licht macht Bilder ruhiger</h2>
+            <p>
+              Natürliches Licht ist für Hochzeitsfotografie essenziell.
+              Große Tageslichtfenster sorgen für ausgewogene Beleuchtung und
+              vermeiden harte Schatten. Kleine dunkle Räume können zwar
+              stimmungsvoll sein, sind für komplette Kleideransichten aber oft
+              schwieriger.
+            </p>
+          </article>
+          <article>
+            <p class="hotel-suite-section-number" aria-hidden="true">04</p>
+            <p class="hotel-suite-kicker">Ruhe</p>
+            <h2>Eine Suite ist aufgeräumter als der Alltag</h2>
+            <p>
+              Hotelsuiten sind in der Regel visueller aufgeräumt als private
+              Wohnungen. Es fehlen viele Alltagsgegenstände, die später im Bild
+              stören würden. Genau das hilft, Kleid, Styling und Stimmung klarer
+              zu erzählen.
+            </p>
+          </article>
+        </section>
+
+        <section class="hotel-suite-designers" id="brautmode" aria-labelledby="designers-title">
+          <div>
+            <p class="hotel-suite-kicker">Brautmodenläden & Modedesigner</p>
+            <h2 id="designers-title">Hotelsuiten sind kein Fotostudio, aber oft schöner</h2>
+          </div>
+          <div class="hotel-suite-copy">
+            <p>
+              Für besonders lange Brautkleider kommen nur manche Hotelsuiten
+              wirklich in Frage. Hohe Decken, Abstand und Licht sind wichtig.
+              Trotzdem bleibt eine Suite abhängig von Wetter, Bewölkung und
+              Jahreszeit.
+            </p>
+            <p>
+              Dafür zeigen die Bilder Brautmode in einem realistischen,
+              hochwertigeren Hochzeitskontext statt an einem sterilen Ort mit
+              perfekter Studioausleuchtung. Es bedeutet aber auch, dass sehr
+              lange Kleider nicht in jedem Bild von allen Seiten vollständig
+              gezeigt werden können.
+            </p>
+          </div>
+        </section>
+
+        <section class="hotel-suite-gallery-intro" id="bilder" aria-labelledby="gallery-title">
+          <div>
+            <p class="hotel-suite-kicker">Bildstrecke</p>
+            <h2 id="gallery-title">Hotelsuite, Brautmode und Hochzeitsmorgen</h2>
+          </div>
+          <p>
+            Die Bilder laden nach dem ersten sichtbaren Bereich lazy und bleiben
+            formatgerecht im Hochformat. So bleibt die mobile Ladezeit schlank,
+            ohne die Wirkung der Bildstrecke zu verlieren.
+          </p>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="hotelsuite-hochzeitsmorgen"
+          label="Hotelsuite am Hochzeitsmorgen mit Brautmode und Getting Ready"
+          dialogLabel="Hotelsuite am Hochzeitsmorgen in Vollansicht"
+        />
+
+        <section class="hotel-suite-faq" aria-labelledby="faq-title">
+          <div>
+            <p class="hotel-suite-kicker">Häufige Fragen</p>
+            <h2 id="faq-title">Hotelsuite für den Hochzeitsmorgen planen</h2>
+          </div>
+          <div class="hotel-suite-faq__items">
+            {faqItems.map((item) => (
+              <details>
+                <summary>{item.question}</summary>
+                <p>{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+
+        <section class="hotel-suite-cta" aria-labelledby="cta-title">
+          <p class="hotel-suite-kicker">Hochzeitsplanung Hamburg</p>
+          <h2 id="cta-title">Ich helfe euch gern bei der Auswahl der richtigen Suite</h2>
+          <p>
+            Wer die Hamburger Hotelszene gut kennt, weiß den Komfort und die
+            Wirkung einer fotogenen Umgebung für Hochzeitsbilder zu schätzen.
+            Ein paar weitere Tipps zur passenden Hotelsuite gebe ich gern im
+            persönlichen Gespräch.
+          </p>
+          <div>
+            <a class="button" href="https://artbild-fotografie.de/kontakt/">
+              Hochzeit anfragen
+            </a>
+            <a class="button is-secondary" href="/hochzeitsfotograf-preise/">
+              Preise ansehen
+            </a>
+          </div>
+        </section>
+
+        <nav class="hotel-suite-related" aria-label="Weitere passende Seiten">
+          <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+            <span>Ratgeber</span>
+            Das perfekte Getting Ready
+          </a>
+          <a href="/gallery/hochzeit-braut-fotoshooting-hamburg/">
+            <span>Hotel Atlantic</span>
+            Braut Fotoshooting Hamburg
+          </a>
+          <a href="/gallery/hochzeitsfotos-hamburg/">
+            <span>Fraser Suites</span>
+            Hochzeitsfotos Hamburg
+          </a>
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+        <a href="https://artbild-fotografie.de/blog/">Blog</a>
+        <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+        <a href="/impressum/">Impressum</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .hotel-suite-page {
+    background: #fbfaf8;
+  }
+
+  .hotel-suite-page main {
+    padding-bottom: clamp(86px, 10vw, 150px);
+  }
+
+  .hotel-suite-article {
+    padding-top: clamp(44px, 5.8vw, 82px);
+  }
+
+  .hotel-suite-breadcrumb,
+  .hotel-suite-hero,
+  .hotel-suite-toc,
+  .hotel-suite-intro,
+  .hotel-suite-feature,
+  .hotel-suite-checklist,
+  .hotel-suite-hotels,
+  .hotel-suite-story,
+  .hotel-suite-designers,
+  .hotel-suite-gallery-intro,
+  .hotel-suite-faq,
+  .hotel-suite-cta,
+  .hotel-suite-related {
+    width: min(1180px, calc(100% - 56px));
+    margin-inline: auto;
+  }
+
+  .hotel-suite-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .hotel-suite-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .hotel-suite-breadcrumb a:hover,
+  .hotel-suite-breadcrumb a:focus-visible {
+    color: #8a6d5a;
+  }
+
+  .hotel-suite-hero {
+    min-height: clamp(560px, 62vw, 760px);
+    padding: clamp(44px, 7vw, 92px) 0 clamp(58px, 8vw, 112px);
+    display: grid;
+    grid-template-columns: minmax(0, .94fr) minmax(360px, .86fr);
+    gap: clamp(36px, 5.8vw, 80px);
+    align-items: center;
+    border-bottom: 1px solid #ddd7cf;
+  }
+
+  .hotel-suite-kicker,
+  .hotel-suite-section-number {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .hotel-suite-hero h1 {
+    max-width: 100%;
+    margin: 14px 0 28px;
+    color: #202020;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 5.8vw, 88px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.02;
+    overflow-wrap: normal;
+  }
+
+  .hotel-suite-hero__copy > p:last-child,
+  .hotel-suite-copy p,
+  .hotel-suite-hotels > p,
+  .hotel-suite-story p,
+  .hotel-suite-gallery-intro > p,
+  .hotel-suite-cta > p {
+    color: #5f5a54;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.72;
+  }
+
+  .hotel-suite-hero__copy > p:last-child {
+    max-width: 560px;
+    margin: 0;
+  }
+
+  .hotel-suite-hero__image {
+    margin: 0;
+  }
+
+  .hotel-suite-hero__image :global(img) {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    display: block;
+    object-fit: cover;
+  }
+
+  .hotel-suite-hero__image figcaption {
+    margin-top: 12px;
+    color: #807970;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .hotel-suite-toc {
+    margin-top: clamp(28px, 4vw, 48px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 14px;
+  }
+
+  .hotel-suite-toc a {
+    min-height: 42px;
+    padding: 0 16px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #ddd7cf;
+    color: #282b34;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .hotel-suite-intro {
+    max-width: 1020px;
+    padding: clamp(56px, 8vw, 110px) 0 clamp(44px, 7vw, 78px);
+  }
+
+  .hotel-suite-intro h2,
+  .hotel-suite-feature h2,
+  .hotel-suite-checklist h2,
+  .hotel-suite-hotels h2,
+  .hotel-suite-story h2,
+  .hotel-suite-designers h2,
+  .hotel-suite-gallery-intro h2,
+  .hotel-suite-faq h2,
+  .hotel-suite-cta h2 {
+    margin: 12px 0 20px;
+    color: #202020;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.08;
+  }
+
+  .hotel-suite-intro h2,
+  .hotel-suite-hotels h2,
+  .hotel-suite-gallery-intro h2,
+  .hotel-suite-faq h2,
+  .hotel-suite-cta h2 {
+    font-size: clamp(38px, 5.2vw, 74px);
+  }
+
+  .hotel-suite-copy {
+    max-width: 780px;
+  }
+
+  .hotel-suite-copy p {
+    margin: 0;
+  }
+
+  .hotel-suite-copy p + p {
+    margin-top: 22px;
+  }
+
+  .hotel-suite-feature,
+  .hotel-suite-designers,
+  .hotel-suite-faq {
+    margin-top: clamp(62px, 8vw, 110px);
+    padding: clamp(48px, 6vw, 86px);
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(38px, 7vw, 92px);
+    background: #f0ece6;
+  }
+
+  .hotel-suite-feature h2,
+  .hotel-suite-designers h2,
+  .hotel-suite-faq h2 {
+    font-size: clamp(34px, 4.2vw, 58px);
+  }
+
+  .hotel-suite-checklist {
+    margin-top: clamp(54px, 7vw, 92px);
+    display: grid;
+    grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr);
+    gap: clamp(34px, 6vw, 80px);
+    align-items: start;
+  }
+
+  .hotel-suite-checklist h2 {
+    font-size: clamp(32px, 4.2vw, 56px);
+  }
+
+  .hotel-suite-checklist ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 14px;
+  }
+
+  .hotel-suite-checklist li {
+    padding: 18px 20px;
+    border: 1px solid #ddd7cf;
+    color: #5f5a54;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.55;
+  }
+
+  .hotel-suite-hotels {
+    margin-top: clamp(78px, 9vw, 130px);
+    text-align: center;
+  }
+
+  .hotel-suite-hotels > p {
+    width: min(820px, 100%);
+    margin: 0 auto;
+  }
+
+  .hotel-suite-hotel-list {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .hotel-suite-hotel-list span {
+    padding: 11px 14px;
+    border: 1px solid #ddd7cf;
+    color: #282b34;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .hotel-suite-story {
+    margin-top: clamp(78px, 9vw, 128px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    background: #ddd7cf;
+    border: 1px solid #ddd7cf;
+  }
+
+  .hotel-suite-story article {
+    min-width: 0;
+    padding: clamp(30px, 4.6vw, 52px);
+    background: #fbfaf8;
+  }
+
+  .hotel-suite-story article:nth-child(2) {
+    background: #f0ece6;
+  }
+
+  .hotel-suite-story h2 {
+    font-size: clamp(28px, 3.1vw, 42px);
+  }
+
+  .hotel-suite-gallery-intro {
+    margin-top: clamp(82px, 10vw, 142px);
+    display: grid;
+    grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+    gap: clamp(34px, 7vw, 92px);
+    align-items: end;
+  }
+
+  .hotel-suite-gallery-intro > p {
+    margin: 0;
+  }
+
+  .hotel-suite-faq__items {
+    display: grid;
+    gap: 12px;
+  }
+
+  .hotel-suite-faq details {
+    border-bottom: 1px solid #d8d2ca;
+    padding: 0 0 18px;
+  }
+
+  .hotel-suite-faq summary {
+    cursor: pointer;
+    color: #252932;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 28px);
+    line-height: 1.25;
+  }
+
+  .hotel-suite-faq summary:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 5px;
+  }
+
+  .hotel-suite-faq details p {
+    margin: 16px 0 0;
+    color: #5f5a54;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.65;
+  }
+
+  .hotel-suite-cta {
+    margin-top: clamp(82px, 10vw, 140px);
+    padding: clamp(48px, 6vw, 86px);
+    background: #252932;
+    color: #fff;
+    text-align: center;
+  }
+
+  .hotel-suite-cta .hotel-suite-kicker,
+  .hotel-suite-cta h2,
+  .hotel-suite-cta p {
+    color: #fff;
+  }
+
+  .hotel-suite-cta p {
+    width: min(780px, 100%);
+    margin: 0 auto;
+    opacity: .8;
+  }
+
+  .hotel-suite-cta div {
+    margin-top: 34px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+  }
+
+  .hotel-suite-cta .button.is-secondary {
+    border-color: rgba(255, 255, 255, .45);
+    background: transparent;
+    color: #fff;
+  }
+
+  .hotel-suite-related {
+    margin-top: clamp(78px, 9vw, 128px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .hotel-suite-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .hotel-suite-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .hotel-suite-related span {
+    margin-bottom: 14px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 980px) {
+    .hotel-suite-hero,
+    .hotel-suite-feature,
+    .hotel-suite-checklist,
+    .hotel-suite-designers,
+    .hotel-suite-gallery-intro,
+    .hotel-suite-faq {
+      grid-template-columns: 1fr;
+    }
+
+    .hotel-suite-story,
+    .hotel-suite-related {
+      grid-template-columns: 1fr;
+    }
+
+    .hotel-suite-related a + a {
+      border-left: 0;
+      border-top: 1px solid #dedad4;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .hotel-suite-breadcrumb,
+    .hotel-suite-hero,
+    .hotel-suite-toc,
+    .hotel-suite-intro,
+    .hotel-suite-feature,
+    .hotel-suite-checklist,
+    .hotel-suite-hotels,
+    .hotel-suite-story,
+    .hotel-suite-designers,
+    .hotel-suite-gallery-intro,
+    .hotel-suite-faq,
+    .hotel-suite-cta,
+    .hotel-suite-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .hotel-suite-article {
+      padding-top: 44px;
+    }
+
+    .hotel-suite-hero {
+      min-height: 0;
+      padding-top: 48px;
+      text-align: center;
+    }
+
+    .hotel-suite-hero h1 {
+      margin-inline: auto;
+      font-size: clamp(36px, 11vw, 44px);
+      line-height: 1.08;
+    }
+
+    .hotel-suite-hero__copy > p:last-child {
+      margin-inline: auto;
+    }
+
+    .hotel-suite-feature,
+    .hotel-suite-designers,
+    .hotel-suite-faq,
+    .hotel-suite-cta {
+      padding: 38px 24px;
+    }
+
+    .hotel-suite-hotels,
+    .hotel-suite-gallery-intro,
+    .hotel-suite-cta,
+    .hotel-suite-related {
+      margin-top: 76px;
+    }
+
+    .hotel-suite-toc {
+      justify-content: flex-start;
+    }
+
+    .hotel-suite-toc a,
+    .hotel-suite-cta .button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
