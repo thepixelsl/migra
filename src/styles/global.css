@@ -1480,6 +1480,65 @@ h3 {
   text-align: left;
 }
 
+.destination-card-grid {
+  width: min(900px, 100%);
+  margin: clamp(34px, 4.5vw, 62px) auto 0;
+  display: grid;
+  gap: 18px;
+}
+
+.destination-card {
+  min-width: 0;
+}
+
+.destination-card a {
+  display: grid;
+  grid-template-columns: minmax(240px, .78fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(22px, 4vw, 46px);
+  padding: clamp(16px, 2.5vw, 24px);
+  border: 1px solid var(--line);
+  background: #fff;
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+}
+
+.destination-card img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  display: block;
+  background: var(--soft);
+  object-fit: cover;
+}
+
+.destination-card h3 {
+  margin: 0;
+  color: #202633;
+  font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+  font-size: clamp(30px, 3vw, 48px);
+  font-weight: 400;
+  line-height: 1.12;
+}
+
+.destination-card p:not(.eyebrow) {
+  margin: 18px 0 0;
+  font-size: clamp(17px, 1.35vw, 21px);
+  line-height: 1.65;
+}
+
+.destination-card span {
+  margin-top: 24px;
+  display: inline-flex;
+  color: #202633;
+  font-family: "Raleway", Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .16em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
 .destination-actions a {
   display: flex;
   min-height: 150px;
@@ -1673,6 +1732,8 @@ h3 {
 .contact-note__actions a:focus-visible,
 .destination-actions a:hover,
 .destination-actions a:focus-visible,
+.destination-card a:hover span,
+.destination-card a:focus-visible span,
 .vendor-grid a:hover,
 .vendor-grid a:focus-visible,
 .story-card a:hover span,
@@ -1685,6 +1746,7 @@ h3 {
 .story-card a:focus-visible,
 .planning-card a:focus-visible,
 .mini-portfolio-grid a:focus-visible,
+.destination-card a:focus-visible,
 .destination-links a:focus-visible,
 .related-links a:focus-visible,
 .social-links a:focus-visible,
@@ -2146,6 +2208,10 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .destination-card a {
+    grid-template-columns: minmax(220px, .72fr) minmax(0, 1fr);
+  }
+
   .story-grid,
   .mini-portfolio-grid {
     grid-template-columns: 1fr;
@@ -2408,6 +2474,16 @@ h3 {
 
   .destination-actions a {
     min-height: 108px;
+  }
+
+  .destination-card a {
+    grid-template-columns: 1fr;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .destination-card img {
+    aspect-ratio: 4 / 3;
   }
 
   .story-card a,

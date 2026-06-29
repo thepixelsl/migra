@@ -4,6 +4,7 @@ import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
 import priceCardImage from "../assets/home/hochzeitsreportage_hamburg_preise.jpg";
+import paarshootingMallorcaImage from "../assets/portfolio/paarshooting-mallorca.jpg";
 
 const destinationLinks = [
   { label: "Venedig", href: "https://artbild-fotografie.de/gallery-category/venedig/" },
@@ -11,6 +12,18 @@ const destinationLinks = [
   { label: "Hannover im Herbst", href: "https://artbild-fotografie.de/gallery-category/hannover/" },
   { label: "Paris", href: "/gallery/traumhochzeit-in-paris/" },
   { label: "Hamburg", href: "https://artbild-fotografie.de/gallery-category/hamburg-travel/" },
+];
+
+const destinationCards = [
+  {
+    title: "Paarshooting Mallorca",
+    kicker: "Destination Paarfotografie",
+    text: "Mediterranes Licht, ruhige Paarportraits und ein weiter Blick über Dächer, Stadt und Meer.",
+    href: "/gallery/paarshooting-mallorca/",
+    linkLabel: "Paarshooting Mallorca ansehen",
+    image: paarshootingMallorcaImage,
+    alt: "Paarshooting auf Mallorca mit Blick über Stadt und Meer",
+  },
 ];
 
 const storyCards = [
@@ -172,6 +185,12 @@ const homepageSchema = {
           position: storyCards.length + index + 1,
           name: item.title,
           url: item.href.startsWith("http") ? item.href : `https://artbild-fotografie.de${item.href}`,
+        })),
+        ...destinationCards.map((item, index) => ({
+          "@type": "ListItem",
+          position: storyCards.length + articleCards.length + index + 1,
+          name: item.title,
+          url: `https://artbild-fotografie.de${item.href}`,
         })),
       ],
     },
@@ -395,6 +414,30 @@ const homepageSchema = {
           </li>
         ))}
       </ul>
+      <div class="destination-card-grid" aria-label="Empfohlene Destination Galerien">
+        {destinationCards.map((item) => (
+          <article class="destination-card">
+            <a href={item.href} aria-label={item.linkLabel}>
+              <Image
+                src={item.image}
+                alt={item.alt}
+                widths={[360, 620, 768]}
+                sizes="(max-width: 620px) calc(100vw - 28px), (max-width: 980px) calc(100vw - 44px), 520px"
+                loading="lazy"
+                decoding="async"
+                format="webp"
+                quality={88}
+              />
+              <div>
+                <p class="eyebrow">{item.kicker}</p>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+                <span>Galerie ansehen</span>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
       <div class="destination-actions">
         <a href="/hochzeitsfotograf-preise/">Hochzeitsfotograf Preise ansehen</a>
         <a href="https://artbild-fotografie.de/gallery-category/hamburg-travel/">Mein schönes Hamburg ansehen</a>
