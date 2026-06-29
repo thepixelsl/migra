@@ -1,0 +1,447 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import { travelGalleries } from "../../../data/travelGalleries";
+import lovebirdsElbstrand from "../../../assets/portfolio/lovebirds-elbstrand.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery-category/travel/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Travel Fotografie | Artbild-Fotografie";
+const description =
+  "Travel-Galerien von Artbild-Fotografie aus Hamburg, Norddeutschland, Hannover, Mallorca, Teneriffa, Paris und Venedig - mit Landschaften, Städten und Lichtstimmungen.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const imageModules = import.meta.glob("../../../assets/travel-galleries/**/*.{jpg,jpeg,png,webp}", {
+  eager: true,
+  import: "default",
+}) as Record<string, ImageMetadata>;
+
+const travelCards = travelGalleries.map((gallery, index) => {
+  const imageEntry = Object.entries(imageModules).find(([path]) =>
+    path.endsWith(`/travel-galleries/${gallery.slug}/${gallery.images[0]}`),
+  );
+
+  if (!imageEntry) {
+    throw new Error(`No preview image found for travel gallery ${gallery.slug}`);
+  }
+
+  return {
+    title: gallery.shortTitle,
+    description: gallery.description,
+    href: `/gallery/${gallery.slug}/`,
+    location: `${gallery.locationName}, ${gallery.region}`,
+    image: imageEntry[1],
+    alt: `${gallery.imageAltPrefix} - Vorschau`,
+    eager: index === 0,
+  };
+});
+
+const cards = [
+  ...travelCards.slice(0, 1),
+  {
+    title: "Lovebirds am Elbstrand",
+    description:
+      "Paarshooting und Verlobungsshooting am Hamburger Elbstrand mit natürlicher Nähe und ruhigem Licht.",
+    href: "/gallery/lovebirds-am-elbstrand/",
+    location: "Hamburg, Elbstrand",
+    image: lovebirdsElbstrand,
+    alt: "Verlobungsshooting am Elbstrand in Hamburg - Vorschau",
+    eager: false,
+  },
+  ...travelCards.slice(1),
+];
+
+const primaryImage = cards[0].image;
+const primaryImageUrl = new URL(primaryImage.src, siteUrl).href;
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${pageUrl}#collection`,
+      url: pageUrl,
+      name: title,
+      description,
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      about: [
+        "Travel Fotografie",
+        "Landschaftsfotografie",
+        "Destination Wedding Photography",
+        "Hochzeitsfotografie Hamburg",
+      ],
+      mainEntity: {
+        "@type": "ItemList",
+        name: "Travel Galerien",
+        numberOfItems: cards.length,
+        itemListElement: cards.map((card, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${siteUrl}${card.href}`,
+          name: card.title,
+          description: card.description,
+          image: new URL(card.image.src, siteUrl).href,
+        })),
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: primaryImageUrl,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Hamburg",
+        },
+        {
+          "@type": "Place",
+          name: "Norddeutschland",
+        },
+        {
+          "@type": "Place",
+          name: "Mallorca",
+        },
+        {
+          "@type": "City",
+          name: "Paris",
+        },
+        {
+          "@type": "City",
+          name: "Venedig",
+        },
+      ],
+      serviceType: [
+        "Travel Fotografie",
+        "Landschaftsfotografie",
+        "Hochzeitsfotografie",
+        "Destination Wedding Photography",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": pageUrl,
+            name: "Travel Fotografie",
+          },
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      dateModified: "2026-06-29T07:20:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImageUrl,
+        width: primaryImage.width,
+        height: primaryImage.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImageUrl}>
+  <meta property="og:image:alt" content={cards[0].alt}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImageUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template travel-category-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="travel-category-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Startseite</a>
+      <span aria-hidden="true">/</span>
+      <span>Travel</span>
+    </nav>
+
+    <section class="travel-category-hero" aria-labelledby="travel-category-title">
+      <p>Gallery Category</p>
+      <h1 id="travel-category-title">Travel Fotografie</h1>
+      <span aria-hidden="true"></span>
+      <p>
+        Orte, Licht und Atmosphäre: Diese Galerien zeigen Reise- und
+        Landschaftsfotografie von Hamburg aus in den Norden, nach Mallorca,
+        Teneriffa, Paris und Venedig.
+      </p>
+    </section>
+
+    <section class="travel-card-grid" aria-label="Travel Galerien">
+      {cards.map((card) => (
+        <article class="travel-card">
+          <a href={card.href} aria-label={`${card.title} Galerie ansehen`}>
+            <figure>
+              <Image
+                src={card.image}
+                alt={card.alt}
+                widths={[360, 620, 900, 1200]}
+                sizes="(max-width: 760px) 92vw, (max-width: 1100px) 45vw, 31vw"
+                loading={card.eager ? "eager" : "lazy"}
+                fetchpriority={card.eager ? "high" : "auto"}
+                decoding="async"
+              />
+            </figure>
+            <div>
+              <p>{card.location}</p>
+              <h2>{card.title}</h2>
+              <span>{card.description}</span>
+            </div>
+          </a>
+        </article>
+      ))}
+    </section>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/hochzeitsfotograf-preise/">Preise</a>
+      <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .travel-category-page main {
+    padding-bottom: clamp(72px, 8vw, 120px);
+  }
+
+  .travel-category-breadcrumb {
+    width: min(1140px, calc(100% - 44px));
+    margin: clamp(48px, 5vw, 78px) auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .travel-category-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .travel-category-hero {
+    width: min(940px, calc(100% - 44px));
+    margin: clamp(72px, 8vw, 124px) auto 0;
+    text-align: center;
+  }
+
+  .travel-category-hero > p:first-child {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    text-transform: uppercase;
+  }
+
+  .travel-category-hero h1 {
+    margin: 26px auto 0;
+    color: #242732;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(48px, 7.4vw, 112px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .travel-category-hero > span {
+    width: 72px;
+    height: 1px;
+    margin: 34px auto 0;
+    display: block;
+    background: #9ba0a8;
+  }
+
+  .travel-category-hero > p:last-child {
+    width: min(720px, 100%);
+    margin: 30px auto 0;
+    color: #625d58;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.55vw, 23px);
+    line-height: 1.68;
+  }
+
+  .travel-card-grid {
+    width: min(1360px, calc(100% - clamp(44px, 8vw, 140px)));
+    margin: clamp(72px, 8vw, 118px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(28px, 3.2vw, 52px);
+  }
+
+  .travel-card a {
+    display: grid;
+    min-height: 100%;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .travel-card figure {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    background: #eee9e3;
+    overflow: hidden;
+  }
+
+  .travel-card :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 420ms ease, filter 420ms ease;
+  }
+
+  .travel-card a:hover :global(img),
+  .travel-card a:focus-visible :global(img) {
+    transform: scale(1.02);
+    filter: brightness(.92);
+  }
+
+  .travel-card a:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 6px;
+  }
+
+  .travel-card div {
+    padding-top: 22px;
+  }
+
+  .travel-card p {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    line-height: 1.55;
+    text-transform: uppercase;
+  }
+
+  .travel-card h2 {
+    margin: 14px 0 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 3.2vw, 44px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .travel-card span {
+    display: block;
+    margin-top: 16px;
+    color: #67615b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.58;
+  }
+
+  @media (max-width: 1020px) {
+    .travel-card-grid {
+      width: min(100% - 44px, 820px);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 640px) {
+    .travel-category-breadcrumb,
+    .travel-category-hero,
+    .travel-card-grid {
+      width: min(100% - 28px, 520px);
+    }
+
+    .travel-card-grid {
+      grid-template-columns: 1fr;
+      gap: 42px;
+    }
+
+    .travel-card figure {
+      aspect-ratio: 5 / 4;
+    }
+  }
+</style>

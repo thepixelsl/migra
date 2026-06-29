@@ -178,7 +178,7 @@ const entries: PortfolioEntry[] = [
     category: "Norddeutschland",
     filter: "Travel",
     date: "05.07.2019",
-    href: "https://artbild-fotografie.de/gallery/der-norden-und-die-kueste/",
+    href: "/gallery/der-norden-und-die-kueste/",
     image: nordenKueste,
     alt: "Landschaftsfotografie an der norddeutschen Küste",
     aspect: "landscape",

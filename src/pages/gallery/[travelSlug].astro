@@ -1,0 +1,501 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
+import { travelGalleries, type TravelGallery } from "../../data/travelGalleries";
+
+export function getStaticPaths() {
+  return travelGalleries.map((gallery) => ({
+    params: { travelSlug: gallery.slug },
+    props: { gallery },
+  }));
+}
+
+const { gallery } = Astro.props as { gallery: TravelGallery };
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = `/gallery/${gallery.slug}/`;
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = `${gallery.shortTitle} Travel Fotografie | Artbild-Fotografie`;
+const description = gallery.description;
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const imageModules = import.meta.glob("../../assets/travel-galleries/**/*.{jpg,jpeg,png,webp}", {
+  eager: true,
+  import: "default",
+}) as Record<string, ImageMetadata>;
+
+const resolveAspect = (image: ImageMetadata) => {
+  if (image.height > image.width * 1.12) return "portrait";
+  if (image.width > image.height * 1.78) return "wide";
+  return "landscape";
+};
+
+const galleryImages = gallery.images
+  .map((fileName, index) => {
+    const assetEntry = Object.entries(imageModules).find(([path]) =>
+      path.endsWith(`/travel-galleries/${gallery.slug}/${fileName}`),
+    );
+
+    if (!assetEntry) return null;
+    const image = assetEntry[1];
+
+    return {
+      id: `${gallery.slug}-${index + 1}`,
+      image,
+      alt: `${gallery.imageAltPrefix} - Bild ${index + 1}`,
+      aspect: resolveAspect(image),
+      eager: index === 0,
+    };
+  })
+  .filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+const primaryImage = galleryImages[0];
+if (!primaryImage) {
+  throw new Error(`No images found for travel gallery ${gallery.slug}`);
+}
+
+const primaryImageUrl = new URL(primaryImage.image.src, siteUrl).href;
+const galleryColumns = [[], [], []] as (typeof galleryImages)[];
+
+galleryImages.forEach((item, index) => {
+  galleryColumns[index % 3].push(item);
+});
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: gallery.title,
+      description,
+      about: {
+        "@id": `${pageUrl}#place`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+        contentLocation: {
+          "@id": `${pageUrl}#place`,
+        },
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "Place",
+      "@id": `${pageUrl}#place`,
+      name: gallery.locationName,
+      address: {
+        "@type": "PostalAddress",
+        addressRegion: gallery.region,
+        addressCountry: gallery.country,
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: gallery.latitude,
+        longitude: gallery.longitude,
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: primaryImageUrl,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+      },
+      areaServed: [
+        {
+          "@id": `${pageUrl}#place`,
+        },
+        {
+          "@type": "City",
+          name: "Hamburg",
+        },
+      ],
+      serviceType: [
+        "Travel Fotografie",
+        "Landschaftsfotografie",
+        "Hochzeitsfotografie",
+        "Destination Wedding Photography",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": `${siteUrl}/gallery-category/travel/`,
+            name: "Travel Fotografie",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          item: {
+            "@id": pageUrl,
+            name: gallery.shortTitle,
+          },
+        },
+      ],
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${pageUrl}#primaryimage`,
+      url: primaryImageUrl,
+      contentUrl: primaryImageUrl,
+      width: primaryImage.image.width,
+      height: primaryImage.image.height,
+      caption: primaryImage.alt,
+      contentLocation: {
+        "@id": `${pageUrl}#place`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: gallery.datePublished,
+      dateModified: gallery.dateModified,
+      primaryImageOfPage: {
+        "@id": `${pageUrl}#primaryimage`,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      about: {
+        "@id": `${pageUrl}#place`,
+      },
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImageUrl}>
+  <meta property="og:image:secure_url" content={primaryImageUrl}>
+  <meta property="og:image:width" content={primaryImage.image.width}>
+  <meta property="og:image:height" content={primaryImage.image.height}>
+  <meta property="og:image:alt" content={primaryImage.alt}>
+  <meta property="og:image:type" content="image/jpeg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImageUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template travel-gallery-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="travel-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Startseite</a>
+      <span aria-hidden="true">/</span>
+      <a href="/gallery-category/travel/">Travel</a>
+      <span aria-hidden="true">/</span>
+      <span>{gallery.shortTitle}</span>
+    </nav>
+
+    <article class="travel-article">
+      <header class="travel-hero">
+        <p class="travel-kicker">Travel Fotografie</p>
+        <h1>{gallery.title}</h1>
+        <p>{description}</p>
+      </header>
+
+      <figure class="travel-feature">
+        <Image
+          src={primaryImage.image}
+          alt={primaryImage.alt}
+          widths={[720, 1040, 1440, 1800]}
+          sizes="(max-width: 760px) 92vw, min(82vw, 1280px)"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+        />
+      </figure>
+
+      <GalleryImageGrid
+        columns={galleryColumns}
+        galleryId={`travel-${gallery.slug}`}
+        label={`${gallery.shortTitle} Travel Galerie`}
+        dialogLabel={`${gallery.shortTitle} Travel Galerie in Vollansicht`}
+      />
+
+      <section class="travel-context" aria-labelledby="travel-context-title">
+        <p class="travel-kicker">Ort & Kontext</p>
+        <h2 id="travel-context-title">{gallery.shortTitle} als visuelle Reise</h2>
+        <p>
+          Diese Galerie ergänzt das Portfolio von Artbild-Fotografie um Travel-
+          und Landschaftsbilder. Sie zeigt Orte, Licht und Atmosphäre, die auch
+          für Destination Weddings, Paarshootings und Hochzeitsreportagen relevant
+          sein können.
+        </p>
+        <dl>
+          <div>
+            <dt>Ort</dt>
+            <dd>{gallery.locationName}</dd>
+          </div>
+          <div>
+            <dt>Region</dt>
+            <dd>{gallery.region}</dd>
+          </div>
+          <div>
+            <dt>Schwerpunkt</dt>
+            <dd>Travel Fotografie, Lichtstimmung, Architektur und Landschaft</dd>
+          </div>
+        </dl>
+        <a class="button ghost" href="/gallery-category/travel/">Alle Travel-Galerien ansehen</a>
+      </section>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .travel-gallery-page main {
+    padding-bottom: 52px;
+  }
+
+  .travel-breadcrumb {
+    width: min(1140px, calc(100% - 44px));
+    margin: clamp(48px, 5vw, 78px) auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .travel-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .travel-article {
+    padding-top: clamp(42px, 4vw, 68px);
+  }
+
+  .travel-hero {
+    width: min(900px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .travel-kicker {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .32em;
+    text-transform: uppercase;
+  }
+
+  .travel-hero h1 {
+    margin: 28px auto 0;
+    color: #242732;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(42px, 6.4vw, 92px);
+    font-weight: 400;
+    line-height: 1.04;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .travel-hero p {
+    width: min(720px, 100%);
+    margin: 30px auto 0;
+    color: #625d58;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.55vw, 23px);
+    line-height: 1.68;
+  }
+
+  .travel-feature {
+    width: min(1280px, calc(100% - 44px));
+    margin: clamp(58px, 7vw, 98px) auto 0;
+    background: #eee9e3;
+    overflow: hidden;
+  }
+
+  .travel-feature :global(img) {
+    width: 100%;
+    max-height: min(78vh, 920px);
+    display: block;
+    object-fit: cover;
+  }
+
+  .travel-context {
+    width: min(920px, calc(100% - 44px));
+    margin: clamp(104px, 12vw, 168px) auto 0;
+    padding: clamp(42px, 6vw, 78px);
+    background: #f3f1ec;
+    text-align: center;
+  }
+
+  .travel-context h2 {
+    margin: 24px auto 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(32px, 4.6vw, 62px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .travel-context p {
+    width: min(680px, 100%);
+    margin: 28px auto 0;
+    color: #66605b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .travel-context dl {
+    margin: 42px auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    text-align: left;
+  }
+
+  .travel-context div {
+    padding-top: 18px;
+    border-top: 1px solid #ded7ce;
+  }
+
+  .travel-context dt {
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+  }
+
+  .travel-context dd {
+    margin: 14px 0 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.65vw, 24px);
+    line-height: 1.32;
+  }
+
+  .travel-context .button {
+    margin-top: 42px;
+  }
+
+  @media (max-width: 780px) {
+    .travel-breadcrumb,
+    .travel-hero,
+    .travel-feature,
+    .travel-context {
+      width: min(100% - 28px, 620px);
+    }
+
+    .travel-context dl {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .travel-hero h1 {
+      font-size: clamp(34px, 10.8vw, 44px);
+      line-height: 1.08;
+    }
+
+    .travel-feature :global(img) {
+      max-height: 74vh;
+    }
+
+    .travel-context {
+      padding: 34px 22px;
+    }
+  }
+</style>
