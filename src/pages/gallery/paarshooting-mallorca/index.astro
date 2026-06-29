@@ -30,7 +30,6 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Paarshooting Mallorca | Artbild-Fotografie";
 const pageHeading = "Paarshooting Mallorca";
 const description = "Paarshooting auf Mallorca mit natürlichen Paarportraits, mediterranem Licht sowie Stadt- und Meerblick. Fotografiert von Artbild-Fotografie.";
-const originalImageUrl = "https://artbild-fotografie.de/wp-content/uploads/2019/11/ART0682-Bearbeitet_thumb.jpg";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
 const galleryImages = [
@@ -55,6 +54,9 @@ const galleryImages = [
   { id: "art-9457", image: art9457, alt: "Paar tanzt bei einem Schwarzweiß-Shooting auf Mallorca", aspect: "landscape" },
   { id: "art-9407", image: art9407, alt: "Mediterraner Ausblick von einer Dachterrasse auf Mallorca", aspect: "landscape" },
 ];
+
+const primaryImage = galleryImages[0];
+const primaryImageUrl = new URL(primaryImage.image.src, siteUrl).href;
 
 const galleryColumns = [
   ["art-0682", "art-0874", "art-0534", "art-9903", "art-0862", "art-0593", "art-9457"],
@@ -104,6 +106,9 @@ const schemaGraph = {
         "@type": "ImageObject",
         position: index + 1,
         caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
         contentLocation: {
           "@id": `${pageUrl}#place`,
         },
@@ -135,7 +140,7 @@ const schemaGraph = {
       legalName: "Artbild-Fotografie",
       url: siteUrl,
       email: "info@artbild-fotografie.de",
-      image: originalImageUrl,
+      image: primaryImageUrl,
       logo: {
         "@type": "ImageObject",
         "@id": `${siteUrl}/#logo`,
@@ -197,11 +202,11 @@ const schemaGraph = {
     {
       "@type": "ImageObject",
       "@id": `${pageUrl}#primaryimage`,
-      url: originalImageUrl,
-      contentUrl: originalImageUrl,
-      width: 1384,
-      height: 924,
-      caption: "Paarshooting auf Mallorca",
+      url: primaryImageUrl,
+      contentUrl: primaryImageUrl,
+      width: primaryImage.image.width,
+      height: primaryImage.image.height,
+      caption: primaryImage.alt,
       contentLocation: {
         "@id": `${pageUrl}#place`,
       },
@@ -249,18 +254,18 @@ const schemaGraph = {
   <meta property="article:author" content="https://www.facebook.com/artbildfotografie/">
   <meta property="article:published_time" content="2019-11-24T17:45:58+01:00">
   <meta property="article:modified_time" content="2020-05-27T13:04:50+02:00">
-  <meta property="og:image" content={originalImageUrl}>
-  <meta property="og:image:secure_url" content={originalImageUrl}>
-  <meta property="og:image:width" content="1384">
-  <meta property="og:image:height" content="924">
-  <meta property="og:image:alt" content="Paarshooting auf Mallorca">
+  <meta property="og:image" content={primaryImageUrl}>
+  <meta property="og:image:secure_url" content={primaryImageUrl}>
+  <meta property="og:image:width" content={primaryImage.image.width}>
+  <meta property="og:image:height" content={primaryImage.image.height}>
+  <meta property="og:image:alt" content={primaryImage.alt}>
   <meta property="og:image:type" content="image/jpeg">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
   <meta name="twitter:site" content="@artbild">
   <meta name="twitter:creator" content="@artbild">
-  <meta name="twitter:image" content={originalImageUrl}>
+  <meta name="twitter:image" content={primaryImageUrl}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
 </head>
 <body class="gallery-template mallorca-page">
@@ -276,11 +281,10 @@ const schemaGraph = {
         <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
       </a>
       <ul class="gallery-nav__group">
-        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
-        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
-        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
-        <li><a class="gallery-search" href="https://artbild-fotografie.de/?s=" aria-label="Suche">⌕</a></li>
-      </ul>
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
     </nav>
   </header>
 
@@ -305,11 +309,11 @@ const schemaGraph = {
       <aside class="mallorca-share" aria-label="Galerie teilen und Schlagworte">
         <div>
           <span>Tags:</span>
-          <a href="https://artbild-fotografie.de/gallery-tag/fotograf/">Fotograf</a>
-          <a href="https://artbild-fotografie.de/gallery-tag/hochzeit/">Hochzeit</a>
-          <a href="https://artbild-fotografie.de/gallery-tag/mallorca/">Mallorca</a>
-          <a href="https://artbild-fotografie.de/gallery-tag/paarshooting/">Paarshooting</a>
-          <a href="https://artbild-fotografie.de/gallery-tag/paerchen/">Pärchen</a>
+          <span>Fotograf</span>
+          <span>Hochzeit</span>
+          <span>Mallorca</span>
+          <span>Paarshooting</span>
+          <span>Pärchen</span>
         </div>
         <div>
           <span>Share:</span>
@@ -356,6 +360,7 @@ const schemaGraph = {
       <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
       <a href="https://artbild-fotografie.de/blog/">Blog</a>
       <a href="/impressum/">Impressum</a>
+      <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
       <a href="https://artbild-fotografie.de/datenschutz/">Datenschutzerklärung</a>
     </nav>
     <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
