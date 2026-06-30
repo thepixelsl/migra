@@ -60,6 +60,12 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         description: "Inspiration für den Hochzeitsmorgen in Hamburg",
         seoContext: "Getting Ready Hochzeit Hamburg",
       },
+      {
+        label: "Brautstyling Hamburg",
+        href: "/brautstyling-hamburg/",
+        description: "Empfohlene Visagistin und Brautmode für den Hochzeitsmorgen",
+        seoContext: "Brautstyling Hamburg",
+      },
     ],
   },
   {

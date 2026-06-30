@@ -1,0 +1,727 @@
+---
+import { Image } from "astro:assets";
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import heroImage from "../../assets/getting-ready-hamburg/getting_ready_hochzeitsfotograf_hamburg2385-768x513.jpg";
+import manijaImage from "../../assets/brautstyling-hamburg/manija-biebow-brautstyling-hamburg.jpg";
+import ellaImage from "../../assets/ella-deck-couture/ella_deck_couture-scaled.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/brautstyling-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Brautstyling Hamburg | Dienstleister für Hochzeiten";
+const description =
+  "Empfehlungen für Brautstyling in Hamburg: Visagistin Manija Biebow, Ella Deck Couture und fotografische Tipps für ein ruhiges Getting Ready am Hochzeitsmorgen.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const vendors = [
+  {
+    name: "Visagistin Manija Biebow",
+    kicker: "Make-up Artist · Hamburg",
+    date: "23.11.2020",
+    text:
+      "Manija ist Friseurmeisterin und Dipl.-Visagistin. Für ein hochwertiges Brautstyling am Hochzeitsmorgen ist ruhige, verlässliche Arbeit besonders wertvoll.",
+    href: "https://artbild-fotografie.de/gallery/visagistin-manja-biebow/",
+    cta: "Buchungsdetails und Angebote ansehen",
+    image: manijaImage,
+    alt: "Portrait von Manija Biebow, Visagistin für Brautstyling in Hamburg",
+    external: true,
+    location: "Hamburg",
+  },
+  {
+    name: "Ella Deck Couture",
+    kicker: "Brautmode · Hamburg-Eppendorf",
+    date: "16.11.2020",
+    text:
+      "Ella Deck Couture aus Hamburg-Eppendorf steht für persönliche Brautmode, feine Details und Kleider, die auch beim Getting Ready fotografisch schön wirken.",
+    href: "/gallery/ella-deck-couture/",
+    cta: "Ella Deck Couture ansehen",
+    image: ellaImage,
+    alt: "Ella Deck Couture in Hamburg-Eppendorf",
+    external: false,
+    location: "Hamburg-Eppendorf",
+  },
+];
+
+const relatedLinks = [
+  {
+    label: "Getting Ready Hamburg",
+    href: "/gallery/getting-ready-hamburg/",
+    text: "Brautstyling und natürliche Portraits am Hochzeitsmorgen",
+  },
+  {
+    label: "Getting-Ready-Ratgeber",
+    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+    text: "Planung, Timing und fotografische Begleitung",
+  },
+  {
+    label: "Hochzeitsfotograf Preise",
+    href: "/hochzeitsfotograf-preise/",
+    text: "Pakete und Leistungen für Hochzeitsreportagen",
+  },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${pageUrl}#collection`,
+      url: pageUrl,
+      name: title,
+      description,
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      about: [
+        "Brautstyling Hamburg",
+        "Getting Ready Hochzeit",
+        "Hochzeitsdienstleister Hamburg",
+        "Brautmode Hamburg",
+      ],
+      mainEntity: {
+        "@type": "ItemList",
+        name: "Empfohlene Dienstleister für Brautstyling in Hamburg",
+        numberOfItems: vendors.length,
+        itemListElement: vendors.map((vendor, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: vendor.href.startsWith("http") ? vendor.href : `${siteUrl}${vendor.href}`,
+          name: vendor.name,
+          description: vendor.text,
+          image: new URL(vendor.image.src, siteUrl).href,
+        })),
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      image: primaryImage,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Hamburg",
+        },
+        {
+          "@type": "Place",
+          name: "Hamburg-Eppendorf",
+        },
+        {
+          "@type": "Place",
+          name: "Hamburg-Rahlstedt",
+        },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Brautstyling Reportage",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          item: {
+            "@id": siteUrl,
+            name: "Startseite",
+          },
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          item: {
+            "@id": pageUrl,
+            name: "Brautstyling Hamburg",
+          },
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Wann sollte das Brautstyling am Hochzeitstag beginnen?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Das Styling sollte so geplant werden, dass nach Make-up und Frisur noch Zeit für Ankleiden, Detailbilder und ruhige Portraits bleibt.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Warum ist gutes Brautstyling für Hochzeitsfotos wichtig?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: "Professionelles Styling hält länger, wirkt auf Fotos ruhiger und unterstützt natürliche Portraits beim Getting Ready und über den gesamten Hochzeitstag.",
+          },
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2020-11-23T10:00:00+01:00",
+      dateModified: "2026-06-30T09:45:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:width" content={heroImage.width}>
+  <meta property="og:image:height" content={heroImage.height}>
+  <meta property="og:image:alt" content="Brautstyling und Getting Ready in Hamburg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template bridal-styling-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <nav class="gallery-nav" aria-label="Hauptnavigation">
+      <ul class="gallery-nav__group">
+        <li><a href="/">Start</a></li>
+        <li><a href="/portfolio/">Portfolio</a></li>
+        <li><a href="https://artbild-fotografie.de/kontakt/">Kontakt</a></li>
+      </ul>
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <ul class="gallery-nav__group">
+        <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+        <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+        <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <nav class="bridal-breadcrumb" aria-label="Breadcrumb">
+      <a href="/">Startseite</a>
+      <span aria-hidden="true">/</span>
+      <span>Brautstyling Hamburg</span>
+    </nav>
+
+    <article>
+      <header class="bridal-hero">
+        <div class="bridal-hero__copy">
+          <p class="bridal-script" aria-hidden="true">Getting Ready</p>
+          <p class="bridal-kicker">Make-up Artist · Visagistin · Brautmode</p>
+          <h1>Dienstleister für das Brautstyling in Hamburg</h1>
+          <p>
+            Ein ruhiges Getting Ready beginnt mit Menschen, die ihr Handwerk
+            verstehen. Hier findest Du kuratierte Empfehlungen für Brautstyling
+            und Brautmode in Hamburg.
+          </p>
+        </div>
+        <figure class="bridal-hero__image">
+          <Image
+            src={heroImage}
+            alt="Visagistin und Braut beim Getting Ready in Hamburg"
+            widths={[620, 920, 1220, 1440]}
+            sizes="(max-width: 820px) 92vw, 47vw"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </figure>
+      </header>
+
+      <section class="bridal-intro" aria-labelledby="bridal-intro-title">
+        <p class="bridal-kicker">Makeup-Artist und Visagistinnen</p>
+        <h2 id="bridal-intro-title">Warum gute Vorbereitung auf Bildern sichtbar wird</h2>
+        <p>
+          Beim Brautstyling entstehen die ersten Bilder des Hochzeitstags:
+          Pinsel, Haare, Kleid, Schmuck und die leise Vorfreude. Wenn Styling,
+          Zeitplan und Raum gut zusammenpassen, bleibt der Morgen entspannter
+          und die Hochzeitsreportage wirkt natürlicher.
+        </p>
+      </section>
+
+      <section class="bridal-vendors" aria-label="Empfohlene Dienstleister für Brautstyling in Hamburg">
+        {vendors.map((vendor) => (
+          <article class="bridal-vendor-card">
+            <a
+              href={vendor.href}
+              aria-label={`${vendor.name} ansehen`}
+              rel={vendor.external ? "noopener" : undefined}
+            >
+              <figure>
+                <Image
+                  src={vendor.image}
+                  alt={vendor.alt}
+                  widths={[360, 620, 920]}
+                  sizes="(max-width: 760px) 92vw, 34vw"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <div>
+                <p>{vendor.kicker}</p>
+                <time datetime={vendor.date.split(".").reverse().join("-")}>{vendor.date}</time>
+                <h2>{vendor.name}</h2>
+                <span>{vendor.text}</span>
+                <strong>{vendor.cta}{vendor.external ? " ↗" : ""}</strong>
+              </div>
+            </a>
+          </article>
+        ))}
+      </section>
+
+      <section class="bridal-context" aria-labelledby="bridal-context-title">
+        <div>
+          <p class="bridal-kicker">Getting Ready Hamburg</p>
+          <h2 id="bridal-context-title">Brautstyling, Kleid und Fotografie gehören zusammen</h2>
+        </div>
+        <div>
+          <p>
+            Für Hochzeitsfotos ist nicht nur das fertige Styling wichtig. Auch
+            Licht, Platz, Spiegel, natürliche Pausen und das Timing vor dem
+            Ankleiden entscheiden, ob der Morgen ruhig bleibt.
+          </p>
+          <p>
+            Wenn Du Deine Hochzeit in Hamburg planst, sind verlässliche
+            Dienstleister aus der Region ein großer Vorteil: kurze Wege,
+            planbare Abläufe und ein Stil, der zu Stadt, Location und Reportage
+            passt.
+          </p>
+        </div>
+      </section>
+
+      <section class="bridal-faq" aria-labelledby="bridal-faq-title">
+        <p class="bridal-kicker">Planung & Preise</p>
+        <h2 id="bridal-faq-title">Häufige Fragen zum Brautstyling am Hochzeitsmorgen</h2>
+        <div>
+          <article>
+            <h3>Wann sollte das Styling starten?</h3>
+            <p>
+              Plane nicht zu knapp. Nach Make-up und Frisur sollten noch
+              Detailbilder, letzte Handgriffe und Portraits möglich sein.
+            </p>
+          </article>
+          <article>
+            <h3>Was hilft fotografisch besonders?</h3>
+            <p>
+              Helles Fensterlicht, ein aufgeräumter Raum, genügend Platz rund
+              um Kleid und Stylingplatz sowie ein ruhiger Ablauf.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <nav class="bridal-related" aria-label="Interessante Beiträge">
+        {relatedLinks.map((item) => (
+          <a href={item.href}>
+            <span>{item.label}</span>
+            {item.text}
+          </a>
+        ))}
+        <a href="/gallery/braeutigam-im-barberhouse-hamburg/">
+          <span>Groom Styling</span>
+          Barber House Styling für den Bräutigam
+        </a>
+        <a href="/gallery/editorial/">
+          <span>Editorials</span>
+          Editoriale Portraits und Inspiration
+        </a>
+      </nav>
+    </article>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="https://artbild-fotografie.de/kontakt/">Kontakt</a>
+      <a href="/hochzeitsfotograf-preise/">Preise</a>
+      <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .bridal-styling-page main {
+    padding-bottom: clamp(76px, 8vw, 130px);
+  }
+
+  .bridal-breadcrumb {
+    width: min(1160px, calc(100% - 44px));
+    margin: clamp(48px, 5vw, 78px) auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .bridal-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .bridal-hero {
+    width: min(1240px, calc(100% - 72px));
+    margin: clamp(60px, 7vw, 108px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.03fr) minmax(320px, .86fr);
+    gap: clamp(44px, 7vw, 104px);
+    align-items: center;
+  }
+
+  .bridal-script {
+    margin: 0 0 clamp(24px, 4vw, 48px);
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(46px, 6vw, 88px);
+    line-height: 1;
+  }
+
+  .bridal-kicker {
+    margin: 0;
+    color: #866b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .bridal-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(48px, 6.2vw, 88px);
+    font-weight: 400;
+    line-height: 1.02;
+  }
+
+  .bridal-hero__copy > p:last-child,
+  .bridal-intro p,
+  .bridal-context p,
+  .bridal-faq p {
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
+  }
+
+  .bridal-hero__copy > p:last-child {
+    margin: 32px 0 0;
+  }
+
+  .bridal-hero__image {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    background: #eee9e3;
+    overflow: hidden;
+  }
+
+  .bridal-hero__image :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .bridal-intro {
+    width: min(860px, calc(100% - 44px));
+    margin: clamp(86px, 9vw, 132px) auto 0;
+    text-align: center;
+  }
+
+  .bridal-intro h2,
+  .bridal-context h2,
+  .bridal-faq h2 {
+    margin: 22px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 60px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .bridal-intro p {
+    margin: 30px auto 0;
+  }
+
+  .bridal-vendors {
+    width: min(1180px, calc(100% - clamp(44px, 8vw, 126px)));
+    margin: clamp(72px, 8vw, 118px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(34px, 5vw, 74px);
+  }
+
+  .bridal-vendor-card a {
+    display: grid;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .bridal-vendor-card figure {
+    margin: 0;
+    aspect-ratio: 4 / 5;
+    background: #eee9e3;
+    overflow: hidden;
+  }
+
+  .bridal-vendor-card :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform 420ms ease, filter 420ms ease;
+  }
+
+  .bridal-vendor-card a:hover :global(img),
+  .bridal-vendor-card a:focus-visible :global(img) {
+    transform: scale(1.018);
+    filter: brightness(.93);
+  }
+
+  .bridal-vendor-card a:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 6px;
+  }
+
+  .bridal-vendor-card div {
+    padding-top: 24px;
+  }
+
+  .bridal-vendor-card p,
+  .bridal-vendor-card time {
+    margin: 0;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .bridal-vendor-card time {
+    display: block;
+    margin-top: 12px;
+    color: #9b938a;
+  }
+
+  .bridal-vendor-card h2 {
+    margin: 18px 0 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(32px, 3.7vw, 54px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .bridal-vendor-card span {
+    display: block;
+    margin-top: 18px;
+    color: #67615b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.58;
+  }
+
+  .bridal-vendor-card strong {
+    display: inline-flex;
+    margin-top: 24px;
+    color: #292c35;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .bridal-context {
+    width: min(1080px, calc(100% - 44px));
+    margin: clamp(104px, 12vw, 172px) auto 0;
+    padding: clamp(46px, 6vw, 82px);
+    display: grid;
+    grid-template-columns: .8fr 1fr;
+    gap: clamp(36px, 6vw, 86px);
+    background: #f4f0ed;
+  }
+
+  .bridal-context p {
+    margin: 0;
+  }
+
+  .bridal-context p + p {
+    margin-top: 26px;
+  }
+
+  .bridal-faq {
+    width: min(1080px, calc(100% - 44px));
+    margin: clamp(88px, 9vw, 136px) auto 0;
+  }
+
+  .bridal-faq > div {
+    margin-top: 44px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px;
+  }
+
+  .bridal-faq article {
+    padding-top: 22px;
+    border-top: 1px solid #ded7ce;
+  }
+
+  .bridal-faq h3 {
+    margin: 0;
+    color: #262934;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.5vw, 34px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .bridal-faq p {
+    margin: 18px 0 0;
+  }
+
+  .bridal-related {
+    width: min(1080px, calc(100% - 44px));
+    margin: clamp(88px, 10vw, 150px) auto 0;
+    display: grid;
+    border-top: 1px solid #e5ded6;
+    border-bottom: 1px solid #e5ded6;
+  }
+
+  .bridal-related a {
+    padding: 24px 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.8vw, 38px);
+    line-height: 1.14;
+    text-decoration: none;
+    border-top: 1px solid #e5ded6;
+  }
+
+  .bridal-related a:first-child {
+    border-top: 0;
+  }
+
+  .bridal-related span {
+    display: block;
+    margin-bottom: 8px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 860px) {
+    .bridal-hero,
+    .bridal-context {
+      grid-template-columns: 1fr;
+    }
+
+    .bridal-vendors,
+    .bridal-faq > div {
+      grid-template-columns: 1fr;
+    }
+
+    .bridal-hero,
+    .bridal-vendors,
+    .bridal-context,
+    .bridal-faq,
+    .bridal-related {
+      width: min(100% - 44px, 660px);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .bridal-breadcrumb,
+    .bridal-hero,
+    .bridal-intro,
+    .bridal-vendors,
+    .bridal-context,
+    .bridal-faq,
+    .bridal-related {
+      width: min(100% - 28px, 520px);
+    }
+
+    .bridal-hero {
+      margin-top: 56px;
+    }
+
+    .bridal-hero h1 {
+      font-size: clamp(38px, 11.8vw, 52px);
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+
+    .bridal-context {
+      padding: 34px 22px;
+    }
+  }
+</style>
