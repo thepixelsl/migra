@@ -1,0 +1,722 @@
+---
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/visagistin-manja-biebow/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/gallery/visagistin-manja-biebow/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Visagistin Manija Biebow";
+const title = "Visagistin Manija Biebow Hamburg | Brautstyling";
+const description =
+  "Visagistin Manija Biebow in Hamburg: Brautstyling, Make-up und Frisur für ein ruhiges Getting Ready am Hochzeitsmorgen.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const altByFile: Record<string, string> = {
+  "manija-biebow-visagistin-hamburg-portrait.jpg":
+    "Portrait von Visagistin Manija Biebow in Hamburg",
+  "manija-biebow-braut-makeup-hamburg-01.jpg":
+    "Braut beim Make-up von Visagistin Manija Biebow in Hamburg",
+  "manija-biebow-braut-makeup-hamburg-02.jpg":
+    "Natürliches Brautstyling mit Manija Biebow am Hochzeitsmorgen",
+  "manija-biebow-braut-makeup-hamburg-03.jpg":
+    "Visagistin Manija Biebow schminkt eine Braut beim Getting Ready",
+  "manija-biebow-brautstyling-hamburg-04.jpg":
+    "Feines Make-up und Frisur für eine Braut in Hamburg",
+  "manija-biebow-brautstyling-hamburg-05.jpg":
+    "Brautportrait nach dem Styling von Manija Biebow",
+  "salon-manija-biebow-hamburg-schild.jpg":
+    "Schild vom Salon Manija Biebow in Hamburg",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+  eager: index === 0,
+}));
+
+const heroImage = modulesByFile["manija-biebow-visagistin-hamburg-portrait.jpg"];
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const galleryColumns = [[], [], []] as typeof galleryImages[];
+galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+
+const hamburgPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#hamburg`,
+  name: "Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+};
+
+const wandsbekPlace = {
+  "@type": "Place",
+  "@id": `${pageUrl}#wandsbek-gartenstadt`,
+  name: "Wandsbek-Gartenstadt",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+  containedInPlace: {
+    "@id": `${pageUrl}#hamburg`,
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Visagistin Manija Biebow",
+        "Visagistin Hamburg",
+        "Brautstyling Hamburg",
+        "Getting Ready Hamburg",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      datePublished: "2020-11-23T10:00:00+01:00",
+      dateModified: "2026-06-30T10:40:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: {
+        "@id": `${pageUrl}#wandsbek-gartenstadt`,
+      },
+      about: {
+        "@id": `${pageUrl}#manija-biebow`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Brautstyling mit Manija Biebow in Hamburg",
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#hamburg`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "Person",
+      "@id": `${pageUrl}#manija-biebow`,
+      name: "Manija Biebow",
+      alternateName: "Manja Biebow",
+      jobTitle: "Friseurmeisterin und Dipl.-Visagistin",
+      url: "https://www.salon-manija-hamburg.de/",
+      worksFor: {
+        "@type": "BeautySalon",
+        name: "Salon Manija Hamburg",
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: "Hamburg",
+          addressRegion: "Hamburg",
+          addressCountry: "DE",
+        },
+        areaServed: {
+          "@id": `${pageUrl}#hamburg`,
+        },
+      },
+    },
+    hamburgPlace,
+    wandsbekPlace,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Brautstyling Reportage",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Brautstyling Hamburg",
+          item: `${siteUrl}/brautstyling-hamburg/`,
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: heading,
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: [
+        {
+          "@type": "Question",
+          name: "Kann ich Manija Biebow in ihrem Salon besuchen?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text:
+              "Ja. Manija Biebow arbeitet in Hamburg und bietet dort Beratung, Probestyling, Frisur, Make-up und auf Wunsch auch die Abstimmung von Haarschmuck an.",
+          },
+        },
+        {
+          "@type": "Question",
+          name: "Wann sollte ich einen Termin für mein Brautstyling buchen?",
+          acceptedAnswer: {
+            "@type": "Answer",
+            text:
+              "Für beliebte Hochzeitstermine ist eine Anfrage etwa ein Jahr im Voraus sinnvoll. Spätestens nach der Kleidauswahl lohnt sich ein Probestyling mit Bild vom Kleid und, falls vorhanden, Schleier oder Haarschmuck.",
+          },
+        },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2020-11-23T10:00:00+01:00",
+      dateModified: "2026-06-30T10:40:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Portrait von Visagistin Manija Biebow in Hamburg",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2020-11-23T10:00:00+01:00">
+    <meta property="article:modified_time" content="2026-06-30T10:40:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Portrait von Visagistin Manija Biebow in Hamburg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template visagist-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img
+            src="/images/logo-artbild-black.png"
+            width="1200"
+            height="480"
+            alt="Artbild Fotografie"
+          >
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <nav class="visagist-breadcrumb" aria-label="Breadcrumb">
+        <a href="/">Startseite</a>
+        <span aria-hidden="true">/</span>
+        <a href="/brautstyling-hamburg/">Brautstyling Hamburg</a>
+        <span aria-hidden="true">/</span>
+        <span>Manija Biebow</span>
+      </nav>
+
+      <article>
+        <header class="visagist-hero">
+          <div class="visagist-hero__copy">
+            <p class="visagist-kicker">Brautstyling · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Manija Biebow ist Friseurmeisterin und Dipl.-Visagistin in Hamburg.
+              Ihre Arbeit passt besonders gut zu ruhigen Getting-Ready-Reportagen,
+              weil Make-up, Frisur und Timing verlässlich zusammenspielen.
+            </p>
+            <div class="visagist-hero__actions" aria-label="Weiterführende Links">
+              <a href="/brautstyling-hamburg/">Brautstyling Hamburg</a>
+              <a href="/gallery/getting-ready-hamburg/">Getting Ready ansehen</a>
+            </div>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[480, 720, 924]}
+              sizes="(max-width: 760px) 82vw, 34vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              alt="Portrait von Visagistin Manija Biebow in Hamburg"
+            />
+            <figcaption>Visagistin Manija Biebow</figcaption>
+          </figure>
+        </header>
+
+        <section class="visagist-intro" aria-labelledby="visagist-intro-title">
+          <div>
+            <p class="visagist-kicker">Über die Visagistin</p>
+            <h2 id="visagist-intro-title">Make-up, Frisur und Beratung vor der Hochzeit</h2>
+          </div>
+          <div class="visagist-intro__text">
+            <p>
+              Manija ist nicht nur Friseurmeisterin, sondern auch Dipl.-Visagistin
+              und arbeitet mit einem hohen Anspruch an Ergebnis, Verlässlichkeit
+              und Flexibilität. Für Bräute ist das besonders wertvoll, weil der
+              Hochzeitsmorgen oft eng geplant ist.
+            </p>
+            <p>
+              In ihrem Salon in der Wandsbeker Gartenstadt bietet sie neben
+              Frisuren und Beauty-Behandlungen auch Beratung, Probestyling und
+              auf Wunsch die Abstimmung von Schleier oder Haarschmuck an.
+            </p>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="visagistin-manja-biebow"
+          label="Fotogalerie Visagistin Manija Biebow in Hamburg"
+          dialogLabel="Brautstyling mit Manija Biebow in Vollansicht"
+        />
+
+        <section class="visagist-faq" aria-labelledby="visagist-faq-title">
+          <div>
+            <p class="visagist-kicker">Planung</p>
+            <h2 id="visagist-faq-title">Wann lohnt sich ein Termin?</h2>
+          </div>
+          <div class="visagist-faq__grid">
+            <article>
+              <h3>Probestyling früh anfragen</h3>
+              <p>
+                Für Hochzeitstermine ist eine Anfrage etwa ein Jahr im Voraus
+                sinnvoll. Sobald das Kleid ausgesucht ist, hilft ein Foto vom
+                Kleid beim Probestyling.
+              </p>
+            </article>
+            <article>
+              <h3>Schleier und Haarschmuck mitdenken</h3>
+              <p>
+                Wenn Schleier oder Accessoires geplant sind, sollten sie beim
+                Probetermin sichtbar sein. So entsteht ein Styling, das am Tag
+                selbst natürlich wirkt und fotografisch hält.
+              </p>
+            </article>
+            <article>
+              <h3>Salon und Buchung</h3>
+              <p>
+                Weitere Informationen zur Buchung findest du direkt beim
+                <a href="https://www.salon-manija-hamburg.de/" rel="noopener">Salon Manija Hamburg</a>.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="visagist-related" aria-labelledby="visagist-related-title">
+          <p class="visagist-kicker">Sicher interessiert dich auch</p>
+          <h2 id="visagist-related-title">Weitere Seiten zum Hochzeitsmorgen</h2>
+          <div class="visagist-related__grid">
+            <a href="/gallery/getting-ready-hamburg/">
+              <span>Getting Ready Hamburg</span>
+              <small>Brautstyling, Details und ruhige Portraits am Hochzeitsmorgen</small>
+            </a>
+            <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+              <span>Getting-Ready-Ratgeber</span>
+              <small>Planung, Ablauf und fotografische Tipps für Hamburg</small>
+            </a>
+            <a href="/gallery/ella-deck-couture/">
+              <span>Ella Deck Couture</span>
+              <small>Brautmode aus Hamburg-Eppendorf als Inspiration</small>
+            </a>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <p>Artbild-Fotografie · Hochzeitsfotograf Hamburg</p>
+      <a href="/portfolio/">Zurück zum Portfolio</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .visagist-page {
+    background: #fbfaf8;
+    color: #1e1e1f;
+  }
+
+  .visagist-breadcrumb {
+    width: min(1180px, calc(100% - 48px));
+    margin: clamp(26px, 4vw, 52px) auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    color: #827b73;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .visagist-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .visagist-breadcrumb a:focus-visible,
+  .visagist-breadcrumb a:hover {
+    color: #30343d;
+  }
+
+  .visagist-hero {
+    width: min(1180px, calc(100% - 48px));
+    margin: clamp(44px, 6vw, 82px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.72fr);
+    gap: clamp(42px, 6vw, 96px);
+    align-items: center;
+  }
+
+  .visagist-kicker {
+    margin: 0 0 18px;
+    color: #7b746d;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .visagist-hero h1,
+  .visagist-intro h2,
+  .visagist-faq h2,
+  .visagist-related h2 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    line-height: 0.98;
+    letter-spacing: 0;
+  }
+
+  .visagist-hero h1 {
+    max-width: 8.4em;
+    font-size: clamp(4.2rem, 9.2vw, 9.2rem);
+  }
+
+  .visagist-hero__copy p:not(.visagist-kicker) {
+    max-width: 600px;
+    margin: 28px 0 0;
+    color: #716c67;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(1.08rem, 1.4vw, 1.3rem);
+    line-height: 1.75;
+  }
+
+  .visagist-hero__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+  }
+
+  .visagist-hero__actions a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid #2f323c;
+    color: #2f323c;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .visagist-hero__actions a:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 5px;
+  }
+
+  .visagist-hero figure {
+    margin: 0;
+    justify-self: center;
+    width: min(100%, 430px);
+  }
+
+  .visagist-hero :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    box-shadow: 0 28px 70px rgb(54 48 44 / 0.16);
+  }
+
+  .visagist-hero figcaption {
+    margin-top: 16px;
+    color: #827b73;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.13em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .visagist-intro,
+  .visagist-faq,
+  .visagist-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: clamp(76px, 9vw, 132px) auto 0;
+  }
+
+  .visagist-intro {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1fr);
+    gap: clamp(34px, 6vw, 86px);
+    padding-top: clamp(40px, 5vw, 68px);
+    border-top: 1px solid #ded8d0;
+  }
+
+  .visagist-intro h2,
+  .visagist-faq h2,
+  .visagist-related h2 {
+    font-size: clamp(2.4rem, 5vw, 5.2rem);
+  }
+
+  .visagist-intro__text {
+    display: grid;
+    gap: 22px;
+  }
+
+  .visagist-intro__text p,
+  .visagist-faq p,
+  .visagist-related small {
+    margin: 0;
+    color: #716c67;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.78;
+  }
+
+  .visagist-page :global(.gallery-image-grid) {
+    margin-top: clamp(70px, 8vw, 116px);
+  }
+
+  .visagist-faq {
+    padding-top: clamp(42px, 5vw, 72px);
+    border-top: 1px solid #ded8d0;
+  }
+
+  .visagist-faq__grid,
+  .visagist-related__grid {
+    margin-top: clamp(34px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(18px, 2.4vw, 32px);
+  }
+
+  .visagist-faq article,
+  .visagist-related a {
+    min-width: 0;
+    border: 1px solid #ded8d0;
+    background: #fff;
+    padding: clamp(24px, 3vw, 38px);
+  }
+
+  .visagist-faq h3,
+  .visagist-related span {
+    margin: 0 0 16px;
+    display: block;
+    color: #242426;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.55rem, 2.2vw, 2.25rem);
+    font-weight: 500;
+    line-height: 1.08;
+  }
+
+  .visagist-faq a,
+  .visagist-related a {
+    color: #2f323c;
+  }
+
+  .visagist-related a {
+    text-decoration: none;
+    transition: border-color 220ms ease, transform 220ms ease;
+  }
+
+  .visagist-related a:hover,
+  .visagist-related a:focus-visible {
+    border-color: #2f323c;
+    outline: 0;
+    transform: translateY(-2px);
+  }
+
+  .gallery-footer {
+    margin-top: clamp(86px, 10vw, 142px);
+  }
+
+  @media (max-width: 900px) {
+    .visagist-hero,
+    .visagist-intro {
+      grid-template-columns: 1fr;
+    }
+
+    .visagist-hero h1 {
+      max-width: 7.4em;
+    }
+
+    .visagist-hero figure {
+      width: min(82vw, 430px);
+      justify-self: start;
+    }
+
+    .visagist-faq__grid,
+    .visagist-related__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .visagist-breadcrumb,
+    .visagist-hero,
+    .visagist-intro,
+    .visagist-faq,
+    .visagist-related {
+      width: min(100% - 28px, 460px);
+    }
+
+    .visagist-hero {
+      gap: 36px;
+    }
+
+    .visagist-hero h1 {
+      font-size: clamp(3.45rem, 18vw, 4.7rem);
+      line-height: 1;
+    }
+
+    .visagist-hero__copy p:not(.visagist-kicker) {
+      margin-top: 22px;
+      font-size: 1.02rem;
+    }
+
+    .visagist-hero figure {
+      width: min(86vw, 390px);
+      justify-self: center;
+    }
+
+    .visagist-intro h2,
+    .visagist-faq h2,
+    .visagist-related h2 {
+      font-size: clamp(2.2rem, 12vw, 3.2rem);
+      line-height: 1.06;
+    }
+
+    .visagist-faq article,
+    .visagist-related a {
+      padding: 24px;
+    }
+  }
+</style>
