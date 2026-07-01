@@ -1,0 +1,517 @@
+---
+import { Image } from "astro:assets";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import "../../styles/global.css";
+import heroImage from "../../assets/hochzeitsfotograf-ratgeber/hochzeitsfotograf-hamburg-ratgeber-art9666.jpg";
+import standesamtImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-01.jpg";
+import reportImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-02.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/hochzeitsfotograf-ratgeber/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Hochzeitsfotograf Hamburg: Preise & Budget-Tipps";
+const heading = "Budget für Hochzeitsfotos";
+const description =
+  "Ratgeber für Hochzeitsfotografie in Hamburg: So vergleichst du Preise, Pakete, Bildbearbeitung und Fahrtkosten ohne versteckte Kosten.";
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const sections = [
+  {
+    title: "Stundenlohn vergleichen",
+    text:
+      "Wenn ein Hochzeitsfotograf nach Stunden abrechnet, lohnt sich ein genauer Vergleich: Was ist enthalten, wie viele Bilder werden geliefert und sind Vorgespräch, Bildbearbeitung und Anfahrt bereits eingerechnet?",
+  },
+  {
+    title: "Preis pro Bild kritisch prüfen",
+    text:
+      "Ein günstiger Einstiegspreis kann teuer werden, wenn jedes weitere Bild einzeln berechnet wird. Gerade bei Trauung, Gratulationen, Paarshooting und Feier entstehen viele wichtige Momente in kurzer Zeit.",
+  },
+  {
+    title: "Bildbearbeitung einplanen",
+    text:
+      "Professionelle Bearbeitung macht Licht, Farben und Stimmung konsistent. Achte darauf, ob die RAW-Bearbeitung finaler Bilder im Paket enthalten ist oder später zusätzliche Kosten entstehen.",
+  },
+  {
+    title: "Fahrtkosten und Zeitfenster klären",
+    text:
+      "Bei Hochzeiten in Hamburg sind kurze Wege ein Vorteil. Trotzdem solltest du vorab klären, ob Fahrtkosten, Parkplatzsuche oder Ortswechsel zwischen Standesamt, Shooting und Location berechnet werden.",
+  },
+];
+
+const faqItems = [
+  {
+    question: "Wie spare ich bei Hochzeitsfotos Geld, ohne Qualität zu verlieren?",
+    answer:
+      "Am besten vergleichst du vollständige Pakete statt einzelner Stundenpreise. Wichtig sind enthaltene Bilder, Bearbeitung, Anfahrt, Onlinegalerie und klare Vereinbarungen zu Zusatzkosten.",
+  },
+  {
+    question: "Sind Festpreise für Hochzeitsfotografie sinnvoll?",
+    answer:
+      "Festpreise geben Planungssicherheit. Besonders bei standesamtlichen Trauungen oder klaren Reportage-Zeiten helfen sie, das Budget zuverlässig einzuhalten.",
+  },
+  {
+    question: "Warum ist ein Kennenlernshooting hilfreich?",
+    answer:
+      "Ein Kennenlernshooting nimmt Unsicherheit vor der Kamera und zeigt früh, ob Stil, Sympathie und Arbeitsweise des Fotografen zu euch passen.",
+  },
+];
+
+const relatedLinks = [
+  {
+    href: "/hochzeitsfotograf-preise/",
+    label: "Aktuelle Preise & Pakete",
+    text: "Klare Pakete für standesamtliche Trauungen und längere Reportagen.",
+  },
+  {
+    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    label: "Standesamt Altona",
+    text: "Beispiel einer standesamtlichen Trauung in Hamburg-Altona.",
+  },
+  {
+    href: "/gallery/lovebirds-am-elbstrand/",
+    label: "Kennenlernshooting",
+    text: "Warum ein Paarshooting vor der Hochzeit Vertrauen schafft.",
+  },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: title,
+      description,
+      datePublished: "2019-08-14T09:37:40+02:00",
+      dateModified: "2026-06-30T11:20:00+02:00",
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: primaryImage,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      contentLocation: { "@id": `${pageUrl}#hamburg` },
+      keywords: [
+        "Hochzeitsfotograf Hamburg Preise",
+        "Hochzeitsfotograf Budget",
+        "Hochzeitsreportage Hamburg",
+        "Standesamt Hamburg",
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "FAQPage",
+      "@id": `${pageUrl}#faq`,
+      mainEntity: faqItems.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "City",
+      "@id": `${pageUrl}#hamburg`,
+      name: "Hamburg",
+      geo: { "@type": "GeoCoordinates", latitude: 53.5511, longitude: 9.9937 },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: ["Hochzeitsfotografie", "Hochzeitsreportage", "Standesamtliche Trauung"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Startseite", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Ratgeber", item: pageUrl },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Hochzeitsreportage in Hamburg als Ratgeberbild">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template advice-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="advice-article">
+        <nav class="advice-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Startseite</a>
+          <span aria-hidden="true">/</span>
+          <a href="/brautstyling-hamburg/">Planung</a>
+          <span aria-hidden="true">/</span>
+          <span>Budget</span>
+        </nav>
+
+        <header class="advice-hero">
+          <div>
+            <p class="advice-kicker">Planung & Budget · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Eine Hochzeitsreportage hält die flüchtigen Momente eures Tages fest.
+              Mit klaren Paketen, transparenter Bildbearbeitung und sauber geklärten
+              Fahrtkosten bleibt das Budget in Hamburg planbar.
+            </p>
+            <a class="advice-button" href="/hochzeitsfotograf-preise/">Preise ansehen</a>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[620, 920, 1384]}
+              sizes="(max-width: 760px) 100vw, 44vw"
+              format="webp"
+              quality={86}
+              loading="eager"
+              fetchpriority="high"
+              alt="Hochzeitsreportage in Hamburg als Beispiel für Budgetplanung"
+            />
+          </figure>
+        </header>
+
+        <section class="advice-content" aria-label="Ratgeber Hochzeitsfotograf Preise">
+          {sections.map((section) => (
+            <section>
+              <h2>{section.title}</h2>
+              <p>{section.text}</p>
+            </section>
+          ))}
+        </section>
+
+        <section class="advice-feature" aria-labelledby="standesamt-title">
+          <div>
+            <p class="advice-kicker">Beispiel Hamburg-Altona</p>
+            <h2 id="standesamt-title">Standesamtliche Trauung ohne Kostenüberraschung</h2>
+            <p>
+              Für eine standesamtliche Trauung reichen oft wenige Stunden, wenn der
+              Ablauf gut geplant ist: Ankommen, Trauung, Gratulationen, Familienbilder
+              und ein kurzes Paarshooting. Genau hier helfen klare Festpreise.
+            </p>
+          </div>
+          <div class="advice-feature__images">
+            <Image src={standesamtImage} widths={[480, 720, 920]} sizes="(max-width: 760px) 100vw, 30vw" format="webp" quality={84} loading="lazy" alt="Standesamtliche Trauung in Hamburg-Altona" />
+            <Image src={reportImage} widths={[480, 720, 920]} sizes="(max-width: 760px) 100vw, 30vw" format="webp" quality={84} loading="lazy" alt="Hochzeitsreportage nach dem Standesamt in Hamburg-Altona" />
+          </div>
+        </section>
+
+        <section class="advice-faq" aria-labelledby="faq-title">
+          <p class="advice-kicker">Kurz beantwortet</p>
+          <h2 id="faq-title">Häufige Fragen zu Preisen</h2>
+          <div>
+            {faqItems.map((item) => (
+              <article>
+                <h3>{item.question}</h3>
+                <p>{item.answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <nav class="advice-related" aria-label="Weiterführende Seiten">
+          {relatedLinks.map((item) => (
+            <a href={item.href}>
+              <span>{item.label}</span>
+              {item.text}
+            </a>
+          ))}
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <p>Artbild-Fotografie · Hochzeitsfotograf Hamburg</p>
+      <a href="/brautstyling-hamburg/">Zurück zu Brautstyling Hamburg</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(html) {
+    overflow-x: clip;
+  }
+
+  .advice-page {
+    background: #fbfaf8;
+    color: #202024;
+    overflow-x: clip;
+  }
+
+  .advice-article,
+  .advice-breadcrumb {
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .advice-breadcrumb {
+    margin-top: clamp(32px, 4vw, 58px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #817970;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .advice-breadcrumb a,
+  .advice-related a,
+  .advice-button {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .advice-hero {
+    margin-top: clamp(46px, 6vw, 86px);
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(300px, 0.78fr);
+    gap: clamp(42px, 6vw, 92px);
+    align-items: center;
+  }
+
+  .advice-hero > *,
+  .advice-content > *,
+  .advice-feature > *,
+  .advice-faq > *,
+  .advice-related > * {
+    min-width: 0;
+  }
+
+  .advice-kicker {
+    margin: 0 0 18px;
+    color: #7d756d;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .advice-hero h1,
+  .advice-content h2,
+  .advice-feature h2,
+  .advice-faq h2 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .advice-hero h1 {
+    max-width: 8em;
+    font-size: clamp(3.7rem, 7.8vw, 8.8rem);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .advice-hero p,
+  .advice-content p,
+  .advice-feature p,
+  .advice-faq p,
+  .advice-related a {
+    color: #716c67;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.78;
+  }
+
+  .advice-hero p {
+    max-width: 610px;
+    margin: 28px 0 0;
+  }
+
+  .advice-button {
+    min-height: 44px;
+    margin-top: 28px;
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid #30343d;
+    color: #30343d;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .advice-hero figure {
+    margin: 0;
+  }
+
+  .advice-hero :global(img),
+  .advice-feature :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .advice-content,
+  .advice-feature,
+  .advice-faq,
+  .advice-related {
+    margin-top: clamp(76px, 9vw, 130px);
+    padding-top: clamp(38px, 5vw, 70px);
+    border-top: 1px solid #ded8d0;
+  }
+
+  .advice-content {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(32px, 4vw, 62px);
+  }
+
+  .advice-content h2,
+  .advice-feature h2,
+  .advice-faq h2 {
+    font-size: clamp(2.25rem, 4.6vw, 4.7rem);
+  }
+
+  .advice-content p,
+  .advice-feature p {
+    margin: 18px 0 0;
+  }
+
+  .advice-feature {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 78px);
+    align-items: start;
+  }
+
+  .advice-feature__images {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .advice-faq > div,
+  .advice-related {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .advice-faq article,
+  .advice-related a {
+    border: 1px solid #ded8d0;
+    background: #fff;
+    padding: clamp(24px, 3vw, 36px);
+  }
+
+  .advice-faq h3,
+  .advice-related span {
+    margin: 0 0 14px;
+    display: block;
+    color: #242426;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.55rem, 2vw, 2.15rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .advice-related a:hover,
+  .advice-related a:focus-visible,
+  .advice-button:focus-visible {
+    outline: 2px solid #30343d;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .advice-hero,
+    .advice-content,
+    .advice-feature,
+    .advice-faq > div,
+    .advice-related {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .advice-article,
+    .advice-breadcrumb {
+      width: min(100% - 28px, 460px);
+    }
+
+    .advice-hero h1 {
+      font-size: clamp(2.72rem, 13.2vw, 4rem);
+      line-height: 1.02;
+    }
+
+    .advice-feature__images {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

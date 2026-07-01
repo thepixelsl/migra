@@ -1,0 +1,509 @@
+---
+import { Image } from "astro:assets";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import "../../styles/global.css";
+import heroImage from "../../assets/getting-ready-fehler/getting-ready-fehler-hotelzimmer.jpg";
+import prepImage from "../../assets/getting-ready-fehler/getting-ready-braut-vorbereitung.jpg";
+import stylingImage from "../../assets/getting-ready-fehler/getting-ready-brautstyling-hamburg.jpg";
+import coupleImage from "../../assets/getting-ready-fehler/kennenlernshooting-hamburg-paar.jpg";
+
+const siteUrl = "https://artbild-fotografie.de";
+const pagePath = "/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Getting Ready: Diese Fehler solltest du vermeiden";
+const heading = "Getting Ready richtig planen";
+const description =
+  "Ratgeber für Getting-Ready-Fotos in Hamburg: Diese Fehler bei Raum, Timing und Kennenlernshooting solltest du vor der Hochzeit vermeiden.";
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const mistakes = [
+  {
+    number: "01",
+    title: "Das Getting Ready gar nicht fotografieren lassen",
+    text:
+      "Der Hochzeitsmorgen erzählt viel über Vorfreude, Anspannung und Nähe. Wer diesen Teil komplett auslässt, verliert oft die ruhigsten und persönlichsten Bilder der Reportage.",
+  },
+  {
+    number: "02",
+    title: "Unordnung im Zimmer unterschätzen",
+    text:
+      "Leere Verpackungen, Taschen und herumliegende Kleidung lenken ab. Plane zehn Minuten Aufräumzeit ein und halte einen hellen Bereich am Fenster frei.",
+  },
+  {
+    number: "03",
+    title: "Kein Kennenlernshooting machen",
+    text:
+      "Wenn du dich vor der Kamera noch unsicher fühlst, ist ein Kennenlernshooting Gold wert. Am Hochzeitstag steht dann keine fremde Person im Raum, sondern jemand, dessen Arbeitsweise du bereits kennst.",
+  },
+];
+
+const checklist = [
+  "Helles Fensterlicht und genügend Platz einplanen.",
+  "Stylingplatz, Kleid, Schuhe und Schmuck vorher sortieren.",
+  "Mindestens 20 Minuten Puffer nach Make-up und Frisur lassen.",
+  "Nur Menschen im Raum haben, die Ruhe in den Morgen bringen.",
+  "Vor der Hochzeit ein Kennenlernshooting oder Vorgespräch planen.",
+];
+
+const relatedLinks = [
+  {
+    href: "/gallery/getting-ready-hamburg/",
+    label: "Getting Ready Hamburg",
+    text: "Fotogalerie mit Brautstyling, Details und ruhigen Portraits.",
+  },
+  {
+    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+    label: "Getting-Ready-Ratgeber",
+    text: "Planung, Ablauf und fotografische Vorbereitung am Hochzeitsmorgen.",
+  },
+  {
+    href: "/brautstyling-hamburg/",
+    label: "Brautstyling Hamburg",
+    text: "Empfohlene Dienstleister und Inspiration für den Hochzeitsmorgen.",
+  },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: title,
+      description,
+      datePublished: "2019-11-08T10:00:00+01:00",
+      dateModified: "2026-06-30T11:25:00+02:00",
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: primaryImage,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      contentLocation: { "@id": `${pageUrl}#hamburg` },
+      keywords: [
+        "Getting Ready Hamburg",
+        "Brautstyling Hamburg",
+        "Hochzeitsmorgen",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "HowTo",
+      "@id": `${pageUrl}#howto`,
+      name: "Getting-Ready-Fehler vermeiden",
+      description,
+      step: checklist.map((item, index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        text: item,
+      })),
+      inLanguage: "de",
+    },
+    {
+      "@type": "City",
+      "@id": `${pageUrl}#hamburg`,
+      name: "Hamburg",
+      geo: { "@type": "GeoCoordinates", latitude: 53.5511, longitude: 9.9937 },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: ["Getting Ready Fotografie", "Hochzeitsfotografie", "Brautstyling Reportage"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Startseite", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "Brautstyling Hamburg", item: `${siteUrl}/brautstyling-hamburg/` },
+        { "@type": "ListItem", position: 3, name: heading, item: pageUrl },
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Getting Ready am Hochzeitsmorgen in Hamburg">
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template getting-mistakes-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="https://artbild-fotografie.de/blog/">Blog</a></li>
+          <li><a href="https://artbild-fotografie.de/about/">Über mich</a></li>
+          <li><a href="https://artbild-fotografie.de/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class="mistakes-article">
+        <nav class="mistakes-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Startseite</a>
+          <span aria-hidden="true">/</span>
+          <a href="/brautstyling-hamburg/">Brautstyling Hamburg</a>
+          <span aria-hidden="true">/</span>
+          <span>Getting Ready</span>
+        </nav>
+
+        <header class="mistakes-hero">
+          <div>
+            <p class="mistakes-kicker">Getting Ready · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Der Hochzeitsmorgen darf leicht sein. Mit einem hellen Raum,
+              gutem Timing und etwas Vertrauen vor der Kamera entstehen Bilder,
+              die sich nicht gestellt anfühlen.
+            </p>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[620, 920, 1384]}
+              sizes="(max-width: 760px) 100vw, 46vw"
+              format="webp"
+              quality={86}
+              loading="eager"
+              fetchpriority="high"
+              alt="Getting Ready am Hochzeitsmorgen in einem hellen Zimmer"
+            />
+          </figure>
+        </header>
+
+        <section class="mistakes-list" aria-label="Drei Getting-Ready-Fehler">
+          {mistakes.map((item) => (
+            <article>
+              <span>{item.number}</span>
+              <h2>{item.title}</h2>
+              <p>{item.text}</p>
+            </article>
+          ))}
+        </section>
+
+        <section class="mistakes-gallery" aria-labelledby="gallery-title">
+          <div>
+            <p class="mistakes-kicker">Vorbereitung</p>
+            <h2 id="gallery-title">Was auf Fotos sofort hilft</h2>
+            <ul>
+              {checklist.map((item) => <li>{item}</li>)}
+            </ul>
+          </div>
+          <div class="mistakes-gallery__images">
+            <Image src={prepImage} widths={[480, 720, 920]} sizes="(max-width: 760px) 100vw, 28vw" format="webp" quality={84} loading="lazy" alt="Braut bei der Vorbereitung am Hochzeitsmorgen" />
+            <Image src={stylingImage} widths={[480, 720, 920]} sizes="(max-width: 760px) 100vw, 28vw" format="webp" quality={84} loading="lazy" alt="Brautstyling und Details beim Getting Ready in Hamburg" />
+            <Image src={coupleImage} widths={[480, 720, 920]} sizes="(max-width: 760px) 100vw, 28vw" format="webp" quality={84} loading="lazy" alt="Paarshooting in Hamburg als Kennenlernen vor der Hochzeit" />
+          </div>
+        </section>
+
+        <nav class="mistakes-related" aria-label="Weiterführende Seiten">
+          {relatedLinks.map((item) => (
+            <a href={item.href}>
+              <span>{item.label}</span>
+              {item.text}
+            </a>
+          ))}
+        </nav>
+      </article>
+    </main>
+
+    <footer class="gallery-footer">
+      <p>Artbild-Fotografie · Hochzeitsfotograf Hamburg</p>
+      <a href="/brautstyling-hamburg/">Zurück zu Brautstyling Hamburg</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(html) {
+    overflow-x: clip;
+  }
+
+  .getting-mistakes-page {
+    background: #fbfaf8;
+    color: #202024;
+    overflow-x: clip;
+  }
+
+  .mistakes-article,
+  .mistakes-breadcrumb {
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .mistakes-breadcrumb {
+    margin-top: clamp(32px, 4vw, 58px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    color: #817970;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .mistakes-breadcrumb a,
+  .mistakes-related a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mistakes-hero {
+    margin-top: clamp(46px, 6vw, 86px);
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(300px, 0.88fr);
+    gap: clamp(42px, 6vw, 92px);
+    align-items: center;
+  }
+
+  .mistakes-hero > *,
+  .mistakes-list > *,
+  .mistakes-gallery > *,
+  .mistakes-related > * {
+    min-width: 0;
+  }
+
+  .mistakes-kicker {
+    margin: 0 0 18px;
+    color: #7d756d;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .mistakes-hero h1,
+  .mistakes-list h2,
+  .mistakes-gallery h2 {
+    margin: 0;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1;
+  }
+
+  .mistakes-hero h1 {
+    max-width: 7.6em;
+    font-size: clamp(3.7rem, 7.8vw, 8.4rem);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
+  .mistakes-hero p,
+  .mistakes-list p,
+  .mistakes-gallery li,
+  .mistakes-related a {
+    color: #716c67;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: 1.08rem;
+    line-height: 1.78;
+  }
+
+  .mistakes-hero p {
+    max-width: 610px;
+    margin: 28px 0 0;
+  }
+
+  .mistakes-hero figure {
+    margin: 0;
+  }
+
+  .mistakes-hero :global(img),
+  .mistakes-gallery :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .mistakes-list,
+  .mistakes-gallery,
+  .mistakes-related {
+    margin-top: clamp(76px, 9vw, 130px);
+    padding-top: clamp(38px, 5vw, 70px);
+    border-top: 1px solid #ded8d0;
+  }
+
+  .mistakes-list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(24px, 3vw, 44px);
+  }
+
+  .mistakes-list article {
+    min-width: 0;
+  }
+
+  .mistakes-list span {
+    display: block;
+    margin-bottom: 18px;
+    color: #9a6d4e;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+  }
+
+  .mistakes-list h2,
+  .mistakes-gallery h2 {
+    font-size: clamp(2.1rem, 4.2vw, 4.25rem);
+  }
+
+  .mistakes-list p {
+    margin: 18px 0 0;
+  }
+
+  .mistakes-gallery {
+    display: grid;
+    grid-template-columns: minmax(0, 0.68fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 78px);
+    align-items: start;
+  }
+
+  .mistakes-gallery ul {
+    margin: 26px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 16px;
+  }
+
+  .mistakes-gallery li {
+    padding-left: 24px;
+    position: relative;
+  }
+
+  .mistakes-gallery li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    left: 0;
+    top: 0.82em;
+    background: #9a6d4e;
+  }
+
+  .mistakes-gallery__images {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .mistakes-gallery__images :global(img:first-child) {
+    grid-column: 1 / -1;
+  }
+
+  .mistakes-related {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+  }
+
+  .mistakes-related a {
+    border: 1px solid #ded8d0;
+    background: #fff;
+    padding: clamp(24px, 3vw, 36px);
+  }
+
+  .mistakes-related span {
+    margin: 0 0 14px;
+    display: block;
+    color: #242426;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.55rem, 2vw, 2.15rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .mistakes-related a:hover,
+  .mistakes-related a:focus-visible {
+    outline: 2px solid #30343d;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .mistakes-hero,
+    .mistakes-list,
+    .mistakes-gallery,
+    .mistakes-related {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .mistakes-article,
+    .mistakes-breadcrumb {
+      width: min(100% - 28px, 460px);
+    }
+
+    .mistakes-hero h1 {
+      font-size: clamp(2.9rem, 14vw, 4.25rem);
+      line-height: 1.02;
+    }
+
+    .mistakes-gallery__images {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
