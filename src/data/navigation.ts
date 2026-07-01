@@ -49,10 +49,9 @@ export const mobileNavigationGroups: NavigationGroup[] = [
       },
       {
         label: "Standesamtliche Trauung",
-        href: "https://artbild-fotografie.de/standesamt-hamburg/",
+        href: "/standesamt-hamburg/",
         description: "Begleitung im Standesamt Hamburg und in Altona",
         seoContext: "Standesamtliche Trauung Hamburg",
-        external: true,
       },
       {
         label: "Getting Ready",
@@ -73,18 +72,16 @@ export const mobileNavigationGroups: NavigationGroup[] = [
     items: [
       {
         label: "Freie Termine & Anfrage",
-        href: "https://artbild-fotografie.de/kontakt/",
+        href: "/kontakt/",
         description: "Erzählt mir von Eurer Hochzeit und Euren Wünschen",
         seoContext: "Hochzeitsfotograf Hamburg anfragen",
         badge: "2026/2027",
-        external: true,
         emphasis: "cta",
       },
       {
         label: "Kontakt",
-        href: "https://artbild-fotografie.de/kontakt/",
+        href: "/kontakt/",
         description: "Direkter Kontakt zu Artbild-Fotografie in Hamburg",
-        external: true,
       },
       {
         label: "Sicherer Kontakt",
@@ -100,21 +97,18 @@ export const mobileNavigationGroups: NavigationGroup[] = [
     items: [
       {
         label: "Blog",
-        href: "https://artbild-fotografie.de/blog/",
+        href: "/blog/",
         description: "Planungstipps und Geschichten rund um Hochzeiten",
-        external: true,
       },
       {
         label: "Über mich",
-        href: "https://artbild-fotografie.de/about/",
+        href: "/about/",
         description: "Fotograf York Augustin aus Hamburg",
-        external: true,
       },
       {
         label: "Newsletter",
-        href: "https://artbild-fotografie.de/newsletter/",
+        href: "/newsletter/",
         description: "Neuigkeiten und ausgewählte Fotogeschichten",
-        external: true,
       },
     ],
   },
@@ -122,7 +116,7 @@ export const mobileNavigationGroups: NavigationGroup[] = [
 
 export const mobileSearchItem: NavigationItem = {
   label: "Suche",
-  href: "https://artbild-fotografie.de/?s=",
+  href: "/?s=",
   description: "Website durchsuchen",
   external: true,
 };

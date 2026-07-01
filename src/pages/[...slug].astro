@@ -1,0 +1,495 @@
+---
+import MobileNavigation from "../components/MobileNavigation.astro";
+import migratedPages from "../data/migratedPages.json";
+import "../styles/global.css";
+
+type MigratedImage = {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  eager?: boolean;
+};
+
+type MigratedPage = {
+  path: string;
+  sourceUrl: string;
+  type: string;
+  title: string;
+  metaTitle: string;
+  description: string;
+  eyebrow: string;
+  datePublished?: string;
+  dateModified?: string;
+  heroImage?: MigratedImage;
+  contentHtml: string;
+  galleryImages: MigratedImage[];
+  keywords: string[];
+};
+
+export function getStaticPaths() {
+  return (migratedPages as MigratedPage[]).map((page) => ({
+    params: {
+      slug: page.path.replace(/^\/|\/$/g, ""),
+    },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: MigratedPage };
+const siteUrl = "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}${page.path}`;
+const isGallery = page.path.startsWith("/gallery/");
+const isLargeEnough = (image?: MigratedImage) =>
+  Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
+const heroImage = isLargeEnough(page.heroImage) ? page.heroImage : undefined;
+const galleryImages = isGallery
+  ? page.galleryImages
+  : page.galleryImages.filter((image) => isLargeEnough(image));
+const hasGallery = galleryImages.length > 0;
+const primaryImage = heroImage ? `${siteUrl}${heroImage.src}` : `${siteUrl}/images/logo-artbild-black.png`;
+const breadcrumbLabel = isGallery ? "Galerie" : page.type === "post" ? "Blog" : "Seite";
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: ["Hochzeitsfotografie", "Portraitfotografie", "Reisefotografie"],
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Startseite", item: siteUrl },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: breadcrumbLabel,
+          item: isGallery ? `${siteUrl}/portfolio/` : `${siteUrl}/blog/`,
+        },
+        { "@type": "ListItem", position: 3, name: page.title, item: pageUrl },
+      ],
+    },
+    {
+      "@type": isGallery ? "ImageGallery" : page.type === "post" ? "Article" : "WebPage",
+      "@id": `${pageUrl}#primary`,
+      url: pageUrl,
+      name: page.metaTitle,
+      headline: page.title,
+      description: page.description,
+      keywords: page.keywords,
+      datePublished: page.datePublished,
+      dateModified: page.dateModified,
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: page.metaTitle,
+      description: page.description,
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage?.width,
+        height: heroImage?.height,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{page.metaTitle}</title>
+    <meta name="description" content={page.description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content={page.type === "post" ? "article" : "website"}>
+    <meta property="og:title" content={page.metaTitle}>
+    <meta property="og:description" content={page.description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    {heroImage?.width && <meta property="og:image:width" content={String(heroImage.width)}>}
+    {heroImage?.height && <meta property="og:image:height" content={String(heroImage.height)}>}
+    <meta property="og:image:alt" content={heroImage?.alt ?? page.title}>
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="migrated-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <nav class="gallery-nav" aria-label="Hauptnavigation">
+        <ul class="gallery-nav__group">
+          <li><a href="/">Start</a></li>
+          <li><a href="/portfolio/">Portfolio</a></li>
+          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
+        </ul>
+        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+        </a>
+        <ul class="gallery-nav__group">
+          <li><a href="/blog/">Blog</a></li>
+          <li><a href="/about/">Über mich</a></li>
+          <li><a href="/newsletter/">Newsletter</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <article class:list={["migrated-article", { "is-gallery": isGallery }]}>
+        <nav class="migrated-breadcrumb" aria-label="Breadcrumb">
+          <a href="/">Startseite</a>
+          <span aria-hidden="true">/</span>
+          <a href={isGallery ? "/portfolio/" : "/blog/"}>{breadcrumbLabel}</a>
+          <span aria-hidden="true">/</span>
+          <span>{page.title}</span>
+        </nav>
+
+        <header class:list={["migrated-hero", { "has-no-image": !heroImage }]}>
+          <div>
+            <p class="migrated-kicker">{page.eyebrow}</p>
+            <h1>{page.title}</h1>
+            <p>{page.description}</p>
+          </div>
+
+          {heroImage && (
+            <figure>
+              <img
+                src={heroImage.src}
+                width={heroImage.width}
+                height={heroImage.height}
+                alt={heroImage.alt}
+                loading="eager"
+                decoding="async"
+                fetchpriority="high"
+              >
+            </figure>
+          )}
+        </header>
+
+        <section class="migrated-content" aria-label="Inhalt">
+          <div set:html={page.contentHtml}></div>
+        </section>
+
+        {hasGallery && (
+          <section class="migrated-gallery" aria-labelledby="migrated-gallery-title">
+            <p class="migrated-kicker">Bildstrecke</p>
+            <h2 id="migrated-gallery-title">{isGallery ? "Galerie" : "Bilder zur Seite"}</h2>
+            <div>
+              {galleryImages.map((image, index) => (
+                <figure>
+                  <img
+                    src={image.src}
+                    width={image.width}
+                    height={image.height}
+                    alt={image.alt}
+                    loading={index < 2 ? "eager" : "lazy"}
+                    decoding="async"
+                    fetchpriority={index === 0 ? "high" : "auto"}
+                  >
+                </figure>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <footer class="migrated-footer">
+          <a href="/portfolio/">Portfolio ansehen</a>
+          <a href="/sicherer-kontakt/">Kontakt aufnehmen</a>
+        </footer>
+      </article>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(html) {
+    overflow-x: clip;
+  }
+
+  .migrated-page {
+    overflow-x: clip;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .migrated-page main {
+    padding: clamp(48px, 6vw, 94px) 0 clamp(70px, 8vw, 130px);
+  }
+
+  .migrated-article {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto;
+  }
+
+  .migrated-breadcrumb {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: clamp(46px, 7vw, 94px);
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  .migrated-breadcrumb a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .migrated-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 520px);
+    gap: clamp(34px, 6vw, 92px);
+    align-items: center;
+    margin-bottom: clamp(44px, 7vw, 96px);
+  }
+
+  .migrated-hero.has-no-image {
+    display: block;
+    width: min(860px, 100%);
+  }
+
+  .migrated-hero > div,
+  .migrated-hero figure {
+    min-width: 0;
+  }
+
+  .migrated-kicker {
+    margin: 0 0 20px;
+    color: #7f7972;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .26em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  .migrated-hero h1 {
+    max-width: 800px;
+    margin: 0;
+    font-size: clamp(58px, 7vw, 116px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: .98;
+    overflow-wrap: anywhere;
+  }
+
+  .migrated-hero p:not(.migrated-kicker) {
+    max-width: 650px;
+    margin: 28px 0 0;
+    color: #77706a;
+    font-size: clamp(20px, 2.1vw, 30px);
+    line-height: 1.65;
+  }
+
+  .migrated-hero figure {
+    margin: 0;
+  }
+
+  .migrated-hero img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .migrated-content {
+    width: min(820px, 100%);
+    margin: 0 auto;
+    color: #5f5953;
+    font-size: clamp(20px, 1.8vw, 25px);
+    line-height: 1.8;
+  }
+
+  .migrated-content :global(h1),
+  .migrated-content :global(h2),
+  .migrated-content :global(h3) {
+    margin: 2.2em 0 .65em;
+    color: var(--ink);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.12;
+  }
+
+  .migrated-content :global(h1) {
+    font-size: clamp(42px, 5vw, 72px);
+  }
+
+  .migrated-content :global(h2) {
+    font-size: clamp(34px, 4vw, 56px);
+  }
+
+  .migrated-content :global(h3) {
+    font-size: clamp(26px, 3vw, 38px);
+  }
+
+  .migrated-content :global(p),
+  .migrated-content :global(ul),
+  .migrated-content :global(ol),
+  .migrated-content :global(blockquote) {
+    margin: 0 0 1.25em;
+  }
+
+  .migrated-content :global(ul),
+  .migrated-content :global(ol) {
+    padding-left: 1.1em;
+  }
+
+  .migrated-content :global(a) {
+    color: var(--ink);
+    text-decoration-color: var(--accent);
+    text-underline-offset: .22em;
+  }
+
+  .migrated-content :global(table) {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 18px;
+  }
+
+  .migrated-content :global(td),
+  .migrated-content :global(th) {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+  }
+
+  .migrated-gallery {
+    margin-top: clamp(58px, 8vw, 120px);
+  }
+
+  .migrated-gallery > .migrated-kicker,
+  .migrated-gallery h2 {
+    width: min(820px, 100%);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .migrated-gallery h2 {
+    margin-top: 0;
+    margin-bottom: 34px;
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .migrated-gallery > div {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(14px, 2vw, 28px);
+  }
+
+  .migrated-gallery figure {
+    margin: 0;
+    background: #f4f0eb;
+  }
+
+  .migrated-gallery img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .migrated-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 18px;
+    margin-top: clamp(58px, 8vw, 118px);
+    padding-top: 34px;
+    border-top: 1px solid var(--line);
+  }
+
+  .migrated-footer a {
+    color: var(--ink);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 900px) {
+    .migrated-page main {
+      padding-top: 0;
+    }
+
+    .migrated-article {
+      width: min(100%, calc(100% - 32px));
+      padding-top: 54px;
+    }
+
+    .migrated-breadcrumb {
+      margin-bottom: 54px;
+      font-size: 11px;
+    }
+
+    .migrated-hero {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 34px;
+      margin-bottom: 54px;
+    }
+
+    .migrated-hero h1 {
+      font-size: clamp(42px, 14vw, 64px);
+      line-height: 1.02;
+    }
+
+    .migrated-hero p:not(.migrated-kicker),
+    .migrated-content {
+      font-size: 21px;
+      line-height: 1.75;
+    }
+
+    .migrated-gallery > div {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+  }
+</style>
