@@ -4,6 +4,7 @@ import {
   mobileSearchItem,
   type NavigationItem,
 } from "../data/navigation";
+import FloatingActionButton from "./FloatingActionButton.astro";
 
 const currentPath = Astro.url.pathname;
 
@@ -129,6 +130,8 @@ const isCurrent = (item: NavigationItem) => {
     </div>
   </div>
 </div>
+
+<FloatingActionButton />
 
 <script>
   const navigationRoots = document.querySelectorAll("[data-mobile-navigation]");
