@@ -1,9 +1,17 @@
 ---
-const whatsappText = encodeURIComponent("Hallo York! Bist Du noch buchbar am:");
+const whatsappText = encodeURIComponent("Hallo York!\nBist Du noch buchbar am:");
 const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 ---
 
-<div class="floating-action" data-floating-action>
+<div
+  class="floating-action"
+  data-floating-action
+  data-show-delay="400"
+  data-availability-endpoint="/api/availability"
+  data-availability-max-months="24"
+  data-availability-request-timeout="8000"
+  data-availability-min-loading="600"
+>
   <button
     class="floating-action__toggle"
     type="button"
@@ -13,282 +21,1087 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
     data-floating-action-toggle
   >
     <img
+      class="floating-action__badge"
       src="/images/fab/kontakt-icon-128.png"
-      alt=""
+      srcset="/images/fab/kontakt-icon-64.png 64w, /images/fab/kontakt-icon-128.png 128w"
+      sizes="128px"
+      alt="Kontakt Icon"
       width="128"
       height="128"
       decoding="async"
       loading="eager"
-      aria-hidden="true"
     >
-    <span class="visually-hidden">Schnellkontakt</span>
   </button>
 
-  <nav
+  <div
     class="floating-action__menu"
     id="floating-action-menu"
-    aria-label="Schnellkontakt"
     aria-hidden="true"
-    data-floating-action-menu
+    data-floating-action-panel
   >
-    <a class="floating-action__item" href="/kontakt/" data-floating-action-link>
-      <span class="floating-action__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor" d="M7 2h2v2h6V2h2v2h2a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h2V2Zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Z"></path>
-        </svg>
-      </span>
-      <span>Termin noch frei?</span>
-    </a>
-
-    <a
-      class="floating-action__item"
-      href={whatsappHref}
-      target="_blank"
-      rel="noopener"
-      aria-label="WhatsApp Chat mit Artbild-Fotografie öffnen"
-      data-floating-action-link
+    <nav
+      class="floating-action__view"
+      aria-label="Schnellkontakt"
+      data-floating-action-contact-view
     >
-      <span class="floating-action__icon" aria-hidden="true">
-        <img src="/images/fab/whatsapp-chat.png" alt="" width="30" height="30" loading="lazy" decoding="async">
-      </span>
-      <span>WhatsApp</span>
-    </a>
+      <a
+        class="floating-action__item is-availability"
+        href="/kontakt/"
+        data-floating-action-availability-open
+      >
+        <span class="floating-action__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M7 2h2v2h6V2h2v2h2a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h2V2Zm12 8H5v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Z"></path>
+          </svg>
+        </span>
+        <span>Termin noch frei?</span>
+      </a>
 
-    <a class="floating-action__item" href="/kontakt/" data-floating-action-link>
-      <span class="floating-action__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 4h12v2H6V8Zm0 4h12v2H6v-2Z"></path>
-        </svg>
-      </span>
-      <span>Kontaktformular</span>
-    </a>
+      <a
+        class="floating-action__item is-wa"
+        href={whatsappHref}
+        target="_blank"
+        rel="noopener"
+        aria-label="WhatsApp Chat öffnen"
+        data-floating-action-link
+      >
+        <span class="floating-action__icon" aria-hidden="true">
+          <img
+            class="floating-action__wa-logo"
+            src="/images/fab/whatsapp-chat.png"
+            srcset="/images/fab/whatsapp-chat.png 64w, /images/fab/whatsapp-chat-2x.png 128w"
+            sizes="30px"
+            alt="WhatsApp"
+            width="30"
+            height="30"
+            loading="lazy"
+            decoding="async"
+          >
+        </span>
+        <span>WhatsApp</span>
+      </a>
 
-    <a
-      class="floating-action__item"
-      href="mailto:info@artbild-fotografie.de?subject=Anfrage%20%C3%BCber%20Website"
-      aria-label="E-Mail an Artbild-Fotografie schreiben"
-      data-floating-action-link
+      <a class="floating-action__item is-form" href="/kontakt/" data-floating-action-link>
+        <span class="floating-action__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 4h12v2H6V8Zm0 4h12v2H6v-2Z"></path>
+          </svg>
+        </span>
+        <span>Kontaktformular</span>
+      </a>
+
+      <a
+        class="floating-action__item is-mail"
+        href="mailto:info@artbild-fotografie.de?subject=Anfrage%20%C3%BCber%20Website"
+        aria-label="E-Mail an Artbild-Fotografie schreiben"
+        data-floating-action-link
+      >
+        <span class="floating-action__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 3.5-8 5-8-5V6l8 5 8-5v1.5Z"></path>
+          </svg>
+        </span>
+        <span>E-Mail</span>
+      </a>
+    </nav>
+
+    <section
+      class="floating-action__view floating-action__availability"
+      role="dialog"
+      aria-labelledby="floating-action-availability-title"
+      aria-hidden="true"
+      hidden
+      data-floating-action-availability-view
     >
-      <span class="floating-action__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24">
-          <path fill="currentColor" d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Zm0 3.5-8 5-8-5V6l8 5 8-5v1.5Z"></path>
-        </svg>
-      </span>
-      <span>E-Mail</span>
-    </a>
-  </nav>
+      <header class="floating-action__dialog-header">
+        <button
+          class="floating-action__icon-button"
+          type="button"
+          aria-label="Zurück zum Kontaktmenü"
+          data-floating-action-back
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="m15.4 5.4-1.4-1.4-8 8 8 8 1.4-1.4L8.8 12l6.6-6.6Z"></path>
+          </svg>
+        </button>
+        <h2 id="floating-action-availability-title">Terminprüfung</h2>
+        <button
+          class="floating-action__icon-button"
+          type="button"
+          aria-label="Schnellkontakt schließen"
+          data-floating-action-close
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z"></path>
+          </svg>
+        </button>
+      </header>
+
+      <div class="floating-action__dialog-body">
+        <p class="floating-action__intro">Für welchen Tag möchtet ihr die Verfügbarkeit prüfen?</p>
+
+        <form data-floating-action-availability-form novalidate>
+          <label for="floating-action-availability-date">Hochzeitsdatum</label>
+          <input
+            id="floating-action-availability-date"
+            name="date"
+            type="date"
+            required
+            aria-describedby="floating-action-availability-error"
+            data-floating-action-date
+          >
+          <div class="floating-action__honeypot" aria-hidden="true">
+            <label for="floating-action-availability-website">Website</label>
+            <input
+              id="floating-action-availability-website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+              data-floating-action-website
+            >
+          </div>
+          <p
+            class="floating-action__error"
+            id="floating-action-availability-error"
+            role="alert"
+            hidden
+            data-floating-action-error
+          ></p>
+          <button class="floating-action__primary" type="submit" data-floating-action-submit>
+            Termin prüfen
+          </button>
+        </form>
+
+        <div class="floating-action__conversation" hidden data-floating-action-conversation>
+          <p class="floating-action__bubble floating-action__bubble--user" data-floating-action-date-bubble></p>
+          <div class="floating-action__status" data-floating-action-status>
+            <span class="floating-action__dots" aria-hidden="true"><span></span><span></span><span></span></span>
+            <span>Kalender wird geprüft</span>
+          </div>
+          <div class="floating-action__result" tabindex="-1" hidden data-floating-action-result>
+            <h3>Ergebnis der Terminprüfung</h3>
+            <p class="floating-action__bubble floating-action__bubble--result" aria-hidden="true" data-floating-action-result-text></p>
+            <p class="visually-hidden" aria-live="polite" data-floating-action-live></p>
+            <a class="floating-action__primary" href="/kontakt/" hidden data-floating-action-action></a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
 
 <script>
   const floatingActionRoots = document.querySelectorAll("[data-floating-action]");
 
   floatingActionRoots.forEach((root) => {
-    const toggle = root.querySelector("[data-floating-action-toggle]");
-    const menu = root.querySelector("[data-floating-action-menu]");
-    const links = root.querySelectorAll("[data-floating-action-link]");
+    if (!(root instanceof HTMLElement) || root.dataset.floatingActionReady === "true") return;
+    root.dataset.floatingActionReady = "true";
 
-    if (!(toggle instanceof HTMLButtonElement) || !(menu instanceof HTMLElement)) return;
-
-    const setOpen = (isOpen) => {
-      root.classList.toggle("is-open", isOpen);
-      toggle.setAttribute("aria-expanded", String(isOpen));
-      toggle.setAttribute("aria-label", isOpen ? "Schnellkontakt schließen" : "Schnellkontakt öffnen");
-      menu.setAttribute("aria-hidden", String(!isOpen));
-      document.body.classList.toggle("has-floating-action-open", isOpen);
-
-      if (isOpen) {
-        const firstLink = menu.querySelector("a[href]");
-        if (firstLink instanceof HTMLElement) firstLink.focus();
-      }
+    const elements = {
+      toggle: root.querySelector("[data-floating-action-toggle]"),
+      panel: root.querySelector("[data-floating-action-panel]"),
+      contactView: root.querySelector("[data-floating-action-contact-view]"),
+      availabilityOpen: root.querySelector("[data-floating-action-availability-open]"),
+      availabilityView: root.querySelector("[data-floating-action-availability-view]"),
+      back: root.querySelector("[data-floating-action-back]"),
+      close: root.querySelector("[data-floating-action-close]"),
+      form: root.querySelector("[data-floating-action-availability-form]"),
+      date: root.querySelector("[data-floating-action-date]"),
+      website: root.querySelector("[data-floating-action-website]"),
+      error: root.querySelector("[data-floating-action-error]"),
+      submit: root.querySelector("[data-floating-action-submit]"),
+      conversation: root.querySelector("[data-floating-action-conversation]"),
+      dateBubble: root.querySelector("[data-floating-action-date-bubble]"),
+      status: root.querySelector("[data-floating-action-status]"),
+      result: root.querySelector("[data-floating-action-result]"),
+      resultText: root.querySelector("[data-floating-action-result-text]"),
+      live: root.querySelector("[data-floating-action-live]"),
+      action: root.querySelector("[data-floating-action-action]"),
     };
 
-    toggle.addEventListener("click", () => {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    if (
+      !(elements.toggle instanceof HTMLButtonElement)
+      || !(elements.panel instanceof HTMLElement)
+      || !(elements.contactView instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    const states = {
+      MENU: "menu",
+      DATE_SELECTION: "date_selection",
+      SUBMITTING: "submitting",
+      AVAILABLE: "available",
+      UNAVAILABLE: "unavailable",
+      TECHNICAL_ERROR: "technical_error",
+      RATE_LIMITED: "rate_limited",
+      TEMPORARILY_DISABLED: "temporarily_disabled",
+    };
+
+    const showDelay = numberFromData("showDelay", 400);
+    const maxMonths = numberFromData("availabilityMaxMonths", 24);
+    const requestTimeout = numberFromData("availabilityRequestTimeout", 8000);
+    const minimumLoading = numberFromData("availabilityMinLoading", 600);
+    const endpoint = root.dataset.availabilityEndpoint || "/api/availability";
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let currentState = states.MENU;
+    let opened = false;
+    let operationId = 0;
+    let activeRequest = null;
+    let scrollTimer = null;
+
+    function numberFromData(key, fallback) {
+      const value = Number.parseInt(root.dataset[key] || "", 10);
+      return Number.isFinite(value) ? value : fallback;
+    }
+
+    function localDateFromValue(value) {
+      const parts = value.split("-").map(Number);
+      if (parts.length !== 3 || parts.some((part) => !Number.isFinite(part))) return null;
+      const date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return date.getFullYear() === parts[0] && date.getMonth() === parts[1] - 1 && date.getDate() === parts[2]
+        ? date
+        : null;
+    }
+
+    function valueFromLocalDate(date) {
+      const year = String(date.getFullYear());
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function todayLocal() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function maximumLocalDate() {
+      const today = todayLocal();
+      const originalDay = today.getDate();
+      const maximum = new Date(today.getFullYear(), today.getMonth() + maxMonths, 1);
+      const lastDay = new Date(maximum.getFullYear(), maximum.getMonth() + 1, 0).getDate();
+      maximum.setDate(Math.min(originalDay, lastDay));
+      return maximum;
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat("de-DE", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }).format(date);
+    }
+
+    function delay(milliseconds) {
+      return new Promise((resolve) => window.setTimeout(resolve, Math.max(0, milliseconds)));
+    }
+
+    function setDateBounds() {
+      if (!(elements.date instanceof HTMLInputElement)) return;
+      elements.date.min = valueFromLocalDate(todayLocal());
+      elements.date.max = valueFromLocalDate(maximumLocalDate());
+    }
+
+    function setState(nextState) {
+      currentState = nextState;
+      root.dataset.state = nextState;
+      const isMenu = nextState === states.MENU;
+      const isSubmitting = nextState === states.SUBMITTING;
+
+      elements.contactView.hidden = !isMenu;
+      elements.contactView.setAttribute("aria-hidden", isMenu ? "false" : "true");
+
+      if (elements.availabilityView instanceof HTMLElement) {
+        elements.availabilityView.hidden = isMenu;
+        elements.availabilityView.setAttribute("aria-hidden", isMenu ? "true" : "false");
+      }
+
+      if (elements.date instanceof HTMLInputElement) elements.date.disabled = isSubmitting;
+      if (elements.submit instanceof HTMLButtonElement) elements.submit.disabled = isSubmitting;
+    }
+
+    function abortActiveRequest() {
+      if (!activeRequest) return;
+      window.clearTimeout(activeRequest.timeoutId);
+      activeRequest.controller.abort();
+      activeRequest = null;
+    }
+
+    function resetAvailability() {
+      abortActiveRequest();
+      operationId += 1;
+
+      if (
+        !(elements.form instanceof HTMLFormElement)
+        || !(elements.error instanceof HTMLElement)
+        || !(elements.date instanceof HTMLInputElement)
+        || !(elements.conversation instanceof HTMLElement)
+        || !(elements.dateBubble instanceof HTMLElement)
+        || !(elements.status instanceof HTMLElement)
+        || !(elements.result instanceof HTMLElement)
+        || !(elements.resultText instanceof HTMLElement)
+        || !(elements.live instanceof HTMLElement)
+        || !(elements.action instanceof HTMLAnchorElement)
+        || !(elements.submit instanceof HTMLButtonElement)
+      ) {
+        return;
+      }
+
+      elements.form.reset();
+      elements.form.hidden = false;
+      elements.error.hidden = true;
+      elements.error.textContent = "";
+      elements.date.removeAttribute("aria-invalid");
+      elements.conversation.hidden = true;
+      elements.dateBubble.textContent = "";
+      elements.status.hidden = false;
+      elements.result.hidden = true;
+      elements.resultText.textContent = "";
+      elements.live.textContent = "";
+      elements.action.hidden = true;
+      elements.action.textContent = "";
+      elements.action.href = "/kontakt/";
+      elements.date.disabled = false;
+      elements.submit.disabled = false;
+      setDateBounds();
+    }
+
+    function openMenu() {
+      resetAvailability();
+      setState(states.MENU);
+      root.classList.add("is-open");
+      elements.toggle.setAttribute("aria-expanded", "true");
+      elements.toggle.setAttribute("aria-label", "Schnellkontakt schließen");
+      elements.panel.setAttribute("aria-hidden", "false");
+      document.body.classList.add("has-floating-action-open");
+      opened = true;
+    }
+
+    function closeMenu(returnFocus = false) {
+      resetAvailability();
+      setState(states.MENU);
+      root.classList.remove("is-open");
+      elements.toggle.setAttribute("aria-expanded", "false");
+      elements.toggle.setAttribute("aria-label", "Schnellkontakt öffnen");
+      elements.panel.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("has-floating-action-open");
+      opened = false;
+      if (returnFocus) elements.toggle.focus();
+    }
+
+    function openAvailability() {
+      resetAvailability();
+      setState(states.DATE_SELECTION);
+      if (elements.date instanceof HTMLInputElement) elements.date.focus();
+    }
+
+    function returnToMenu() {
+      resetAvailability();
+      setState(states.MENU);
+      if (elements.availabilityOpen instanceof HTMLElement) elements.availabilityOpen.focus();
+    }
+
+    function validateDate() {
+      if (!(elements.date instanceof HTMLInputElement) || !(elements.error instanceof HTMLElement)) return null;
+
+      const date = localDateFromValue(elements.date.value);
+      let message = "";
+      if (!date) message = "Bitte wählt ein gültiges Datum aus.";
+      else if (date < todayLocal()) message = "Bitte wählt ein heutiges oder zukünftiges Datum aus.";
+      else if (date > maximumLocalDate()) message = `Bitte wählt ein Datum innerhalb der nächsten ${maxMonths} Monate aus.`;
+
+      elements.error.textContent = message;
+      elements.error.hidden = message === "";
+      elements.date.setAttribute("aria-invalid", message === "" ? "false" : "true");
+      return message === "" ? date : null;
+    }
+
+    function resultFor(state, formattedDate) {
+      const results = {
+        [states.AVAILABLE]: {
+          text: `Nach aktuellem Kalenderstand ist der ${formattedDate} noch verfügbar. Verbindlich wird der Termin erst nach meiner persönlichen Bestätigung und erfolgreicher Buchung.`,
+          action: "Jetzt unverbindlich anfragen",
+        },
+        [states.UNAVAILABLE]: {
+          text: `Am ${formattedDate} bin ich leider nicht mehr verfügbar.`,
+          action: "Persönlich nachfragen",
+        },
+        [states.TECHNICAL_ERROR]: {
+          text: "Die automatische Terminprüfung ist gerade nicht zuverlässig möglich. Bitte sendet mir euren Wunschtermin über das Kontaktformular - ich prüfe ihn persönlich.",
+          action: "Termin persönlich anfragen",
+        },
+        [states.RATE_LIMITED]: {
+          text: "Ich kann gerade keine weiteren Termine automatisch prüfen. Sendet mir euren Wunschtermin bitte über das Kontaktformular - ich prüfe ihn persönlich.",
+          action: "Zum Kontaktformular",
+        },
+        [states.TEMPORARILY_DISABLED]: {
+          text: "Die automatische Terminprüfung ist gerade nicht verfügbar. Bitte sendet mir euren Wunschtermin über das Kontaktformular - ich prüfe ihn persönlich.",
+          action: "Termin persönlich anfragen",
+        },
+      };
+      return results[state] || results[states.TECHNICAL_ERROR];
+    }
+
+    function typeResult(text, expectedOperation) {
+      if (!(elements.resultText instanceof HTMLElement)) return Promise.resolve();
+      elements.resultText.textContent = "";
+      if (reducedMotion.matches) {
+        elements.resultText.textContent = text;
+        return Promise.resolve();
+      }
+
+      return new Promise((resolve) => {
+        let index = 0;
+        const nextCharacter = () => {
+          if (expectedOperation !== operationId) {
+            resolve();
+            return;
+          }
+          index += 1;
+          elements.resultText.textContent = text.slice(0, index);
+          if (index < text.length) window.setTimeout(nextCharacter, 12);
+          else resolve();
+        };
+        nextCharacter();
+      });
+    }
+
+    function showResult(state, formattedDate, expectedOperation, serverResult = {}) {
+      if (
+        !(elements.status instanceof HTMLElement)
+        || !(elements.result instanceof HTMLElement)
+        || !(elements.live instanceof HTMLElement)
+        || !(elements.action instanceof HTMLAnchorElement)
+        || !(elements.date instanceof HTMLInputElement)
+      ) {
+        return;
+      }
+
+      const result = resultFor(state, formattedDate);
+      if (typeof serverResult.message === "string") result.text = serverResult.message;
+      if (typeof serverResult.action_label === "string") result.action = serverResult.action_label;
+
+      setState(state);
+      elements.status.hidden = true;
+      elements.result.hidden = false;
+      elements.result.focus();
+
+      typeResult(result.text, expectedOperation).then(() => {
+        if (expectedOperation !== operationId || currentState !== state) return;
+        const contactUrl = new URL("/kontakt/", window.location.origin);
+        contactUrl.searchParams.set("termin", elements.date.value);
+        elements.live.textContent = result.text;
+        elements.action.textContent = result.action;
+        elements.action.href = typeof serverResult.action_href === "string" ? serverResult.action_href : contactUrl.pathname + contactUrl.search;
+        elements.action.hidden = false;
+      });
+    }
+
+    async function requestAvailability(dateValue, signal) {
+      const response = await window.fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          date: dateValue,
+          website: elements.website instanceof HTMLInputElement ? elements.website.value : "",
+        }),
+        credentials: "omit",
+        signal,
+      });
+      const text = await response.text();
+      if (!text) throw new Error("empty_response");
+      const data = JSON.parse(text);
+      if (!data || typeof data.status !== "string") throw new Error("unexpected_response");
+      return data;
+    }
+
+    async function submitAvailability(event) {
+      event.preventDefault();
+      if (currentState === states.SUBMITTING) return;
+      if (elements.website instanceof HTMLInputElement && elements.website.value) return;
+
+      const date = validateDate();
+      if (!date) {
+        if (elements.date instanceof HTMLInputElement) elements.date.focus();
+        return;
+      }
+
+      if (
+        !(elements.form instanceof HTMLFormElement)
+        || !(elements.conversation instanceof HTMLElement)
+        || !(elements.dateBubble instanceof HTMLElement)
+        || !(elements.status instanceof HTMLElement)
+        || !(elements.result instanceof HTMLElement)
+        || !(elements.date instanceof HTMLInputElement)
+      ) {
+        return;
+      }
+
+      abortActiveRequest();
+      const expectedOperation = operationId + 1;
+      operationId = expectedOperation;
+      const formattedDate = formatDate(date);
+      const requestContext = {
+        controller: new window.AbortController(),
+        timedOut: false,
+        timeoutId: null,
+      };
+      activeRequest = requestContext;
+      requestContext.timeoutId = window.setTimeout(() => {
+        requestContext.timedOut = true;
+        requestContext.controller.abort();
+      }, Math.max(1000, requestTimeout));
+
+      setState(states.SUBMITTING);
+      elements.form.hidden = true;
+      elements.conversation.hidden = false;
+      elements.dateBubble.textContent = formattedDate;
+      elements.status.hidden = false;
+      elements.result.hidden = true;
+
+      try {
+        const [response] = await Promise.all([
+          requestAvailability(elements.date.value, requestContext.controller.signal),
+          delay(minimumLoading),
+        ]);
+
+        if (expectedOperation !== operationId || currentState !== states.SUBMITTING) return;
+        window.clearTimeout(requestContext.timeoutId);
+        if (activeRequest === requestContext) activeRequest = null;
+
+        if (response.status === "invalid_date") {
+          if (elements.error instanceof HTMLElement) {
+            setState(states.DATE_SELECTION);
+            elements.form.hidden = false;
+            elements.conversation.hidden = true;
+            elements.error.textContent = response.message || "Bitte wählt ein gültiges Datum aus.";
+            elements.error.hidden = false;
+            elements.date.setAttribute("aria-invalid", "true");
+            elements.date.focus();
+          }
+          return;
+        }
+
+        showResult(response.status, response.date_label || formattedDate, expectedOperation, response);
+      } catch (error) {
+        window.clearTimeout(requestContext.timeoutId);
+        if (activeRequest === requestContext) activeRequest = null;
+        if (expectedOperation !== operationId || currentState !== states.SUBMITTING) return;
+        if (error && error.name === "AbortError" && !requestContext.timedOut) return;
+        showResult(states.TECHNICAL_ERROR, formattedDate, expectedOperation);
+      }
+    }
+
+    setState(states.MENU);
+    setDateBounds();
+    window.setTimeout(() => root.classList.add("is-visible"), Math.max(0, showDelay));
+    root.addEventListener("touchstart", () => root.classList.add("is-visible"), { passive: true });
+
+    elements.toggle.addEventListener("click", (event) => {
+      event.preventDefault();
+      opened ? closeMenu(false) : openMenu();
     });
 
-    links.forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    if (elements.availabilityOpen instanceof HTMLAnchorElement) {
+      elements.availabilityOpen.addEventListener("click", (event) => {
+        event.preventDefault();
+        openAvailability();
+      });
+    }
+    if (elements.back instanceof HTMLButtonElement) elements.back.addEventListener("click", returnToMenu);
+    if (elements.close instanceof HTMLButtonElement) elements.close.addEventListener("click", () => closeMenu(true));
+    if (elements.form instanceof HTMLFormElement) elements.form.addEventListener("submit", submitAvailability);
+
+    root.querySelectorAll("[data-floating-action-link]").forEach((link) => {
+      link.addEventListener("click", () => closeMenu(false));
+    });
+
+    window.addEventListener("scroll", () => {
+      if (!opened) root.classList.remove("is-visible");
+      window.clearTimeout(scrollTimer);
+      scrollTimer = window.setTimeout(() => {
+        if (!opened) root.classList.add("is-visible");
+      }, 250);
+    }, { passive: true });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && opened) closeMenu(true);
+    });
 
     document.addEventListener("click", (event) => {
       if (!(event.target instanceof Node)) return;
-      if (!root.contains(event.target)) setOpen(false);
-    });
-
-    root.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
+      if (opened && !root.contains(event.target)) closeMenu(false);
+    }, true);
   });
 </script>
 
 <style>
   .floating-action {
-    --fab-size: 108px;
+    --fab-icon-size: 128px;
+    --fab-scale: .7;
+    --fab-img-size: calc(var(--fab-icon-size) * var(--fab-scale));
+    --fab-glass-bg: rgba(255, 255, 255, .55);
+    --fab-glass-bd: rgba(255, 255, 255, .45);
+    --fab-glass-sep: rgba(0, 0, 0, .06);
+    --fab-glass-hover: rgba(255, 255, 255, .35);
+    --fab-text: #0a0a0a;
+    --fab-shadow: 0 18px 42px rgba(0, 0, 0, .28), 0 1px 0 rgba(255, 255, 255, .3) inset;
+    --fab-solid-bg: #fff;
+    --fab-solid-bd: rgba(0, 0, 0, .1);
     position: fixed;
     right: max(8px, env(safe-area-inset-right));
-    bottom: max(10px, env(safe-area-inset-bottom));
-    z-index: 2800;
-    width: var(--fab-size);
-    height: var(--fab-size);
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    z-index: 9999;
+    width: var(--fab-icon-size);
+    height: var(--fab-icon-size);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--fab-text);
     font-family: "Playfair Display", Georgia, serif;
-    color: #0d0d0d;
+    opacity: 0;
+    pointer-events: auto;
+    transform: translateY(6px);
+    transition: opacity .25s ease, transform .25s ease;
+  }
+
+  .floating-action.is-visible,
+  .floating-action.is-open {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .floating-action svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .floating-action [hidden] {
+    display: none !important;
   }
 
   .floating-action__toggle {
-    width: var(--fab-size);
-    height: var(--fab-size);
+    width: var(--fab-icon-size);
+    height: var(--fab-icon-size);
     padding: 0;
+    margin: 0;
     display: grid;
     place-items: center;
     border: 0;
     border-radius: 50%;
     background: transparent;
+    box-shadow: none;
     cursor: pointer;
-    filter: drop-shadow(0 20px 24px rgba(30, 28, 25, .2));
-    transition: transform 180ms ease, filter 180ms ease;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .floating-action__toggle img {
+  .floating-action__toggle::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+  }
+
+  .floating-action__toggle:hover,
+  .floating-action__toggle:focus,
+  .floating-action__toggle:active {
+    background: transparent;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .floating-action__toggle:focus-visible,
+  .floating-action__item:focus-visible,
+  .floating-action__icon-button:focus-visible,
+  .floating-action__primary:focus-visible,
+  .floating-action input:focus-visible {
+    outline: 3px solid currentColor;
+    outline-offset: 2px;
+  }
+
+  .floating-action__badge {
+    display: block;
+    width: var(--fab-img-size);
+    height: var(--fab-img-size);
+    object-fit: contain;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .2)) drop-shadow(0 2px 6px rgba(0, 0, 0, .12));
+  }
+
+  .floating-action__menu {
+    position: absolute;
+    right: max(8px, env(safe-area-inset-right));
+    bottom: calc(var(--fab-icon-size) + 16px);
+    min-width: 280px;
+    max-height: min(680px, calc(100vh - var(--fab-icon-size) - 48px));
+    padding: 10px;
+    overflow: auto;
+    overscroll-behavior: contain;
+    border: 1px solid var(--fab-glass-bd);
+    border-radius: 18px;
+    background: var(--fab-glass-bg);
+    background-clip: padding-box;
+    box-shadow: var(--fab-shadow);
+    color: var(--fab-text);
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(.92);
+    transform-origin: bottom right;
+    transition: transform .18s ease, opacity .18s ease, visibility 0s linear .18s;
+    backdrop-filter: saturate(180%) blur(22px);
+    -webkit-backdrop-filter: saturate(180%) blur(22px);
+    will-change: transform, opacity;
+  }
+
+  .floating-action__menu::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 100% at 100% 0%, rgba(255, 255, 255, .35), transparent 55%),
+      linear-gradient(180deg, rgba(255, 255, 255, .25), rgba(255, 255, 255, 0) 40%);
+    mix-blend-mode: overlay;
+    opacity: .7;
+  }
+
+  .floating-action__menu::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .35) inset;
+    opacity: .6;
+  }
+
+  .floating-action.is-open .floating-action__menu {
+    opacity: 1;
+    visibility: visible;
+    transform: scale(1);
+    transition-delay: 0s;
+  }
+
+  .floating-action__view {
+    position: relative;
+    z-index: 1;
+  }
+
+  .floating-action__item {
+    position: relative;
+    min-height: 48px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-radius: 12px;
+    color: inherit;
+    font-size: 16px;
+    line-height: 1.25;
+    text-decoration: none;
+    transition: background-color .12s ease, transform .12s ease;
+  }
+
+  .floating-action__item + .floating-action__item {
+    border-top: 1px solid var(--fab-glass-sep);
+  }
+
+  .floating-action__item:hover,
+  .floating-action__item:focus {
+    background: var(--fab-glass-hover);
+  }
+
+  .floating-action__item:active {
+    transform: translateY(1px);
+  }
+
+  .floating-action__icon {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+  }
+
+  .floating-action__icon svg {
+    color: currentColor;
+  }
+
+  .floating-action__wa-logo {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: contain;
   }
 
-  .floating-action__toggle:hover,
-  .floating-action__toggle:focus-visible {
-    transform: translateY(-2px);
-    filter: drop-shadow(0 22px 28px rgba(30, 28, 25, .25));
-    outline: 2px solid transparent;
+  .floating-action__availability {
+    width: min(390px, 88vw);
   }
 
-  .floating-action__toggle:focus-visible {
-    outline: 2px solid #2c739c;
-    outline-offset: 3px;
-  }
-
-  .floating-action__menu {
-    position: absolute;
-    right: 8px;
-    bottom: calc(var(--fab-size) + 14px);
-    width: min(340px, calc(100vw - 46px));
-    padding: 12px;
+  .floating-action__dialog-header {
+    margin-bottom: 10px;
     display: grid;
+    grid-template-columns: 44px 1fr 44px;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .floating-action__dialog-header h2,
+  .floating-action__result h3 {
+    margin: 0;
+    color: inherit;
+    font-family: inherit;
+    font-weight: 650;
+  }
+
+  .floating-action__dialog-header h2 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .floating-action__result h3 {
+    margin-bottom: 8px;
+    font-size: 16px;
+  }
+
+  .floating-action__icon-button {
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+    border: 0;
+    border-radius: 12px;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .floating-action__icon-button:hover,
+  .floating-action__icon-button:focus {
+    background: var(--fab-glass-hover);
+  }
+
+  .floating-action__dialog-body {
+    padding: 4px;
+  }
+
+  .floating-action__intro {
+    margin: 0 0 16px;
+    line-height: 1.45;
+  }
+
+  .floating-action__availability form {
+    position: relative;
+    display: grid;
+    gap: 10px;
+  }
+
+  .floating-action__availability label {
+    font-weight: 650;
+  }
+
+  .floating-action__availability input[type="date"] {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 48px;
+    padding: 10px 12px;
+    border: 1px solid var(--fab-glass-bd);
+    border-radius: 12px;
+    background: var(--fab-solid-bg);
+    color: var(--fab-text);
+    font: inherit;
+    color-scheme: light dark;
+  }
+
+  .floating-action__honeypot {
+    position: absolute;
+    left: -10000px;
+    width: 1px;
+    height: 1px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, .65);
-    border-radius: 20px;
-    background: rgba(255, 255, 255, .76);
-    box-shadow: 0 18px 42px rgba(0, 0, 0, .24), inset 0 1px 0 rgba(255, 255, 255, .38);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(10px) scale(.94);
-    transform-origin: 100% 100%;
-    transition: opacity 180ms ease, transform 180ms ease;
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
   }
 
-  .floating-action.is-open .floating-action__menu {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0) scale(1);
-  }
-
-  .floating-action__item {
-    min-height: 64px;
-    padding: 16px;
+  .floating-action__primary {
+    box-sizing: border-box;
+    min-height: 48px;
+    width: 100%;
+    padding: 12px 16px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    border: 1px solid var(--fab-glass-bd);
     border-radius: 12px;
-    color: inherit;
-    font-size: 22px;
-    line-height: 1.2;
+    background: var(--fab-text);
+    color: var(--fab-solid-bg);
+    font: inherit;
+    font-weight: 650;
+    text-align: center;
     text-decoration: none;
-    transition: background 160ms ease, transform 160ms ease;
+    cursor: pointer;
   }
 
-  .floating-action__item + .floating-action__item {
-    border-top: 1px solid rgba(26, 27, 31, .08);
+  .floating-action__primary:hover,
+  .floating-action__primary:focus {
+    opacity: .86;
   }
 
-  .floating-action__item:hover,
-  .floating-action__item:focus-visible {
-    background: rgba(255, 255, 255, .72);
-    outline: 2px solid transparent;
-    transform: translateX(-2px);
+  .floating-action__primary:disabled {
+    cursor: wait;
+    opacity: .6;
   }
 
-  .floating-action__item:focus-visible {
-    outline: 2px solid #2c739c;
-    outline-offset: -2px;
+  .floating-action__error {
+    margin: 0;
+    color: #a51d24;
+    font-size: 14px;
+    line-height: 1.4;
   }
 
-  .floating-action__icon {
-    flex: 0 0 38px;
-    width: 38px;
-    height: 38px;
+  .floating-action__conversation {
     display: grid;
-    place-items: center;
+    gap: 12px;
   }
 
-  .floating-action__icon svg {
-    width: 32px;
-    height: 32px;
+  .floating-action__bubble {
+    margin: 0;
+    padding: 12px 14px;
+    border-radius: 16px;
+    line-height: 1.45;
   }
 
-  .floating-action__icon img {
-    width: 32px;
-    height: 32px;
-    object-fit: contain;
+  .floating-action__bubble--user {
+    max-width: 82%;
+    justify-self: end;
+    border-bottom-right-radius: 5px;
+    background: var(--fab-text);
+    color: var(--fab-solid-bg);
+  }
+
+  .floating-action__bubble--result {
+    border-bottom-left-radius: 5px;
+    background: var(--fab-glass-hover);
+  }
+
+  .floating-action__status {
+    min-height: 48px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .floating-action__dots {
+    display: flex;
+    gap: 4px;
+  }
+
+  .floating-action__dots span {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: floating-action-dot-pulse .9s infinite alternate;
+  }
+
+  .floating-action__dots span:nth-child(2) {
+    animation-delay: .15s;
+  }
+
+  .floating-action__dots span:nth-child(3) {
+    animation-delay: .3s;
+  }
+
+  .floating-action__result .floating-action__primary {
+    margin-top: 12px;
   }
 
   :global(.has-mobile-navigation-open) .floating-action {
     visibility: hidden;
   }
 
-  @media (min-width: 768px) {
-    .floating-action {
-      --fab-size: 116px;
-      right: max(14px, env(safe-area-inset-right));
-      bottom: max(14px, env(safe-area-inset-bottom));
+  @media (min-width: 1024px) {
+    .floating-action__item.is-wa {
+      display: none !important;
     }
+  }
 
-    .floating-action__menu {
-      width: 280px;
-    }
-
+  @media (max-width: 480px) {
     .floating-action__item {
-      min-height: 54px;
-      padding: 13px 14px;
+      min-height: 52px;
+      padding: 16px;
+      gap: 14px;
       font-size: 17px;
     }
 
     .floating-action__icon {
-      flex-basis: 32px;
+      flex: 0 0 32px;
       width: 32px;
       height: 32px;
     }
 
-    .floating-action__icon svg,
-    .floating-action__icon img {
-      width: 26px;
-      height: 26px;
+    .floating-action__menu {
+      min-width: 88vw;
+      max-width: 480px;
+      max-height: calc(100dvh - var(--fab-icon-size) - env(safe-area-inset-bottom) - 36px);
+      padding: 12px;
+      border-radius: 20px;
+      margin-bottom: max(8px, env(safe-area-inset-bottom));
+      backdrop-filter: saturate(180%) blur(18px);
+      -webkit-backdrop-filter: saturate(180%) blur(18px);
     }
   }
 
-  @media (min-width: 1200px) {
+  @media (prefers-color-scheme: dark) {
     .floating-action {
-      --fab-size: 96px;
+      --fab-glass-bg: rgba(20, 20, 22, .6);
+      --fab-glass-bd: rgba(255, 255, 255, .18);
+      --fab-glass-sep: rgba(255, 255, 255, .1);
+      --fab-glass-hover: rgba(255, 255, 255, .1);
+      --fab-text: #f6f6f6;
+      --fab-shadow: 0 18px 42px rgba(0, 0, 0, .6), 0 1px 0 rgba(255, 255, 255, .05) inset;
+      --fab-solid-bg: #1a1a1c;
+      --fab-solid-bd: rgba(255, 255, 255, .08);
+    }
+
+    .floating-action__error {
+      color: #ff9aa0;
+    }
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .floating-action {
+      --fab-glass-bg: var(--fab-solid-bg);
+      --fab-glass-bd: var(--fab-solid-bd);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .floating-action__toggle,
-    .floating-action__menu,
-    .floating-action__item {
-      transition: none;
+    .floating-action,
+    .floating-action__menu {
+      transition: opacity .15s linear !important;
+      transform: none !important;
+    }
+
+    .floating-action__dots span {
+      animation: none !important;
+      opacity: .65;
+      transform: none;
+    }
+  }
+
+  @keyframes floating-action-dot-pulse {
+    from {
+      opacity: .28;
+      transform: translateY(1px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-1px);
     }
   }
 </style>
