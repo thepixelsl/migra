@@ -90,7 +90,8 @@ const schemaGraph = {
         "Hochzeitsfotografie",
         "Hochzeitsreportage",
         "Standesamtliche Trauung Hamburg",
-        "Paarshooting",
+        "Portraitshooting",
+        "TFP Shooting",
       ],
       sameAs: [
         "https://www.instagram.com/artbild/",
@@ -258,6 +259,7 @@ const schemaGraph = {
           class="contact-form"
           action="/api/contact"
           method="post"
+          enctype="multipart/form-data"
           aria-labelledby="contact-form-title"
           aria-describedby="contact-form-intro contact-form-status"
           data-contact-form
@@ -268,10 +270,10 @@ const schemaGraph = {
 
           <div class="contact-form__header">
             <p class="contact-kicker">Formular</p>
-            <h2 id="contact-form-title">Hochzeit anfragen</h2>
+            <h2 id="contact-form-title">Termin anfragen</h2>
             <p id="contact-form-intro">
-              Pflichtfelder sind mit einem Stern markiert. Bitte sendet keine
-              sensiblen Daten, bevor der Termin grundsätzlich bestätigt ist.
+              Kurz reicht: Name, E-Mail, Ort und Wunschdatum. So kann ich zuerst
+              prüfen, ob der Termin überhaupt frei ist.
             </p>
           </div>
 
@@ -288,8 +290,29 @@ const schemaGraph = {
           </div>
 
           <fieldset>
-            <legend>Kontakt</legend>
+            <legend>Anfrage</legend>
             <div class="contact-form__grid">
+              <div class="contact-field">
+                <label for="contact-request-type">Worum geht es? *</label>
+                <select
+                  id="contact-request-type"
+                  name="request_type"
+                  required
+                  aria-describedby="contact-request-type-hint"
+                  data-agent-field="request-type"
+                  data-contact-request-type
+                >
+                  <option value="">Bitte auswählen</option>
+                  <option value="hochzeit">Hochzeit</option>
+                  <option value="standesamtliche-trauung">Standesamtliche Trauung</option>
+                  <option value="portraitshooting">Portraitshooting</option>
+                  <option value="tfp">TFP</option>
+                </select>
+                <p id="contact-request-type-hint">
+                  Bei TFP-Anfragen könnt Ihr unten bis zu drei Beispielbilder anhängen.
+                </p>
+              </div>
+
               <div class="contact-field">
                 <label for="contact-name">Euer Name *</label>
                 <input
@@ -299,6 +322,7 @@ const schemaGraph = {
                   autocomplete="name"
                   required
                   minlength="2"
+                  maxlength="120"
                   data-agent-field="full-name"
                 >
               </div>
@@ -317,120 +341,96 @@ const schemaGraph = {
               </div>
 
               <div class="contact-field">
-                <label for="contact-phone">Telefon oder WhatsApp</label>
-                <input
-                  id="contact-phone"
-                  name="phone"
-                  type="tel"
-                  autocomplete="tel"
-                  inputmode="tel"
-                  aria-describedby="contact-phone-hint"
-                  data-agent-field="phone"
-                >
-                <p id="contact-phone-hint">Optional, falls ein kurzer Rückruf sinnvoll ist.</p>
-              </div>
-
-              <div class="contact-field">
-                <label for="contact-request-type">Worum geht es? *</label>
-                <select
-                  id="contact-request-type"
-                  name="request_type"
-                  required
-                  data-agent-field="request-type"
-                >
-                  <option value="">Bitte auswählen</option>
-                  <option value="hochzeitsreportage">Hochzeitsreportage</option>
-                  <option value="standesamt">Standesamtliche Trauung</option>
-                  <option value="paarshooting">Paarshooting</option>
-                  <option value="editorial">Editorial oder Portrait</option>
-                  <option value="sonstiges">Sonstige Anfrage</option>
-                </select>
-              </div>
-            </div>
-          </fieldset>
-
-          <fieldset>
-            <legend>Termin & Ort</legend>
-            <div class="contact-form__grid">
-              <div class="contact-field">
-                <label for="contact-event-date">Wunschdatum</label>
+                <label for="contact-event-date">
+                  Wunschdatum <span data-date-required-marker>*</span>
+                </label>
                 <input
                   id="contact-event-date"
                   name="event_date"
                   type="date"
                   autocomplete="off"
+                  required
+                  aria-describedby="contact-date-hint"
                   data-agent-field="event-date"
                   data-contact-date
                 >
+                <p id="contact-date-hint">Für TFP darf das Datum offen bleiben.</p>
               </div>
 
               <div class="contact-field">
-                <label for="contact-location">Ort oder Location</label>
+                <label for="contact-location">Ort oder Location *</label>
                 <input
                   id="contact-location"
                   name="location"
                   type="text"
                   autocomplete="address-level2"
                   placeholder="z. B. Hamburg, Standesamt Altona"
+                  required
+                  minlength="2"
+                  maxlength="160"
                   data-agent-field="event-location"
                 >
               </div>
 
               <div class="contact-field">
-                <label for="contact-coverage">Gewünschte Begleitung</label>
-                <select id="contact-coverage" name="coverage" data-agent-field="coverage">
-                  <option value="">Noch offen</option>
-                  <option value="2-3-stunden">2-3 Stunden</option>
-                  <option value="4-6-stunden">4-6 Stunden</option>
-                  <option value="ganzer-tag">Ganzer Hochzeitstag</option>
-                  <option value="mehrere-tage">Mehrere Tage oder Destination Wedding</option>
-                </select>
-              </div>
-
-              <div class="contact-field">
-                <label for="contact-guest-count">Anzahl Gäste</label>
+                <label for="contact-security-year">Welches Jahr haben wir? *</label>
                 <input
-                  id="contact-guest-count"
-                  name="guest_count"
-                  type="number"
-                  min="0"
-                  max="600"
+                  id="contact-security-year"
+                  name="security_year"
+                  type="text"
                   inputmode="numeric"
-                  data-agent-field="guest-count"
+                  pattern="[0-9]{4}"
+                  maxlength="4"
+                  placeholder="JJJJ"
+                  autocomplete="off"
+                  required
+                  aria-describedby="contact-security-year-hint"
+                  data-agent-field="current-year-check"
+                  data-current-year
                 >
+                <p id="contact-security-year-hint">
+                  Bitte das aktuelle Jahr eintragen. Die Prüfung aktualisiert sich automatisch.
+                </p>
               </div>
             </div>
           </fieldset>
 
           <fieldset>
-            <legend>Nachricht</legend>
+            <legend>Optional</legend>
             <div class="contact-field contact-field--wide">
-              <label for="contact-message">Was darf ich für Euch fotografieren? *</label>
+              <label for="contact-message">Kurze Nachricht</label>
               <textarea
                 id="contact-message"
                 name="message"
-                rows="7"
-                required
-                minlength="20"
-                maxlength="3600"
+                rows="5"
+                maxlength="1200"
                 aria-describedby="contact-message-hint"
                 data-agent-field="message"
               ></textarea>
               <p id="contact-message-hint">
-                Hilfreich sind Datum, Ort, gewünschte Dauer, Standesamt oder Location
-                und was Euch an den Bildern wichtig ist.
+                Optional, falls etwas Besonderes wichtig ist. Bitte keine Links oder Code-Fragmente senden.
               </p>
             </div>
 
-            <div class="contact-field contact-field--wide">
-              <label for="contact-referral">Wie habt Ihr Artbild-Fotografie gefunden?</label>
+            <div
+              class="contact-field contact-field--wide contact-field--tfp"
+              hidden
+              data-contact-tfp
+            >
+              <label for="contact-tfp-images">TFP-Bilder</label>
               <input
-                id="contact-referral"
-                name="referral"
-                type="text"
-                autocomplete="off"
-                data-agent-field="referral"
+                id="contact-tfp-images"
+                name="tfp_images"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                aria-describedby="contact-tfp-images-hint"
+                data-agent-field="tfp-image-upload"
+                data-contact-tfp-images
               >
+              <p id="contact-tfp-images-hint">
+                Maximal drei Bilder, je 2 MB. Erlaubt sind nur JPG, PNG oder WebP.
+              </p>
             </div>
           </fieldset>
 
@@ -476,7 +476,12 @@ const schemaGraph = {
       if (contactForm instanceof HTMLFormElement) {
         const loadedAt = contactForm.querySelector("[data-contact-loaded-at]");
         const jsEnabled = contactForm.querySelector("[data-contact-js]");
+        const requestType = contactForm.querySelector("[data-contact-request-type]");
         const dateField = contactForm.querySelector("[data-contact-date]");
+        const dateRequiredMarker = contactForm.querySelector("[data-date-required-marker]");
+        const yearField = contactForm.querySelector("[data-current-year]");
+        const tfpBlock = contactForm.querySelector("[data-contact-tfp]");
+        const tfpImages = contactForm.querySelector("[data-contact-tfp-images]");
         const status = contactForm.querySelector("[data-contact-status]");
         const submit = contactForm.querySelector("[data-contact-submit]");
         const params = new URLSearchParams(window.location.search);
@@ -488,9 +493,68 @@ const schemaGraph = {
           dateField.value = termin;
         }
 
+        const syncRequestType = () => {
+          const isTfp = requestType instanceof HTMLSelectElement && requestType.value === "tfp";
+          if (dateField instanceof HTMLInputElement) {
+            dateField.required = !isTfp;
+          }
+          if (dateRequiredMarker instanceof HTMLElement) {
+            dateRequiredMarker.hidden = isTfp;
+          }
+          if (tfpBlock instanceof HTMLElement) {
+            tfpBlock.hidden = !isTfp;
+          }
+          if (!isTfp && tfpImages instanceof HTMLInputElement) {
+            tfpImages.value = "";
+          }
+        };
+
+        const validateYear = () => {
+          if (!(yearField instanceof HTMLInputElement)) return;
+          const expectedYear = yearField.dataset.currentYear || String(new Date().getFullYear());
+          yearField.setCustomValidity(
+            yearField.value.trim() === expectedYear
+              ? ""
+              : `Bitte ${expectedYear} eintragen.`
+          );
+        };
+
+        if (requestType instanceof HTMLSelectElement) {
+          requestType.addEventListener("change", syncRequestType);
+          syncRequestType();
+        }
+
+        if (yearField instanceof HTMLInputElement) {
+          const expectedYear = new Intl.DateTimeFormat("de-DE", {
+            timeZone: "Europe/Berlin",
+            year: "numeric",
+          }).format(new Date());
+          yearField.dataset.currentYear = expectedYear;
+          yearField.placeholder = expectedYear;
+          yearField.addEventListener("input", validateYear);
+        }
+
+        if (tfpImages instanceof HTMLInputElement) {
+          tfpImages.addEventListener("change", () => {
+            const files = Array.from(tfpImages.files || []);
+            const invalidFile = files.find((file) => {
+              return !["image/jpeg", "image/png", "image/webp"].includes(file.type)
+                || file.size > 2 * 1024 * 1024;
+            });
+            tfpImages.setCustomValidity(
+              files.length > 3
+                ? "Bitte maximal drei Bilder auswählen."
+                : invalidFile
+                  ? "Bitte nur JPG, PNG oder WebP mit maximal 2 MB auswählen."
+                  : ""
+            );
+          });
+        }
+
         contactForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
+          validateYear();
           if (!contactForm.reportValidity()) return;
           if (!(status instanceof HTMLElement) || !(submit instanceof HTMLButtonElement)) return;
 
@@ -518,6 +582,7 @@ const schemaGraph = {
             contactForm.reset();
             if (loadedAt instanceof HTMLInputElement) loadedAt.value = String(Date.now());
             if (jsEnabled instanceof HTMLInputElement) jsEnabled.value = "1";
+            syncRequestType();
             status.focus();
           } catch (error) {
             status.dataset.state = "error";
@@ -733,6 +798,10 @@ const schemaGraph = {
   .contact-field {
     display: grid;
     gap: 8px;
+  }
+
+  .contact-field[hidden] {
+    display: none !important;
   }
 
   .contact-field label,

@@ -3,10 +3,19 @@ const JSON_HEADERS = {
   "Cache-Control": "no-store",
 };
 
-const MAX_BODY_BYTES = 64 * 1024;
+const MAX_BODY_BYTES = 8 * 1024 * 1024;
 const MIN_SUBMIT_TIME_MS = 3500;
-const MAX_MESSAGE_LENGTH = 3600;
+const MAX_MESSAGE_LENGTH = 1200;
 const MAX_TEXT_LENGTH = 220;
+const MAX_TFP_IMAGES = 3;
+const MAX_IMAGE_BYTES = 2 * 1024 * 1024;
+const ALLOWED_REQUEST_TYPES = new Set([
+  "hochzeit",
+  "standesamtliche-trauung",
+  "portraitshooting",
+  "tfp",
+]);
+const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -89,6 +98,113 @@ function countUrls(value) {
   return (String(value).match(/https?:\/\/|www\./gi) || []).length;
 }
 
+function currentYear() {
+  return Number(new Intl.DateTimeFormat("de-DE", {
+    timeZone: "Europe/Berlin",
+    year: "numeric",
+  }).format(new Date()));
+}
+
+function containsUnsafeCharacters(value) {
+  return /[<>{}\[\]`]/.test(String(value || ""));
+}
+
+function containsCodePattern(value) {
+  const text = String(value || "").toLowerCase();
+  return /<\s*\/?\s*[a-z]|javascript:|data:text\/html|on[a-z]+\s*=|%3c|%3e|\{\{|\}\}|\$\{/.test(text);
+}
+
+function safeFileName(value) {
+  return String(value || "bild")
+    .split(/[\\/]/)
+    .pop()
+    .replace(/[^a-zA-Z0-9._-]/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 90);
+}
+
+async function readImageAttachment(file) {
+  if (!(file instanceof File) || file.size === 0) return null;
+  if (file.size > MAX_IMAGE_BYTES) {
+    return {
+      error: `Das Bild "${safeFileName(file.name)}" ist zu groß. Bitte maximal 2 MB pro Bild hochladen.`,
+    };
+  }
+  if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+    return {
+      error: `Das Bild "${safeFileName(file.name)}" hat kein erlaubtes Format. Bitte JPG, PNG oder WebP verwenden.`,
+    };
+  }
+
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  const isJpeg = bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+  const isPng =
+    bytes[0] === 0x89
+    && bytes[1] === 0x50
+    && bytes[2] === 0x4e
+    && bytes[3] === 0x47
+    && bytes[4] === 0x0d
+    && bytes[5] === 0x0a
+    && bytes[6] === 0x1a
+    && bytes[7] === 0x0a;
+  const isWebp =
+    bytes[0] === 0x52
+    && bytes[1] === 0x49
+    && bytes[2] === 0x46
+    && bytes[3] === 0x46
+    && bytes[8] === 0x57
+    && bytes[9] === 0x45
+    && bytes[10] === 0x42
+    && bytes[11] === 0x50;
+
+  const signatureMatches =
+    (file.type === "image/jpeg" && isJpeg)
+    || (file.type === "image/png" && isPng)
+    || (file.type === "image/webp" && isWebp);
+
+  if (!signatureMatches) {
+    return {
+      error: `Das Bild "${safeFileName(file.name)}" konnte nicht als echte Bilddatei erkannt werden.`,
+    };
+  }
+
+  let binary = "";
+  const chunkSize = 0x8000;
+  for (let index = 0; index < bytes.length; index += chunkSize) {
+    binary += String.fromCharCode(...bytes.subarray(index, index + chunkSize));
+  }
+
+  return {
+    attachment: {
+      filename: safeFileName(file.name),
+      contentType: file.type,
+      size: file.size,
+      base64: btoa(binary),
+    },
+  };
+}
+
+async function collectImageAttachments(form) {
+  const files = form
+    .getAll("tfp_images")
+    .filter((file) => file instanceof File && file.size > 0);
+
+  if (files.length > MAX_TFP_IMAGES) {
+    return {
+      error: `Bitte maximal ${MAX_TFP_IMAGES} Bilder hochladen.`,
+    };
+  }
+
+  const attachments = [];
+  for (const file of files) {
+    const result = await readImageAttachment(file);
+    if (result?.error) return result;
+    if (result?.attachment) attachments.push(result.attachment);
+  }
+
+  return { attachments };
+}
+
 async function sha256(value) {
   const input = new TextEncoder().encode(value);
   const digest = await crypto.subtle.digest("SHA-256", input);
@@ -117,30 +233,36 @@ async function parsePayload(request) {
   const contentLength = Number(request.headers.get("content-length") || "0");
   if (contentLength > MAX_BODY_BYTES) {
     return {
-      error: "Die Anfrage ist zu groß. Bitte kürzt die Nachricht etwas.",
+      error: "Die Anfrage ist zu groß. Bitte maximal drei Bilder mit je 2 MB hochladen.",
       status: 413,
     };
   }
 
   const form = await request.formData();
+  const attachmentResult = await collectImageAttachments(form);
+  if (attachmentResult.error) {
+    return {
+      error: attachmentResult.error,
+      status: 422,
+    };
+  }
+
   return {
     payload: {
       name: cleanText(form.get("name")),
       email: normalizeEmail(form.get("email")),
-      phone: cleanText(form.get("phone"), 80),
       requestType: cleanText(form.get("request_type"), 80),
       eventDate: cleanText(form.get("event_date"), 20),
       location: cleanText(form.get("location")),
-      coverage: cleanText(form.get("coverage"), 80),
-      guestCount: cleanText(form.get("guest_count"), 20),
-      referral: cleanText(form.get("referral")),
       message: String(form.get("message") || "").trim().slice(0, MAX_MESSAGE_LENGTH + 1),
+      securityYear: cleanText(form.get("security_year"), 4),
       privacy: form.get("privacy") === "yes",
       website: cleanText(form.get("website"), 500),
       loadedAt: Number(form.get("form_loaded_at") || "0"),
       jsEnabled: form.get("js_enabled") === "1",
       sourcePath: cleanText(form.get("source_path"), 180),
       turnstileToken: cleanText(form.get("cf-turnstile-response"), 4096),
+      attachments: attachmentResult.attachments || [],
     },
   };
 }
@@ -149,17 +271,28 @@ function validate(payload) {
   if (payload.website) return { spam: true };
   if (!payload.name || payload.name.length < 2) return { error: "Bitte nennt euren Namen." };
   if (!validEmail(payload.email)) return { error: "Bitte tragt eine gültige E-Mail-Adresse ein." };
-  if (!payload.requestType) return { error: "Bitte wählt aus, worum es geht." };
+  if (!ALLOWED_REQUEST_TYPES.has(payload.requestType)) return { error: "Bitte wählt aus, worum es geht." };
+  if (!payload.location || payload.location.length < 2) return { error: "Bitte nennt den Ort oder die Stadt." };
   if (!validDateValue(payload.eventDate)) return { error: "Bitte verwendet ein gültiges Datum." };
-  if (!payload.message || payload.message.length < 20) {
-    return { error: "Bitte schreibt kurz, worum es geht. 20 Zeichen reichen schon." };
+  if (payload.requestType !== "tfp" && !payload.eventDate) {
+    return { error: "Bitte tragt euer Wunschdatum ein, damit ich die Verfügbarkeit prüfen kann." };
   }
   if (payload.message.length > MAX_MESSAGE_LENGTH) {
     return { error: "Die Nachricht ist zu lang. Bitte kürzt sie etwas." };
   }
+  if (String(currentYear()) !== payload.securityYear) {
+    return { error: `Bitte beantwortet die Sicherheitsfrage mit dem aktuellen Jahr ${currentYear()}.` };
+  }
   if (!payload.privacy) return { error: "Bitte bestätigt den Datenschutz-Hinweis." };
-  if (countUrls(payload.message) > 3 || countUrls(payload.referral) > 2) {
+  if (countUrls(payload.message) > 1) {
     return { error: "Die Nachricht enthält ungewöhnlich viele Links." };
+  }
+  const textValues = [payload.name, payload.location, payload.message];
+  if (textValues.some((value) => containsUnsafeCharacters(value) || containsCodePattern(value))) {
+    return { error: "Bitte entfernt Sonderzeichen oder Code-Fragmente aus der Anfrage." };
+  }
+  if (payload.requestType !== "tfp" && payload.attachments.length > 0) {
+    return { error: "Bilder können nur bei TFP-Anfragen hochgeladen werden." };
   }
   if (payload.jsEnabled && payload.loadedAt && Date.now() - payload.loadedAt < MIN_SUBMIT_TIME_MS) {
     return { spam: true };
@@ -198,24 +331,30 @@ async function storeInD1(db, payload, ipHash, userAgent) {
         guest_count,
         referral,
         message,
+        security_year,
+        attachment_count,
+        attachment_names,
         source_path,
         user_agent,
         ip_hash
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .bind(
       id,
       payload.name,
       payload.email,
-      payload.phone,
+      "",
       payload.requestType,
       payload.eventDate,
       payload.location,
-      payload.coverage,
-      payload.guestCount,
-      payload.referral,
+      "",
+      "",
+      "",
       payload.message,
+      payload.securityYear,
+      String(payload.attachments.length),
+      payload.attachments.map((attachment) => attachment.filename).join(", "),
       payload.sourcePath,
       userAgent,
       ipHash,
@@ -239,6 +378,12 @@ async function forwardToWebhook(url, payload, requestId) {
       loadedAt: undefined,
       jsEnabled: undefined,
       turnstileToken: undefined,
+      attachments: payload.attachments.map((attachment) => ({
+        filename: attachment.filename,
+        contentType: attachment.contentType,
+        size: attachment.size,
+        contentBase64: attachment.base64,
+      })),
     }),
   });
   return response.ok;
