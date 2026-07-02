@@ -5115,38 +5115,6 @@
     ]
   },
   {
-    "path": "/kontakt/",
-    "sourceUrl": "https://artbild-fotografie.de/kontakt/",
-    "type": "page",
-    "title": "Kontakt",
-    "metaTitle": "Kontakt | Artbild-Fotografie",
-    "description": "Ist Dein Termin noch frei? Bitte schreibe mir jetzt für eine Buchungsanfrage, bevor Dein Wunschtermin anderweitig vergeben wird.",
-    "eyebrow": "Seite",
-    "datePublished": "2017-11-16T10:22:14",
-    "dateModified": "2026-06-01T11:56:22",
-    "heroImage": {
-      "src": "/migrated-assets/kontakt/ART_6078-Bearbeitet_web-e1562367504217.jpg",
-      "alt": "Kontakt",
-      "width": 322,
-      "height": 484,
-      "eager": true
-    },
-    "contentHtml": "<p>Liebe Interessentin, lieber Interessent,</p>\n<p><strong>bitte schauen Sie unbedingt in Ihren Spam Ordner, wenn Sie einen Tag nach Ihrer Email noch keine Antwort erhalten haben.</strong></p>\n<p>&nbsp;</p>\n<p>Telefonische Erreichbarkeit nur nach Absprache, da ich im Kundentermin nicht telefonieren kann.</p>\n<p>Vielen Dank!</p>",
-    "galleryImages": [
-      {
-        "src": "/migrated-assets/kontakt/ART_6078-Bearbeitet_web-e1562367504217.jpg",
-        "alt": "Kontakt",
-        "width": 322,
-        "height": 484,
-        "eager": true
-      }
-    ],
-    "keywords": [
-      "Kontakt",
-      "Artbild-Fotografie"
-    ]
-  },
-  {
     "path": "/lbgt-hochzeit-mallorca/",
     "sourceUrl": "https://artbild-fotografie.de/lbgt-hochzeit-mallorca/",
     "type": "page",
