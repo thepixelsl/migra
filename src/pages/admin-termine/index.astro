@@ -1,0 +1,483 @@
+---
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import "../../styles/global.css";
+
+const title = "Admin Termine | Artbild-Fotografie";
+const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hamburg.";
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="noindex, nofollow">
+  </head>
+  <body class="availability-admin-page">
+    <header class="gallery-header">
+      <MobileNavigation showFloatingAction={false} />
+    </header>
+
+    <main class="availability-admin" aria-labelledby="availability-admin-title">
+      <header class="availability-admin__hero">
+        <p class="availability-admin__kicker">Artbild-Fotografie</p>
+        <h1 id="availability-admin-title">Terminverwaltung</h1>
+        <p>
+          Blockierte Hochzeitstermine werden ohne Namen, Kontaktdaten oder Notizen
+          gespeichert. Änderungen sind sofort im Schnellkontakt sichtbar.
+        </p>
+      </header>
+
+      <section
+        class="availability-admin__panel"
+        aria-labelledby="availability-calendar-title"
+        data-admin-availability
+      >
+        <div class="availability-admin__toolbar">
+          <button type="button" data-admin-prev aria-label="Vorherigen Monat anzeigen">
+            <span aria-hidden="true">←</span>
+          </button>
+          <div>
+            <p class="availability-admin__eyebrow">Kalender</p>
+            <h2 id="availability-calendar-title" data-admin-month-title></h2>
+          </div>
+          <button type="button" data-admin-next aria-label="Nächsten Monat anzeigen">
+            <span aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="availability-admin__status" role="status" aria-live="polite" data-admin-status>
+          Termine werden geladen.
+        </div>
+
+        <div class="availability-admin__weekdays" aria-hidden="true">
+          <span>Mo</span>
+          <span>Di</span>
+          <span>Mi</span>
+          <span>Do</span>
+          <span>Fr</span>
+          <span>Sa</span>
+          <span>So</span>
+        </div>
+
+        <div
+          class="availability-admin__calendar"
+          role="grid"
+          aria-labelledby="availability-calendar-title"
+          data-admin-calendar
+        ></div>
+
+        <div class="availability-admin__legend" aria-label="Legende">
+          <span><i class="is-free" aria-hidden="true"></i> frei</span>
+          <span><i class="is-blocked" aria-hidden="true"></i> blockiert</span>
+          <span><i class="is-today" aria-hidden="true"></i> heute</span>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const adminRoot = document.querySelector("[data-admin-availability]");
+
+      if (adminRoot instanceof HTMLElement) {
+        const elements = {
+          prev: adminRoot.querySelector("[data-admin-prev]"),
+          next: adminRoot.querySelector("[data-admin-next]"),
+          title: adminRoot.querySelector("[data-admin-month-title]"),
+          status: adminRoot.querySelector("[data-admin-status]"),
+          calendar: adminRoot.querySelector("[data-admin-calendar]"),
+        };
+
+        const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+        const endpoint = "/api/admin/availability";
+        const today = new Date();
+        let monthCursor = new Date(today.getFullYear(), today.getMonth(), 1);
+        let blockedDates = new Set();
+        let isSaving = false;
+
+        function setStatus(message, tone = "") {
+          if (!(elements.status instanceof HTMLElement)) return;
+          elements.status.textContent = message;
+          elements.status.dataset.tone = tone;
+        }
+
+        function dateValue(date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, "0");
+          const day = String(date.getDate()).padStart(2, "0");
+          return `${year}-${month}-${day}`;
+        }
+
+        function validDateValue(value) {
+          if (typeof value !== "string" || !datePattern.test(value)) return false;
+          const [year, month, day] = value.split("-").map(Number);
+          const date = new Date(Date.UTC(year, month - 1, day));
+          return date.getUTCFullYear() === year
+            && date.getUTCMonth() === month - 1
+            && date.getUTCDate() === day;
+        }
+
+        function monthTitle(date) {
+          return new Intl.DateTimeFormat("de-DE", {
+            month: "long",
+            year: "numeric",
+          }).format(date);
+        }
+
+        function dayLabel(date, blocked) {
+          const label = new Intl.DateTimeFormat("de-DE", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }).format(date);
+          return blocked
+            ? `${label}, aktuell blockiert. Zum Freigeben klicken.`
+            : `${label}, aktuell frei. Zum Blockieren klicken.`;
+        }
+
+        function renderCalendar() {
+          if (!(elements.calendar instanceof HTMLElement) || !(elements.title instanceof HTMLElement)) return;
+
+          elements.title.textContent = monthTitle(monthCursor);
+          elements.calendar.textContent = "";
+
+          const year = monthCursor.getFullYear();
+          const month = monthCursor.getMonth();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const firstDay = new Date(year, month, 1).getDay();
+          const leadingEmptyCells = (firstDay + 6) % 7;
+          const todayValue = dateValue(today);
+
+          for (let index = 0; index < leadingEmptyCells; index += 1) {
+            const spacer = document.createElement("span");
+            spacer.className = "availability-admin__day-spacer";
+            spacer.setAttribute("aria-hidden", "true");
+            elements.calendar.append(spacer);
+          }
+
+          for (let day = 1; day <= daysInMonth; day += 1) {
+            const date = new Date(year, month, day);
+            const value = dateValue(date);
+            const isBlocked = blockedDates.has(value);
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "availability-admin__day";
+            button.dataset.date = value;
+            button.dataset.blocked = String(isBlocked);
+            button.setAttribute("aria-label", dayLabel(date, isBlocked));
+            button.setAttribute("aria-pressed", String(isBlocked));
+            button.innerHTML = `<span>${String(day)}</span><small>${isBlocked ? "blockiert" : "frei"}</small>`;
+            if (value === todayValue) button.dataset.today = "true";
+            button.addEventListener("click", () => toggleDate(value));
+            elements.calendar.append(button);
+          }
+        }
+
+        async function loadBlockedDates() {
+          try {
+            const response = await fetch(endpoint, {
+              method: "GET",
+              credentials: "same-origin",
+              cache: "no-store",
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data?.message || "load_failed");
+            const dates = Array.isArray(data.blockedDates)
+              ? data.blockedDates.filter(validDateValue)
+              : [];
+            blockedDates = new Set(dates);
+            renderCalendar();
+            setStatus(`${dates.length} blockierte Termine geladen.`, "ok");
+          } catch {
+            setStatus("Die Terminliste konnte nicht geladen werden. Prüfe bitte Cloudflare Access und das KV-Binding.", "error");
+          }
+        }
+
+        async function toggleDate(value) {
+          if (isSaving || !validDateValue(value)) return;
+          isSaving = true;
+          const action = blockedDates.has(value) ? "unblock" : "block";
+          setStatus(action === "block" ? "Termin wird blockiert." : "Termin wird freigegeben.");
+
+          try {
+            const response = await fetch(endpoint, {
+              method: "POST",
+              credentials: "same-origin",
+              cache: "no-store",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ date: value, action }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data?.message || "save_failed");
+            const dates = Array.isArray(data.blockedDates)
+              ? data.blockedDates.filter(validDateValue)
+              : [];
+            blockedDates = new Set(dates);
+            renderCalendar();
+            setStatus(action === "block" ? `${value} ist blockiert.` : `${value} ist wieder frei.`, "ok");
+          } catch {
+            setStatus("Die Änderung konnte nicht gespeichert werden.", "error");
+          } finally {
+            isSaving = false;
+          }
+        }
+
+        if (elements.prev instanceof HTMLButtonElement) {
+          elements.prev.addEventListener("click", () => {
+            monthCursor = new Date(monthCursor.getFullYear(), monthCursor.getMonth() - 1, 1);
+            renderCalendar();
+          });
+        }
+
+        if (elements.next instanceof HTMLButtonElement) {
+          elements.next.addEventListener("click", () => {
+            monthCursor = new Date(monthCursor.getFullYear(), monthCursor.getMonth() + 1, 1);
+            renderCalendar();
+          });
+        }
+
+        renderCalendar();
+        loadBlockedDates();
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  .availability-admin-page {
+    background: #f8f6f2;
+  }
+
+  .availability-admin {
+    width: min(1120px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: clamp(42px, 7vw, 96px) 0 clamp(64px, 8vw, 118px);
+  }
+
+  .availability-admin__hero {
+    max-width: 820px;
+    margin: 0 auto clamp(30px, 5vw, 58px);
+    text-align: center;
+  }
+
+  .availability-admin__kicker,
+  .availability-admin__eyebrow {
+    margin: 0 0 10px;
+    color: #7d756d;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .availability-admin h1 {
+    font-size: clamp(44px, 7vw, 92px);
+  }
+
+  .availability-admin__hero p:last-child {
+    max-width: 640px;
+    margin: 22px auto 0;
+    color: #6f6a64;
+    font-size: clamp(18px, 2vw, 23px);
+    line-height: 1.55;
+  }
+
+  .availability-admin__panel {
+    padding: clamp(18px, 3vw, 34px);
+    border: 1px solid #ded8cf;
+    background: #fff;
+  }
+
+  .availability-admin__toolbar {
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .availability-admin__toolbar h2 {
+    font-size: clamp(28px, 4vw, 54px);
+    text-align: center;
+    text-transform: capitalize;
+  }
+
+  .availability-admin__toolbar button,
+  .availability-admin__day {
+    min-width: 44px;
+    min-height: 44px;
+    border: 1px solid #d8d0c6;
+    background: #fff;
+    color: #171717;
+    font: inherit;
+    cursor: pointer;
+  }
+
+  .availability-admin__toolbar button {
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+  }
+
+  .availability-admin__toolbar button:focus-visible,
+  .availability-admin__day:focus-visible {
+    outline: 3px solid #171717;
+    outline-offset: 3px;
+  }
+
+  .availability-admin__status {
+    min-height: 44px;
+    margin: 24px 0 16px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e5ded5;
+    color: #6f6a64;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .availability-admin__status[data-tone="ok"] {
+    color: #1d5b3a;
+  }
+
+  .availability-admin__status[data-tone="error"] {
+    color: #9d232b;
+  }
+
+  .availability-admin__weekdays,
+  .availability-admin__calendar {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .availability-admin__weekdays {
+    margin-bottom: 8px;
+    color: #7d756d;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .availability-admin__day-spacer {
+    min-height: clamp(62px, 9vw, 96px);
+  }
+
+  .availability-admin__day {
+    min-height: clamp(62px, 9vw, 96px);
+    padding: 10px 6px;
+    display: grid;
+    place-items: center;
+    gap: 2px;
+    transition: background-color .16s ease, border-color .16s ease, color .16s ease;
+  }
+
+  .availability-admin__day span {
+    font-size: clamp(20px, 3vw, 34px);
+    line-height: 1;
+  }
+
+  .availability-admin__day small {
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+  }
+
+  .availability-admin__day[data-blocked="true"] {
+    border-color: #1f2733;
+    background: #1f2733;
+    color: #fff;
+  }
+
+  .availability-admin__day[data-today="true"] {
+    box-shadow: 0 0 0 2px #9b6f4f inset;
+  }
+
+  .availability-admin__day:hover {
+    border-color: #9b6f4f;
+  }
+
+  .availability-admin__legend {
+    margin-top: 22px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px 24px;
+    color: #6f6a64;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .availability-admin__legend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .availability-admin__legend i {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    border: 1px solid #d8d0c6;
+  }
+
+  .availability-admin__legend .is-free {
+    background: #fff;
+  }
+
+  .availability-admin__legend .is-blocked {
+    border-color: #1f2733;
+    background: #1f2733;
+  }
+
+  .availability-admin__legend .is-today {
+    border: 2px solid #9b6f4f;
+    background: #fff;
+  }
+
+  @media (max-width: 680px) {
+    .availability-admin {
+      width: min(100% - 20px, 520px);
+      padding-top: 32px;
+    }
+
+    .availability-admin__panel {
+      padding: 12px;
+    }
+
+    .availability-admin__toolbar {
+      grid-template-columns: 44px 1fr 44px;
+      gap: 8px;
+    }
+
+    .availability-admin__weekdays,
+    .availability-admin__calendar {
+      gap: 5px;
+    }
+
+    .availability-admin__day {
+      min-height: 58px;
+      padding: 7px 2px;
+    }
+
+    .availability-admin__day small {
+      font-size: 8px;
+      letter-spacing: .04em;
+    }
+  }
+</style>

@@ -1,5 +1,7 @@
 import * as availability from "../functions/api/availability.js";
+import * as adminAvailability from "../functions/api/admin/availability.js";
 import * as contact from "../functions/api/contact.js";
+import { assertAdminAccess } from "../functions/_availability.js";
 
 function pageContext(request, env, ctx) {
   return {
@@ -33,6 +35,15 @@ export default {
 
     if (url.pathname === "/api/availability") {
       return handlePagesFunction(availability, request, env, ctx);
+    }
+
+    if (url.pathname === "/api/admin/availability") {
+      return handlePagesFunction(adminAvailability, request, env, ctx);
+    }
+
+    if (url.pathname === "/admin-termine" || url.pathname.startsWith("/admin-termine/")) {
+      const denied = assertAdminAccess(request, env);
+      if (denied) return denied;
     }
 
     return env.ASSETS.fetch(request);

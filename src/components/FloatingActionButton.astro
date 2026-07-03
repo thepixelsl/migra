@@ -501,20 +501,20 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
     }
 
     async function requestAvailability(dateValue, signal) {
-      const response = await window.fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          date: dateValue,
-          website: elements.website instanceof HTMLInputElement ? elements.website.value : "",
-        }),
+      const requestUrl = new URL(endpoint, window.location.origin);
+      requestUrl.searchParams.set("date", dateValue);
+
+      const response = await window.fetch(requestUrl, {
+        method: "GET",
         credentials: "omit",
         signal,
       });
       const text = await response.text();
       if (!text) throw new Error("empty_response");
       const data = JSON.parse(text);
-      if (!data || typeof data.status !== "string") throw new Error("unexpected_response");
+      if (!data || (typeof data.available !== "boolean" && typeof data.status !== "string")) {
+        throw new Error("unexpected_response");
+      }
       return data;
     }
 
@@ -572,7 +572,7 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         window.clearTimeout(requestContext.timeoutId);
         if (activeRequest === requestContext) activeRequest = null;
 
-        if (response.status === "invalid_date") {
+        if (response.error === "invalid_date" || response.status === "invalid_date") {
           if (elements.error instanceof HTMLElement) {
             setState(states.DATE_SELECTION);
             elements.form.hidden = false;
@@ -585,7 +585,10 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
           return;
         }
 
-        showResult(response.status, response.date_label || formattedDate, expectedOperation, response);
+        const state = typeof response.available === "boolean"
+          ? (response.available ? states.AVAILABLE : states.UNAVAILABLE)
+          : response.status;
+        showResult(state, formattedDate, expectedOperation, response);
       } catch (error) {
         window.clearTimeout(requestContext.timeoutId);
         if (activeRequest === requestContext) activeRequest = null;

@@ -7,7 +7,7 @@ import {
 import FloatingActionButton from "./FloatingActionButton.astro";
 
 const currentPath = Astro.url.pathname;
-const showFloatingAction = !currentPath.startsWith("/kontakt");
+const showFloatingAction = Astro.props.showFloatingAction ?? !currentPath.startsWith("/kontakt");
 
 const isCurrent = (item: NavigationItem) => {
   if (item.href === "/") return currentPath === "/";
