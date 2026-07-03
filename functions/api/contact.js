@@ -166,14 +166,14 @@ function buildMailText(payload, request, requestId) {
     timeStyle: "short",
     timeZone: "Europe/Berlin",
   }).format(new Date());
-  const pageUrl = new URL(payload.sourcePath || "/kontakt/", request.url);
+  const pagePath = payload.sourcePath || "/kontakt/";
 
   return [
     "Neue Anfrage über das Kontaktformular",
     "",
     `Anfrage-ID: ${requestId}`,
     `Zeitpunkt: ${submittedAt}`,
-    `Seite: ${pageUrl.href}`,
+    `Seite: ${pagePath}`,
     "",
     `Art der Anfrage: ${formatRequestType(payload.requestType)}`,
     `Name: ${payload.name}`,
