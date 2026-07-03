@@ -1,0 +1,8 @@
+name = "migra"
+main = "src/worker.js"
+compatibility_date = "2026-07-03"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+preview_urls = true
+
+assets = { directory = "./dist", binding = "ASSETS" }
