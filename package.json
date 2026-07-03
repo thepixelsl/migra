@@ -12,7 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0"
+    "astro": "^5.0.0",
+    "worker-mailer": "^1.2.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0"

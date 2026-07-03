@@ -16,6 +16,13 @@ const ALLOWED_REQUEST_TYPES = new Set([
   "tfp",
 ]);
 const ALLOWED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const REQUEST_TYPE_LABELS = {
+  hochzeit: "Hochzeit",
+  "standesamtliche-trauung": "Standesamtliche Trauung",
+  portraitshooting: "Portraitshooting",
+  tfp: "TFP",
+};
+const CONTACT_SUBJECT = "Neue Anfrage über das Kontaktformular";
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -78,6 +85,10 @@ function normalizeEmail(value) {
   return cleanText(value, 320).toLowerCase();
 }
 
+function cleanHeaderText(value, maxLength = MAX_TEXT_LENGTH) {
+  return cleanText(value, maxLength).replace(/[\r\n]+/g, " ");
+}
+
 function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
 }
@@ -96,6 +107,10 @@ function validDateValue(value) {
 
 function countUrls(value) {
   return (String(value).match(/https?:\/\/|www\./gi) || []).length;
+}
+
+function hasLineBreak(value) {
+  return /[\r\n]/.test(String(value || ""));
 }
 
 function currentYear() {
@@ -121,6 +136,94 @@ function safeFileName(value) {
     .replace(/[^a-zA-Z0-9._-]/g, "-")
     .replace(/-+/g, "-")
     .slice(0, 90);
+}
+
+function configuredSmtp(env) {
+  const user = cleanHeaderText(env.STRATO_SMTP_USER, 320);
+  const pass = String(env.STRATO_SMTP_PASS || "");
+  const to = cleanHeaderText(env.CONTACT_TO, 320);
+
+  if (!user || !pass || !to) return null;
+  if (!validEmail(user.toLowerCase()) || !validEmail(to.toLowerCase())) return null;
+
+  return { user, pass, to };
+}
+
+function formatRequestType(value) {
+  return REQUEST_TYPE_LABELS[value] || value || "Nicht angegeben";
+}
+
+function buildMailText(payload, request, requestId) {
+  const submittedAt = new Intl.DateTimeFormat("de-DE", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Europe/Berlin",
+  }).format(new Date());
+  const pageUrl = new URL(payload.sourcePath || "/kontakt/", request.url);
+
+  return [
+    "Neue Anfrage über das Kontaktformular",
+    "",
+    `Anfrage-ID: ${requestId}`,
+    `Zeitpunkt: ${submittedAt}`,
+    `Seite: ${pageUrl.href}`,
+    "",
+    `Art der Anfrage: ${formatRequestType(payload.requestType)}`,
+    `Name: ${payload.name}`,
+    `E-Mail: ${payload.email}`,
+    `Ort/Location: ${payload.location}`,
+    `Wunschdatum: ${payload.eventDate || "offen"}`,
+    `TFP-Bilder: ${payload.attachments.length ? payload.attachments.map((attachment) => attachment.filename).join(", ") : "keine"}`,
+    "",
+    "Nachricht:",
+    payload.message || "Keine zusätzliche Nachricht.",
+  ].join("\n");
+}
+
+async function sendSmtpMail(env, payload, request, requestId) {
+  const smtp = configuredSmtp(env);
+  if (!smtp) {
+    throw new Error("smtp_not_configured");
+  }
+
+  const { WorkerMailer, LogLevel } = await import("worker-mailer");
+  await WorkerMailer.send(
+    {
+      host: "smtp.strato.de",
+      port: 465,
+      secure: true,
+      startTls: false,
+      authType: "login",
+      credentials: {
+        username: smtp.user,
+        password: smtp.pass,
+      },
+      logLevel: LogLevel.NONE,
+      socketTimeoutMs: 15000,
+      responseTimeoutMs: 15000,
+    },
+    {
+      from: {
+        name: "Artbild Kontaktformular",
+        email: smtp.user,
+      },
+      to: {
+        name: "Artbild-Fotografie",
+        email: smtp.to,
+      },
+      reply: {
+        name: cleanHeaderText(payload.name, 120),
+        email: payload.email,
+      },
+      subject: CONTACT_SUBJECT,
+      text: buildMailText(payload, request, requestId),
+      attachments: payload.attachments.map((attachment) => ({
+        filename: attachment.filename,
+        content: attachment.base64,
+        mimeType: attachment.contentType,
+      })),
+    },
+  );
 }
 
 async function readImageAttachment(file) {
@@ -271,6 +374,9 @@ function validate(payload) {
   if (payload.website) return { spam: true };
   if (!payload.name || payload.name.length < 2) return { error: "Bitte nennt euren Namen." };
   if (!validEmail(payload.email)) return { error: "Bitte tragt eine gültige E-Mail-Adresse ein." };
+  if (hasLineBreak(payload.name) || hasLineBreak(payload.email)) {
+    return { error: "Bitte prüft Name und E-Mail-Adresse." };
+  }
   if (!ALLOWED_REQUEST_TYPES.has(payload.requestType)) return { error: "Bitte wählt aus, worum es geht." };
   if (!payload.location || payload.location.length < 2) return { error: "Bitte nennt den Ort oder die Stadt." };
   if (!validDateValue(payload.eventDate)) return { error: "Bitte verwendet ein gültiges Datum." };
@@ -456,6 +562,7 @@ export async function onRequestPost({ request, env }) {
   const userAgent = cleanText(request.headers.get("user-agent"), 500);
   const ip = request.headers.get("CF-Connecting-IP") || request.headers.get("x-forwarded-for") || "unknown";
   const ipHash = await sha256(`${env.CONTACT_HASH_SALT || "artbild"}:${ip}`);
+  const smtp = configuredSmtp(env);
 
   if (db) {
     const recentCount = await recentSubmissionCount(db, ipHash, payload.email);
@@ -469,16 +576,17 @@ export async function onRequestPost({ request, env }) {
   }
 
   const hasWebhook = typeof env.CONTACT_WEBHOOK_URL === "string" && env.CONTACT_WEBHOOK_URL.startsWith("https://");
-  if (!db && !hasWebhook) {
+  if (!smtp && !hasWebhook) {
     return reply(request, {
       ok: false,
       title: "Kontaktformular noch nicht aktiv",
-      message: "Das Kontaktformular ist technisch vorbereitet, aber noch nicht mit D1 oder einem Webhook verbunden. Bitte schreibt direkt an info@artbild-fotografie.de.",
+      message: "Das Kontaktformular ist technisch vorbereitet, aber noch nicht mit dem Mailversand verbunden. Bitte schreibt direkt an info@artbild-fotografie.de.",
     }, 503);
   }
 
   try {
     const requestId = db ? await storeInD1(db, payload, ipHash, userAgent) : crypto.randomUUID();
+    if (smtp) await sendSmtpMail(env, payload, request, requestId);
     const webhookOk = hasWebhook ? await forwardToWebhook(env.CONTACT_WEBHOOK_URL, payload, requestId) : true;
     if (!webhookOk) throw new Error("webhook_failed");
 
