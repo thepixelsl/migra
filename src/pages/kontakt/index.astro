@@ -379,7 +379,6 @@ const schemaGraph = {
                   name="security_year"
                   type="text"
                   inputmode="numeric"
-                  pattern="[0-9]{4}"
                   maxlength="4"
                   placeholder="JJJJ"
                   autocomplete="off"
@@ -450,7 +449,7 @@ const schemaGraph = {
             </span>
           </label>
 
-          <p class="contact-status" id="contact-form-status" role="status" aria-live="polite" data-contact-status></p>
+          <p class="contact-status" id="contact-form-status" role="status" aria-live="polite" tabindex="-1" data-contact-status></p>
 
           <div class="contact-actions">
             <button class="contact-submit" type="submit" data-contact-submit>
@@ -512,10 +511,13 @@ const schemaGraph = {
         const validateYear = () => {
           if (!(yearField instanceof HTMLInputElement)) return;
           const expectedYear = yearField.dataset.currentYear || String(new Date().getFullYear());
+          const enteredYear = yearField.value.trim();
           yearField.setCustomValidity(
-            yearField.value.trim() === expectedYear
+            enteredYear === expectedYear
               ? ""
-              : `Bitte ${expectedYear} eintragen.`
+              : enteredYear.length === 0
+                ? `Bitte das aktuelle Jahr ${expectedYear} eintragen.`
+                : `Bitte als Sicherheitsfrage das aktuelle Jahr ${expectedYear} eintragen.`
           );
         };
 
@@ -531,7 +533,10 @@ const schemaGraph = {
           }).format(new Date());
           yearField.dataset.currentYear = expectedYear;
           yearField.placeholder = expectedYear;
-          yearField.addEventListener("input", validateYear);
+          yearField.addEventListener("input", () => {
+            yearField.value = yearField.value.replace(/\D/g, "").slice(0, 4);
+            validateYear();
+          });
         }
 
         if (tfpImages instanceof HTMLInputElement) {
