@@ -48,7 +48,7 @@ const schemaGraph = {
       mainEntity: {
         "@type": "ContactPoint",
         contactType: "customer support",
-        email: "info@artbild-fotografie.de",
+        url: pageUrl,
         areaServed: [
           { "@type": "City", name: "Hamburg" },
           { "@type": "AdministrativeArea", name: "Norddeutschland" },
@@ -68,7 +68,6 @@ const schemaGraph = {
         "@type": "ImageObject",
         url: logoUrl,
       },
-      email: "info@artbild-fotografie.de",
       founder: {
         "@type": "Person",
         name: "York Augustin",
@@ -229,7 +228,17 @@ const schemaGraph = {
             <div>
               <dt>E-Mail</dt>
               <dd>
-                <a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a>
+                <button
+                  class="contact-inline-button"
+                  type="button"
+                  data-mail-button
+                  aria-describedby="contact-mail-hint"
+                >
+                  E-Mail-Adresse anzeigen
+                </button>
+                <span class="contact-mail-output" id="contact-mail-hint" data-mail-output>
+                  Wird erst nach Klick angezeigt.
+                </span>
               </dd>
             </div>
             <div>
@@ -298,7 +307,6 @@ const schemaGraph = {
                   id="contact-request-type"
                   name="request_type"
                   required
-                  aria-describedby="contact-request-type-hint"
                   data-agent-field="request-type"
                   data-contact-request-type
                 >
@@ -308,7 +316,7 @@ const schemaGraph = {
                   <option value="portraitshooting">Portraitshooting</option>
                   <option value="tfp">TFP</option>
                 </select>
-                <p id="contact-request-type-hint">
+                <p id="contact-request-type-hint" hidden data-contact-tfp-hint>
                   Bei TFP-Anfragen könnt Ihr unten bis zu drei Beispielbilder anhängen.
                 </p>
               </div>
@@ -350,11 +358,10 @@ const schemaGraph = {
                   type="date"
                   autocomplete="off"
                   required
-                  aria-describedby="contact-date-hint"
                   data-agent-field="event-date"
                   data-contact-date
                 >
-                <p id="contact-date-hint">Für TFP darf das Datum offen bleiben.</p>
+                <p id="contact-date-hint" hidden data-contact-date-hint>Für TFP darf das Datum offen bleiben.</p>
               </div>
 
               <div class="contact-field">
@@ -455,9 +462,9 @@ const schemaGraph = {
             <button class="contact-submit" type="submit" data-contact-submit>
               Anfrage senden
             </button>
-            <a href="mailto:info@artbild-fotografie.de?subject=Hochzeitsanfrage%20%C3%BCber%20Artbild-Fotografie">
-              Direkt per E-Mail
-            </a>
+            <button class="contact-mail-action" type="button" data-mail-button>
+              E-Mail öffnen
+            </button>
           </div>
         </form>
       </section>
@@ -478,6 +485,8 @@ const schemaGraph = {
         const requestType = contactForm.querySelector("[data-contact-request-type]");
         const dateField = contactForm.querySelector("[data-contact-date]");
         const dateRequiredMarker = contactForm.querySelector("[data-date-required-marker]");
+        const dateHint = contactForm.querySelector("[data-contact-date-hint]");
+        const tfpHint = contactForm.querySelector("[data-contact-tfp-hint]");
         const yearField = contactForm.querySelector("[data-current-year]");
         const tfpBlock = contactForm.querySelector("[data-contact-tfp]");
         const tfpImages = contactForm.querySelector("[data-contact-tfp-images]");
@@ -496,9 +505,27 @@ const schemaGraph = {
           const isTfp = requestType instanceof HTMLSelectElement && requestType.value === "tfp";
           if (dateField instanceof HTMLInputElement) {
             dateField.required = !isTfp;
+            if (isTfp) {
+              dateField.setAttribute("aria-describedby", "contact-date-hint");
+            } else {
+              dateField.removeAttribute("aria-describedby");
+            }
           }
           if (dateRequiredMarker instanceof HTMLElement) {
             dateRequiredMarker.hidden = isTfp;
+          }
+          if (dateHint instanceof HTMLElement) {
+            dateHint.hidden = !isTfp;
+          }
+          if (tfpHint instanceof HTMLElement) {
+            tfpHint.hidden = !isTfp;
+          }
+          if (requestType instanceof HTMLSelectElement) {
+            if (isTfp) {
+              requestType.setAttribute("aria-describedby", "contact-request-type-hint");
+            } else {
+              requestType.removeAttribute("aria-describedby");
+            }
           }
           if (tfpBlock instanceof HTMLElement) {
             tfpBlock.hidden = !isTfp;
@@ -555,6 +582,21 @@ const schemaGraph = {
             );
           });
         }
+
+        document.querySelectorAll("[data-mail-button]").forEach((button) => {
+          if (!(button instanceof HTMLButtonElement)) return;
+          button.addEventListener("click", () => {
+            const user = String.fromCharCode(105, 110, 102, 111);
+            const host = ["artbild-fotografie", "de"].join(".");
+            const address = `${user}@${host}`;
+            const subject = encodeURIComponent("Hochzeitsanfrage über Artbild-Fotografie");
+            const output = document.querySelector("[data-mail-output]");
+            if (output instanceof HTMLElement) {
+              output.textContent = address;
+            }
+            window.location.href = `mailto:${address}?subject=${subject}`;
+          });
+        });
 
         contactForm.addEventListener("submit", async (event) => {
           event.preventDefault();
@@ -688,10 +730,9 @@ const schemaGraph = {
   }
 
   .contact-hero__image img {
+    display: block;
     width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    object-position: 50% 32%;
+    height: auto;
     background: var(--soft);
   }
 
@@ -742,6 +783,33 @@ const schemaGraph = {
     margin: 6px 0 0;
     font-size: clamp(20px, 3vw, 28px);
     line-height: 1.25;
+  }
+
+  .contact-inline-button {
+    min-height: 48px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: .2em;
+  }
+
+  .contact-mail-output {
+    display: block;
+    margin-top: 8px;
+    color: #706a64;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    text-transform: uppercase;
   }
 
   .contact-aside a {
@@ -852,7 +920,8 @@ const schemaGraph = {
   .contact-field textarea:focus,
   .contact-consent input:focus-visible,
   .contact-submit:focus-visible,
-  .contact-actions a:focus-visible,
+  .contact-mail-action:focus-visible,
+  .contact-inline-button:focus-visible,
   .contact-secure-link:focus-visible {
     outline: 3px solid #1f6688;
     outline-offset: 3px;
@@ -898,7 +967,7 @@ const schemaGraph = {
   }
 
   .contact-submit,
-  .contact-actions a {
+  .contact-mail-action {
     min-height: 56px;
     padding: 16px 22px;
     display: inline-flex;
@@ -925,9 +994,10 @@ const schemaGraph = {
     opacity: .62;
   }
 
-  .contact-actions a {
+  .contact-mail-action {
     background: transparent;
     color: var(--ink);
+    cursor: pointer;
   }
 
   .contact-form__honeypot {
@@ -997,7 +1067,7 @@ const schemaGraph = {
     }
 
     .contact-submit,
-    .contact-actions a {
+    .contact-mail-action {
       width: 100%;
     }
   }
