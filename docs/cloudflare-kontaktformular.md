@@ -8,6 +8,7 @@ Diese Variablen müssen in Cloudflare Pages gesetzt werden:
 
 - `STRATO_SMTP_USER`: vollständige STRATO-E-Mail-Adresse
 - `STRATO_SMTP_PASS`: Postfach-Passwort
+- `CONTACT_FROM`: sichtbare Absenderadresse des Formulars, z. B. `mail@artbild-fotografie.de`
 - `CONTACT_TO`: Zieladresse für Kontaktanfragen
 
 Optional:
@@ -36,3 +37,4 @@ Cloudflare Turnstile kann später ergänzt werden. Dafür `TURNSTILE_SECRET_KEY`
 - Prüfung von MIME-Type und Dateisignatur, keine SVGs, Skripte oder sonstigen Dateiformate
 - Ablehnung auffälliger Code-Fragmente und Sonderzeichen in Textfeldern
 - Header-Injection-Schutz: Besucher-E-Mail wird nur als Reply-To genutzt, nie als From
+- SMTP-Login und sichtbarer Absender sind getrennt: `STRATO_SMTP_USER` authentifiziert, `CONTACT_FROM` steht als Absender in der Mail

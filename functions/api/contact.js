@@ -141,12 +141,19 @@ function safeFileName(value) {
 function configuredSmtp(env) {
   const user = cleanHeaderText(env.STRATO_SMTP_USER, 320);
   const pass = String(env.STRATO_SMTP_PASS || "");
+  const from = cleanHeaderText(env.CONTACT_FROM || env.STRATO_SMTP_USER, 320);
   const to = cleanHeaderText(env.CONTACT_TO, 320);
 
-  if (!user || !pass || !to) return null;
-  if (!validEmail(user.toLowerCase()) || !validEmail(to.toLowerCase())) return null;
+  if (!user || !pass || !from || !to) return null;
+  if (
+    !validEmail(user.toLowerCase())
+    || !validEmail(from.toLowerCase())
+    || !validEmail(to.toLowerCase())
+  ) {
+    return null;
+  }
 
-  return { user, pass, to };
+  return { user, pass, from, to };
 }
 
 function formatRequestType(value) {
@@ -205,7 +212,7 @@ async function sendSmtpMail(env, payload, request, requestId) {
     {
       from: {
         name: "Artbild Kontaktformular",
-        email: smtp.user,
+        email: smtp.from,
       },
       to: {
         name: "Artbild-Fotografie",
