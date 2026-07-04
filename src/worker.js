@@ -4,11 +4,27 @@ import * as contact from "../functions/api/contact.js";
 import { assertAdminAccess } from "../functions/_availability.js";
 
 const HSTS_HEADER_VALUE = "max-age=31536000; includeSubDomains; preload";
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "frame-ancestors 'self'",
+  "form-action 'self'",
+  "img-src 'self' data: https:",
+  "font-src 'self' data:",
+  "style-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline'",
+  "connect-src 'self'",
+  "upgrade-insecure-requests",
+].join("; ");
 
 function withSecurityHeaders(response) {
   const headers = new Headers(response.headers);
   headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
+  headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
   headers.set("X-Content-Type-Options", "nosniff");
+  headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
 
   return new Response(response.body, {
     status: response.status,

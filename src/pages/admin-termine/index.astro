@@ -168,7 +168,11 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
             button.dataset.blocked = String(isBlocked);
             button.setAttribute("aria-label", dayLabel(date, isBlocked));
             button.setAttribute("aria-pressed", String(isBlocked));
-            button.innerHTML = `<span>${String(day)}</span><small>${isBlocked ? "blockiert" : "frei"}</small>`;
+            const dayNumber = document.createElement("span");
+            dayNumber.textContent = String(day);
+            const state = document.createElement("small");
+            state.textContent = isBlocked ? "blockiert" : "frei";
+            button.append(dayNumber, state);
             if (value === todayValue) button.dataset.today = "true";
             button.addEventListener("click", () => toggleDate(value));
             elements.calendar.append(button);

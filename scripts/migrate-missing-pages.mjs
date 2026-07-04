@@ -195,11 +195,32 @@ const normalizeInternalLinks = (html) =>
     .replace(/https:\/\/artbild-fotografie\.de(\/(?!wp-content\/uploads\/)[^"' <)]*)/g, "$1")
     .replace(/http:\/\/artbild-fotografie\.de(\/(?!wp-content\/uploads\/)[^"' <)]*)/g, "$1");
 
+const safeHref = (href = "") => {
+  const trimmed = href.trim();
+  if (
+    trimmed.startsWith("/")
+    || trimmed.startsWith("#")
+    || trimmed.startsWith("https://")
+    || trimmed.startsWith("http://")
+    || trimmed.startsWith("mailto:")
+    || trimmed.startsWith("tel:")
+  ) {
+    return trimmed.replace(/"/g, "&quot;");
+  }
+  return "";
+};
+
 const sanitizeContent = (html = "", assetMap = new Map()) => {
   let content = html
     .replace(/<script[\s\S]*?<\/script>/gi, "")
     .replace(/<style[\s\S]*?<\/style>/gi, "")
     .replace(/<noscript[\s\S]*?<\/noscript>/gi, "")
+    .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
+    .replace(/<object[\s\S]*?<\/object>/gi, "")
+    .replace(/<embed\b[^>]*>/gi, "")
+    .replace(/<form[\s\S]*?<\/form>/gi, "")
+    .replace(/<input\b[^>]*>/gi, "")
+    .replace(/<button[\s\S]*?<\/button>/gi, "")
     .replace(/<!--[\s\S]*?-->/g, "")
     .replace(/\[[^\]]+\]/g, "")
     .replace(/<figure[\s\S]*?<\/figure>/gi, "")
@@ -213,10 +234,10 @@ const sanitizeContent = (html = "", assetMap = new Map()) => {
   }
 
   content = content
-    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority)="[^"]*"/gi, "")
-    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority)='[^']*'/gi, "")
+    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority|on[\w-]+)="[^"]*"/gi, "")
+    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority|on[\w-]+)='[^']*'/gi, "")
     .replace(/<a\b([^>]*)>/gi, (tag, attrs) => {
-      const href = attrs.match(/\shref=["']([^"']+)["']/i)?.[1];
+      const href = safeHref(attrs.match(/\shref=["']([^"']+)["']/i)?.[1]);
       const rel = href && !href.startsWith("/") && !href.startsWith("#") ? ' rel="noopener"' : "";
       const target = href && !href.startsWith("/") && !href.startsWith("#") ? ' target="_blank"' : "";
       return href ? `<a href="${href}"${rel}${target}>` : "<a>";
