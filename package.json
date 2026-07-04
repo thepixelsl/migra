@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "build": "astro build",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
@@ -16,6 +18,7 @@
     "worker-mailer": "^1.2.1"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0"
+    "@playwright/test": "^1.61.0",
+    "wrangler": "^4.107.0"
   }
 }
