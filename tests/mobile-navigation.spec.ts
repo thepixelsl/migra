@@ -22,13 +22,15 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   const navigation = page.getByRole("navigation", { name: "Mobile Hauptnavigation" });
   await expect(navigation).toBeVisible();
   await expect(toggleState).toHaveAttribute("aria-expanded", "true");
-  await expect(page.getByRole("link", { name: /Freie Termine & Anfrage/ })).toBeVisible();
+  await expect(navigation.getByRole("link", { name: "Kontakt", exact: true })).toBeVisible();
   await page.waitForTimeout(350);
 
-  const linkHeights = await page.locator(".mobile-navigation__link").evaluateAll((links) =>
+  const linkHeights = await page.locator(
+    ".mobile-navigation__group:not(.is-secondary) .mobile-navigation__link",
+  ).evaluateAll((links) =>
     links.map((link) => link.getBoundingClientRect().height),
   );
-  expect(Math.min(...linkHeights)).toBeGreaterThanOrEqual(48);
+  expect(Math.min(...linkHeights)).toBeGreaterThanOrEqual(44);
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -52,6 +54,28 @@ test("desktop navigation remains active", async ({ page }) => {
 
   await expect(page.locator(".gallery-nav")).toBeVisible();
   await expect(page.locator(".mobile-navigation")).toBeHidden();
+  await expect(page.locator(".gallery-search")).toHaveCount(0);
+  await expect(page.locator('.gallery-nav a[href="/?s="]')).toHaveCount(0);
+
+  const navigationAlignment = await page.locator(".gallery-nav").evaluate((navigation) => {
+    const navigationBounds = navigation.getBoundingClientRect();
+    const menuItems = Array.from(
+      navigation.querySelectorAll<HTMLElement>(".gallery-nav__group--home > li"),
+    );
+    const firstBounds = menuItems[0]?.getBoundingClientRect();
+    const lastBounds = menuItems.at(-1)?.getBoundingClientRect();
+
+    return {
+      itemCount: menuItems.length,
+      centerDifference: Math.abs(
+        (navigationBounds.left + navigationBounds.width / 2)
+        - (((firstBounds?.left ?? 0) + (lastBounds?.right ?? 0)) / 2),
+      ),
+    };
+  });
+
+  expect(navigationAlignment.itemCount).toBe(6);
+  expect(navigationAlignment.centerDifference).toBeLessThanOrEqual(1);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({

@@ -1,0 +1,504 @@
+---
+import { Image } from "astro:assets";
+import FaviconHead from "../../components/FaviconHead.astro";
+import "../../styles/global.css";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
+import migratedPages from "../../data/migratedPages.json";
+
+import img0 from "../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
+import img1 from "../../assets/hochzeitsfotos-hamburg/96bedd5324b86db5.jpg";
+import img2 from "../../assets/hochzeitsfotos-hamburg/ff9af8435a08e944.jpg";
+import img3 from "../../assets/hochzeitsfotos-hamburg/215d8c71c322e3b0.jpg";
+import img4 from "../../assets/hochzeitsfotos-hamburg/d1d877960c7a66d0.jpg";
+import img5 from "../../assets/hochzeitsfotos-hamburg/d903b55f3efe9784.jpg";
+import img6 from "../../assets/hochzeitsfotos-hamburg/555b999643b90697.jpg";
+import img7 from "../../assets/hochzeitsfotos-hamburg/c527a2e37545a1e4.jpg";
+import img8 from "../../assets/hochzeitsfotos-hamburg/fde30dc54e7f8b96.jpg";
+import img9 from "../../assets/hochzeitsfotos-hamburg/47c0bf17b288100a.jpg";
+import img10 from "../../assets/hochzeitsfotos-hamburg/f1e9eceb70da709b.jpg";
+import img11 from "../../assets/hochzeitsfotos-hamburg/5e02af00ed8dc76f.jpg";
+import img12 from "../../assets/hochzeitsfotos-hamburg/823a3be48672cb17.jpg";
+import img13 from "../../assets/hochzeitsfotos-hamburg/3899e9231061cbe0.jpg";
+import img14 from "../../assets/hochzeitsfotos-hamburg/17a861985849e013.jpg";
+import img15 from "../../assets/hochzeitsfotos-hamburg/36ec87e5a79a8d8d.jpg";
+import img16 from "../../assets/hochzeitsfotos-hamburg/f1c69b8ed66ea780.jpg";
+import img17 from "../../assets/hochzeitsfotos-hamburg/3691ac3cba332a72.jpg";
+import img18 from "../../assets/hochzeitsfotos-hamburg/2befbf371e08237f.jpg";
+import img19 from "../../assets/hochzeitsfotos-hamburg/277d94e2e9189c16.jpg";
+import img20 from "../../assets/hochzeitsfotos-hamburg/80f1e2e5b135c9db.jpg";
+import img21 from "../../assets/hochzeitsfotos-hamburg/bb7e8e2710a9768f.jpg";
+import img22 from "../../assets/hochzeitsfotos-hamburg/aeab941d817656e6.jpg";
+import img23 from "../../assets/hochzeitsfotos-hamburg/436d629024c6eb47.jpg";
+import img24 from "../../assets/hochzeitsfotos-hamburg/1c0c2dd1c328df68.jpg";
+import img25 from "../../assets/hochzeitsfotos-hamburg/4a1c4be388ee88da.jpg";
+import img26 from "../../assets/hochzeitsfotos-hamburg/2cf7ca5fbb071b4d.jpg";
+import img27 from "../../assets/hochzeitsfotos-hamburg/2f89e6a94004dc66.jpg";
+import img28 from "../../assets/hochzeitsfotos-hamburg/e67b1f9d22527396.jpg";
+
+const pagePath = "/braut-fotoshooting-fraser-suites-hamburg/";
+const page = migratedPages.find((entry) => entry.path === pagePath);
+
+if (!page) {
+  throw new Error(`Migrationsdaten fuer ${pagePath} fehlen.`);
+}
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = page.metaTitle ?? page.title;
+const description =
+  "Inszeniertes Braut-Editorial in den Fraser Suites Hamburg mit Model, Brautkleid, Styling und Aufnahmen im Hotelzimmer sowie im Treppenhaus.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const articleHtml = `
+  <h2>Inszeniertes Braut-Editorial in Hamburg</h2>
+  <p>Diese Bildstrecke entstand als geplantes Editorial mit einem Model. Sie dokumentiert keine echte Hochzeit und keine Trauung.</p>
+  <p>Fotografiert wurde in den Fraser Suites Hamburg: im Hotelzimmer, am Fenster und im historischen Treppenhaus. Die Serie konzentriert sich auf Brautkleid, Schleier, Styling, Licht und die Architektur des Hauses.</p>
+  <h2>Team und Ausstattung</h2>
+  <p>Am Editorial beteiligt waren die Modedesignerin <a href="https://paramour-brautmode.de" rel="noopener" target="_blank">Nathalie Tramecourt</a> und die <a href="/gallery/visagistin-manja-biebow/">Visagistin Manija Biebow</a>. Der Brautstrauß kam vom <a href="https://www.blumenhaus-asmussen.de" rel="noopener" target="_blank">Blumenhaus Asmussen</a> in Hamburg.</p>
+  <p>Die nachfolgende Galerie zeigt die vollständige fotografische Auswahl dieser Produktion.</p>
+`;
+
+const galleryImages = [
+  { id: "fraser-01", image: img0, alt: "Brautportrait in den Fraser Suites Hamburg" },
+  { id: "fraser-02", image: img1, alt: "Braut in elegantem Kleid beim Getting Ready in Hamburg" },
+  { id: "fraser-03", image: img2, alt: "Elegantes Hochzeitsfoto in den Fraser Suites Hamburg" },
+  { id: "fraser-04", image: img3, alt: "Braut am Fenster in den Fraser Suites Hamburg" },
+  { id: "fraser-05", image: img4, alt: "Brautportrait mit feinem Licht in Hamburg" },
+  { id: "fraser-06", image: img5, alt: "Editoriales Brautfoto im Hotel in Hamburg" },
+  { id: "fraser-07", image: img6, alt: "Fraser Suites Hamburg Braut Hochzeit" },
+  { id: "fraser-08", image: img7, alt: "Brautbild mit klassischer Architektur in Hamburg" },
+  { id: "fraser-09", image: img8, alt: "Braut Fotoshooting in den Fraser Suites Hamburg" },
+  { id: "fraser-10", image: img9, alt: "Hochzeitsfoto einer Braut im Hotelzimmer" },
+  { id: "fraser-11", image: img10, alt: "Getting Ready Brautfoto in Hamburg" },
+  { id: "fraser-12", image: img11, alt: "Detailaufnahme aus einem Brautshooting in Hamburg" },
+  { id: "fraser-13", image: img12, alt: "Brautportrait mit elegantem Kleid in Hamburg" },
+  { id: "fraser-14", image: img13, alt: "Hochzeitsfoto einer Braut in ruhigem Licht" },
+  { id: "fraser-15", image: img14, alt: "Braut im Hotel beim Fotoshooting in Hamburg" },
+  { id: "fraser-16", image: img15, alt: "Klassisches Brautportrait in Hamburg" },
+  { id: "fraser-17", image: img16, alt: "Braut vor einer Hochzeit in den Fraser Suites" },
+  { id: "fraser-18", image: img17, alt: "Elegantes Hochzeitsdetail in Hamburg" },
+  { id: "fraser-19", image: img18, alt: "Brautshooting im Hotel in Hamburg" },
+  { id: "fraser-20", image: img19, alt: "Hochzeitsfoto mit Brautkleid in Hamburg" },
+  { id: "fraser-21", image: img20, alt: "Brautportrait im Innenraum der Fraser Suites" },
+  { id: "fraser-22", image: img21, alt: "Editoriales Hochzeitsfoto einer Braut" },
+  { id: "fraser-23", image: img22, alt: "Brautbild mit Tageslicht in Hamburg" },
+  { id: "fraser-24", image: img23, alt: "Braut beim Getting Ready in Hamburg" },
+  { id: "fraser-25", image: img24, alt: "Stilvolle Hochzeitsfotografie in den Fraser Suites" },
+  { id: "fraser-26", image: img25, alt: "Brautportrait im Hotelambiente" },
+  { id: "fraser-27", image: img26, alt: "Braut Foto in klassischer Hamburger Location" },
+  { id: "fraser-28", image: img27, alt: "Hochzeitsfoto einer Braut im eleganten Innenraum" },
+  { id: "fraser-29", image: img28, alt: "Brautshooting als Inspiration fuer Hochzeitsfotos Hamburg" },
+].map((item) => ({ ...item, aspect: "natural" as const }));
+
+const galleryColumns = [galleryImages.slice(1)];
+const ogImage = new URL(img0.src, siteUrl).href;
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Blog", href: "/blog/" },
+  { label: page.title, href: pagePath },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: page.title,
+      description,
+      datePublished: page.datePublished,
+      dateModified: page.dateModified,
+      image: { "@id": `${pageUrl}#primaryimage` },
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      articleSection: ["Hochzeitsfotografie", "Getting Ready", "Hamburg"],
+      inLanguage: "de-DE",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: page.title,
+      description,
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+        contentLocation: { "@id": `${pageUrl}#location` },
+      })),
+    },
+    {
+      "@type": "Place",
+      "@id": `${pageUrl}#location`,
+      name: "Fraser Suites Hamburg",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rödingsmarkt 2",
+        postalCode: "20459",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: logoUrl,
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "Country", name: "Deutschland" },
+      ],
+      serviceType: ["Hochzeitsfotografie", "Hochzeitsreportage", "Getting Ready Fotografie"],
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        addressLocality: "Hamburg",
+        postalCode: "22143",
+        addressCountry: "DE",
+      },
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${pageUrl}#primaryimage`,
+      url: ogImage,
+      contentUrl: ogImage,
+      width: img0.width,
+      height: img0.height,
+      caption: galleryImages[0].alt,
+      inLanguage: "de-DE",
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: page.datePublished,
+      dateModified: page.dateModified,
+      primaryImageOfPage: { "@id": `${pageUrl}#primaryimage` },
+      inLanguage: "de-DE",
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={ogImage}>
+    <meta property="article:published_time" content={page.datePublished}>
+    <meta property="article:modified_time" content={page.dateModified}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={ogImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)} />
+  </head>
+  <body>
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main class="fraser-editorial">
+      <div class="fraser-breadcrumbs">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+
+      <header class="fraser-hero">
+        <p class="fraser-hero__kicker">Hochzeit · Editorial · Peoplefotografie</p>
+        <h1>{page.title}</h1>
+        <figure class="fraser-hero__media">
+          <Image
+            src={img0}
+            alt={galleryImages[0].alt}
+            widths={[720, 1080, 1440, 1840]}
+            sizes="(max-width: 760px) calc(100vw - 40px), 920px"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </figure>
+      </header>
+
+      <article
+        class="fraser-copy"
+        data-track-section="fraser_suites_editorial"
+        data-content-topic="braut_fotoshooting_fraser_suites_hamburg"
+        data-user-intent="inspiration_finden"
+        data-journey-stage="consideration"
+        data-content-format="editorial_article"
+        data-position="main"
+      >
+        <div class="fraser-copy__body" set:html={articleHtml} />
+      </article>
+
+      <section
+        class="fraser-gallery"
+        aria-label="Braut-Fotoshooting in den Fraser Suites Hamburg"
+        data-track-section="fraser_suites_gallery"
+        data-content-topic="hochzeitsfotos_hamburg"
+        data-user-intent="bildsprache_pruefen"
+        data-journey-stage="consideration"
+        data-content-format="image_gallery"
+        data-position="after_article"
+      >
+        <div class="fraser-gallery__heading">
+          <p>Fotostrecke</p>
+          <h2>Fraser Suites Hamburg</h2>
+        </div>
+        <GalleryImageGrid columns={galleryColumns} label="Braut-Fotoshooting Fraser Suites Hamburg" />
+      </section>
+
+      <StoryLanguageCta kind="editorial" />
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  :global(body) {
+    margin: 0;
+    color: #242a35;
+    background: #fff;
+  }
+
+  .fraser-editorial {
+    padding-top: clamp(68px, 8vw, 116px);
+  }
+
+  .fraser-breadcrumbs {
+    width: min(1500px, calc(100% - 72px));
+    margin: 0 auto clamp(70px, 8vw, 118px);
+  }
+
+  .fraser-hero {
+    width: min(1180px, calc(100% - 44px));
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .fraser-hero__kicker,
+  .fraser-gallery__heading p {
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: #81786f;
+  }
+
+  .fraser-hero h1 {
+    max-width: 15ch;
+    margin: 26px auto 0;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(43px, 6vw, 86px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.04;
+  }
+
+  .fraser-hero__media {
+    width: min(920px, 100%);
+    margin: clamp(66px, 8vw, 110px) auto 0;
+  }
+
+  .fraser-hero__media :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .fraser-copy {
+    width: min(960px, calc(100% - 48px));
+    margin: clamp(86px, 9vw, 140px) auto;
+  }
+
+  .fraser-copy__body {
+    width: min(820px, 100%);
+    margin: 0 auto;
+  }
+
+  :global(.fraser-copy__body h2) {
+    margin: 72px 0 22px;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(30px, 3.2vw, 46px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.15;
+    text-wrap: balance;
+  }
+
+  :global(.fraser-copy__body h2:first-child) {
+    margin-top: 0;
+  }
+
+  :global(.fraser-copy__body p) {
+    margin: 0 0 24px;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 21px);
+    letter-spacing: 0;
+    line-height: 1.78;
+    color: #6b655f;
+  }
+
+  :global(.fraser-copy__body a) {
+    color: #303743;
+    text-decoration-color: #a98368;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  :global(.fraser-copy__body a:hover),
+  :global(.fraser-copy__body a:focus-visible) {
+    color: #8b6249;
+  }
+
+  .fraser-gallery {
+    padding: clamp(82px, 9vw, 142px) 0;
+    background: #f8f6f2;
+  }
+
+  .fraser-gallery__heading {
+    width: min(1500px, calc(100% - 72px));
+    margin: 0 auto clamp(54px, 6vw, 88px);
+    text-align: center;
+  }
+
+  .fraser-gallery__heading h2 {
+    margin: 18px 0 0;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(38px, 5vw, 72px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.06;
+  }
+
+  .gallery-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    padding: clamp(74px, 8vw, 120px) 24px 60px;
+    text-align: center;
+    background: #fff;
+  }
+
+  .gallery-logo {
+    display: block;
+    width: min(220px, 60vw);
+  }
+
+  .gallery-logo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .gallery-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px 28px;
+  }
+
+  .gallery-footer nav a,
+  .gallery-footer p {
+    font-family: "Raleway", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    line-height: 1.5;
+    text-transform: uppercase;
+    color: #6e6964;
+  }
+
+  .gallery-footer p {
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .fraser-editorial {
+      padding-top: 42px;
+    }
+
+    .fraser-breadcrumbs,
+    .fraser-gallery__heading {
+      width: calc(100% - 40px);
+    }
+
+    .fraser-breadcrumbs {
+      margin-bottom: 58px;
+    }
+
+    .fraser-hero {
+      width: calc(100% - 40px);
+    }
+
+    .fraser-hero h1 {
+      max-width: 11ch;
+      font-size: clamp(40px, 13vw, 58px);
+    }
+
+    .fraser-hero__media {
+      margin-top: 52px;
+    }
+
+    .fraser-copy {
+      width: calc(100% - 40px);
+      margin: 72px auto 86px;
+    }
+
+    :global(.fraser-copy__body h2) {
+      margin-top: 56px;
+      font-size: 32px;
+    }
+
+    :global(.fraser-copy__body p) {
+      font-size: 18px;
+      line-height: 1.68;
+    }
+
+    .fraser-gallery {
+      padding: 76px 0 88px;
+    }
+  }
+</style>

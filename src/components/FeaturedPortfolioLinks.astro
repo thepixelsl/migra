@@ -18,7 +18,7 @@ type FeaturedPortfolioLink = {
   serviceType: string;
 };
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 const links: FeaturedPortfolioLink[] = [
@@ -100,6 +100,11 @@ const visibleLocation = (entry: FeaturedPortfolioLink) => (
   entry.title.toLowerCase().includes(entry.location.toLowerCase()) ? "" : entry.location
 );
 
+const trackingSlug = (href: string) => href
+  .replace(/^\/|\/$/g, "")
+  .replace(/\//g, "_")
+  .replace(/[^a-z0-9_]+/g, "_");
+
 const imageWidths = [360, 520, 760, 1040, 1320];
 const linksWithImages = await Promise.all(links.map(async (entry) => {
   const usableWidths = [...new Set([
@@ -180,10 +185,21 @@ const schema = {
 };
 ---
 
-<div id="desktop_featured_links" class="flo-block flo-block--8074 visible" data-id="8074" data-onready="flo_featured_links_1">
+<div id="desktop_featured_links" class="flo-block flo-block--8074 visible" data-id="8074" data-onready="flo_featured_links_1" data-home-reveal>
   <script type="application/ld+json" set:html={JSON.stringify(schema)}></script>
   <div class="flo-block__container">
-    <section class="flo-featured-links-1 flo-featured-links-1--420" data-featured-links aria-labelledby="featured-portfolio-title" aria-describedby="featured-portfolio-copy">
+    <section
+      class="flo-featured-links-1 flo-featured-links-1--420"
+      data-featured-links
+      aria-labelledby="featured-portfolio-title"
+      aria-describedby="featured-portfolio-copy"
+      data-track-section="home_featured_portfolio"
+      data-content-topic="portfolio"
+      data-user-intent="beispielgalerie_auswaehlen"
+      data-journey-stage="auswahl"
+      data-content-format="featured_links"
+      data-position="home_portfolio"
+    >
       <div class="flo-featured-links-1__links-wrap">
         <div class="flo-featured-links-1__image-wrap" aria-hidden="true">
           {linksWithImages.map((entry, index) => (
@@ -229,22 +245,15 @@ const schema = {
                   href={entry.href}
                   data-featured-link
                   data-featured-index={String(index)}
+                  data-track-event="cta_click"
+                  data-cta-id={`featured_portfolio_${trackingSlug(entry.href)}`}
+                  data-cta-type="gallery_featured_link"
+                  data-section-id="home_featured_portfolio"
+                  data-content-topic="portfolio"
+                  data-user-intent="galerie_ansehen"
+                  data-journey-stage="auswahl"
+                  data-position={`featured_portfolio_${index + 1}`}
                 >
-                    <picture class="flo-featured-links-1__mobile-thumb">
-                      <source
-                        media="(max-width: 900px)"
-                        srcset={entry.imageSrcset}
-                        sizes="calc(100vw - 56px)"
-                      />
-                      <img
-                        src={transparentPixel}
-                        width={entry.image.width}
-                        height={entry.image.height}
-                        alt={entry.alt}
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </picture>
                     <span>{entry.title}</span>
                     {location && <small>{location}</small>}
                   </a>

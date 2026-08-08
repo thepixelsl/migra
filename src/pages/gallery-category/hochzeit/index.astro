@@ -1,0 +1,415 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import PortfolioCard from "../../../components/PortfolioCard.astro";
+import { portfolioEntries } from "../../../data/portfolio";
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery-category/hochzeit/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Hochzeitsgalerien | Artbild-Fotografie";
+const description =
+  "Hochzeitsgalerien von Artbild-Fotografie: Reportagen, Standesamt, Getting Ready, Elopements und Paarshootings in Hamburg, Norddeutschland und Europa.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+
+const weddingEntries = portfolioEntries.filter((entry) => entry.filter === "Hochzeit");
+const primaryEntry = weddingEntries[0];
+const primaryImageUrl = primaryEntry ? new URL(primaryEntry.image.src, siteUrl).href : logoUrl;
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: "Hochzeitsgalerien", href: pagePath },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${pageUrl}#collection`,
+      url: pageUrl,
+      name: title,
+      description,
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      about: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Standesamtliche Trauung",
+        "Getting Ready",
+        "Elopement Hochzeit",
+        "Hochzeitsfotograf Hamburg",
+      ],
+      mainEntity: {
+        "@type": "ItemList",
+        name: "Hochzeitsgalerien",
+        numberOfItems: weddingEntries.length,
+        itemListElement: weddingEntries.map((entry, index) => ({
+          "@type": "ListItem",
+          position: index + 1,
+          url: `${siteUrl}${entry.href}`,
+          name: entry.title,
+          image: new URL(entry.image.src, siteUrl).href,
+        })),
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild Fotografie",
+      legalName: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      image: primaryImageUrl,
+      logo: {
+        "@type": "ImageObject",
+        "@id": `${siteUrl}/#logo`,
+        url: logoUrl,
+        contentUrl: logoUrl,
+        caption: "Artbild-Fotografie",
+      },
+      areaServed: [
+        {
+          "@type": "City",
+          name: "Hamburg",
+        },
+        {
+          "@type": "Place",
+          name: "Norddeutschland",
+        },
+        {
+          "@type": "Country",
+          name: "Deutschland",
+        },
+        {
+          "@type": "Place",
+          name: "Europa",
+        },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Standesamtliche Trauung",
+        "Getting Ready Fotografie",
+        "Elopement Fotografie",
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      dateModified: "2026-07-07T18:40:00+02:00",
+      primaryImageOfPage: primaryEntry
+        ? {
+            "@type": "ImageObject",
+            url: primaryImageUrl,
+            width: primaryEntry.image.width,
+            height: primaryEntry.image.height,
+          }
+        : undefined,
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+<head>
+  <FaviconHead />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImageUrl}>
+  <meta property="og:image:alt" content={primaryEntry?.alt ?? "Artbild-Fotografie Hochzeitsgalerien"}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImageUrl}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template wedding-category-page">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <DesktopNavigation />
+  </header>
+
+  <main>
+    <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} siteUrl={siteUrl} />
+
+    <section
+      class="wedding-category-hero"
+      aria-labelledby="wedding-category-title"
+      data-track-section="hochzeitsgalerien_hero"
+      data-content-topic="hochzeitsportfolio"
+      data-user-intent="galerien_vergleichen"
+      data-journey-stage="inspiration"
+      data-content-format="category_hero"
+      data-position="main"
+    >
+      <p>Gallery Category</p>
+      <h1 id="wedding-category-title">Hochzeitsgalerien</h1>
+      <span aria-hidden="true"></span>
+      <p>
+        Eine kuratierte Übersicht der Hochzeitsreportagen,
+        standesamtlichen Trauungen, Getting-Ready-Geschichten und Elopements
+        von Artbild-Fotografie.
+      </p>
+    </section>
+
+    <section
+      class="wedding-category-intro"
+      aria-label="Schwerpunkte der Hochzeitsgalerien"
+      data-track-section="hochzeitsgalerien_schwerpunkte"
+      data-content-topic="hochzeitsfotografie_hamburg"
+      data-user-intent="leistung_einordnen"
+      data-journey-stage="inspiration"
+      data-content-format="topic_summary"
+      data-position="after_hero"
+    >
+      <article>
+        <p>Hamburg</p>
+        <h2>Reportagen und Standesamt</h2>
+        <span>Hochzeiten in Hamburg, Altona, am Elbstrand und in besonderen Locations.</span>
+      </article>
+      <article>
+        <p>Norddeutschland</p>
+        <h2>Hochzeit mit Geschichte</h2>
+        <span>Ruhige, echte Bildstrecken mit Fokus auf Menschen, Architektur und Atmosphäre.</span>
+      </article>
+      <article>
+        <p>Europa</p>
+        <h2>Elopements und Destination</h2>
+        <span>Hochzeitsgeschichten aus Deutschland und Europa, editorial und natürlich erzählt.</span>
+      </article>
+    </section>
+
+    <section
+      class="wedding-overview-grid"
+      aria-label="Alle Hochzeitsgalerien"
+      role="list"
+      data-track-section="hochzeitsgalerien_grid"
+      data-content-topic="hochzeitsportfolio"
+      data-user-intent="galerie_auswaehlen"
+      data-journey-stage="inspiration"
+      data-content-format="portfolio_grid"
+      data-position="main_content"
+    >
+      {weddingEntries.map((entry, index) => <PortfolioCard entry={entry} priority={index < 2} />)}
+    </section>
+
+    <section
+      class="wedding-category-cta"
+      aria-labelledby="wedding-category-cta-title"
+      data-track-section="hochzeitsgalerien_cta"
+      data-content-topic="preise_leistungen"
+      data-user-intent="angebot_pruefen"
+      data-journey-stage="entscheidung"
+      data-content-format="cta_panel"
+      data-position="after_gallery_grid"
+    >
+      <p>Die Reportagen und Editorials zeigen meinen fotografischen Ansatz.</p>
+      <h2 id="wedding-category-cta-title">Preise und Leistungen für Eure Hochzeit</h2>
+      <a
+        href="/hochzeitsfotograf-preise/"
+        data-track-event="cta_click"
+        data-cta-id="hochzeitsgalerien_preise_leistungen"
+        data-cta-type="internal_service_page"
+        data-section-id="hochzeitsgalerien_cta"
+        data-content-topic="preise_leistungen"
+        data-user-intent="angebot_pruefen"
+        data-journey-stage="entscheidung"
+      >
+        Preise &amp; Leistungen ansehen
+      </a>
+    </section>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="/portfolio/">Portfolio</a>
+      <a href="/hochzeitsfotograf-preise/">Preise</a>
+      <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .wedding-category-page main {
+    padding-bottom: clamp(76px, 8vw, 128px);
+  }
+
+  .wedding-category-hero {
+    width: min(880px, calc(100% - 44px));
+    margin: clamp(64px, 8vw, 118px) auto 0;
+    text-align: center;
+  }
+
+  .wedding-category-hero > p:first-child,
+  .wedding-category-intro article > p,
+  .wedding-category-cta > p {
+    margin: 0 0 18px;
+    color: #827b73;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .32em;
+    line-height: 1.55;
+    text-transform: uppercase;
+  }
+
+  .wedding-category-hero h1 {
+    margin: 0;
+    color: #1f232c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 9vw, 124px);
+    font-weight: 400;
+    line-height: .95;
+  }
+
+  .wedding-category-hero span {
+    display: block;
+    width: 72px;
+    height: 1px;
+    margin: clamp(28px, 4vw, 48px) auto;
+    background: #9aa0a9;
+  }
+
+  .wedding-category-hero > p:last-child {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #716b65;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(21px, 2.25vw, 31px);
+    line-height: 1.7;
+  }
+
+  .wedding-category-intro {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(72px, 8vw, 124px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid #e1d9cf;
+    background: #e1d9cf;
+  }
+
+  .wedding-category-intro article {
+    min-width: 0;
+    padding: clamp(28px, 4vw, 48px);
+    background: #fbfaf8;
+  }
+
+  .wedding-category-intro h2 {
+    margin: 0 0 16px;
+    color: #1f232c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(25px, 2.4vw, 38px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .wedding-category-intro span {
+    color: #716b65;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.5vw, 22px);
+    line-height: 1.65;
+  }
+
+  .wedding-overview-grid {
+    width: min(1120px, calc(100% - 44px));
+    margin: clamp(82px, 9vw, 142px) auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: clamp(32px, 4vw, 70px);
+    row-gap: clamp(72px, 8vw, 124px);
+  }
+
+  .wedding-category-cta {
+    width: min(900px, calc(100% - 44px));
+    margin: clamp(88px, 10vw, 148px) auto 0;
+    padding: clamp(42px, 6vw, 72px) clamp(28px, 6vw, 82px);
+    border-top: 1px solid #ded6ca;
+    border-bottom: 1px solid #ded6ca;
+    text-align: center;
+  }
+
+  .wedding-category-cta h2 {
+    max-width: 660px;
+    margin: 0 auto 28px;
+    color: #1f232c;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 5vw, 68px);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .wedding-category-cta a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    color: #1f232c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .24em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .wedding-category-cta a:focus-visible {
+    outline: 1px solid #827b73;
+    outline-offset: 8px;
+  }
+
+  @media (max-width: 980px) {
+    .wedding-category-intro {
+      grid-template-columns: 1fr;
+    }
+
+    .wedding-overview-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 680px) {
+    .wedding-category-hero,
+    .wedding-category-intro,
+    .wedding-overview-grid,
+    .wedding-category-cta {
+      width: min(100% - 40px, 520px);
+    }
+
+    .wedding-overview-grid {
+      grid-template-columns: 1fr;
+      row-gap: 58px;
+    }
+  }
+</style>

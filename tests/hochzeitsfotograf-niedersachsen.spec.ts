@@ -84,12 +84,16 @@ test("mobile report is stable and touch friendly", async ({ page }) => {
 
   const pageState = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    eagerImages: [...document.images].filter((image) => image.loading === "eager").length,
-    lazyImages: [...document.images].filter((image) => image.loading === "lazy").length,
+    eagerGalleryImages: [
+      ...document.querySelectorAll<HTMLImageElement>(".gallery-image-grid img"),
+    ].filter((image) => image.loading === "eager").length,
+    lazyGalleryImages: [
+      ...document.querySelectorAll<HTMLImageElement>(".gallery-image-grid img"),
+    ].filter((image) => image.loading === "lazy").length,
   }));
   expect(pageState.overflow).toBe(0);
-  expect(pageState.eagerImages).toBe(1);
-  expect(pageState.lazyImages).toBe(25);
+  expect(pageState.eagerGalleryImages).toBe(1);
+  expect(pageState.lazyGalleryImages).toBe(25);
 
   await page.screenshot({
     path: `${screenshotDirectory}/mobile-hero.png`,

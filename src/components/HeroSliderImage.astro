@@ -1,0 +1,98 @@
+---
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+type Props = {
+  src: ImageMetadata;
+  fallbackSrc: string;
+  alt: string;
+  deferred?: boolean;
+  priority?: boolean;
+};
+
+const {
+  src,
+  alt,
+  deferred = true,
+  priority = false,
+} = Astro.props;
+
+const widths = [...new Set([
+  240,
+  320,
+  480,
+  640,
+  800,
+  960,
+  1080,
+  1280,
+  src.width,
+].filter((width) => width <= src.width))].sort((a, b) => a - b);
+
+const webp = await getImage({
+  src,
+  widths,
+  format: "webp",
+  quality: 82,
+});
+
+const aspect = src.width / src.height;
+
+const responsiveSizes = (
+  minimumWidth: number,
+  fluidWidth: number,
+  maximumWidth: number,
+  mediaMaximum: number,
+) => {
+  const minimumBreakpoint = Math.round((minimumWidth / fluidWidth) * 100);
+  const maximumBreakpoint = Math.round((maximumWidth / fluidWidth) * 100);
+  const fluidVw = Number(fluidWidth.toFixed(2));
+
+  return {
+    minimumBreakpoint: Math.min(minimumBreakpoint, mediaMaximum),
+    maximumBreakpoint: Math.min(maximumBreakpoint, mediaMaximum),
+    minimumWidth: Math.ceil(minimumWidth),
+    maximumWidth: Math.ceil(maximumWidth),
+    fluidVw,
+  };
+};
+
+const mobile = responsiveSizes(
+  Math.max(138, 232 * aspect),
+  Math.max(38, 62 * aspect),
+  Math.max(210, 340 * aspect),
+  900,
+);
+const desktop = responsiveSizes(
+  Math.max(300, 485 * aspect),
+  Math.max(22, 36 * aspect),
+  Math.max(371, 600 * aspect),
+  2000,
+);
+
+const sizes = [
+  `(orientation: portrait) and (max-width: ${mobile.minimumBreakpoint}px) ${mobile.minimumWidth}px`,
+  `(orientation: portrait) and (max-width: ${mobile.maximumBreakpoint}px) ${mobile.fluidVw}vw`,
+  `(orientation: portrait) and (max-width: 700px) ${mobile.maximumWidth}px`,
+  `(orientation: landscape) and (max-width: ${mobile.minimumBreakpoint}px) ${mobile.minimumWidth}px`,
+  `(orientation: landscape) and (max-width: ${mobile.maximumBreakpoint}px) ${mobile.fluidVw}vw`,
+  `(orientation: landscape) and (max-width: 900px) ${mobile.maximumWidth}px`,
+  `(max-width: ${desktop.minimumBreakpoint}px) ${desktop.minimumWidth}px`,
+  `(max-width: ${desktop.maximumBreakpoint}px) ${desktop.fluidVw}vw`,
+  `${desktop.maximumWidth}px`,
+].join(", ");
+---
+
+<picture class="hero-slider__picture">
+  <img
+    srcset={deferred ? undefined : webp.srcSet.attribute}
+    data-srcset={deferred ? webp.srcSet.attribute : undefined}
+    sizes={sizes}
+    width={src.width}
+    height={src.height}
+    alt={alt}
+    loading={priority ? "eager" : "lazy"}
+    fetchpriority={priority ? "high" : undefined}
+    decoding="async"
+  >
+</picture>

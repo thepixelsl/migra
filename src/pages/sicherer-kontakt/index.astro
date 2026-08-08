@@ -1,17 +1,23 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import secureHero from "../../assets/sicherer-kontakt/ART_8206-Bearbeitet.jpg";
+import mallorcaCouple from "../../assets/paarshooting-mallorca/ART0759-Wiederhergestellt_thumb.jpg";
 import "../../styles/global.css";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl =
+  Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pageUrl = `${siteUrl}/sicherer-kontakt/`;
-const title = "Sicherer Kontakt per E-Mail | Artbild-Fotografie Hamburg";
+const title =
+  "Kontakt und öffentlicher PGP-Schlüssel | Artbild-Fotografie";
 const description =
-  "Sicherer E-Mail-Kontakt mit Artbild-Fotografie in Hamburg: Hinweise zu S/MIME, PGP-Schlüssel und datensparsamer Übermittlung sensibler Veranstaltungsinformationen.";
+  "Datensparsamer Erstkontakt mit Artbild-Fotografie und öffentlicher PGP-Schlüssel für technisch geeignete verschlüsselte Nachrichten.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 const primaryImage = new URL(secureHero.src, siteUrl).href;
 const pgpDownload = "/downloads/York-Augustin-2C86E0AD-Oeffentlich.asc";
+const secureMailto = "mailto:info@artbild-fotografie.de";
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -23,7 +29,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: "2022-03-30T08:02:48+02:00",
-      dateModified: "2026-06-27T12:00:00+02:00",
+      dateModified: "2026-08-08T12:00:00+02:00",
       isPartOf: {
         "@id": `${siteUrl}/#website`,
       },
@@ -38,7 +44,7 @@ const schemaGraph = {
         },
         {
           "@type": "Thing",
-          name: "S/MIME-Zertifikat",
+          name: "Datensparsame Hochzeitsanfrage",
         },
       ],
       primaryImageOfPage: {
@@ -46,7 +52,7 @@ const schemaGraph = {
         url: primaryImage,
         width: secureHero.width,
         height: secureHero.height,
-        caption: "Sicherer E-Mail-Kontakt mit Artbild-Fotografie in Hamburg",
+        caption: "Kontakt und öffentlicher PGP-Schlüssel von Artbild-Fotografie",
       },
       contentLocation: {
         "@type": "City",
@@ -93,7 +99,7 @@ const schemaGraph = {
       serviceType: [
         "Hochzeitsfotografie",
         "Hochzeitsreportage",
-        "Sicherer E-Mail-Kontakt",
+        "Kontakt",
       ],
       sameAs: [
         "https://www.instagram.com/artbild/",
@@ -126,6 +132,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -144,7 +151,7 @@ const schemaGraph = {
     <meta property="og:image" content={primaryImage}>
     <meta property="og:image:width" content={secureHero.width}>
     <meta property="og:image:height" content={secureHero.height}>
-    <meta property="og:image:alt" content="Sicherer E-Mail-Kontakt mit Artbild-Fotografie">
+    <meta property="og:image:alt" content="Kontakt und öffentlicher PGP-Schlüssel von Artbild-Fotografie">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
     <meta name="twitter:description" content={description}>
@@ -154,170 +161,160 @@ const schemaGraph = {
   <body class="gallery-template secure-contact-template">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img
-            src="/images/logo-artbild-black.png"
-            width="1200"
-            height="480"
-            alt="Artbild Fotografie"
-          >
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-          <li>
-            <a
-              class="gallery-search"
-              href="/?s="
-              aria-label="Suche"
-            >⌕</a>
-          </li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main id="main-content">
-      <nav class="secure-breadcrumb" aria-label="Breadcrumb">
-        <a href="/">Startseite</a>
-        <span aria-hidden="true">/</span>
-        <span aria-current="page">Sicherer Kontakt</span>
-      </nav>
-
       <article class="secure-contact" aria-labelledby="secure-contact-title">
-        <header class="secure-hero">
-          <div class="secure-hero__copy">
-            <p class="secure-kicker">Vertrauliche Informationen</p>
-            <h1 id="secure-contact-title">Sicherer Mail-Kontakt</h1>
-            <p>
-              Artbild-Fotografie in Hamburg arbeitet mit Ihnen zusammen, um
-              geschützte Informationen sicher zu übermitteln, wenn Ort, Zeit
-              oder weitere personenbezogene Daten besonderen Schutz benötigen.
-            </p>
-            <div class="secure-hero__actions" aria-label="Schnelle Aktionen">
-              <a class="secure-button" href="mailto:info@artbild-fotografie.de?subject=Sicherer%20Kontakt%20mit%20Artbild-Fotografie">
-                Erstkontakt per E-Mail
-              </a>
-              <a
-                class="secure-button secure-button--ghost"
-                href={pgpDownload}
-                download
-                rel="nofollow"
-                aria-label="Öffentlichen PGP-Schlüssel von York Augustin herunterladen"
-              >
-                PGP-Schlüssel
-              </a>
-            </div>
-          </div>
-          <figure class="secure-hero__image">
+        <section class="secure-hero-shell" aria-labelledby="secure-contact-title">
+          <div class="secure-hero">
             <Image
               src={secureHero}
-              widths={[520, 760, 1040, 1385]}
-              sizes="(max-width: 760px) 100vw, 48vw"
+              widths={[760, 1040, 1385]}
+              sizes="(max-width: 760px) calc(100vw - 28px), 86vw"
               format="webp"
-              quality={88}
+              quality={90}
               loading="eager"
               fetchpriority="high"
               decoding="async"
-              alt="Ruhiges Portraitmotiv für sicheren E-Mail-Kontakt mit Artbild-Fotografie"
+              alt="Schwarz-Weiß-Aufnahme einer ruhigen Straße bei Nacht"
+            />
+            <div class="secure-hero__overlay"></div>
+            <div class="secure-hero__content">
+              <h1 id="secure-contact-title">Kontakt und PGP-Schlüssel</h1>
+              <div>
+                <p>
+                  Für die erste Anfrage genügen Name, E-Mail-Adresse und
+                  Wunschdatum. Vertrauliche Angaben sollten nicht in einer
+                  unverschlüsselten Erstnachricht stehen.
+                </p>
+                <p>
+                  Für technisch geeignete PGP-Programme steht unten ein
+                  öffentlicher Schlüssel zum Download bereit.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="secure-copy" aria-labelledby="secure-copy-title">
+          <header class="secure-copy__heading">
+            <h2 id="secure-copy-title">
+              Erstkontakt mit möglichst wenigen Angaben
+            </h2>
+          </header>
+
+          <div class="secure-original-copy">
+            <div>
+              <p>
+                Der Kontakt-Link auf dieser Seite öffnet eine normale E-Mail. Eine
+                solche Nachricht ist nicht automatisch Ende-zu-Ende verschlüsselt.
+              </p>
+              <p>
+                Wenn Sie PGP bereits in einem geeigneten E-Mail-Programm verwenden,
+                können Sie diesen öffentlichen Schlüssel herunterladen:
+              </p>
+              <a
+                class="secure-download"
+                href={pgpDownload}
+                download
+                rel="nofollow"
+                aria-label="York-Augustin-2C86E0AD-Oeffentlich.asc herunterladen"
+              >
+                York-Augustin-2C86E0AD-Oeffentlich.asc
+              </a>
+              <p>
+                Prüfen Sie die Identität des Schlüssels vor der Übermittlung
+                vertraulicher Daten über einen unabhängig vereinbarten Kontaktweg.
+                Der Download allein verschlüsselt noch keine Nachricht.
+              </p>
+              <p>
+                Wenn Ihre Organisation einen eigenen Kommunikationsweg vorgibt,
+                nennen Sie ihn bitte zunächst ohne vertrauliche Inhalte. Die
+                technische Eignung wird vor einem weiteren Austausch abgestimmt.
+              </p>
+            </div>
+            <div>
+              <p>
+                Zunächst wird nur geprüft, ob der gewünschte Termin verfügbar ist.
+                Dafür sind noch keine Angaben zu Schutzpersonen, Adressen oder
+                internen Abläufen erforderlich.
+              </p>
+              <p>
+                Teilen Sie weitere Informationen erst mit, wenn der Termin passt
+                und ein geeigneter Kommunikationsweg vereinbart wurde.
+              </p>
+              <p>
+                Die Verfügbarkeit Ihres Wunschtermins können Sie vorab über das
+                Kontakt-Symbol (FAB) unten rechts mit „Termin noch frei?“ prüfen.
+                Dafür genügt das gewünschte Datum.
+              </p>
+              <p>
+                Diese Seite beschreibt lediglich die angebotenen Kontaktwege. Sie
+                gibt keine Garantie für die Sicherheit fremder Geräte, Programme
+                oder E-Mail-Systeme.
+              </p>
+              <p>Herzlichen Dank!</p>
+            </div>
+          </div>
+        </section>
+
+        <section
+          class="secure-mail-cta"
+          aria-labelledby="secure-cta-title"
+          data-track-section="secure_mail_cta"
+          data-content-topic="sicherer_kontakt"
+          data-user-intent="erstkontakt_senden"
+          data-journey-stage="conversion"
+          data-content-format="contact_cta"
+          data-position="after_security_information"
+        >
+          <h2 id="secure-cta-title">Erstkontakt per E-Mail</h2>
+          <p>
+            Der Mail-Link öffnet Ihr Standardprogramm. Die Nachricht wird dadurch
+            nicht automatisch verschlüsselt.
+          </p>
+          <a
+            class="secure-button"
+            href={secureMailto}
+            data-track-event="contact_click"
+            data-cta-id="secure_contact_email"
+            data-cta-type="email"
+            data-section-id="secure_mail_cta"
+            data-content-topic="sicherer_kontakt"
+            data-user-intent="erstkontakt_senden"
+            data-journey-stage="conversion"
+            data-position="primary"
+          >
+            Kontakt
+          </a>
+        </section>
+
+        <section class="secure-featured" aria-labelledby="secure-featured-title">
+          <figure>
+            <Image
+              src={mallorcaCouple}
+              widths={[520, 760, 1040, 1384]}
+              sizes="(max-width: 760px) 100vw, 52vw"
+              format="webp"
+              quality={88}
+              loading="lazy"
+              decoding="async"
+              alt="Paarshooting von Artbild-Fotografie auf Mallorca"
             />
           </figure>
-        </header>
-
-        <section class="secure-intro" aria-labelledby="secure-intro-title">
-          <p class="secure-section-number" aria-hidden="true">01</p>
-          <h2 id="secure-intro-title">
-            Sicherer E-Mail-Kontakt für Behörden, Organisationen und Privatpersonen
-            mit besonderem Sicherheitsbedarf.
-          </h2>
-          <p>
-            Generell kann jede Privatperson Informationen geschützt übermitteln,
-            wenn Sicherheitsinteressen für die Veranstaltung von Bedeutung sind.
-            Bitte senden Sie sensible Details erst, nachdem der gewünschte Termin
-            grundsätzlich verfügbar ist.
-          </p>
-        </section>
-
-        <section class="secure-grid" aria-label="Hinweise zum sicheren Kontakt">
-          <article class="secure-card">
-            <p class="secure-section-number" aria-hidden="true">02</p>
-            <h2>S/MIME und signierte E-Mails</h2>
+          <div class="secure-featured__copy">
+            <h2 id="secure-featured-title">Paarshooting-Fotogalerie</h2>
             <p>
-              Normale E-Mails von Artbild-Fotografie sind mit einem offiziellen
-              S/MIME-DigiCert-Zertifikat signiert. Dieses Zertifikat können Sie
-              verwenden, um Ihre E-Mail an mich zu verschlüsseln.
+              Mit einem tollen Paarshooting von Artbild-Fotografie hielt dieses
+              Paar seine Erinnerungen an die gemeinsame Zeit in seiner Wohnung auf
+              Mallorca fest. Die beiden haben mir erlaubt, Euch ein paar Bilder
+              davon zu zeigen.
             </p>
-            <p>
-              Wenn Sie selbst ein S/MIME-Zertifikat einer vertrauenswürdigen
-              Zertifizierungsstelle verwenden, achten Sie bitte darauf, dass es als
-              gültig ausgewiesen wird. Anfragen mit ungültigen Zertifikaten können
-              leider nicht beantwortet werden.
-            </p>
-          </article>
-
-          <article class="secure-card secure-card--accent">
-            <p class="secure-section-number" aria-hidden="true">03</p>
-            <h2>PGP-Schlüssel</h2>
-            <p>
-              Für die sichere Übermittlung geschützter Informationen wird ein
-              öffentlicher PGP-Schlüssel bereitgestellt.
-            </p>
-            <a
-              class="secure-download"
-              href={pgpDownload}
-              download
-              rel="nofollow"
-              aria-label="York-Augustin-2C86E0AD-Oeffentlich.asc herunterladen"
-            >
-              York-Augustin-2C86E0AD-Oeffentlich.asc
+            <a class="secure-button secure-button--light" href="/gallery/paarshooting-mallorca/">
+              Jetzt ansehen!
             </a>
-          </article>
-
-          <article class="secure-card">
-            <p class="secure-section-number" aria-hidden="true">04</p>
-            <h2>Kurznachrichten vermeiden</h2>
-            <p>
-              Von SMS, MMS, iMessage oder RCS für sensible Veranstaltungsdetails rate
-              ich ab. Nutzen Sie bitte die angebotenen Ende-zu-Ende-verschlüsselten
-              Methoden und denken Sie an Datensparsamkeit.
-            </p>
-          </article>
-
-          <article class="secure-card">
-            <p class="secure-section-number" aria-hidden="true">05</p>
-            <h2>Erst Verfügbarkeit klären</h2>
-            <p>
-              Zunächst prüfe ich, ob ich an Ihrem Wunschtermin verfügbar bin. Erst
-              danach sollten weitere Informationen zu Ort, Zeit, beteiligten Personen
-              oder Abläufen mitgeteilt werden.
-            </p>
-            <p>
-              Der Informationsaustausch kann auch über Ihren öffentlich
-              bereitgestellten, sicheren E-Mailserver erfolgen. Die Bitte zur
-              Erstkontaktaufnahme erfolgt dann über meine E-Mail-Adresse.
-            </p>
-          </article>
-        </section>
-
-        <section class="secure-cta" aria-labelledby="secure-cta-title">
-          <div>
-            <p class="secure-kicker">Sicherer E-Mail-Kontakt</p>
-            <h2 id="secure-cta-title">Erstkontakt mit Artbild-Fotografie</h2>
-            <p>
-              Für eine erste Anfrage reicht eine kurze Nachricht mit Datum und
-              grobem Anlass. Weitere sensible Informationen können anschließend
-              geschützt abgestimmt werden.
-            </p>
           </div>
-          <a class="secure-button" href="mailto:info@artbild-fotografie.de?subject=Sicherer%20Kontakt%20mit%20Artbild-Fotografie">
-            Kontakt aufnehmen
-          </a>
         </section>
       </article>
     </main>
@@ -395,7 +392,6 @@ const schemaGraph = {
     z-index: 1;
   }
 
-  .secure-kicker,
   .secure-section-number {
     margin: 0;
     color: #2c739c;
@@ -647,6 +643,382 @@ const schemaGraph = {
     .secure-card h2,
     .secure-cta h2 {
       line-height: 1.12;
+    }
+  }
+</style>
+
+<style>
+  /*
+   * FloThemes-inspired page composition from the original page:
+   * image hero, centered introduction, two editorial text columns,
+   * a three-part mail CTA and the featured Mallorca gallery.
+   */
+  .secure-contact-template {
+    background: #fff;
+  }
+
+  .secure-contact-template main {
+    overflow: hidden;
+    padding-bottom: 0;
+  }
+
+  .secure-contact {
+    width: 100%;
+    margin: 0;
+  }
+
+  .secure-hero-shell {
+    padding: clamp(44px, 5vw, 72px) 0;
+    background: #f0f1f2;
+  }
+
+  .secure-hero {
+    position: relative;
+    width: min(1180px, calc(100% - 140px));
+    min-height: clamp(420px, 36vw, 520px);
+    margin: 0 auto;
+    padding: 0;
+    display: block;
+    overflow: hidden;
+    border: 0;
+    isolation: isolate;
+  }
+
+  .secure-hero :global(img) {
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .secure-hero__overlay {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    background: rgba(12, 12, 12, .25);
+  }
+
+  .secure-hero__content {
+    min-height: inherit;
+    padding: clamp(72px, 8vw, 118px) clamp(72px, 9vw, 145px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(48px, 8vw, 112px);
+    align-items: start;
+    color: #fff;
+  }
+
+  .secure-hero h1 {
+    max-width: none;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(28px, 2.4vw, 38px);
+    font-weight: 400;
+    letter-spacing: .01em;
+    line-height: 1.2;
+  }
+
+  .secure-hero__content p {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: clamp(17px, 1.45vw, 21px);
+    line-height: 1.42;
+  }
+
+  .secure-hero__content p:last-child {
+    margin-bottom: 0;
+  }
+
+  .secure-copy {
+    width: min(1180px, calc(100% - 140px));
+    margin: 0 auto;
+    padding: clamp(64px, 7vw, 96px) clamp(46px, 4.8vw, 72px) clamp(72px, 8vw, 112px);
+  }
+
+  .secure-copy__heading {
+    max-width: 780px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .secure-copy__heading h2 {
+    margin: 0 0 22px;
+    color: #393939;
+    font-size: clamp(28px, 3.2vw, 46px);
+    font-weight: 400;
+    letter-spacing: .035em;
+    line-height: 1.18;
+  }
+
+  .secure-copy__heading > p:last-child {
+    max-width: 680px;
+    margin: 0 auto;
+    color: #67615c;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.65;
+  }
+
+  .secure-original-copy {
+    margin-top: clamp(52px, 6vw, 82px);
+    padding: clamp(42px, 5vw, 68px) 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(54px, 7vw, 92px);
+    border-top: 1px solid #d9d5d0;
+    border-bottom: 1px solid #d9d5d0;
+  }
+
+  .secure-original-copy > div {
+    min-width: 0;
+  }
+
+  .secure-original-copy p {
+    margin: 0 0 20px;
+    color: #605b56;
+    font-size: clamp(16px, 1.25vw, 18px);
+    line-height: 1.72;
+  }
+
+  .secure-original-copy .secure-download {
+    margin: 2px 0 24px;
+  }
+
+  .secure-download {
+    width: auto;
+    min-height: 0;
+    justify-content: flex-start;
+    padding: 8px 0 5px;
+    overflow-wrap: anywhere;
+    border: 0;
+    border-bottom: 1px solid #827b75;
+    background: transparent;
+    color: #4d4945;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: left;
+  }
+
+  .secure-download:hover,
+  .secure-download:focus-visible {
+    color: #8c6b56;
+  }
+
+  .secure-mail-cta {
+    width: min(1180px, calc(100% - 140px));
+    margin: 0 auto;
+    padding: clamp(56px, 7vw, 88px) clamp(46px, 5vw, 76px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(34px, 6vw, 80px);
+    align-items: center;
+    border-top: 1px solid #ddd9d4;
+    border-bottom: 1px solid #ddd9d4;
+    text-align: center;
+  }
+
+  .secure-mail-cta h2 {
+    margin: 18px 0 0;
+    color: #44413e;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: .48em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .secure-mail-cta > p {
+    margin: 0;
+    color: #5e5954;
+    font-size: clamp(16px, 1.35vw, 19px);
+    line-height: 1.55;
+  }
+
+  .secure-button {
+    width: auto;
+    min-width: 186px;
+    min-height: 52px;
+    justify-self: center;
+    padding: 15px 26px;
+    border: 1px solid #77716b;
+    background: transparent;
+    color: #3f3b38;
+    font-size: 9px;
+    letter-spacing: .34em;
+  }
+
+  .secure-button:hover,
+  .secure-button:focus-visible {
+    border-color: #3f3b38;
+    background: #3f3b38;
+    color: #fff;
+  }
+
+  .secure-featured {
+    width: min(1180px, calc(100% - 140px));
+    margin: clamp(62px, 8vw, 112px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1.16fr) minmax(0, .84fr);
+    background: #f0f1f2;
+  }
+
+  .secure-featured figure {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .secure-featured figure :global(img) {
+    width: 100%;
+    height: 100%;
+    min-height: 430px;
+    display: block;
+    object-fit: cover;
+  }
+
+  .secure-featured__copy {
+    padding: clamp(46px, 6vw, 84px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .secure-featured h2 {
+    margin: 0 0 clamp(36px, 5vw, 64px);
+    color: #44413e;
+    font-size: clamp(32px, 3.4vw, 48px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .secure-featured p {
+    margin: 0 0 34px;
+    color: #5e5954;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.6;
+  }
+
+  .secure-button--light {
+    justify-self: auto;
+  }
+
+  .secure-contact-template .gallery-footer {
+    margin-top: clamp(94px, 12vw, 170px);
+  }
+
+  .secure-contact-template :is(a, button):focus-visible {
+    outline: 2px solid #8c6b56;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .secure-hero,
+    .secure-copy,
+    .secure-mail-cta,
+    .secure-featured {
+      width: min(100% - 56px, 760px);
+    }
+
+    .secure-hero__content {
+      grid-template-columns: 1fr;
+      gap: 26px;
+      align-content: center;
+    }
+
+    .secure-hero__content > div {
+      max-width: 560px;
+    }
+
+    .secure-copy {
+      padding-inline: 24px;
+    }
+
+    .secure-original-copy,
+    .secure-mail-cta,
+    .secure-featured {
+      grid-template-columns: 1fr;
+    }
+
+    .secure-original-copy {
+      gap: 22px;
+    }
+
+    .secure-mail-cta {
+      gap: 28px;
+    }
+
+    .secure-featured figure :global(img) {
+      min-height: 0;
+      aspect-ratio: 3 / 2;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .secure-hero-shell {
+      padding: 24px 0;
+    }
+
+    .secure-hero,
+    .secure-copy,
+    .secure-mail-cta,
+    .secure-featured {
+      width: calc(100% - 28px);
+    }
+
+    .secure-hero {
+      min-height: 510px;
+    }
+
+    .secure-hero :global(img) {
+      object-position: 46% center;
+    }
+
+    .secure-hero__content {
+      min-height: 510px;
+      padding: 40px 28px;
+      align-content: end;
+    }
+
+    .secure-hero h1 {
+      font-size: clamp(34px, 10vw, 44px);
+    }
+
+    .secure-hero__content p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .secure-copy {
+      padding: 58px 10px 74px;
+    }
+
+    .secure-copy__heading h2 {
+      font-size: clamp(28px, 8.2vw, 34px);
+    }
+
+    .secure-featured__copy {
+      padding: 24px 20px;
+    }
+
+    .secure-download,
+    .secure-button {
+      width: 100%;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .secure-mail-cta {
+      padding: 48px 24px;
+    }
+
+    .secure-featured {
+      margin-top: 72px;
+    }
+
+    .secure-featured h2 {
+      margin-bottom: 28px;
     }
   }
 </style>

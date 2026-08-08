@@ -1,6 +1,10 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
 import { Image } from "astro:assets";
 
@@ -16,17 +20,15 @@ const modulesByFile = Object.fromEntries(
   ]),
 ) as Record<string, ImageMetadata>;
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/brautpaar-in-zuerich/";
 const pageUrl = `${siteUrl}${pagePath}`;
-const heading = "Brautpaar in Zürich";
-const title = "Brautpaar in Zürich | Styled Elopement Fotoshooting";
+const heading = "Styled Editorial in Zürich";
+const title = "Styled Editorial mit Stephanie und Laurin in Zürich";
 const description =
-  "Natürlich, elegant und editorial: Styled Elopement Fotoshooting mit Stephanie und Laurin in Zürich an der Limmat, mit Brautstyling, Maßanzügen und Schweizer Hochzeitsinspiration.";
-const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+  "Inszeniertes Editorial mit Stephanie und Laurin in Zürich, fotografiert an der Limmat und an weiteren Orten in der Stadt.";
 const heroImage = modulesByFile["ART_8515-Bearbeitet-scaled.jpg"];
-const heroAlt =
-  "Stephanie und Laurin als Brautpaar bei einem eleganten Elopement Fotoshooting in Zürich";
+const heroAlt = "Stephanie und Laurin beim Styled Editorial in Zürich";
 
 const galleryDefinitions = [
   ["ART_6708-1024x683.jpg", "Stephanie und Laurin beim Styled Elopement in Zürich an der Limmat"],
@@ -86,14 +88,18 @@ const galleryImages = galleryDefinitions.map(([file, alt]) => ({
   aspect: "natural" as const,
 }));
 
-const itemsPerColumn = Math.ceil(galleryImages.length / 3);
 const galleryColumns = [
-  galleryImages.slice(0, itemsPerColumn),
-  galleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
-  galleryImages.slice(itemsPerColumn * 2),
+  galleryImages,
 ];
 
 const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -104,13 +110,7 @@ const schemaGraph = {
       headline: heading,
       name: title,
       description,
-      keywords: [
-        "Brautpaar in Zürich",
-        "Elopement Zürich",
-        "Hochzeitsfotos Schweiz",
-        "Styled Elopement",
-        "Destination Hochzeitsfotograf",
-      ],
+      keywords: ["Styled Editorial Zürich", "Stephanie und Laurin"],
       datePublished: "2026-06-03T08:00:00+02:00",
       dateModified: "2026-06-25T14:00:00+02:00",
       author: {
@@ -163,65 +163,6 @@ const schemaGraph = {
       },
     },
     {
-      "@type": "ProfessionalService",
-      "@id": `${siteUrl}/#organization`,
-      name: "Artbild-Fotografie",
-      url: siteUrl,
-      email: "info@artbild-fotografie.de",
-      logo: {
-        "@type": "ImageObject",
-        url: logoUrl,
-      },
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Rahlstedter Bahnhofstraße 27",
-        postalCode: "22143",
-        addressLocality: "Hamburg",
-        addressRegion: "Hamburg",
-        addressCountry: "DE",
-      },
-      areaServed: [
-        { "@type": "City", name: "Hamburg" },
-        { "@type": "City", name: "Zürich" },
-        { "@type": "Country", name: "Schweiz" },
-      ],
-      serviceType: [
-        "Hochzeitsfotografie",
-        "Elopement Fotografie",
-        "Brautpaarshooting",
-        "Destination Wedding Fotografie",
-      ],
-      sameAs: [
-        "https://www.instagram.com/artbild/",
-        "https://www.facebook.com/artbildfotografie/",
-        "https://www.pinterest.de/artbildf/",
-      ],
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Blog",
-          item: `${siteUrl}/blog/`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: heading,
-          item: pageUrl,
-        },
-      ],
-    },
-    {
       "@type": "WebPage",
       "@id": `${pageUrl}#webpage`,
       url: pageUrl,
@@ -248,6 +189,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
@@ -275,34 +217,21 @@ const schemaGraph = {
 <body class="gallery-template zurich-page">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
     <article class="zurich-article">
       <header class="zurich-hero">
         <div class="zurich-hero__copy">
-          <p class="zurich-kicker">Peoplefotografie · Hochzeit · Schweiz</p>
+          <p class="zurich-kicker">Peoplefotografie · Editorial · Zürich</p>
           <h1>{heading}</h1>
-          <p>Braut Paar in Zürich - natürlich, elegant</p>
+          <p>Stephanie und Laurin in Zürich</p>
           <p>
-            Ein styled Elopement Fotoshooting mit Stephanie und Laurin, von
+            Ein geplantes Editorial mit Stephanie und Laurin, gemeinsam mit
             Connection-of-Us und Yildiz von
-            <a href="https://hamburgbrautstyling.com/" rel="noopener">Hamburg Brautstyling</a>.
+            <a href="/gallery/yildiz-duman-werner/">Hamburg Brautstyling</a>.
           </p>
         </div>
         <figure>
@@ -315,57 +244,40 @@ const schemaGraph = {
             fetchpriority="high"
             decoding="async"
           />
-          <figcaption>Styled Elopement mit Stephanie und Laurin in Zürich</figcaption>
+          <figcaption>Styled Editorial mit Stephanie und Laurin in Zürich</figcaption>
         </figure>
       </header>
 
       <section class="zurich-intro" aria-labelledby="zurich-intro-title">
         <div>
-          <p class="zurich-kicker">Editorial in Zürich</p>
-          <h2 id="zurich-intro-title">Hochzeitsfotos in der Schweiz - natürlich und elegant</h2>
+          <p class="zurich-kicker">Produktion in Zürich</p>
+          <h2 id="zurich-intro-title">Ein inszeniertes Editorial an der Limmat</h2>
         </div>
         <div class="zurich-intro__copy">
           <p>
-            Wir hatten den Wunsch, ein schönes Editorial in der Schweiz,
-            genauer in Zürich an der Limmat und an ein paar wundervollen Orten
-            in Zürich zu machen. Laurin erschien perfekt gestyled in zwei
-            Maßanzügen von
-            <a href="https://appointment.whitecollar.ch/" rel="noopener">White Collar</a>
-            aus Basel, die wirklich elegant waren. Stephanie hatte gerade ihr
-            Lieblingskleid entdeckt.
+            Die Serie entstand in Zürich an der Limmat und an weiteren Orten in
+            der Stadt. Laurin trug zwei Maßanzüge von&nbsp;<a href="https://appointment.whitecollar.ch/" rel="noopener">White Collar</a>&nbsp;aus
+            Basel; Stephanie trug ihr ausgewähltes Kleid.
           </p>
           <p>
-            Für Stephanie und Laurin sollte das Shooting nicht wie eine
-            klassische Hochzeitsreportage wirken, sondern wie ein liebevoll
-            geplantes Editorial. Zürich bietet dafür eine wundervolle Bühne:
-            stilvoll, aber nicht aufdringlich, hochwertig und mit viel Raum für
-            Brautkleid, Anzug, Styling und die Verbindung zwischen zwei Menschen.
-          </p>
-          <p>
-            Kleine Bewegungen, kurze Blicke, ein Lächeln zwischendurch, ein
-            Moment an der Limmat oder ein ruhiger Spaziergang durch Zürich -
-            genau daraus entstehen Bilder, die bleiben.
+            Es handelt sich um eine inszenierte Produktion und nicht um die
+            Dokumentation einer Trauung oder eines Hochzeitstags. Kleidung,
+            Styling und Aufnahmeorte wurden für die Bildstrecke geplant.
           </p>
         </div>
       </section>
 
       <section class="zurich-section" aria-labelledby="zurich-elopement-title">
         <div>
-          <p class="zurich-kicker">Elopement Inspiration</p>
-          <h2 id="zurich-elopement-title">Elopement Inspiration für Paare in Zürich</h2>
+          <p class="zurich-kicker">Bildstrecke</p>
+          <h2 id="zurich-elopement-title">Was die Galerie zeigt</h2>
         </div>
         <div class="zurich-section__copy">
           <p>
-            Ein Elopement steht für Intimität, Freiheit und die Entscheidung,
-            den Tag ganz bewusst miteinander zu erleben. Auch wenn dieses
-            Shooting als Styled Editorial geplant war, erzählt es genau von
-            diesem Gefühl.
-          </p>
-          <p>
-            Für Paare, die über ein Elopement in Zürich, ein
-            After-Wedding-Shooting in der Schweiz oder besondere Brautpaarfotos
-            außerhalb des Hochzeitstages nachdenken, ist diese Bildstrecke eine
-            ruhige, elegante Inspiration.
+            Die Aufnahmen zeigen Stephanie und Laurin als Brautpaarmodell in
+            unterschiedlichen Situationen entlang der Limmat und im Züricher
+            Stadtraum. Portraits, Bewegungen und Kleidungswechsel bilden den
+            roten Faden der Serie.
           </p>
         </div>
       </section>
@@ -388,21 +300,14 @@ const schemaGraph = {
 
       <section class="zurich-section is-final" aria-labelledby="zurich-service-title">
         <div>
-          <p class="zurich-kicker">Hochzeitsfotografie in Zürich und der Schweiz</p>
-          <h2 id="zurich-service-title">Destination Hochzeitsfotos mit ruhiger Eleganz</h2>
+          <p class="zurich-kicker">Hinter der Serie</p>
+          <h2 id="zurich-service-title">Drei Tage Produktion in Zürich</h2>
         </div>
         <div class="zurich-section__copy">
           <p>
-            Als Hochzeitsfotograf liebe ich Orte, die nicht nur schön aussehen,
-            sondern eine Stimmung tragen. Zürich hat uns genau das gegeben: die
-            Limmat, die Stadt, die Speisen in der Wirtschaft Degenried und die
-            vielen kleinen Wege dazwischen.
-          </p>
-          <p>
-            Dieses Styled Elopement Fotoshooting mit Stephanie und Laurin war
-            eine kleine Reise. Danke für drei Tage Schweiz, zwei wundervolle
-            Abende, elegante Kleidung, liebevolle Details und ein Team, das mit
-            viel Gefühl und Freude zusammengearbeitet hat.
+            Die Produktion dauerte drei Tage. Neben Stephanie und Laurin waren
+            Connection-of-Us und Yildiz Duman Werner am Editorial beteiligt.
+            Die Galerie hält die gemeinsam geplanten Motive und Orte fest.
           </p>
           <div class="zurich-actions">
             <a href="/kontakt/">Hochzeit anfragen</a>
@@ -426,7 +331,8 @@ const schemaGraph = {
         </a>
       </nav>
     </article>
-  </main>
+      <StoryLanguageCta kind="editorial" />
+    </main>
 
   <footer class="gallery-footer">
     <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">

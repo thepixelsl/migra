@@ -8,15 +8,44 @@ type Props = {
 };
 
 const { entry, priority = false } = Astro.props;
+
+const trackingSlug = entry.href
+  .replace(/^\/|\/$/g, "")
+  .replace(/\//g, "_")
+  .replace(/[^a-z0-9_]+/g, "_");
+
+const imageAspect =
+  entry.image.width === entry.image.height
+    ? "square"
+    : entry.image.width > entry.image.height
+      ? "landscape"
+      : "portrait";
 ---
 
 <article
-  class={`portfolio-overview-card portfolio-overview-card--${entry.aspect}`}
+  class={`portfolio-overview-card portfolio-overview-card--${imageAspect}`}
+  style={`--portfolio-image-ratio: ${entry.image.width} / ${entry.image.height};`}
   role="listitem"
   data-portfolio-entry
   data-portfolio-category={entry.filter.toLowerCase()}
+  data-track-section={`portfolio_card_${trackingSlug}`}
+  data-content-topic="portfolio"
+  data-user-intent="beispielgalerie_auswaehlen"
+  data-journey-stage="auswahl"
+  data-content-format="portfolio_card"
 >
-  <a href={entry.href} class="portfolio-overview-card__link" aria-label={`${entry.title} ansehen`}>
+  <a
+    href={entry.href}
+    class="portfolio-overview-card__link"
+    aria-label={`${entry.title} ansehen`}
+    data-track-event="cta_click"
+    data-cta-id={`portfolio_${trackingSlug}`}
+    data-cta-type="gallery_card"
+    data-section-id={`portfolio_card_${trackingSlug}`}
+    data-content-topic="portfolio"
+    data-user-intent="galerie_ansehen"
+    data-journey-stage="auswahl"
+  >
     <figure class="portfolio-overview-card__figure">
       <Image
         src={entry.image}
@@ -52,7 +81,8 @@ const { entry, priority = false } = Astro.props;
 
   .portfolio-overview-card__figure {
     margin: 0;
-    background: #ece8e2;
+    aspect-ratio: var(--portfolio-image-ratio);
+    background: #f7f4ef;
     overflow: hidden;
   }
 
@@ -60,21 +90,21 @@ const { entry, priority = false } = Astro.props;
     width: 100%;
     height: 100%;
     display: block;
-    object-fit: cover;
+    object-fit: contain;
     transform: scale(1);
     transition: transform 700ms ease, filter 700ms ease;
   }
 
   .portfolio-overview-card--square .portfolio-overview-card__figure {
-    aspect-ratio: 1 / 1;
+    aspect-ratio: var(--portfolio-image-ratio);
   }
 
   .portfolio-overview-card--portrait .portfolio-overview-card__figure {
-    aspect-ratio: 2 / 3;
+    aspect-ratio: var(--portfolio-image-ratio);
   }
 
   .portfolio-overview-card--landscape .portfolio-overview-card__figure {
-    aspect-ratio: 3 / 2;
+    aspect-ratio: var(--portfolio-image-ratio);
   }
 
   .portfolio-overview-card__body {

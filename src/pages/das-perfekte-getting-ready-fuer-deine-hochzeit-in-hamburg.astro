@@ -1,15 +1,18 @@
 ---
+import FaviconHead from "../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../styles/global.css";
 import GalleryImageGrid from "../components/GalleryImageGrid.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
+import DesktopNavigation from "../components/DesktopNavigation.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
 import {
   gettingReadyGalleryColumns,
   gettingReadyGalleryImages,
   gettingReadyHeroImage,
 } from "../data/gettingReadyGallery";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Das perfekte Getting Ready für deine Hochzeit in Hamburg";
@@ -39,6 +42,13 @@ const faqItems = [
     answer:
       "Nur Menschen, die Ruhe geben und wirklich guttun: zum Beispiel Trauzeugin, Mutter oder enge Freundinnen. Zu viele Personen machen den Morgen oft unruhig.",
   },
+];
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Ratgeber", href: "/hochzeitsfotograf-ratgeber/" },
+  { label: title, href: pagePath },
 ];
 
 const schemaGraph = {
@@ -161,30 +171,7 @@ const schemaGraph = {
         "https://www.pinterest.de/artbildf/",
       ],
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Ratgeber",
-          item: `${siteUrl}/blog/`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: title,
-          item: pageUrl,
-        },
-      ],
-    },
+
     {
       "@type": "WebPage",
       "@id": `${pageUrl}#webpage`,
@@ -210,6 +197,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -240,29 +228,11 @@ const schemaGraph = {
   <body class="gallery-template getting-ready-guide-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img
-            src="/images/logo-artbild-black.png"
-            width="1200"
-            height="480"
-            alt="Artbild Fotografie"
-          >
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
       <article class="gr-guide">
         <header class="gr-guide-hero">
           <div class="gr-guide-hero__copy">
@@ -294,6 +264,7 @@ const schemaGraph = {
 
         <nav class="gr-guide-toc" aria-label="Inhaltsübersicht">
           <a href="#warum">Warum fotografieren?</a>
+          <a href="#kennenlernshooting">Kennenlernshooting</a>
           <a href="#location">Location</a>
           <a href="#menschen">Begleitung</a>
           <a href="#outfit">Outfit</a>
@@ -301,8 +272,10 @@ const schemaGraph = {
         </nav>
 
         <section class="gr-guide-section is-intro" aria-labelledby="intro-title">
-          <p class="gr-kicker">Getting Ready Hamburg</p>
-          <h2 id="intro-title">Aus Vorbereitung wird Erinnerung</h2>
+          <div>
+            <p class="gr-kicker">Getting Ready Hamburg</p>
+            <h2 id="intro-title">Aus Vorbereitung wird Erinnerung</h2>
+          </div>
           <div class="gr-copy">
             <p>
               Beim feierlichen Getting Ready wird aus einem normalen Morgen der
@@ -470,14 +443,30 @@ const schemaGraph = {
           />
         </section>
 
-        <section class="gr-guide-faq" aria-labelledby="faq-title">
+        <section
+          class="gr-guide-faq"
+          aria-labelledby="faq-title"
+          data-track-section="getting_ready_faq"
+          data-content-topic="getting_ready_hamburg"
+          data-user-intent="planungsfragen_klaeren"
+          data-journey-stage="information"
+          data-content-format="faq"
+          data-position="guide_faq"
+        >
           <div>
             <p class="gr-kicker">Häufige Fragen</p>
             <h2 id="faq-title">Getting Ready in Hamburg planen</h2>
           </div>
           <div class="gr-guide-faq__items">
-            {faqItems.map((item) => (
-              <details>
+            {faqItems.map((item, index) => (
+              <details
+                data-track-event="faq_open"
+                data-faq-id={`getting_ready_faq_${index + 1}`}
+                data-section-id="getting_ready_faq"
+                data-content-topic="getting_ready_hamburg"
+                data-user-intent="planungsfragen_klaeren"
+                data-journey-stage="information"
+              >
                 <summary>{item.question}</summary>
                 <p>{item.answer}</p>
               </details>
@@ -659,14 +648,15 @@ const schemaGraph = {
   .gr-guide-split,
   .gr-guide-checklist,
   .gr-guide-faq {
-    margin-top: clamp(74px, 8vw, 124px);
+    margin-top: clamp(64px, 6vw, 96px);
     display: grid;
-    grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr);
-    gap: clamp(40px, 7vw, 96px);
+    grid-template-columns: minmax(0, .98fr) minmax(0, 1.02fr);
+    gap: clamp(36px, 5vw, 72px);
+    align-items: start;
   }
 
   .gr-guide-section.is-intro {
-    padding: clamp(54px, 6vw, 84px);
+    padding: clamp(48px, 5vw, 68px);
     background: #f3f1ed;
   }
 
@@ -678,11 +668,15 @@ const schemaGraph = {
     font-weight: 400;
     letter-spacing: 0;
     line-height: 1.12;
+    text-wrap: balance;
   }
 
   .gr-copy {
     display: grid;
-    gap: 24px;
+    grid-auto-rows: max-content;
+    gap: 22px;
+    align-self: start;
+    align-content: start;
   }
 
   .gr-copy p,
@@ -693,16 +687,20 @@ const schemaGraph = {
     margin: 0;
     color: #68615b;
     font-size: 17px;
-    line-height: 1.78;
+    line-height: 1.72;
   }
 
   .gr-guide-split {
-    padding-bottom: clamp(62px, 7vw, 96px);
+    padding-bottom: clamp(48px, 5vw, 72px);
     border-bottom: 1px solid #ded8d0;
   }
 
+  .gr-guide-split h2 {
+    font-size: clamp(36px, 3.8vw, 56px);
+  }
+
   .gr-guide-image-band {
-    margin-top: clamp(72px, 7vw, 110px);
+    margin-top: clamp(56px, 5vw, 76px);
     display: grid;
     grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
     gap: clamp(24px, 4vw, 54px);
@@ -725,15 +723,23 @@ const schemaGraph = {
   }
 
   .gr-guide-checklist {
-    padding: clamp(54px, 6vw, 82px);
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+    padding: clamp(48px, 5vw, 64px);
     background: #f3f1ed;
+  }
+
+  .gr-guide-checklist h2 {
+    font-size: clamp(36px, 3.8vw, 56px);
   }
 
   .gr-guide-checklist ul {
     margin: 0;
     padding: 0;
     display: grid;
+    grid-auto-rows: max-content;
     gap: 18px;
+    align-self: start;
+    align-content: start;
     list-style: none;
   }
 
@@ -753,7 +759,7 @@ const schemaGraph = {
   }
 
   .gr-guide-gallery {
-    margin-top: clamp(82px, 9vw, 136px);
+    margin-top: clamp(72px, 7vw, 104px);
     text-align: center;
   }
 
@@ -770,7 +776,7 @@ const schemaGraph = {
 
   .gr-guide-faq__items {
     display: grid;
-    gap: 12px;
+    gap: 0;
   }
 
   .gr-guide-faq details {
@@ -851,13 +857,14 @@ const schemaGraph = {
     outline-offset: 5px;
   }
 
-  @media (max-width: 900px) {
+  @media (max-width: 1040px) {
     .gr-guide-hero,
     .gr-guide-section,
     .gr-guide-split,
     .gr-guide-checklist,
     .gr-guide-faq {
       grid-template-columns: 1fr;
+      row-gap: clamp(28px, 4vw, 40px);
     }
 
     .gr-guide-hero__copy {
@@ -922,7 +929,25 @@ const schemaGraph = {
     .gr-guide-section.is-intro,
     .gr-guide-checklist,
     .gr-guide-cta {
-      padding: 42px 24px;
+      padding: 36px 22px;
+    }
+
+    .gr-guide-section,
+    .gr-guide-split,
+    .gr-guide-faq {
+      margin-top: 48px;
+    }
+
+    .gr-guide-checklist {
+      margin-top: 56px;
+    }
+
+    .gr-guide-split {
+      padding-bottom: 44px;
+    }
+
+    .gr-copy {
+      gap: 16px;
     }
 
     .gr-guide h2 {
@@ -930,6 +955,7 @@ const schemaGraph = {
     }
 
     .gr-guide-image-band {
+      margin-top: 52px;
       grid-template-columns: 1fr;
     }
 
@@ -939,6 +965,10 @@ const schemaGraph = {
 
     .gr-guide-gallery :global(.gallery-image-grid) {
       width: min(100% - 24px, 460px);
+    }
+
+    .gr-guide-gallery {
+      margin-top: 64px;
     }
 
     .gr-guide-faq summary {

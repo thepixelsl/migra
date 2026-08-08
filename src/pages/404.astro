@@ -1,17 +1,19 @@
 ---
+import FaviconHead from "../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import MobileNavigation from "../components/MobileNavigation.astro";
-import museumScene from "../assets/404-museum-york-augustin.png";
+import errorScene from "../assets/404-braut-hotel-hamburg.jpg";
 import "../styles/global.css";
 
 const pageTitle = "404 – Seite nicht gefunden | Artbild-Fotografie";
 const pageDescription =
-  "Diese Seite ist nicht Teil der Sammlung. Zurück zu Artbild-Fotografie, dem Portfolio oder zur Anfrage.";
+  "Die gesuchte Seite ist nicht gelandet. Mit einem kleinen Sprung geht es zurück zu Artbild-Fotografie und ins Portfolio.";
 ---
 
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, follow">
@@ -41,30 +43,31 @@ const pageDescription =
     <main>
       <figure class="error-artwork">
         <Image
-          src={museumScene}
+          src={errorScene}
           widths={[640, 960, 1440, 2048]}
           sizes="100vw"
           format="webp"
           quality={86}
           loading="eager"
           fetchpriority="high"
-          alt="Fotograf York Augustin betrachtet in einem Museum ein zeitgenössisches Gemälde mit der Aufschrift 404 Not Found"
+          alt="Braut springt ausgelassen auf einem Hotelbett"
         />
         <figcaption>
-          <span>Ohne Titel, 404</span>
-          <span>Digitale Irrwege auf Leinwand</span>
+          <span>Ein kleiner Höhenflug, 404</span>
+          <span>Gute Laune trotz Umweg</span>
         </figcaption>
       </figure>
 
       <section class="error-copy" aria-labelledby="error-title">
         <div>
-          <p class="error-eyebrow">Nicht Teil der Sammlung</p>
-          <h1 id="error-title">Diese Seite hat sich wohl im Museum verlaufen.</h1>
+          <p class="error-eyebrow">Kurz falsch abgebogen</p>
+          <h1 id="error-title">Diese Seite ist weg. Die gute Laune darf bleiben.</h1>
         </div>
         <div class="error-copy__body">
           <p>
-            Das gesuchte Werk ist leider nicht auffindbar. Die guten Bilder hängen aber noch da,
-            wo sie hingehören.
+            Die gesuchte Adresse ist leider nicht gelandet. Kein Grund, den Schwung zu verlieren:
+            Springt einfach zurück zur Startseite oder direkt in mein Portfolio. Dort warten echte
+            Geschichten und Bilder, die bleiben.
           </p>
           <nav class="error-actions" aria-label="Weiterführende Links">
             <a class="error-action error-action--primary" href="/">Zur Startseite</a>
@@ -139,7 +142,7 @@ const pageDescription =
     width: 100%;
     height: min(70svh, 820px);
     object-fit: cover;
-    object-position: center;
+    object-position: center top;
   }
 
   .error-artwork figcaption {

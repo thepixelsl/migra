@@ -2,20 +2,45 @@
 interface Props {
   galleryId: string;
   dialogLabel?: string;
+  sectionId?: string;
+  contentTopic?: string;
+  userIntent?: string;
+  journeyStage?: string;
 }
 
 const {
   galleryId,
   dialogLabel = "Bildgalerie in Vollansicht",
+  sectionId = galleryId,
+  contentTopic = galleryId,
+  userIntent = "beispielbilder_ansehen",
+  journeyStage = "auswahl",
 } = Astro.props;
 ---
 
-<div class="gallery-lightbox" data-gallery-lightbox={galleryId} hidden>
+<div
+  class="gallery-lightbox"
+  data-gallery-lightbox={galleryId}
+  data-track-section={`${sectionId}_lightbox`}
+  data-content-topic={contentTopic}
+  data-user-intent={userIntent}
+  data-journey-stage={journeyStage}
+  data-content-format="gallery_lightbox"
+  data-position="overlay"
+  hidden
+>
   <button
     class="gallery-lightbox__backdrop"
     type="button"
     data-gallery-close
     aria-label="Vollansicht schließen"
+    data-track-event="gallery_interaction"
+    data-cta-id={`${sectionId}_lightbox_backdrop_close`}
+    data-cta-type="gallery_lightbox_close"
+    data-section-id={`${sectionId}_lightbox`}
+    data-content-topic={contentTopic}
+    data-user-intent="vollansicht_schliessen"
+    data-journey-stage={journeyStage}
   ></button>
   <div
     class="gallery-lightbox__dialog"
@@ -28,6 +53,13 @@ const {
       type="button"
       data-gallery-close
       aria-label="Vollansicht schließen"
+      data-track-event="gallery_interaction"
+      data-cta-id={`${sectionId}_lightbox_close`}
+      data-cta-type="gallery_lightbox_close"
+      data-section-id={`${sectionId}_lightbox`}
+      data-content-topic={contentTopic}
+      data-user-intent="vollansicht_schliessen"
+      data-journey-stage={journeyStage}
     >
       <span aria-hidden="true"></span>
     </button>
@@ -38,6 +70,14 @@ const {
           type="button"
           data-gallery-prev
           aria-label="Vorheriges Bild"
+          data-track-event="gallery_interaction"
+          data-cta-id={`${sectionId}_lightbox_prev`}
+          data-cta-type="gallery_lightbox_prev"
+          data-section-id={`${sectionId}_lightbox`}
+          data-content-topic={contentTopic}
+          data-user-intent="galerie_navigieren"
+          data-journey-stage={journeyStage}
+          data-position="prev"
         >
           <span aria-hidden="true"></span>
         </button>
@@ -47,6 +87,14 @@ const {
           type="button"
           data-gallery-next
           aria-label="Nächstes Bild"
+          data-track-event="gallery_interaction"
+          data-cta-id={`${sectionId}_lightbox_next`}
+          data-cta-type="gallery_lightbox_next"
+          data-section-id={`${sectionId}_lightbox`}
+          data-content-topic={contentTopic}
+          data-user-intent="galerie_navigieren"
+          data-journey-stage={journeyStage}
+          data-position="next"
         >
           <span aria-hidden="true"></span>
         </button>

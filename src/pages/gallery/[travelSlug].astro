@@ -1,8 +1,12 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
 import { travelGalleries, type TravelGallery } from "../../data/travelGalleries";
 
@@ -14,7 +18,7 @@ export function getStaticPaths() {
 }
 
 const { gallery } = Astro.props as { gallery: TravelGallery };
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = `/gallery/${gallery.slug}/`;
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = `${gallery.shortTitle} Travel Fotografie | Artbild-Fotografie`;
@@ -57,11 +61,15 @@ if (!primaryImage) {
 }
 
 const primaryImageUrl = new URL(primaryImage.image.src, siteUrl).href;
-const galleryColumns = [[], [], []] as (typeof galleryImages)[];
+const galleryColumns = [galleryImages];
 
-galleryImages.forEach((item, index) => {
-  galleryColumns[index % 3].push(item);
-});
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: "Travel Fotografie", href: "/gallery-category/travel/" },
+  { label: gallery.shortTitle, href: pagePath },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -138,36 +146,7 @@ const schemaGraph = {
         "https://www.pinterest.de/artbildf/",
       ],
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          item: {
-            "@id": siteUrl,
-            name: "Startseite",
-          },
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          item: {
-            "@id": `${siteUrl}/gallery-category/travel/`,
-            name: "Travel Fotografie",
-          },
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          item: {
-            "@id": pageUrl,
-            name: gallery.shortTitle,
-          },
-        },
-      ],
-    },
+
     {
       "@type": "ImageObject",
       "@id": `${pageUrl}#primaryimage`,
@@ -210,6 +189,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
@@ -237,31 +217,11 @@ const schemaGraph = {
 <body class="gallery-template travel-gallery-page">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
-    <nav class="travel-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Startseite</a>
-      <span aria-hidden="true">/</span>
-      <a href="/gallery-category/travel/">Travel</a>
-      <span aria-hidden="true">/</span>
-      <span>{gallery.shortTitle}</span>
-    </nav>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
 
     <article class="travel-article">
       <header class="travel-hero">
@@ -292,12 +252,6 @@ const schemaGraph = {
       <section class="travel-context" aria-labelledby="travel-context-title">
         <p class="travel-kicker">Ort & Kontext</p>
         <h2 id="travel-context-title">{gallery.shortTitle} als visuelle Reise</h2>
-        <p>
-          Diese Galerie ergänzt das Portfolio von Artbild-Fotografie um Travel-
-          und Landschaftsbilder. Sie zeigt Orte, Licht und Atmosphäre, die auch
-          für Destination Weddings, Paarshootings und Hochzeitsreportagen relevant
-          sein können.
-        </p>
         <dl>
           <div>
             <dt>Ort</dt>
@@ -315,7 +269,8 @@ const schemaGraph = {
         <a class="button ghost" href="/gallery-category/travel/">Alle Travel-Galerien ansehen</a>
       </section>
     </article>
-  </main>
+      <StoryLanguageCta kind="travel" />
+    </main>
 
   <footer class="gallery-footer">
     <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">

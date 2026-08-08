@@ -10,7 +10,12 @@ node_modules/
 !.env.example
 playwright-report/
 test-results/
+.playwright-cli/
+output/
 screenshots/**/*.png
 !screenshots/**/.gitkeep
+src/assets/traumhochzeit-paris/ART_*.jpg
+src/assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-braeutigam.jpg
+src/assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-brautstrauss.jpg
 .DS_Store
 npm-debug.log*

@@ -81,10 +81,4 @@ export const gettingReadyGalleryImages = gettingReadyGalleryOrder.map((stem, ind
   eager: index === 0,
 }));
 
-const itemsPerColumn = Math.ceil(gettingReadyGalleryImages.length / 3);
-
-export const gettingReadyGalleryColumns = [
-  gettingReadyGalleryImages.slice(0, itemsPerColumn),
-  gettingReadyGalleryImages.slice(itemsPerColumn, itemsPerColumn * 2),
-  gettingReadyGalleryImages.slice(itemsPerColumn * 2),
-];
+export const gettingReadyGalleryColumns = [gettingReadyGalleryImages];

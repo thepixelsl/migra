@@ -1,0 +1,735 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/yildiz-duman-werner/*.jpg",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/yildiz-duman-werner/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Yildiz Duman-Werner, Brautstylistin in Hamburg";
+const title = "Yildiz Duman-Werner | Brautstyling Hamburg";
+const description =
+  "Bilder aus der Zusammenarbeit von Artbild-Fotografie mit Yildiz Duman-Werner von Dizzy Dee Styles bei Bridal-Editorials.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const officialUrl = "https://hamburgbrautstyling.com/";
+
+const altByFile: Record<string, string> = {
+  "brautstyling-paris-balkon.jpg":
+    "Braut mit offenem Haar und natürlichem Make-up auf einem Pariser Balkon",
+  "brautfrisur-offenes-haar.jpg":
+    "Offene Brautfrisur mit weichen Wellen von Yildiz Duman-Werner",
+  "brautstyling-editorial-detail.jpg":
+    "Editoriales Brautstyling mit fein abgestimmtem Make-up",
+  "brautstyling-editorial-modern.jpg":
+    "Moderner Bridal Look von Dizzy Dee Styles",
+  "brautstyling-louvre-paris.jpg":
+    "Braut im zweiteiligen Kleid mit Hair und Make-up von Yildiz Duman-Werner",
+};
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const galleryImages = Object.entries(altByFile).map(([file, alt]) => ({
+  id: file.replace(/\.jpg$/, ""),
+  image: modulesByFile[file],
+  alt,
+  aspect: "natural" as const,
+}));
+
+const heroImage =
+  modulesByFile["yildiz-duman-werner-brautstyling-hamburg.jpg"];
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const galleryColumns = [galleryImages];
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Brautstyling Hamburg", href: "/brautstyling-hamburg/" },
+  { label: "Yildiz Duman-Werner", href: pagePath },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Yildiz Duman-Werner",
+        "Dizzy Dee Styles",
+        "Brautstyling Hamburg",
+        "Bridal Hair and Make-up",
+        "Getting Ready Hamburg",
+      ],
+      datePublished: "2026-07-26T18:30:00+02:00",
+      dateModified: "2026-07-26T18:30:00+02:00",
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      about: {
+        "@id": `${pageUrl}#yildiz-duman-werner`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: "Brautstyling von Yildiz Duman-Werner",
+      description,
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    {
+      "@type": "Person",
+      "@id": `${pageUrl}#yildiz-duman-werner`,
+      name: "Yildiz Duman-Werner",
+      url: officialUrl,
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2026-07-26T18:30:00+02:00",
+      dateModified: "2026-07-26T18:30:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: "Brautstyling von Yildiz Duman-Werner in Hamburg",
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content="2026-07-26T18:30:00+02:00">
+    <meta property="article:modified_time" content="2026-07-26T18:30:00+02:00">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content="Brautstyling von Yildiz Duman-Werner in Hamburg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template stylist-profile-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+
+      <article>
+        <header class="stylist-hero">
+          <div class="stylist-hero__copy">
+            <p class="stylist-kicker">Bridal Hair & Make-up · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Yildiz Duman-Werner arbeitet unter dem Namen Dizzy Dee Styles.
+              Bei den hier gezeigten Editorials war sie für Hair &amp; Make-up
+              verantwortlich.
+            </p>
+            <div class="stylist-hero__actions" aria-label="Weiterführende Links">
+              <a
+                href={officialUrl}
+                rel="noopener"
+                data-track-event="external_resource_click"
+                data-resource-id="hamburg_brautstyling_yildiz"
+                data-resource-type="vendor_website"
+                data-cta-id="yildiz_official_request"
+                data-cta-type="vendor_contact"
+                data-section-id="yildiz_hero"
+                data-content-topic="brautstyling_hamburg"
+                data-user-intent="termin_anfragen"
+                data-journey-stage="anfrage"
+                data-position="hero_primary"
+              >
+                Website von Dizzy Dee Styles ↗
+              </a>
+              <a href="/brautstyling-hamburg/">Weitere Brautstyling-Dienstleister</a>
+            </div>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[480, 720, 945]}
+              sizes="(max-width: 760px) 86vw, 34vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              alt="Yildiz Duman-Werner stylt eine Braut für ein Editorial"
+            />
+            <figcaption>Hair & Make-up · Dizzy Dee Styles</figcaption>
+          </figure>
+        </header>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="yildiz-duman-werner"
+          label="Brautstyling und Editorial Looks von Yildiz Duman-Werner"
+          dialogLabel="Brautstyling von Yildiz Duman-Werner in Vollansicht"
+          sectionId="yildiz_brautstyling_gallery"
+          contentTopic="brautstyling_hamburg"
+          userIntent="styling_beispiele_ansehen"
+          journeyStage="auswahl"
+          position="vendor_profile_gallery"
+        />
+
+        <section class="stylist-collaboration" aria-labelledby="stylist-collaboration-title">
+          <div>
+            <p class="stylist-kicker">Gemeinsame Arbeit</p>
+            <h2 id="stylist-collaboration-title">Hair &amp; Make-up im fertigen Bild</h2>
+          </div>
+          <div>
+            <p>
+              Die Galerie zeigt die Looks in nahen Beauty-Portraits, mit offenem
+              Haar, im Profil und zusammen mit unterschiedlichen Brautkleidern.
+            </p>
+            <p>
+              Aktuelle Angaben zu Leistungen, Ablauf und Verfügbarkeit gibt es
+              direkt auf der Website von Dizzy Dee Styles.
+            </p>
+          </div>
+        </section>
+        <section class="stylist-cta" aria-labelledby="stylist-cta-title">
+          <p class="stylist-kicker">Dizzy Dee Styles</p>
+          <h2 id="stylist-cta-title">Aktuelle Informationen direkt bei Yildiz</h2>
+          <p>
+            Bitte prüfe Leistungen, Konditionen und Verfügbarkeit unmittelbar
+            bei Dizzy Dee Styles.
+          </p>
+          <a
+            href={officialUrl}
+            rel="noopener"
+            data-track-event="external_resource_click"
+            data-resource-id="hamburg_brautstyling_yildiz"
+            data-resource-type="vendor_website"
+            data-cta-id="yildiz_bottom_request"
+            data-cta-type="vendor_contact"
+            data-section-id="yildiz_vendor_cta"
+            data-content-topic="brautstyling_hamburg"
+            data-user-intent="termin_anfragen"
+            data-journey-stage="anfrage"
+            data-position="vendor_cta"
+          >
+            Offizielle Website ansehen ↗
+          </a>
+        </section>
+
+        <section class="stylist-related" aria-labelledby="stylist-related-title">
+          <p class="stylist-kicker">Sicher interessiert dich auch</p>
+          <h2 id="stylist-related-title">Weitere Seiten zum Hochzeitsmorgen</h2>
+          <div class="stylist-related__grid">
+            <a href="/brautstyling-hamburg/">
+              <span>Brautstyling Hamburg</span>
+              <small>Weitere Einträge und Inspiration zum Brautstyling</small>
+            </a>
+            <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">
+              <span>Getting Ready planen</span>
+              <small>Location, Timing und fotografische Tipps für Hamburg</small>
+            </a>
+            <a href="/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/">
+              <span>Häufige Fehler vermeiden</span>
+              <small>Mehr Ruhe, Licht und Platz am Hochzeitsmorgen</small>
+            </a>
+          </div>
+        </section>
+      </article>
+
+      <StoryLanguageCta kind="vendor" />
+    </main>
+
+    <footer class="gallery-footer">
+      <p>Artbild-Fotografie · Hochzeitsfotograf Hamburg</p>
+      <a href="/brautstyling-hamburg/">Zurück zu Brautstyling Hamburg</a>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .stylist-profile-page {
+    background: #fbfaf8;
+    color: #1e1e1f;
+  }
+
+  .stylist-kicker {
+    margin: 0 0 18px;
+    color: #866b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.2em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .stylist-hero,
+  .stylist-intro,
+  .stylist-process,
+  .stylist-collaboration,
+  .stylist-faq,
+  .stylist-related {
+    width: min(1180px, calc(100% - 48px));
+    margin-inline: auto;
+  }
+
+  .stylist-hero {
+    margin-top: clamp(44px, 6vw, 82px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 0.72fr);
+    gap: clamp(42px, 6vw, 96px);
+    align-items: center;
+  }
+
+  .stylist-hero h1,
+  .stylist-intro h2,
+  .stylist-process h2,
+  .stylist-collaboration h2,
+  .stylist-faq h2,
+  .stylist-cta h2,
+  .stylist-related h2 {
+    margin: 0;
+    color: #27272a;
+    font-family: "Playfair Display", Georgia, serif;
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .stylist-hero h1 {
+    max-width: 10em;
+    font-size: clamp(4rem, 6.4vw, 7.1rem);
+  }
+
+  .stylist-hero__copy > p:not(.stylist-kicker),
+  .stylist-intro__text p,
+  .stylist-process p:not(.stylist-kicker),
+  .stylist-collaboration p:not(.stylist-kicker),
+  .stylist-faq p:not(.stylist-kicker),
+  .stylist-cta p:not(.stylist-kicker),
+  .stylist-related small,
+  .stylist-quote p {
+    color: #716c67;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(1.04rem, 1.35vw, 1.22rem);
+    line-height: 1.72;
+  }
+
+  .stylist-hero__copy > p:not(.stylist-kicker) {
+    max-width: 620px;
+    margin: 28px 0 0;
+  }
+
+  .stylist-hero__actions {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+  }
+
+  .stylist-hero__actions a,
+  .stylist-cta > a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    border-bottom: 1px solid #2f323c;
+    color: #2f323c;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .stylist-hero__actions a:focus-visible,
+  .stylist-cta > a:focus-visible,
+  .stylist-source-note a:focus-visible,
+  .stylist-collaboration a:focus-visible {
+    outline: 2px solid #2f323c;
+    outline-offset: 5px;
+  }
+
+  .stylist-hero figure {
+    width: min(100%, 430px);
+    margin: 0;
+    justify-self: center;
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #eee9e3;
+  }
+
+  .stylist-hero figure :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+
+  .stylist-hero figcaption {
+    position: relative;
+    z-index: 1;
+    margin-top: -38px;
+    padding: 11px 14px;
+    background: rgb(251 250 248 / 0.92);
+    color: #827b73;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .stylist-quote {
+    width: min(980px, calc(100% - 48px));
+    margin: clamp(82px, 10vw, 148px) auto 0;
+    padding: clamp(48px, 6vw, 78px);
+    background: #f3eee8;
+    text-align: center;
+  }
+
+  .stylist-quote blockquote {
+    margin: 0;
+    color: #342f2b;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(2.5rem, 5.7vw, 5.5rem);
+    font-style: italic;
+    line-height: 1.08;
+    text-wrap: balance;
+  }
+
+  .stylist-quote p {
+    max-width: 700px;
+    margin: 28px auto 0;
+  }
+
+  .stylist-quote a {
+    color: inherit;
+    text-underline-offset: 4px;
+  }
+
+  .stylist-intro,
+  .stylist-collaboration {
+    margin-top: clamp(76px, 9vw, 132px);
+    padding-top: clamp(42px, 5vw, 68px);
+    border-top: 1px solid #ded8d0;
+    display: grid;
+    grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1fr);
+    gap: clamp(38px, 6vw, 86px);
+    align-items: start;
+  }
+
+  .stylist-intro h2,
+  .stylist-process h2,
+  .stylist-collaboration h2,
+  .stylist-faq h2,
+  .stylist-cta h2,
+  .stylist-related h2 {
+    font-size: clamp(2.4rem, 4.7vw, 4.9rem);
+  }
+
+  .stylist-intro__text,
+  .stylist-collaboration > div:last-child {
+    display: grid;
+    grid-auto-rows: max-content;
+    gap: 22px;
+    align-content: start;
+  }
+
+  .stylist-intro__text p,
+  .stylist-collaboration p:not(.stylist-kicker) {
+    margin: 0;
+  }
+
+  .stylist-profile-page :global(.gallery-image-grid) {
+    margin-top: clamp(80px, 9vw, 132px);
+  }
+
+  .stylist-process,
+  .stylist-faq,
+  .stylist-related {
+    margin-top: clamp(82px, 10vw, 146px);
+  }
+
+  .stylist-process {
+    padding-top: clamp(42px, 5vw, 68px);
+    border-top: 1px solid #ded8d0;
+  }
+
+  .stylist-process__grid,
+  .stylist-faq__grid,
+  .stylist-related__grid {
+    margin-top: clamp(34px, 4vw, 56px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(18px, 2.4vw, 32px);
+    align-items: start;
+  }
+
+  .stylist-process article,
+  .stylist-faq article,
+  .stylist-related a {
+    min-width: 0;
+    padding: clamp(24px, 3vw, 38px);
+    border: 1px solid #ded8d0;
+    background: #fff;
+  }
+
+  .stylist-process article > span {
+    color: #a7836b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+  }
+
+  .stylist-process h3,
+  .stylist-faq h3,
+  .stylist-related span {
+    margin: 18px 0 14px;
+    display: block;
+    color: #242426;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(1.45rem, 2.1vw, 2.15rem);
+    font-weight: 500;
+    line-height: 1.1;
+  }
+
+  .stylist-process article p,
+  .stylist-faq article p {
+    margin: 0;
+  }
+
+  .stylist-collaboration a,
+  .stylist-source-note a {
+    color: #2f323c;
+    text-underline-offset: 4px;
+  }
+
+  .stylist-faq > p.stylist-source-note {
+    max-width: 820px;
+    margin: clamp(28px, 3vw, 36px) 0 0;
+    font-size: 0.96rem;
+    line-height: 1.65;
+  }
+
+  .stylist-cta {
+    width: min(980px, calc(100% - 48px));
+    margin: clamp(56px, 8vw, 112px) auto 0;
+    padding: clamp(52px, 7vw, 86px);
+    background: #302a26;
+    text-align: center;
+  }
+
+  .stylist-cta .stylist-kicker,
+  .stylist-cta h2,
+  .stylist-cta p,
+  .stylist-cta > a {
+    color: #f5f1ec;
+  }
+
+  .stylist-cta > p:not(.stylist-kicker) {
+    max-width: 660px;
+    margin: 26px auto;
+  }
+
+  .stylist-cta > a {
+    border-bottom-color: #f5f1ec;
+  }
+
+  .stylist-related a {
+    color: #2f323c;
+    text-decoration: none;
+    transition: border-color 220ms ease, transform 220ms ease;
+  }
+
+  .stylist-related span {
+    margin-top: 0;
+  }
+
+  .stylist-related small {
+    display: block;
+  }
+
+  .stylist-related a:hover,
+  .stylist-related a:focus-visible {
+    border-color: #2f323c;
+    outline: 0;
+    transform: translateY(-2px);
+  }
+
+  .gallery-footer {
+    margin-top: clamp(86px, 10vw, 142px);
+  }
+
+  @media (max-width: 940px) {
+    .stylist-hero,
+    .stylist-intro,
+    .stylist-collaboration {
+      grid-template-columns: 1fr;
+    }
+
+    .stylist-hero h1 {
+      max-width: 8.5em;
+    }
+
+    .stylist-hero figure {
+      width: min(82vw, 430px);
+      justify-self: start;
+    }
+
+    .stylist-process__grid,
+    .stylist-faq__grid,
+    .stylist-related__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .stylist-hero,
+    .stylist-intro,
+    .stylist-process,
+    .stylist-collaboration,
+    .stylist-faq,
+    .stylist-related,
+    .stylist-quote,
+    .stylist-cta {
+      width: min(100% - 28px, 460px);
+    }
+
+    .stylist-hero {
+      gap: 36px;
+    }
+
+    .stylist-hero h1 {
+      font-size: clamp(3.15rem, 15vw, 4.4rem);
+      line-height: 1;
+    }
+
+    .stylist-hero__copy > p:not(.stylist-kicker) {
+      margin-top: 22px;
+      font-size: 1.02rem;
+    }
+
+    .stylist-hero figure {
+      width: min(88vw, 390px);
+      justify-self: center;
+    }
+
+    .stylist-quote,
+    .stylist-cta {
+      padding: 40px 24px;
+    }
+
+    .stylist-intro h2,
+    .stylist-process h2,
+    .stylist-collaboration h2,
+    .stylist-faq h2,
+    .stylist-cta h2,
+    .stylist-related h2 {
+      font-size: clamp(2.15rem, 11vw, 3.1rem);
+      line-height: 1.06;
+    }
+
+    .stylist-process article,
+    .stylist-faq article,
+    .stylist-related a {
+      padding: 24px;
+    }
+  }
+</style>

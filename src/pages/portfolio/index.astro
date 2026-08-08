@@ -1,34 +1,41 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import PortfolioGrid from "../../components/PortfolioGrid.astro";
+import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
+import { googleReviews } from "../../data/reviews";
 import { portfolioEntries, portfolioFilters } from "../../data/portfolio";
 
-const siteUrl = "https://artbild-fotografie.de";
+const portfolioPageEntries = [...portfolioEntries];
+const editorialIndex = portfolioPageEntries.findIndex(
+  (entry) => entry.href === "/gallery/editorial/",
+);
+const parisEditorialIndex = portfolioPageEntries.findIndex(
+  (entry) => entry.href === "/gallery/brautkleid-editorial-paris/",
+);
+
+if (editorialIndex >= 0 && parisEditorialIndex >= 0) {
+  [portfolioPageEntries[editorialIndex], portfolioPageEntries[parisEditorialIndex]] = [
+    portfolioPageEntries[parisEditorialIndex],
+    portfolioPageEntries[editorialIndex],
+  ];
+}
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pageUrl = `${siteUrl}/portfolio/`;
 const title = "Portfolio";
 const metaTitle = "Portfolio - Hochzeitsfotografie Hamburg | Artbild-Fotografie";
 const description = "Portfolio von Artbild-Fotografie: Hochzeitsbilder, Paarshootings, Travel- und Peoplefotografie aus Hamburg und darüber hinaus.";
 const primaryImage = `${siteUrl}/images/getting-ready-gallery-2.jpg`;
 
-const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Startseite",
-      "item": siteUrl,
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Portfolio",
-      "item": pageUrl,
-    },
-  ],
-};
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+];
 
 const collectionSchema = {
   "@context": "https://schema.org",
@@ -52,8 +59,8 @@ const collectionSchema = {
   "mainEntity": {
     "@type": "ItemList",
     "name": "Portfolio Galerien",
-    "numberOfItems": portfolioEntries.length,
-    "itemListElement": portfolioEntries.map((entry, index) => ({
+    "numberOfItems": portfolioPageEntries.length,
+    "itemListElement": portfolioPageEntries.map((entry, index) => ({
       "@type": "ListItem",
       "position": index + 1,
       "url": entry.href.startsWith("http") ? entry.href : `${siteUrl}${entry.href}`,
@@ -67,6 +74,7 @@ const collectionSchema = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{metaTitle}</title>
@@ -85,36 +93,16 @@ const collectionSchema = {
   <meta name="twitter:title" content={metaTitle}>
   <meta name="twitter:description" content={description}>
   <meta name="twitter:image" content={primaryImage}>
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)}></script>
   <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)}></script>
 </head>
 <body class="gallery-template portfolio-template">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a aria-current="page" href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-        <li><a class="gallery-search" href="/?s=" aria-label="Suche">⌕</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
-    <nav class="portfolio-breadcrumb" aria-label="Breadcrumb">
-      <a href="/">Startseite</a>
-      <span aria-hidden="true">/</span>
-      <span>Portfolio</span>
-    </nav>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
 
     <section class="portfolio-hero" aria-labelledby="portfolio-title">
       <p class="portfolio-kicker">Galleries</p>
@@ -125,18 +113,66 @@ const collectionSchema = {
       </p>
     </section>
 
-    <PortfolioGrid entries={portfolioEntries} filters={portfolioFilters} />
+    <PortfolioGrid entries={portfolioPageEntries} filters={portfolioFilters} />
 
-    <section class="portfolio-funnel" aria-label="Nächste Schritte">
-      <a href="/gallery-category/hochzeit/">
+    <EditorialReviewQuote
+      reviews={[
+        googleReviews.patrickDeku,
+        googleReviews.laraFriedrichs,
+        googleReviews.markusNerger,
+      ]}
+      sectionId="portfolio_review_patrick_deku"
+      heading="Bilder, die den ganzen Tag wieder lebendig machen"
+      contentTopic="hochzeitsportfolio"
+      userIntent="bildsprache_bewerten"
+      journeyStage="auswahl"
+      position="after_portfolio_grid"
+    />
+
+    <section
+      class="portfolio-funnel"
+      aria-label="Nächste Schritte"
+      data-track-section="portfolio_next_steps"
+      data-content-topic="portfolio_navigation"
+      data-user-intent="naechsten_schritt_waehlen"
+      data-journey-stage="decision"
+      data-content-format="cta_group"
+      data-position="after_portfolio_grid"
+    >
+      <a
+        href="/gallery-category/hochzeit/"
+        data-track-event="cta_click"
+        data-cta-id="portfolio_next_reports"
+        data-cta-type="portfolio_navigation"
+        data-section-id="portfolio_next_steps"
+        data-user-intent="hochzeitsreportagen_ansehen"
+        data-position="step_1"
+      >
         <span>01</span>
         Hochzeitsreportagen ansehen
       </a>
-      <a href="/hochzeitsfotograf-preise/">
+      <a
+        href="/hochzeitsfotograf-preise/"
+        data-track-event="cta_click"
+        data-cta-id="portfolio_next_pricing"
+        data-cta-type="pricing"
+        data-section-id="portfolio_next_steps"
+        data-user-intent="preise_ansehen"
+        data-position="step_2"
+      >
         <span>02</span>
         Preise ansehen
       </a>
-      <a href="/kontakt/">
+      <a
+        href="/kontakt/"
+        data-track-event="contact_click"
+        data-cta-id="portfolio_next_availability"
+        data-cta-type="contact_form"
+        data-section-id="portfolio_next_steps"
+        data-user-intent="verfuegbarkeit_anfragen"
+        data-journey-stage="conversion"
+        data-position="step_3"
+      >
         <span>03</span>
         Verfügbarkeit anfragen
       </a>
@@ -144,9 +180,19 @@ const collectionSchema = {
 
     <section class="portfolio-instagram">
       <p>Folgt mir auf Instagram für kostenlose TFP-Shootings!</p>
-      <a href="https://www.instagram.com/artbild/">@ARTBILD</a>
+      <a
+        href="https://www.instagram.com/artbild/"
+        data-track-event="external_resource_click"
+        data-resource-id="instagram_artbild"
+        data-resource-type="social_profile"
+        data-section-id="portfolio_instagram"
+        data-content-topic="social_media"
+        data-user-intent="instagram_oeffnen"
+        data-journey-stage="retention"
+      >@ARTBILD</a>
     </section>
-  </main>
+      <StoryLanguageCta kind="portfolio" />
+    </main>
 
   <footer class="gallery-footer">
     <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">

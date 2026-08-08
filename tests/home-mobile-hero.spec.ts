@@ -14,7 +14,9 @@ test("mobile homepage uses the editorial header and larger image slider", async 
   await expect(navigationBar).toBeVisible();
   await expect(slider).toBeVisible();
   await expect(page.locator(".booking-strip")).toBeHidden();
-  expect(await slider.locator(".hero-slider__slide img[src]").count()).toBeGreaterThanOrEqual(3);
+  expect(
+    await slider.locator(".hero-slider__slide img[src], .hero-slider__slide img[srcset]").count(),
+  ).toBeGreaterThanOrEqual(3);
 
   const navigationBox = await navigationBar.boundingBox();
   const sliderBox = await slider.boundingBox();

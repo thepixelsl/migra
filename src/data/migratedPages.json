@@ -259,7 +259,7 @@
     "type": "page",
     "title": "Datenschutz",
     "metaTitle": "Datenschutz | Artbild-Fotografie",
-    "description": "Informationssicherheit Moin, wenn Du eine Sicherheitslücke auf meiner Webseite findest, die nicht in einem korrekt konfigurierten WordPress-System begründet ist, konktaktiere mich gerne....",
+    "description": "Datenschutzerklärung von Artbild-Fotografie mit Informationen zur Verarbeitung personenbezogener Daten und zu eingesetzten Diensten.",
     "eyebrow": "Seite",
     "datePublished": "2020-04-08T17:11:07",
     "dateModified": "2025-12-21T10:05:55",
@@ -314,369 +314,75 @@
     "description": "Paarshooting in Hamburg",
     "eyebrow": "Galerie",
     "heroImage": {
-      "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/York-Augustin-Black-Low-Res-e1562367022694.png",
-      "alt": "Paarshooting in Hamburg",
-      "width": 245,
-      "height": 123,
+      "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_4000.jpg",
+      "alt": "Paar beim Engagement-Shooting an der Hamburger Binnenalster",
+      "width": 1384,
+      "height": 924,
       "eager": true
     },
     "contentHtml": "<p>Paarshooting in Hamburg</p>",
     "galleryImages": [
       {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/York-Augustin-Black-Low-Res-e1562367022694.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 245,
-        "height": 123,
-        "eager": true
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/York-Augustin-White-Low-Res-2-460x230.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 460,
-        "height": 230,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/York-Augustin-White-Low-Res-2-400x200.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 400,
-        "height": 200,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3742.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Paar spaziert bei einem Engagement-Shooting durch Hamburg",
         "width": 1155,
         "height": 924,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3742-300x240.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 240,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3742-768x614.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 614,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3742-1024x819.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 819,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3814.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Nahes Paarportrait bei einem Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3814-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3814-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3814-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3863.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Paar sitzt entspannt bei seinem Engagement-Shooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3863-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3863-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3863-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3832.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Natürliches Paarportrait in der Hamburger Innenstadt",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3832-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3832-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3832-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3891.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Kuss beim Engagement-Shooting vor Hamburger Stadtkulisse",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3891-200x300.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3891-768x1151.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3891-684x1024.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 684,
-        "height": 1024,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3849.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Schwarz-Weiß-Portrait eines Paares in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3849-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3849-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3849-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3926.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Paar spaziert durch eine Hamburger Passage",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3926-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3926-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3926-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Intimes Paarportrait mit urbaner Hamburger Architektur",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974-620x414.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 620,
-        "height": 414,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3974-1180x788.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1180,
-        "height": 788,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3967.jpg",
-        "alt": "Paarshooting in Hamburg",
+        "alt": "Schwarz-Weiß-Paarportrait bei einem Hamburger Engagement-Shooting",
         "width": 1293,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3967-300x214.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 214,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3967-768x549.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 549,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3967-1024x732.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 732,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_4000.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1384,
-        "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_4000-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_4000-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_4000-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_3680-Bearbeitet-Wiederhergestellt_web-e1562367326517.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 323,
-        "height": 484,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_6078-Bearbeitet_web-1-e1592367183595.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 186,
-        "height": 279,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_5111-Bearbeitet_web.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 924,
-        "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/ART_6065-Bearbeitet_web.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 924,
-        "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/bct-cloudflare-turnstile-main.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 640,
-        "height": 360,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__engagement-shooting-in-hamburg/cb-facebook-main.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1176,
-        "height": 923,
         "eager": false
       }
     ],
@@ -692,596 +398,148 @@
     "type": "gallery",
     "title": "Botanical Art - Florale Kunst",
     "metaTitle": "Botanical Art - Florale Kunst | Artbild-Fotografie",
-    "description": "Schau Dir die meine kreativen Bilder zur Umsetzung floraler Portraitideen an. Wenn Du Dir für Dich auch so etwas wünscht, schreibe mir einfach!",
+    "description": "Schau Dir meine kreativen Bilder zur Umsetzung floraler Portraitideen an. Wenn Du Dir für Dich auch so etwas wünschst, schreibe mir einfach!",
     "eyebrow": "Galerie",
     "heroImage": {
-      "src": "/migrated-assets/gallery__floral-art/York-Augustin-Black-Low-Res-e1562367022694.png",
-      "alt": "Botanical Art - Florale Kunst",
-      "width": 245,
-      "height": 123,
+      "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb.jpg",
+      "alt": "Florales Schwarz-Weiß-Portrait mit Blüten als Botanical Art Motiv",
+      "width": 924,
+      "height": 924,
       "eager": true
     },
-    "contentHtml": "<p>Schau Dir die meine kreativen Bilder zur Umsetzung floraler Portraitideen an. Wenn Du Dir für Dich auch so etwas wünscht, schreibe mir einfach!</p>",
+    "contentHtml": "<p>Schau Dir meine kreativen Bilder zur Umsetzung floraler Portraitideen an. Wenn Du Dir für Dich auch so etwas wünschst, schreibe mir einfach!</p>",
     "galleryImages": [
       {
-        "src": "/migrated-assets/gallery__floral-art/York-Augustin-Black-Low-Res-e1562367022694.png",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 245,
-        "height": 123,
+        "src": "/migrated-assets/gallery__floral-art/ART_6600-Bearbeitet_web.jpg",
+        "alt": "Florales Portraitshooting mit kreativer Botanical-Art-Inszenierung",
+        "width": 924,
+        "height": 1384,
         "eager": true
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/York-Augustin-White-Low-Res-2-460x230.png",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 460,
-        "height": 230,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/York-Augustin-White-Low-Res-2-400x200.png",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 400,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 924,
-        "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb-300x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 300,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb-150x150.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 150,
-        "height": 150,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb-768x768.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 768,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb-1024x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 924,
-        "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/blumenkopf_1-1_thumb-620x620.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 620,
-        "height": 620,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6600-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 924,
-        "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6600-Bearbeitet_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6600-Bearbeitet_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6600-Bearbeitet_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_2238-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Künstlerisches Portrait mit floralen Elementen",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2238-Bearbeitet_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2238-Bearbeitet_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2238-Bearbeitet_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_0663_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Portrait in ruhiger natürlicher Bildsprache",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0663_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0663_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0663_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_2453-Bearbeitet-2_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Botanical-Art-Portrait mit feinen Blütenakzenten",
         "width": 924,
         "height": 1384,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_2453-Bearbeitet-2_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2453-Bearbeitet-2_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2453-Bearbeitet-2_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_2509-Bearbeitet_thumb.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Portraitshooting als kreative Peoplefotografie",
         "width": 924,
         "height": 1155,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_2509-Bearbeitet_thumb-240x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 240,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2509-Bearbeitet_thumb-768x960.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 960,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_2509-Bearbeitet_thumb-819x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 819,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_6427-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Editorial mit natürlichem Licht",
         "width": 1384,
         "height": 924,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_6427-Bearbeitet_web-300x200.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6427-Bearbeitet_web-768x513.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6427-Bearbeitet_web-1024x684.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_1242_thumb.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Botanical-Art-Portrait mit zarter floraler Gestaltung",
         "width": 924,
         "height": 1299,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_1242_thumb-213x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 213,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_1242_thumb-768x1080.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1080,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_1242_thumb-728x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 728,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_6250-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Kreatives Floral-Art-Portrait mit weicher Bildsprache",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6250-Bearbeitet_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6250-Bearbeitet_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6250-Bearbeitet_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_6290-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florale Portraitidee in editorialer Umsetzung",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6290-Bearbeitet_web-300x200.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6290-Bearbeitet_web-768x513.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6290-Bearbeitet_web-1024x684.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_4524-Bearbeitet.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Künstlerisches Portrait mit Blumen und ruhiger Komposition",
         "width": 924,
         "height": 1386,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4524-Bearbeitet-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4524-Bearbeitet-768x1152.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1152,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4524-Bearbeitet-683x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 683,
-        "height": 1024,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_0454_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Portrait mit klarer Botanical-Art-Stimmung",
         "width": 924,
         "height": 1384,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_0454_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0454_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0454_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-1.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Portrait mit floraler Inszenierung und natürlichem Ausdruck",
         "width": 924,
         "height": 1386,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-1-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-1-768x1152.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1152,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-1-683x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 683,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_0520-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Botanical-Art-Fotoshooting mit feinem Portraitlicht",
         "width": 924,
         "height": 1384,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_0520-Bearbeitet_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0520-Bearbeitet_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0520-Bearbeitet_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_4806-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Editorialbild mit künstlerischer Gestaltung",
         "width": 1384,
         "height": 924,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_4806-Bearbeitet_web-300x200.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4806-Bearbeitet_web-768x513.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4806-Bearbeitet_web-1024x684.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_0625_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Portraitshooting mit ruhigem Hintergrund",
         "width": 924,
         "height": 1384,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_0625_web-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0625_web-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0625_web-684x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Kreative Peoplefotografie mit floralen Details",
         "width": 924,
         "height": 1385,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-200x300.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-768x1151.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_4673-Bearbeitet-683x1024.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 683,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_0725-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Florales Editorial Portrait mit weichem Licht",
         "width": 1386,
         "height": 924,
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__floral-art/ART_0725-Bearbeitet_web-300x200.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0725-Bearbeitet_web-768x512.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 768,
-        "height": 512,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_0725-Bearbeitet_web-1024x683.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 1024,
-        "height": 683,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_3680-Bearbeitet-Wiederhergestellt_web-e1562367326517.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 323,
-        "height": 484,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/ART_6078-Bearbeitet_web-1-e1592367183595.jpg",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 186,
-        "height": 279,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__floral-art/ART_5111-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Botanical-Art-Portrait mit natürlicher Pose",
         "width": 924,
         "height": 1384,
         "eager": false
       },
       {
         "src": "/migrated-assets/gallery__floral-art/ART_6065-Bearbeitet_web.jpg",
-        "alt": "Botanical Art - Florale Kunst",
+        "alt": "Kreatives florales Portraitshooting von Artbild-Fotografie",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/bct-cloudflare-turnstile-main.png",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 640,
-        "height": 360,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__floral-art/cb-facebook-main.png",
-        "alt": "Botanical Art - Florale Kunst",
-        "width": 1176,
-        "height": 923,
         "eager": false
       }
     ],
@@ -3866,89 +3124,19 @@
     "description": "Egal, ob ihr lieber ein lockeres und entspanntes oder ein sinnlich und verliebtes Paarshooting in Hamburg erleben wollt, ich setze Euch passend in Szene.",
     "eyebrow": "Galerie",
     "heroImage": {
-      "src": "/migrated-assets/gallery__paarshooting-in-hamburg/York-Augustin-Black-Low-Res-e1562367022694.png",
+      "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9642-1.jpg",
       "alt": "Paarshooting in Hamburg",
-      "width": 245,
-      "height": 123,
+      "width": 1384,
+      "height": 924,
       "eager": true
     },
     "contentHtml": "<p>Egal, ob ihr lieber ein lockeres und entspanntes oder ein sinnlich und verliebtes Paarshooting in Hamburg erleben wollt, ich setze Euch passend in Szene.</p>",
     "galleryImages": [
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/York-Augustin-Black-Low-Res-e1562367022694.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 245,
-        "height": 123,
-        "eager": true
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/York-Augustin-White-Low-Res-2-460x230.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 460,
-        "height": 230,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/York-Augustin-White-Low-Res-2-400x200.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 400,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9642-1.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1384,
-        "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9642-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9642-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9642-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0051-Bearbeitet-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0051-Bearbeitet-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0051-Bearbeitet-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0051-Bearbeitet-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
@@ -3959,52 +3147,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0067-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0067-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0067-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0190-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0190-1-200x300.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0190-1-768x1151.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0190-1-684x1024.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 684,
-        "height": 1024,
         "eager": false
       },
       {
@@ -4015,52 +3161,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9900-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9900-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9900-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9591-2-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9591-2-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9591-2-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9591-2-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
@@ -4071,52 +3175,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9925-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9925-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9925-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9876-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9876-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9876-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9876-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
@@ -4127,52 +3189,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0123-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0123-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0123-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9570-2-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9570-2-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9570-2-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9570-2-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
@@ -4183,52 +3203,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9951-1-200x300.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 200,
-        "height": 300,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9951-1-768x1151.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 1151,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9951-1-684x1024.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 684,
-        "height": 1024,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0052-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0052-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0052-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0052-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
         "eager": false
       },
       {
@@ -4239,27 +3217,6 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0056-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0056-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0056-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0162-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
@@ -4267,66 +3224,10 @@
         "eager": false
       },
       {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0162-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0162-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART0162-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1.jpg",
         "alt": "Paarshooting in Hamburg",
         "width": 1384,
         "height": 924,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1-300x200.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 300,
-        "height": 200,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1-768x513.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 768,
-        "height": 513,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1-1024x684.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1024,
-        "height": 684,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1-1180x788.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1180,
-        "height": 788,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/ART9666-1-620x414.jpg",
-        "alt": "Paarshooting in Hamburg",
-        "width": 620,
-        "height": 414,
         "eager": false
       },
       {
@@ -4390,20 +3291,6 @@
         "alt": "Paarshooting in Hamburg",
         "width": 924,
         "height": 1384,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/bct-cloudflare-turnstile-main.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 640,
-        "height": 360,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/gallery__paarshooting-in-hamburg/cb-facebook-main.png",
-        "alt": "Paarshooting in Hamburg",
-        "width": 1176,
-        "height": 923,
         "eager": false
       }
     ],

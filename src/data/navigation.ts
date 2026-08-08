@@ -3,6 +3,11 @@ export type NavigationItem = {
   href: string;
   description?: string;
   seoContext?: string;
+  trackingId?: string;
+  ctaType?: string;
+  contentTopic?: string;
+  userIntent?: string;
+  journeyStage?: string;
   badge?: string;
   external?: boolean;
   emphasis?: "primary" | "cta";
@@ -14,109 +19,161 @@ export type NavigationGroup = {
   secondary?: boolean;
 };
 
+export const desktopNavigationItems: NavigationItem[] = [
+  {
+    label: "Start",
+    href: "/",
+    seoContext: "Hochzeitsfotograf Hamburg Startseite",
+    trackingId: "desktop_start",
+    ctaType: "navigation",
+    contentTopic: "startseite",
+    userIntent: "orientieren",
+    journeyStage: "orientierung",
+  },
+  {
+    label: "Portfolio",
+    href: "/portfolio/",
+    description: "Ausgewählte Hochzeitsreportagen und Shootings",
+    seoContext: "Portfolio Hochzeitsfotografie Hamburg",
+    trackingId: "desktop_portfolio",
+    ctaType: "navigation",
+    contentTopic: "portfolio",
+    userIntent: "beispielbilder_ansehen",
+    journeyStage: "auswahl",
+  },
+  {
+    label: "Kontakt",
+    href: "/kontakt/",
+    description: "Anfrage und Terminverfügbarkeit",
+    seoContext: "Hochzeitsfotograf Hamburg anfragen",
+    trackingId: "desktop_kontakt",
+    ctaType: "navigation",
+    contentTopic: "kontaktmoeglichkeiten",
+    userIntent: "kontakt_aufnehmen",
+    journeyStage: "anfrage",
+  },
+  {
+    label: "Blog",
+    href: "/blog/",
+    description: "Ratgeber für Hochzeit, Standesamt und Planung",
+    seoContext: "Hochzeitsratgeber Hamburg",
+    trackingId: "desktop_blog",
+    ctaType: "navigation",
+    contentTopic: "hochzeitsratgeber",
+    userIntent: "ratgeber_lesen",
+    journeyStage: "information",
+  },
+  {
+    label: "Über mich",
+    href: "/about/",
+    description: "Über York Augustin, Hochzeitsfotograf aus Hamburg",
+    seoContext: "Hochzeitsfotograf Hamburg York Augustin",
+    trackingId: "desktop_about",
+    ctaType: "navigation",
+    contentTopic: "ueber_mich",
+    userIntent: "vertrauen_aufbauen",
+    journeyStage: "vertrauen",
+  },
+  {
+    label: "Newsletter",
+    href: "/newsletter/",
+    description: "Neuigkeiten und Inspiration von Artbild-Fotografie",
+    trackingId: "desktop_newsletter",
+    ctaType: "navigation",
+    contentTopic: "newsletter",
+    userIntent: "inspiration_abonnieren",
+    journeyStage: "bindung",
+  },
+];
+
 export const mobileNavigationGroups: NavigationGroup[] = [
   {
-    label: "Entdecken",
+    label: "Hauptmenü",
     items: [
       {
         label: "Start",
         href: "/",
-        description: "Artbild-Fotografie und aktuelle Hochzeitsgeschichten",
+        trackingId: "mobile_start",
+        ctaType: "navigation",
+        contentTopic: "startseite",
+        userIntent: "orientieren",
+        journeyStage: "orientierung",
       },
       {
         label: "Portfolio",
         href: "/portfolio/",
-        description: "Hochzeiten, Paarshootings und Editorials",
         emphasis: "primary",
+        trackingId: "mobile_portfolio",
+        ctaType: "navigation",
+        contentTopic: "portfolio",
+        userIntent: "beispielbilder_ansehen",
+        journeyStage: "auswahl",
       },
-    ],
-  },
-  {
-    label: "Hochzeit",
-    items: [
       {
         label: "Hochzeitsfotograf Hamburg",
         href: "/#hochzeitsfotograf-hamburg",
-        description: "Natürliche Hochzeitsreportagen in Hamburg und Norddeutschland",
         seoContext: "Hochzeitsfotograf Hamburg",
         emphasis: "primary",
+        trackingId: "mobile_hochzeitsfotograf_hamburg",
+        ctaType: "navigation",
+        contentTopic: "hochzeitsfotograf_hamburg",
+        userIntent: "angebot_verstehen",
+        journeyStage: "orientierung",
       },
       {
         label: "Preise & Pakete",
         href: "/hochzeitsfotograf-preise/",
-        description: "Leistungen und Preise für Eure Hochzeitsreportage",
         seoContext: "Preise für Hochzeitsreportagen in Hamburg",
-      },
-      {
-        label: "Standesamtliche Trauung",
-        href: "/standesamt-hamburg/",
-        description: "Begleitung im Standesamt Hamburg und in Altona",
-        seoContext: "Standesamtliche Trauung Hamburg",
-      },
-      {
-        label: "Getting Ready",
-        href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
-        description: "Inspiration für den Hochzeitsmorgen in Hamburg",
-        seoContext: "Getting Ready Hochzeit Hamburg",
-      },
-      {
-        label: "Brautstyling Hamburg",
-        href: "/brautstyling-hamburg/",
-        description: "Empfohlene Visagistin und Brautmode für den Hochzeitsmorgen",
-        seoContext: "Brautstyling Hamburg",
-      },
-    ],
-  },
-  {
-    label: "Anfragen",
-    items: [
-      {
-        label: "Freie Termine & Anfrage",
-        href: "/kontakt/",
-        description: "Erzählt mir von Eurer Hochzeit und Euren Wünschen",
-        seoContext: "Hochzeitsfotograf Hamburg anfragen",
-        badge: "2026/2027",
-        emphasis: "cta",
+        trackingId: "mobile_preise_pakete",
+        ctaType: "navigation",
+        contentTopic: "preise_pakete",
+        userIntent: "preise_pruefen",
+        journeyStage: "vergleich",
       },
       {
         label: "Kontakt",
         href: "/kontakt/",
-        description: "Direkter Kontakt zu Artbild-Fotografie in Hamburg",
+        seoContext: "Kontakt Hochzeitsfotograf Hamburg",
+        trackingId: "mobile_kontakt",
+        ctaType: "navigation",
+        contentTopic: "kontaktmoeglichkeiten",
+        userIntent: "kontakt_aufnehmen",
+        journeyStage: "anfrage",
       },
-      {
-        label: "Sicherer Kontakt",
-        href: "/sicherer-kontakt/",
-        description: "PGP, S/MIME und datensparsame Kontaktaufnahme",
-        seoContext: "Sicherer E-Mail-Kontakt Hamburg",
-      },
-    ],
-  },
-  {
-    label: "Inspiration",
-    secondary: true,
-    items: [
       {
         label: "Blog",
         href: "/blog/",
-        description: "Planungstipps und Geschichten rund um Hochzeiten",
+        trackingId: "mobile_blog",
+        ctaType: "navigation",
+        contentTopic: "hochzeitsratgeber",
+        userIntent: "ratgeber_lesen",
+        journeyStage: "information",
       },
       {
         label: "Über mich",
         href: "/about/",
-        description: "Fotograf York Augustin aus Hamburg",
+        trackingId: "mobile_about",
+        ctaType: "navigation",
+        contentTopic: "ueber_mich",
+        userIntent: "vertrauen_aufbauen",
+        journeyStage: "vertrauen",
       },
+    ],
+  },
+  {
+    label: "Galerien",
+    secondary: true,
+    items: [
       {
-        label: "Newsletter",
-        href: "/newsletter/",
-        description: "Neuigkeiten und ausgewählte Fotogeschichten",
+        label: "Hochzeitsgalerien",
+        href: "/portfolio/?category=hochzeit",
+        seoContext: "Hochzeitsgalerien Hamburg Standesamt Elopement Destination Wedding",
+        trackingId: "mobile_hochzeitsgalerien",
+        ctaType: "portfolio_filter",
+        contentTopic: "hochzeitsgalerien",
+        userIntent: "hochzeitsgalerien_ansehen",
+        journeyStage: "auswahl",
       },
     ],
   },
 ];
-
-export const mobileSearchItem: NavigationItem = {
-  label: "Suche",
-  href: "/?s=",
-  description: "Website durchsuchen",
-  external: true,
-};

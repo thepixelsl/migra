@@ -10,12 +10,12 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("heading", { name: "Editorial Portraits Hamburg" })).toBeVisible();
-  await expect(page.locator("[data-gallery-trigger='editorial']")).toHaveCount(84);
+  await expect(page.locator("[data-gallery-trigger='editorial']")).toHaveCount(91);
 
   const state = await page.evaluate(() => {
-    const schema = JSON.parse(
-      document.querySelector('script[type="application/ld+json"]')?.textContent ?? "{}",
-    );
+    const schemas = [...document.querySelectorAll<HTMLScriptElement>(
+      'script[type="application/ld+json"]',
+    )].map((script) => JSON.parse(script.textContent ?? "{}"));
     const viewportCenter = document.documentElement.clientWidth / 2;
     const centerDelta = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -44,8 +44,11 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
       heroLoading: heroImage?.loading,
       heroPriority: heroImage?.getAttribute("fetchpriority"),
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
-      hasGeoContext: JSON.stringify(schema).includes("Hamburg"),
+      schemaTypes: schemas.flatMap((schema) => [
+        ...(schema["@type"] ? [schema["@type"]] : []),
+        ...(schema["@graph"]?.map((node: { "@type": string }) => node["@type"]) ?? []),
+      ]),
+      hasGeoContext: JSON.stringify(schemas).includes("Hamburg"),
       localGalleryImages: galleryImages.every(
         (image) =>
           !image.currentSrc.includes("wp-content") &&
@@ -61,8 +64,8 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
   expect(state.centers.story).toBe(0);
   expect(state.centers.gallery).toBe(0);
   expect(state.missingAlt).toBe(0);
-  expect(state.lazyImages).toBe(84);
-  expect(state.naturalItems).toBe(84);
+  expect(state.lazyImages).toBe(91);
+  expect(state.naturalItems).toBe(91);
   expect(state.heroLoading).toBe("eager");
   expect(state.heroPriority).toBe("high");
   expect(state.overflow).toBe(0);

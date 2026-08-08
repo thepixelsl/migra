@@ -1,5 +1,15 @@
 import { defineConfig } from "@playwright/test";
 
+const consentCookieValue = encodeURIComponent(
+  JSON.stringify({
+    version: process.env.PUBLIC_CONSENT_VERSION ?? "2026-07-29.1",
+    necessary: true,
+    analytics: false,
+    marketing: false,
+    updatedAt: "2026-07-29T00:00:00.000Z",
+  }),
+);
+
 export default defineConfig({
   testDir: "./tests",
   timeout: 60_000,
@@ -17,5 +27,30 @@ export default defineConfig({
     screenshot: "only-on-failure",
     trace: "retain-on-failure",
     video: "off",
+    storageState: {
+      cookies: [
+        {
+          name: "artbild_consent",
+          value: consentCookieValue,
+          domain: "127.0.0.1",
+          path: "/",
+          expires: -1,
+          httpOnly: false,
+          secure: false,
+          sameSite: "Lax",
+        },
+        {
+          name: "artbild_consent",
+          value: consentCookieValue,
+          domain: "localhost",
+          path: "/",
+          expires: -1,
+          httpOnly: false,
+          secure: false,
+          sameSite: "Lax",
+        },
+      ],
+      origins: [],
+    },
   },
 });

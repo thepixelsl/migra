@@ -1,17 +1,20 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import heroImage from "../../assets/getting-ready-hamburg/getting_ready_hochzeitsfotograf_hamburg2385-768x513.jpg";
 import manijaImage from "../../assets/brautstyling-hamburg/manija-biebow-brautstyling-hamburg.jpg";
+import yildizImage from "../../assets/yildiz-duman-werner/brautstyling-paris-balkon.jpg";
 import ellaImage from "../../assets/ella-deck-couture/ella_deck_couture-scaled.jpg";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/brautstyling-hamburg/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Brautstyling Hamburg | Dienstleister für Hochzeiten";
 const description =
-  "Empfehlungen für Brautstyling in Hamburg: Visagistin Manija Biebow, Ella Deck Couture und fotografische Tipps für ein ruhiges Getting Ready am Hochzeitsmorgen.";
+  "Empfehlungen für Brautstyling in Hamburg: Manija Biebow, Yildiz Duman-Werner, Ella Deck Couture und Tipps für ein ruhiges Getting Ready.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 const primaryImage = new URL(heroImage.src, siteUrl).href;
 
@@ -26,6 +29,19 @@ const vendors = [
     cta: "Manija Biebow ansehen",
     image: manijaImage,
     alt: "Portrait von Manija Biebow, Visagistin für Brautstyling in Hamburg",
+    external: false,
+    location: "Hamburg",
+  },
+  {
+    name: "Yildiz Duman-Werner",
+    kicker: "Bridal Hair & Make-up · Hamburg",
+    date: "26.07.2026",
+    text:
+      "Yildiz verbindet persönliche Vorbereitung und eine ausführliche Probe mit natürlichen bis editorialen Looks, die die Braut nicht verkleiden.",
+    href: "/gallery/yildiz-duman-werner/",
+    cta: "Yildiz Duman-Werner ansehen",
+    image: yildizImage,
+    alt: "Brautstyling von Yildiz Duman-Werner in Hamburg",
     external: false,
     location: "Hamburg",
   },
@@ -197,7 +213,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: "2020-11-23T10:00:00+01:00",
-      dateModified: "2026-06-30T09:45:00+02:00",
+      dateModified: "2026-07-26T18:30:00+02:00",
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
@@ -216,6 +232,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
@@ -241,21 +258,7 @@ const schemaGraph = {
 <body class="gallery-template bridal-styling-page">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
@@ -521,7 +524,7 @@ const schemaGraph = {
     width: min(1180px, calc(100% - clamp(44px, 8vw, 126px)));
     margin: clamp(72px, 8vw, 118px) auto 0;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: clamp(34px, 5vw, 74px);
   }
 
@@ -706,6 +709,12 @@ const schemaGraph = {
     .bridal-faq,
     .bridal-related {
       width: min(100% - 44px, 660px);
+    }
+  }
+
+  @media (min-width: 861px) and (max-width: 1080px) {
+    .bridal-vendors {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 

@@ -1,0 +1,71 @@
+---
+import { desktopNavigationItems } from "../data/navigation";
+import TrackingDataLayer from "./TrackingDataLayer.astro";
+
+const normalizePath = (path: string) => {
+  if (path === "/") {
+    return "/";
+  }
+
+  return path.endsWith("/") ? path : `${path}/`;
+};
+
+const currentPath = normalizePath(Astro.url.pathname);
+
+const isCurrent = (href: string) => {
+  if (href === "/") {
+    return currentPath === "/";
+  }
+
+  const targetPath = normalizePath(new URL(href, Astro.url).pathname);
+  return currentPath === targetPath;
+};
+---
+
+<TrackingDataLayer />
+
+<nav
+  class="gallery-nav gallery-nav--stacked"
+  aria-label="Hauptnavigation"
+  data-track-section="desktop_navigation"
+  data-content-topic="site_navigation"
+  data-user-intent="navigate"
+  data-journey-stage="all"
+  data-content-format="navigation"
+  data-position="header"
+>
+  <a
+    class="gallery-logo"
+    href="/"
+    aria-label="Artbild-Fotografie Startseite"
+    data-track-event="cta_click"
+    data-cta-id="desktop_logo_home"
+    data-cta-type="navigation"
+    data-section-id="desktop_navigation"
+    data-content-topic="site_navigation"
+    data-user-intent="navigate_home"
+    data-journey-stage="all"
+  >
+    <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+  </a>
+  <ul class="gallery-nav__group gallery-nav__group--home">
+    {desktopNavigationItems.map((item, index) => (
+      <li>
+        <a
+          href={item.href}
+          aria-current={isCurrent(item.href) ? "page" : undefined}
+          data-track-event="cta_click"
+          data-cta-id={item.trackingId}
+          data-cta-type={item.ctaType ?? "navigation"}
+          data-section-id="desktop_navigation"
+          data-content-topic={item.contentTopic ?? "site_navigation"}
+          data-user-intent={item.userIntent ?? "navigate"}
+          data-journey-stage={item.journeyStage ?? "all"}
+          data-position={`desktop_nav_${index + 1}`}
+        >
+          {item.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

@@ -1,7 +1,9 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
 
 const imageModules = import.meta.glob(
@@ -16,7 +18,7 @@ const modulesByFile = Object.fromEntries(
   ]),
 ) as Record<string, ImageMetadata>;
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/die-perfekte-hotelsuite-am-hochzeitsmorgen/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title =
@@ -66,8 +68,7 @@ const galleryImages = galleryDefinitions.map(([file, alt], index) => ({
   eager: index === 0,
 }));
 
-const galleryColumns = [[], [], []] as typeof galleryImages[];
-galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+const galleryColumns = [galleryImages];
 
 const checklistItems = [
   "Junior Suite oder größere Zimmerkategorie statt Standardzimmer prüfen.",
@@ -284,6 +285,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{fullTitle}</title>
@@ -319,26 +321,7 @@ const schemaGraph = {
   <body class="gallery-template hotel-suite-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img
-            src="/images/logo-artbild-black.png"
-            width="1200"
-            height="480"
-            alt="Artbild Fotografie"
-          >
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main id="main-content">
@@ -536,14 +519,30 @@ const schemaGraph = {
           dialogLabel="Hotelsuite am Hochzeitsmorgen in Vollansicht"
         />
 
-        <section class="hotel-suite-faq" aria-labelledby="faq-title">
+        <section
+          class="hotel-suite-faq"
+          aria-labelledby="faq-title"
+          data-track-section="hotelsuite_faq"
+          data-content-topic="hotelsuite_hochzeitsmorgen"
+          data-user-intent="locationfragen_klaeren"
+          data-journey-stage="information"
+          data-content-format="faq"
+          data-position="guide_faq"
+        >
           <div>
             <p class="hotel-suite-kicker">Häufige Fragen</p>
             <h2 id="faq-title">Hotelsuite für den Hochzeitsmorgen planen</h2>
           </div>
           <div class="hotel-suite-faq__items">
-            {faqItems.map((item) => (
-              <details>
+            {faqItems.map((item, index) => (
+              <details
+                data-track-event="faq_open"
+                data-faq-id={`hotelsuite_faq_${index + 1}`}
+                data-section-id="hotelsuite_faq"
+                data-content-topic="hotelsuite_hochzeitsmorgen"
+                data-user-intent="locationfragen_klaeren"
+                data-journey-stage="information"
+              >
                 <summary>{item.question}</summary>
                 <p>{item.answer}</p>
               </details>

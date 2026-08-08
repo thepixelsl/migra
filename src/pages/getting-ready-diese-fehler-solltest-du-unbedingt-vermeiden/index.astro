@@ -1,13 +1,15 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import "../../styles/global.css";
 import heroImage from "../../assets/getting-ready-fehler/getting-ready-fehler-hotelzimmer.jpg";
 import prepImage from "../../assets/getting-ready-fehler/getting-ready-braut-vorbereitung.jpg";
 import stylingImage from "../../assets/getting-ready-fehler/getting-ready-brautstyling-hamburg.jpg";
 import coupleImage from "../../assets/getting-ready-fehler/kennenlernshooting-hamburg-paar.jpg";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Getting Ready: Diese Fehler solltest du vermeiden";
@@ -161,6 +163,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -183,21 +186,7 @@ const schemaGraph = {
   <body class="gallery-template getting-mistakes-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>

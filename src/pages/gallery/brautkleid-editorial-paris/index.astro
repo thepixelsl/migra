@@ -1,0 +1,315 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import "../../../styles/editorial-destination.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/paris-bridal-editorial/*.{jpg,jpeg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/brautkleid-editorial-paris/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Brautkleid Editorial in Paris";
+const title = "Brautkleid Shooting Paris | Bridal Editorial Artbild-Fotografie";
+const description =
+  "Brautkleid Editorial in Paris mit modernen Bridal Looks am Louvre, an der Seine und vor dem Eiffelturm, fotografiert von Artbild-Fotografie aus Hamburg.";
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [path.split("/").pop() ?? path, image]),
+) as Record<string, ImageMetadata>;
+
+const heroFile = "ART_4765.jpg";
+const galleryFiles = Object.keys(modulesByFile)
+  .filter((file) => file !== heroFile)
+  .sort((left, right) => left.localeCompare(right, "de"));
+
+const altByFile: Record<string, string> = {
+  "ART_4765.jpg": "Brautkleid Editorial in Paris mit Braut und Eiffelturm",
+  "ART_0860.jpg": "Braut im langen Schleier unter den Arkaden des Louvre in Paris",
+  "ART_3171.jpg": "Modernes Brautkleid vor der Architektur des Louvre",
+  "ART_3449.jpg": "Glaspyramide und historische Fassade des Louvre in Paris",
+  "ART_3803-Bearbeitet.jpg": "Brautportrait am Place de la Concorde in Paris",
+  "ART_3932-Bearbeitet.jpg": "Editoriales Brautportrait in einem historischen Pariser Interieur",
+  "ART_4805.jpg": "Braut an der Seine mit Eiffelturm im Hintergrund",
+  "ART_6223.jpg": "Nahes Beauty Portrait beim Bridal Editorial in Paris",
+  "ART_7089-Bearbeitet.jpg": "Brautkleid Shooting in einer ruhigen Pariser Straße",
+  "ART_7146-Bearbeitet.jpg": "Braut in Bewegung auf einer Straße in Paris",
+  "ART_7988.jpg": "Editoriales Brautportrait am Seineufer in Paris",
+  "ART_9039-Bearbeitet-Bearbeitet-2.jpg": "Braut in den Arkaden des Louvre bei einem Pariser Bridal Shooting",
+  "ART_9088-Bearbeitet-Bearbeitet.jpg": "Brautkleid mit modernem Zweiteiler unter den Arkaden des Louvre",
+  "ART_9865.jpg": "Detailaufnahme der Perlenstickerei eines Brautkleids",
+};
+
+const heroImage = modulesByFile[heroFile];
+const galleryImages = galleryFiles.map((file, index) => ({
+  id: file.replace(/\.(jpe?g)$/i, ""),
+  image: modulesByFile[file],
+  alt: altByFile[file] ?? `Editoriales Brautkleid Shooting in Paris, Bild ${index + 1}`,
+  aspect:
+    modulesByFile[file].width > modulesByFile[file].height
+      ? "landscape" as const
+      : "portrait" as const,
+  eager: false,
+}));
+const galleryColumns = [galleryImages];
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
+
+const parisPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#paris`,
+  name: "Paris",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Paris",
+    addressCountry: "FR",
+  },
+  containedInPlace: { "@type": "Country", name: "Frankreich" },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Brautkleid Shooting Paris",
+        "Bridal Editorial Paris",
+        "Braut Fotoshooting Paris",
+        "Brautkleid Louvre",
+        "Brautportrait Seine",
+      ],
+      datePublished: "2026-07-12T14:00:00+02:00",
+      dateModified: "2026-07-12T14:00:00+02:00",
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: primaryImage,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      contentLocation: { "@id": `${pageUrl}#paris` },
+      about: [
+        { "@type": "Thing", name: "Brautkleid Editorial" },
+        { "@type": "Place", name: "Louvre" },
+        { "@type": "Place", name: "Seine" },
+        { "@type": "Place", name: "Eiffelturm" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: heading,
+      description,
+      contentLocation: { "@id": `${pageUrl}#paris` },
+      image: [
+        {
+          "@type": "ImageObject",
+          position: 1,
+          caption: altByFile[heroFile],
+          contentUrl: primaryImage,
+          width: heroImage.width,
+          height: heroImage.height,
+        },
+        ...galleryImages.map((item, index) => ({
+          "@type": "ImageObject",
+          position: index + 2,
+          caption: item.alt,
+          contentUrl: new URL(item.image.src, siteUrl).href,
+          width: item.image.width,
+          height: item.image.height,
+        })),
+      ],
+    },
+    parisPlace,
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2026-07-12T14:00:00+02:00",
+      dateModified: "2026-07-12T14:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+        caption: altByFile[heroFile],
+      },
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={altByFile[heroFile]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template paris-bridal-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+
+      <article class="destination-editorial">
+        <header
+          class="destination-hero"
+          data-track-section="paris_bridal_hero"
+          data-content-topic="brautkleid_shooting_paris"
+          data-user-intent="bildsprache_bewerten"
+          data-journey-stage="entdeckung"
+          data-content-format="gallery_hero"
+          data-position="page_top"
+        >
+          <div class="destination-hero__copy">
+            <p class="destination-hero__script" aria-hidden="true">Paris</p>
+            <p class="destination-kicker">Bridal Editorial · Louvre · Seine</p>
+            <h1>{heading}</h1>
+            <p>
+              Moderne Brautkleider treffen auf Pariser Architektur: eine
+              editoriale Bildstrecke zwischen Louvre, Seine, Eiffelturm und
+              ruhigen Straßen abseits der großen Boulevards.
+            </p>
+          </div>
+          <figure class="destination-hero__portrait">
+            <Image
+              src={heroImage}
+              widths={[460, 720, 920, 1200]}
+              sizes="(max-width: 760px) 82vw, 38vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt={altByFile[heroFile]}
+            />
+            <figcaption>Bridal Editorial · Paris · Eiffelturm</figcaption>
+          </figure>
+        </header>
+
+        <section
+          class="destination-story"
+          aria-labelledby="paris-bridal-story-title"
+          data-track-section="paris_bridal_story"
+          data-content-topic="bridal_editorial_paris"
+          data-user-intent="shooting_kennenlernen"
+          data-journey-stage="auswahl"
+          data-content-format="editorial_story"
+          data-position="before_gallery"
+        >
+          <div class="destination-story__heading">
+            <p class="destination-kicker">Brautmode in der Stadt des Lichts</p>
+            <h2 id="paris-bridal-story-title">Trois looks, un éditorial parisien</h2>
+          </div>
+          <div class="destination-story__copy">
+            <div>
+              <h3>Louvre & Arkaden</h3>
+              <p>
+                Lange Linien, Steinbögen und die ruhige Symmetrie des Louvre
+                geben Schleier, Spitze und fließenden Stoffen einen klaren Rahmen.
+              </p>
+            </div>
+            <div>
+              <h3>Seine & Eiffelturm</h3>
+              <p>
+                Offenes Licht und vertraute Pariser Silhouetten schaffen den
+                Gegenpol zu den grafischen Motiven der Architekturserie.
+              </p>
+            </div>
+            <div>
+              <h3>Stoff & Bewegung</h3>
+              <p>
+                Die Nahaufnahmen zeigen Spitze und Perlenstickerei; in den weiteren
+                Bildern werden Schleier und fließende Stoffe Teil der Komposition.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="brautkleid-editorial-paris"
+          label="Brautkleid Editorial und Bridal Shooting in Paris"
+          dialogLabel="Brautkleid Editorial Paris in Vollansicht"
+          sectionId="paris_bridal_gallery"
+          contentTopic="brautkleid_shooting_paris"
+          userIntent="beispielbilder_ansehen"
+          journeyStage="auswahl"
+          position="gallery_body"
+        />
+
+        <aside class="destination-meta" aria-label="Themen und Orte der Galerie">
+          <span>Themen:</span>
+          <span>Brautkleid Shooting Paris</span>
+          <span>Bridal Editorial</span>
+          <span>Louvre</span>
+          <span>Brautmode</span>
+        </aside>
+
+        <nav class="destination-related" aria-label="Weitere Editorials und Paris-Galerien">
+          <a href="/gallery/traumhochzeit-in-paris/"><span>Paris</span>Traumhochzeit in Paris</a>
+          <a href="/gallery/editorial-london/"><span>London</span>Editorial mit Mariam</a>
+          <a href="/portfolio/"><span>Übersicht</span>Portfolio Artbild-Fotografie</a>
+        </nav>
+      </article>
+
+      <StoryLanguageCta kind="editorial" />
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>

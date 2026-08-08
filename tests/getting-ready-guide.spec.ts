@@ -10,6 +10,7 @@ mkdirSync(screenshotDirectory, { recursive: true });
 test("Getting Ready guide has complete SEO structure and optimized gallery", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
 
   await expect(
     page.getByRole("heading", {
@@ -20,9 +21,9 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
   await expect(page.locator("[data-gallery-trigger='getting-ready-guide']")).toHaveCount(84);
 
   const metadata = await page.evaluate(() => {
-    const schema = JSON.parse(
-      document.querySelector('script[type="application/ld+json"]')?.textContent ?? "{}",
-    );
+    const schemas = [...document.querySelectorAll('script[type="application/ld+json"]')]
+      .map((script) => JSON.parse(script.textContent ?? "{}"));
+    const schemaNodes = schemas.flatMap((schema) => schema["@graph"] ?? [schema]);
     const viewportCenter = document.documentElement.clientWidth / 2;
     const centerDelta = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -46,9 +47,33 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
       heroImageGaps: heroFigures.slice(1).map((figure, index) =>
         Math.round(figure.left - heroFigures[index].right),
       ),
+      editorialLayout: (() => {
+        const section = document.querySelector<HTMLElement>("#kennenlernshooting");
+        const heading = section?.querySelector<HTMLElement>("h2");
+        const paragraphs = [
+          ...(section?.querySelectorAll<HTMLElement>(".gr-copy p") ?? []),
+        ];
+        const checklist = document.querySelector<HTMLElement>(".gr-guide-checklist");
+        const checklistItems = [
+          ...(checklist?.querySelectorAll<HTMLElement>("li") ?? []),
+        ];
+        const verticalGap = (first: HTMLElement, second: HTMLElement) =>
+          Math.round(second.getBoundingClientRect().top - first.getBoundingClientRect().bottom);
+
+        return {
+          sectionAlign: section ? getComputedStyle(section).alignItems : null,
+          headingOverflow: heading ? heading.scrollWidth - heading.clientWidth : null,
+          paragraphGap:
+            paragraphs.length > 1 ? verticalGap(paragraphs[0], paragraphs[1]) : null,
+          checklistAlign: checklist ? getComputedStyle(checklist).alignItems : null,
+          checklistGaps: checklistItems
+            .slice(1)
+            .map((item, index) => verticalGap(checklistItems[index], item)),
+        };
+      })(),
       missingAlt: [...document.images].filter((image) => !image.alt).length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
+      schemaTypes: schemaNodes.map((node: { "@type": string }) => node["@type"]),
     };
   });
 
@@ -60,6 +85,14 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
   expect(metadata.centers.hero).toBe(0);
   expect(metadata.centers.intro).toBe(0);
   expect(Math.min(...metadata.heroImageGaps)).toBeGreaterThanOrEqual(14);
+  expect(metadata.editorialLayout.sectionAlign).toBe("start");
+  expect(metadata.editorialLayout.headingOverflow).toBeLessThanOrEqual(1);
+  expect(metadata.editorialLayout.paragraphGap).toBeGreaterThanOrEqual(18);
+  expect(metadata.editorialLayout.paragraphGap).toBeLessThanOrEqual(28);
+  expect(metadata.editorialLayout.checklistAlign).toBe("start");
+  expect(
+    metadata.editorialLayout.checklistGaps.every((gap) => gap >= 14 && gap <= 24),
+  ).toBe(true);
   expect(metadata.missingAlt).toBe(0);
   expect(metadata.overflow).toBe(0);
   expect(metadata.schemaTypes).toEqual(
@@ -99,6 +132,7 @@ test("Getting Ready guide has complete SEO structure and optimized gallery", asy
 test("Getting Ready guide is mobile friendly and keeps navigation usable", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
 
   const mobileLayout = await page.evaluate(() => {
     const heroFigures = [...document.querySelectorAll<HTMLElement>(".gr-guide-hero__images figure")]
@@ -112,6 +146,30 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
       heroImageGaps: heroFigures.slice(1).map((figure, index) =>
         Math.round(figure.left - heroFigures[index].right),
       ),
+      editorialLayout: (() => {
+        const section = document.querySelector<HTMLElement>("#kennenlernshooting");
+        const heading = section?.querySelector<HTMLElement>("h2");
+        const paragraphs = [
+          ...(section?.querySelectorAll<HTMLElement>(".gr-copy p") ?? []),
+        ];
+        const checklist = document.querySelector<HTMLElement>(".gr-guide-checklist");
+        const checklistItems = [
+          ...(checklist?.querySelectorAll<HTMLElement>("li") ?? []),
+        ];
+        const verticalGap = (first: HTMLElement, second: HTMLElement) =>
+          Math.round(second.getBoundingClientRect().top - first.getBoundingClientRect().bottom);
+
+        return {
+          sectionColumns: section ? getComputedStyle(section).gridTemplateColumns : null,
+          headingOverflow: heading ? heading.scrollWidth - heading.clientWidth : null,
+          paragraphGap:
+            paragraphs.length > 1 ? verticalGap(paragraphs[0], paragraphs[1]) : null,
+          checklistColumns: checklist ? getComputedStyle(checklist).gridTemplateColumns : null,
+          checklistGaps: checklistItems
+            .slice(1)
+            .map((item, index) => verticalGap(checklistItems[index], item)),
+        };
+      })(),
       centers: (() => {
         const viewportCenter = document.documentElement.clientWidth / 2;
         const centerDelta = (selector: string) => {
@@ -138,6 +196,14 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
   expect(mobileLayout.centers.hero).toBe(0);
   expect(mobileLayout.centers.gallery).toBe(0);
   expect(Math.min(...mobileLayout.heroImageGaps)).toBeGreaterThanOrEqual(8);
+  expect(mobileLayout.editorialLayout.sectionColumns?.split(" ")).toHaveLength(1);
+  expect(mobileLayout.editorialLayout.headingOverflow).toBeLessThanOrEqual(1);
+  expect(mobileLayout.editorialLayout.paragraphGap).toBeGreaterThanOrEqual(12);
+  expect(mobileLayout.editorialLayout.paragraphGap).toBeLessThanOrEqual(22);
+  expect(mobileLayout.editorialLayout.checklistColumns?.split(" ")).toHaveLength(1);
+  expect(
+    mobileLayout.editorialLayout.checklistGaps.every((gap) => gap >= 14 && gap <= 24),
+  ).toBe(true);
 
   await page.screenshot({
     path: `${screenshotDirectory}/mobile-hero.png`,
@@ -145,10 +211,9 @@ test("Getting Ready guide is mobile friendly and keeps navigation usable", async
   });
 
   await page.getByRole("button", { name: "Menü öffnen" }).click();
-  await expect(page.locator(`.mobile-navigation__link[href="${pagePath}"]`)).toHaveAttribute(
-    "aria-current",
-    "page",
-  );
+  await expect(page.getByRole("navigation", { name: "Mobile Hauptnavigation" })).toBeVisible();
+  await expect(page.locator(".mobile-navigation__panel")).toHaveClass(/is-open/);
+  await page.waitForTimeout(300);
 
   const touchTargets = await page
     .locator(".mobile-navigation__link")

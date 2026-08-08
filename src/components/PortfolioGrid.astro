@@ -24,6 +24,12 @@ const {
   data-portfolio-browser
   data-page-size={initialVisible}
   aria-labelledby="portfolio-filter-title"
+  data-track-section="portfolio_browser"
+  data-content-topic="portfolio"
+  data-user-intent="galerie_auswaehlen"
+  data-journey-stage="auswahl"
+  data-content-format="portfolio_grid"
+  data-position="main"
 >
   <header class="portfolio-filter">
     <p id="portfolio-filter-title">Thema</p>
@@ -33,6 +39,13 @@ const {
           type="button"
           data-portfolio-filter={portfolioFilterSlug(filter)}
           aria-pressed={filter === "All" ? "true" : "false"}
+          data-track-event="gallery_interaction"
+          data-cta-id={`portfolio_filter_${portfolioFilterSlug(filter)}`}
+          data-cta-type="portfolio_filter"
+          data-section-id="portfolio_browser"
+          data-content-topic="portfolio"
+          data-user-intent="galerien_filtern"
+          data-journey-stage="auswahl"
         >
           {filter === "All" ? "Alle" : filter}
         </button>
@@ -54,6 +67,13 @@ const {
       type="button"
       data-portfolio-more
       aria-controls="portfolio-gallery-list"
+      data-track-event="gallery_interaction"
+      data-cta-id="portfolio_more_galleries"
+      data-cta-type="load_more"
+      data-section-id="portfolio_browser"
+      data-content-topic="portfolio"
+      data-user-intent="mehr_galerien_ansehen"
+      data-journey-stage="auswahl"
     >
       Mehr Galerien anzeigen
     </button>

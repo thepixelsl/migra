@@ -1,6 +1,10 @@
 ---
+import FaviconHead from "../components/FaviconHead.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
+import DesktopNavigation from "../components/DesktopNavigation.astro";
 import migratedPages from "../data/migratedPages.json";
+import { modernizePrivacyContent } from "../lib/privacyContent";
+import { getMigratedSeoPolicy } from "../lib/migratedSeoPolicy";
 import "../styles/global.css";
 
 type MigratedImage = {
@@ -28,27 +32,93 @@ type MigratedPage = {
 };
 
 export function getStaticPaths() {
-  return (migratedPages as MigratedPage[]).map((page) => ({
-    params: {
-      slug: page.path.replace(/^\/|\/$/g, ""),
-    },
-    props: { page },
-  }));
+  const dedicatedPaths = new Set([
+    "/about/",
+    "/blog/",
+    "/braut-fotoshooting-fraser-suites-hamburg/",
+    "/standesamt-hamburg/",
+  ]);
+
+  return (migratedPages as MigratedPage[])
+    .filter((page) => !dedicatedPaths.has(page.path))
+    .map((page) => ({
+      params: {
+        slug: page.path.replace(/^\/|\/$/g, ""),
+      },
+      props: { page },
+    }));
 }
 
 const { page } = Astro.props as { page: MigratedPage };
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const seoPolicy = getMigratedSeoPolicy(page.path);
 const pageUrl = `${siteUrl}${page.path}`;
+const canonicalUrl = `${siteUrl}${seoPolicy.canonicalPath}`;
 const isGallery = page.path.startsWith("/gallery/");
+const heroTitleLines =
+  page.path === "/gallery/engagement-shooting-in-hamburg/"
+    ? ["Paarshooting", "in Hamburg"]
+    : undefined;
+const isStandesamtHamburgPage = page.path === "/standesamt-hamburg/";
 const isLargeEnough = (image?: MigratedImage) =>
   Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
+const getImageArea = (image: MigratedImage) => (image.width ?? 0) * (image.height ?? 0);
+const getWordPressImageFamily = (src: string) =>
+  src.replace(/-\d+x\d+(?=\.[a-z0-9]+$)/i, "");
+const selectLargestImagePerFamily = (images: MigratedImage[]) => {
+  const imageFamilies = new Map<string, MigratedImage>();
+
+  for (const image of images) {
+    const family = getWordPressImageFamily(image.src);
+    const current = imageFamilies.get(family);
+
+    if (!current || getImageArea(image) > getImageArea(current)) {
+      imageFamilies.set(family, image);
+    }
+  }
+
+  return [...imageFamilies.values()];
+};
+const gentlemenExcludedImageStems = [
+  "bct-cloudflare-turnstile",
+  "cb-facebook",
+  "York-Augustin-Black",
+  "York-Augustin-White",
+  "ART_3680-Bearbeitet-Wiederhergestellt_web",
+  "ART_6078-Bearbeitet_web",
+  "ART_5111-Bearbeitet_web",
+  "ART_6065-Bearbeitet_web",
+];
+const gentlemenGalleryImages = selectLargestImagePerFamily(
+  page.galleryImages.filter(
+    (image) =>
+      !gentlemenExcludedImageStems.some((stem) => image.src.includes(stem)),
+  ),
+);
 const heroImage = isLargeEnough(page.heroImage) ? page.heroImage : undefined;
 const galleryImages = isGallery
-  ? page.galleryImages
+  ? page.path === "/gallery/gentlemen/"
+    ? gentlemenGalleryImages
+    : page.galleryImages
   : page.galleryImages.filter((image) => isLargeEnough(image));
 const hasGallery = galleryImages.length > 0;
-const primaryImage = heroImage ? `${siteUrl}${heroImage.src}` : `${siteUrl}/images/logo-artbild-black.png`;
+const normalizedContentHtml = page.contentHtml.replace(
+  /\b(href|action)=["']https?:\/\/(?:www\.)?artbild-fotografie\.(?:de|ch)(\/[^"']*)?["']/gi,
+  (_match, attribute, path = "/") => `${attribute}="${path}"`,
+);
+const contentHtml = modernizePrivacyContent(page.path, normalizedContentHtml);
+const contentDateModified = ["/datenschutz/", "/datenschutzerklaerung/"].includes(page.path)
+  ? "2026-08-08T00:00:00+02:00"
+  : page.dateModified;
+const primaryImage = heroImage
+  ? `${siteUrl}${heroImage.src}`
+  : `${siteUrl}/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg`;
 const breadcrumbLabel = isGallery ? "Galerie" : page.type === "post" ? "Blog" : "Seite";
+const getImageOrientation = (image: MigratedImage) => {
+  if (!image.width || !image.height) return "natural";
+  if (Math.abs(image.width - image.height) < 8) return "square";
+  return image.width > image.height ? "landscape" : "portrait";
+};
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -96,7 +166,7 @@ const schemaGraph = {
       description: page.description,
       keywords: page.keywords,
       datePublished: page.datePublished,
-      dateModified: page.dateModified,
+      dateModified: contentDateModified,
       image: primaryImage,
       mainEntityOfPage: {
         "@id": `${pageUrl}#webpage`,
@@ -132,43 +202,32 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{page.metaTitle}</title>
     <meta name="description" content={page.description}>
-    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
-    <link rel="canonical" href={pageUrl}>
+    <meta name="robots" content={seoPolicy.robots}>
+    <link rel="canonical" href={canonicalUrl}>
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content={page.type === "post" ? "article" : "website"}>
     <meta property="og:title" content={page.metaTitle}>
     <meta property="og:description" content={page.description}>
-    <meta property="og:url" content={pageUrl}>
+    <meta property="og:url" content={canonicalUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
     <meta property="og:image" content={primaryImage}>
     {heroImage?.width && <meta property="og:image:width" content={String(heroImage.width)}>}
     {heroImage?.height && <meta property="og:image:height" content={String(heroImage.height)}>}
     <meta property="og:image:alt" content={heroImage?.alt ?? page.title}>
     <meta name="twitter:card" content="summary_large_image">
-    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+    {seoPolicy.indexable && (
+      <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+    )}
   </head>
   <body class="migrated-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>
@@ -184,7 +243,13 @@ const schemaGraph = {
         <header class:list={["migrated-hero", { "has-no-image": !heroImage }]}>
           <div>
             <p class="migrated-kicker">{page.eyebrow}</p>
-            <h1>{page.title}</h1>
+            <h1 class:list={{ "has-controlled-lines": heroTitleLines }}>
+              {heroTitleLines
+                ? heroTitleLines.map((line, index) => (
+                    <span>{line}{index < heroTitleLines.length - 1 ? " " : ""}</span>
+                  ))
+                : page.title}
+            </h1>
             <p>{page.description}</p>
           </div>
 
@@ -203,8 +268,40 @@ const schemaGraph = {
           )}
         </header>
 
+        {isStandesamtHamburgPage && (
+          <aside
+            class="standesamt-planning-note"
+            aria-label="Hinweis zum Traukalender der Stadt Hamburg"
+            data-track-section="standesamt_hamburg_traukalender_note"
+            data-content-topic="standesamttermin_hamburg"
+            data-user-intent="termin_finden"
+            data-journey-stage="vor_reservierung"
+            data-content-format="info_box"
+            data-position="after_hero"
+          >
+            <div>
+              <p class="migrated-kicker">Traukalender Stadt Hamburg</p>
+              <p>
+                Noch ganz am Anfang der Planung? Im offiziellen Traukalender der Stadt Hamburg könnt Ihr freie Trautermine online prüfen und reservieren. Hier habe ich Euch erklärt, wie das funktioniert.
+              </p>
+            </div>
+            <a
+              href="/trautermin-hamburg-online-reservieren/"
+              data-track-event="cta_click"
+              data-cta-id="standesamt_hamburg_traukalender_guide"
+              data-cta-type="internal_guide_link"
+              data-section-id="standesamt_hamburg_traukalender_note"
+              data-content-topic="standesamttermin_hamburg"
+              data-user-intent="ratgeber_lesen"
+              data-journey-stage="vor_reservierung"
+            >
+              Zum Ratgeber Trautermin Hamburg
+            </a>
+          </aside>
+        )}
+
         <section class="migrated-content" aria-label="Inhalt">
-          <div set:html={page.contentHtml}></div>
+          <div set:html={contentHtml}></div>
         </section>
 
         {hasGallery && (
@@ -213,7 +310,7 @@ const schemaGraph = {
             <h2 id="migrated-gallery-title">{isGallery ? "Galerie" : "Bilder zur Seite"}</h2>
             <div>
               {galleryImages.map((image, index) => (
-                <figure>
+                <figure class={`is-${getImageOrientation(image)}`}>
                   <img
                     src={image.src}
                     width={image.width}
@@ -314,7 +411,18 @@ const schemaGraph = {
     font-weight: 400;
     letter-spacing: 0;
     line-height: .98;
-    overflow-wrap: anywhere;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+    text-wrap: balance;
+  }
+
+  .migrated-hero h1.has-controlled-lines {
+    font-size: clamp(58px, 5.2vw, 90px);
+  }
+
+  .migrated-hero h1.has-controlled-lines span {
+    display: block;
   }
 
   .migrated-hero p:not(.migrated-kicker) {
@@ -341,6 +449,53 @@ const schemaGraph = {
     color: #5f5953;
     font-size: clamp(20px, 1.8vw, 25px);
     line-height: 1.8;
+  }
+
+  .standesamt-planning-note {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(22px, 4vw, 46px);
+    align-items: center;
+    width: min(980px, 100%);
+    margin: 0 auto clamp(46px, 6vw, 82px);
+    padding: clamp(22px, 3.5vw, 38px);
+    border: 1px solid var(--line);
+    background: #f7f3ee;
+  }
+
+  .standesamt-planning-note p:not(.migrated-kicker) {
+    max-width: 700px;
+    margin: 0;
+    color: #6f6a64;
+    font-size: clamp(18px, 1.35vw, 22px);
+    line-height: 1.72;
+  }
+
+  .standesamt-planning-note .migrated-kicker {
+    margin-bottom: 12px;
+  }
+
+  .standesamt-planning-note a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 46px;
+    padding: 13px 18px;
+    border: 1px solid #202633;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .15em;
+    line-height: 1.4;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .standesamt-planning-note a:focus-visible {
+    outline: 2px solid #202633;
+    outline-offset: 5px;
   }
 
   .migrated-content :global(h1),
@@ -422,15 +577,41 @@ const schemaGraph = {
     gap: clamp(14px, 2vw, 28px);
   }
 
+  .migrated-article.is-gallery .migrated-gallery {
+    width: min(1320px, 100%);
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .migrated-article.is-gallery .migrated-gallery > div {
+    display: block;
+    columns: 3 280px;
+    column-gap: clamp(36px, 4vw, 72px);
+  }
+
   .migrated-gallery figure {
     margin: 0;
     background: #f4f0eb;
+  }
+
+  .migrated-article.is-gallery .migrated-gallery figure {
+    margin: 0 0 clamp(42px, 4vw, 76px);
+    break-inside: avoid;
+    background: transparent;
   }
 
   .migrated-gallery img {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
+  }
+
+  .migrated-article.is-gallery .migrated-gallery img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    object-fit: contain;
   }
 
   .migrated-footer {
@@ -463,6 +644,16 @@ const schemaGraph = {
       padding-top: 54px;
     }
 
+    .standesamt-planning-note {
+      grid-template-columns: 1fr;
+      gap: 22px;
+      padding: 22px;
+    }
+
+    .standesamt-planning-note a {
+      width: 100%;
+    }
+
     .migrated-breadcrumb {
       margin-bottom: 54px;
       font-size: 11px;
@@ -481,6 +672,10 @@ const schemaGraph = {
       line-height: 1.02;
     }
 
+    .migrated-hero h1.has-controlled-lines {
+      font-size: clamp(44px, 13vw, 58px);
+    }
+
     .migrated-hero p:not(.migrated-kicker),
     .migrated-content {
       font-size: 21px;
@@ -490,6 +685,22 @@ const schemaGraph = {
     .migrated-gallery > div {
       grid-template-columns: 1fr;
       gap: 18px;
+    }
+
+    .migrated-article.is-gallery {
+      width: min(100%, calc(100% - 48px));
+    }
+
+    .migrated-article.is-gallery .migrated-gallery {
+      margin-top: clamp(72px, 18vw, 104px);
+    }
+
+    .migrated-article.is-gallery .migrated-gallery > div {
+      columns: 1;
+    }
+
+    .migrated-article.is-gallery .migrated-gallery figure {
+      margin-bottom: clamp(36px, 9vw, 54px);
     }
   }
 </style>

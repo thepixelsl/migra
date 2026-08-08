@@ -1,8 +1,0 @@
-name = "migra"
-compatibility_date = "2026-07-03"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = "dist"
-
-[[kv_namespaces]]
-binding = "AVAILABILITY_KV"
-id = "a0de8186c952464a9bfae2e6283b15dc"

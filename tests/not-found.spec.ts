@@ -12,7 +12,7 @@ const waitForArtwork = async (page: import("@playwright/test").Page) => {
     .toBeGreaterThan(0);
 };
 
-test("404 page presents the museum scene and useful navigation on desktop", async ({ page }) => {
+test("404 page presents the hotel scene and useful navigation on desktop", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   const response = await page.goto(`${baseUrl}/diese-seite-gibt-es-nicht/`, {
     waitUntil: "domcontentloaded",
@@ -20,10 +20,10 @@ test("404 page presents the museum scene and useful navigation on desktop", asyn
 
   expect(response?.status()).toBe(404);
   await expect(page.getByRole("heading", {
-    name: "Diese Seite hat sich wohl im Museum verlaufen.",
+    name: "Diese Seite ist weg. Die gute Laune darf bleiben.",
   })).toBeVisible();
   await expect(page.getByRole("img", {
-    name: "Fotograf York Augustin betrachtet in einem Museum ein zeitgenössisches Gemälde mit der Aufschrift 404 Not Found",
+    name: "Braut springt ausgelassen auf einem Hotelbett",
   })).toBeVisible();
   await waitForArtwork(page);
   await expect(page.getByRole("link", { name: "Zur Startseite" })).toBeVisible();

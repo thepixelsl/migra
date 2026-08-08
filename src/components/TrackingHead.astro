@@ -1,0 +1,402 @@
+---
+import { trackingConfig } from "../config/tracking";
+
+const pathname = Astro.url.pathname;
+const normalizedPathname = pathname.replace(/\/+$/, "") || "/";
+const trackingExcluded =
+  normalizedPathname === "/404"
+  || normalizedPathname === "/404.html"
+  || normalizedPathname === "/admin-termine"
+  || normalizedPathname.startsWith("/admin-termine/");
+
+const publicConfig = trackingExcluded
+  ? {
+      ...trackingConfig,
+      consentEnabled: false,
+      environment: "disabled",
+      gtmContainerId: "",
+      googleAnalyticsId: "",
+      metaPixelId: "",
+    }
+  : trackingConfig;
+
+const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
+---
+
+<script
+  id="artbild-tracking-config"
+  type="application/json"
+  set:html={serializedConfig}
+></script>
+
+<script is:inline>
+  (() => {
+    if (window.__artbildConsentBootstrapped) return;
+    window.__artbildConsentBootstrapped = true;
+
+    const configElement = document.getElementById("artbild-tracking-config");
+    if (!configElement) return;
+
+    let config;
+    try {
+      config = JSON.parse(configElement.textContent || "{}");
+    } catch (_) {
+      return;
+    }
+
+    if (!config.consentEnabled) {
+      window.ArtbildConsent = {
+        enabled: false,
+        hasDecision: true,
+        analytics: false,
+        marketing: false,
+      };
+      window.artbildConsent = window.ArtbildConsent;
+      return;
+    }
+
+    const COOKIE_NAME = "artbild_consent";
+    const GOOGLE_ANALYTICS_COOKIE_PREFIXES = ["_ga", "_gid", "_gat"];
+    const GOOGLE_MARKETING_COOKIE_PREFIXES = ["_gcl", "_gac"];
+    const META_COOKIE_PREFIXES = ["_fbp", "_fbc"];
+
+    const hostMatches = (hostname, rule) => {
+      if (!rule) return false;
+      if (rule.startsWith("*.")) {
+        return hostname.endsWith(rule.slice(1));
+      }
+      return hostname === rule;
+    };
+
+    const hostname = window.location.hostname.toLowerCase();
+    const hostAllowed = Array.isArray(config.allowedHosts)
+      && config.allowedHosts.some((rule) => hostMatches(hostname, String(rule).toLowerCase()));
+    let providersEnabled = config.environment !== "disabled" && hostAllowed;
+
+    const sanitizeTrackingUrl = () => {
+      try {
+        const url = new URL(window.location.href);
+        if (!url.searchParams.has("termin")) return true;
+
+        const requestedDate = url.searchParams.get("termin");
+        if (requestedDate && /^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) {
+          try {
+            window.sessionStorage.setItem("artbild_requested_date", requestedDate);
+          } catch (_) {
+            // The URL still needs to be scrubbed if storage is unavailable.
+          }
+        }
+
+        url.searchParams.delete("termin");
+        window.history.replaceState(
+          window.history.state,
+          "",
+          `${url.pathname}${url.search}${url.hash}`,
+        );
+        return !new URL(window.location.href).searchParams.has("termin");
+      } catch (_) {
+        // URL and history APIs may be unavailable in hardened browser modes.
+        return false;
+      }
+    };
+
+    if (!sanitizeTrackingUrl()) {
+      providersEnabled = false;
+    }
+
+    const readCookie = (name) => {
+      const prefix = `${name}=`;
+      const value = document.cookie
+        .split(";")
+        .map((part) => part.trim())
+        .find((part) => part.startsWith(prefix));
+      return value ? value.slice(prefix.length) : "";
+    };
+
+    const readDecision = () => {
+      const raw = readCookie(COOKIE_NAME);
+      if (!raw) return null;
+
+      try {
+        const decision = JSON.parse(decodeURIComponent(raw));
+        if (
+          decision.version !== config.consentVersion
+          || typeof decision.analytics !== "boolean"
+          || typeof decision.marketing !== "boolean"
+        ) {
+          return null;
+        }
+        return decision;
+      } catch (_) {
+        return null;
+      }
+    };
+
+    const writeDecision = (decision) => {
+      const value = encodeURIComponent(JSON.stringify(decision));
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      document.cookie = `${COOKIE_NAME}=${value}; Path=/; Max-Age=15552000; SameSite=Lax${secure}`;
+    };
+
+    const expireCookie = (name) => {
+      const secure = window.location.protocol === "https:" ? "; Secure" : "";
+      const expires = "Thu, 01 Jan 1970 00:00:00 GMT";
+      document.cookie = `${name}=; Path=/; Expires=${expires}; SameSite=Lax${secure}`;
+
+      if (hostname.includes(".") && hostname !== "127.0.0.1") {
+        const registrableDomain = hostname.split(".").slice(-2).join(".");
+        document.cookie = `${name}=; Path=/; Domain=.${registrableDomain}; Expires=${expires}; SameSite=Lax${secure}`;
+      }
+    };
+
+    const clearProviderCookies = (prefixes) => {
+      document.cookie
+        .split(";")
+        .map((part) => part.trim().split("=")[0])
+        .filter((name) => prefixes.some((prefix) => name.startsWith(prefix)))
+        .forEach(expireCookie);
+    };
+
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = window.gtag || function gtag() {
+      window.dataLayer.push(arguments);
+    };
+
+    const storedDecision = readDecision();
+    const initialState = {
+      analytics: storedDecision?.analytics === true,
+      marketing: storedDecision?.marketing === true,
+    };
+
+    const googleConsentState = (state, includeWait) => {
+      const consent = {
+        analytics_storage: state.analytics ? "granted" : "denied",
+        ad_storage: state.marketing ? "granted" : "denied",
+        ad_user_data: state.marketing ? "granted" : "denied",
+        ad_personalization: state.marketing ? "granted" : "denied",
+        functionality_storage: "denied",
+        personalization_storage: "denied",
+        security_storage: "granted",
+      };
+      if (includeWait) consent.wait_for_update = 500;
+      return consent;
+    };
+
+    window.gtag(
+      "consent",
+      "default",
+      googleConsentState(initialState, !storedDecision),
+    );
+    window.gtag("set", "ads_data_redaction", true);
+    window.gtag("set", "url_passthrough", false);
+
+    window.dataLayer.push({
+      event: "artbild_tracking_config",
+      tracking_environment: config.environment,
+      google_analytics_id: config.googleAnalyticsId || undefined,
+      meta_pixel_id: config.metaPixelId || undefined,
+      consent_mode: "advanced",
+      consent_version: config.consentVersion,
+    });
+
+    const publishState = (state, hasDecision) => {
+      const publicState = {
+        enabled: true,
+        hasDecision,
+        analytics: state.analytics === true,
+        marketing: state.marketing === true,
+        version: config.consentVersion,
+        mode: "advanced",
+      };
+
+      window.ArtbildConsent = publicState;
+      window.artbildConsent = publicState;
+      document.documentElement.dataset.analyticsConsent = publicState.analytics
+        ? "granted"
+        : "denied";
+      document.documentElement.dataset.marketingConsent = publicState.marketing
+        ? "granted"
+        : "denied";
+      return publicState;
+    };
+
+    const loadMetaPixel = () => {
+      if (
+        !providersEnabled
+        || !/^\d{5,20}$/.test(config.metaPixelId || "")
+      ) {
+        return;
+      }
+
+      if (window.__artbildMetaPixelLoaded) {
+        if (typeof window.fbq === "function") {
+          window.fbq("consent", "grant");
+        }
+        return;
+      }
+
+      window.__artbildMetaPixelLoaded = true;
+
+      if (!window.fbq) {
+        const fbq = function () {
+          fbq.callMethod
+            ? fbq.callMethod.apply(fbq, arguments)
+            : fbq.queue.push(arguments);
+        };
+        fbq.push = fbq;
+        fbq.loaded = true;
+        fbq.version = "2.0";
+        fbq.queue = [];
+        window.fbq = fbq;
+        window._fbq = fbq;
+      }
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = "https://connect.facebook.net/en_US/fbevents.js";
+      script.dataset.artbildProvider = "meta";
+      document.head.appendChild(script);
+
+      window.fbq("consent", "grant");
+      window.fbq("init", config.metaPixelId);
+      window.fbq("track", "PageView");
+    };
+
+    const safeMetaParameters = (payload) => {
+      const allowed = [
+        "page_type",
+        "section_id",
+        "content_topic",
+        "journey_stage",
+        "cta_id",
+        "cta_type",
+        "resource_type",
+        "position",
+        "form_id",
+        "form_type",
+        "result",
+        "interaction_action",
+      ];
+      return Object.fromEntries(
+        allowed
+          .filter((key) => payload[key] !== undefined)
+          .map((key) => [key, payload[key]]),
+      );
+    };
+
+    window.artbildMetaPixel = {
+      track(payload) {
+        if (
+          window.ArtbildConsent?.marketing !== true
+          || typeof window.fbq !== "function"
+          || !payload?.event
+        ) {
+          return;
+        }
+
+        const parameters = safeMetaParameters(payload);
+        if (payload.event === "form_success" && payload.form_type === "contact_request") {
+          window.fbq("track", "Lead", parameters);
+          return;
+        }
+        if (payload.event === "contact_click") {
+          window.fbq("track", "Contact", parameters);
+          return;
+        }
+        if (payload.event === "view_pricing") {
+          window.fbq("track", "ViewContent", parameters);
+        }
+      },
+    };
+
+    const updateConsent = (nextState) => {
+      const state = {
+        analytics: nextState.analytics === true,
+        marketing: nextState.marketing === true,
+      };
+      const decision = {
+        version: config.consentVersion,
+        analytics: state.analytics,
+        marketing: state.marketing,
+        updatedAt: new Date().toISOString(),
+      };
+
+      writeDecision(decision);
+      publishState(state, true);
+      window.gtag("consent", "update", googleConsentState(state, false));
+
+      if (!state.analytics) {
+        clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
+      }
+
+      if (state.marketing) {
+        loadMetaPixel();
+      } else {
+        if (typeof window.fbq === "function") {
+          window.fbq("consent", "revoke");
+        }
+        clearProviderCookies(GOOGLE_MARKETING_COOKIE_PREFIXES);
+        clearProviderCookies(META_COOKIE_PREFIXES);
+      }
+
+      const detail = {
+        analytics: state.analytics,
+        marketing: state.marketing,
+        necessary: true,
+        mode: "advanced",
+        version: config.consentVersion,
+      };
+      window.dataLayer.push({
+        event: "artbild_consent_update",
+        consent_analytics: state.analytics ? "granted" : "denied",
+        consent_marketing: state.marketing ? "granted" : "denied",
+        consent_mode: "advanced",
+      });
+      window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
+      return publishState(state, true);
+    };
+
+    publishState(initialState, Boolean(storedDecision));
+    if (!initialState.analytics) {
+      clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
+    }
+    if (!initialState.marketing) {
+      clearProviderCookies(GOOGLE_MARKETING_COOKIE_PREFIXES);
+      clearProviderCookies(META_COOKIE_PREFIXES);
+    }
+
+    window.artbildConsentApi = {
+      getState: () => ({ ...window.ArtbildConsent }),
+      setConsent: updateConsent,
+      openSettings: () => {
+        window.dispatchEvent(new CustomEvent("artbild:consent_settings_open"));
+      },
+    };
+
+    window.dataLayer.push({
+      event: "artbild_consent_state",
+      consent_analytics: initialState.analytics ? "granted" : "denied",
+      consent_marketing: initialState.marketing ? "granted" : "denied",
+      consent_decision_present: Boolean(storedDecision),
+    });
+
+    if (
+      providersEnabled
+      && /^GTM-[A-Z0-9]{4,}$/i.test(config.gtmContainerId || "")
+    ) {
+      window.dataLayer.push({
+        "gtm.start": Date.now(),
+        event: "gtm.js",
+      });
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmContainerId)}`;
+      script.dataset.artbildProvider = "google-tag-manager";
+      document.head.appendChild(script);
+    }
+
+    if (storedDecision?.marketing) {
+      loadMetaPixel();
+    }
+  })();
+</script>

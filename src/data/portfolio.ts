@@ -14,10 +14,18 @@ import gentlemen from "../assets/portfolio/gentlemen.jpg";
 import connyAlex from "../assets/portfolio/conny-alex.jpg";
 import barberhouseHamburg from "../assets/portfolio/barberhouse-hamburg.jpg";
 import nordenKueste from "../assets/portfolio/norden-kueste.jpg";
-import paris from "../assets/portfolio/paris.jpg";
+import travelParis from "../assets/travel-galleries/paris/DSC_4967.jpg";
+import travelVenedig from "../assets/travel-galleries/venedig/ART_8436-HDR.jpg";
+import travelTeneriffa from "../assets/travel-galleries/teneriffa/K1024_Unbenannt-28.jpg";
+import paris from "../assets/traumhochzeit-paris-2019/ART_5851_web.jpg";
 import lovebirdsElbstrand from "../assets/portfolio/lovebirds-elbstrand.jpg";
 import traumhochzeitHamburg from "../assets/portfolio/traumhochzeit-hamburg.jpg";
+import elopementFraserSuitesHamburg from "../assets/elopement-fraser-suites-hamburg/ART_5557-Bearbeitet.jpg";
+import hochzeitJahrhunderhalleBochum from "../assets/portfolio/hochzeit-jahrhunderhalle-bochum.jpg";
 import brautpaarZuerich from "../assets/brautpaar-zuerich/ART_8515-Bearbeitet-scaled.jpg";
+import editorialLondon from "../assets/editorial-london/ART_7899-Bearbeitet.jpg";
+import parisBridalEditorial from "../assets/paris-bridal-editorial/ART_4765.jpg";
+import valerieTim from "../assets/valerie-und-tim/ART_4449.jpg";
 
 export type PortfolioFilter = "All" | "Travel" | "Hochzeit" | "Peoplefotografie";
 
@@ -33,6 +41,56 @@ export type PortfolioEntry = {
 };
 
 const entries: PortfolioEntry[] = [
+  {
+    title: "Hochzeit von Valerie und Tim",
+    category: "Frühlingshochzeit",
+    filter: "Hochzeit",
+    date: "12.07.2026",
+    href: "/gallery/hochzeit-valerie-und-tim/",
+    image: valerieTim,
+    alt: "Valerie und Tim bei ihrem Brautpaarshooting im Frühlingslicht",
+    aspect: "portrait",
+  },
+  {
+    title: "Brautkleid Editorial in Paris",
+    category: "Bridal Editorial Paris",
+    filter: "Peoplefotografie",
+    date: "12.07.2026",
+    href: "/gallery/brautkleid-editorial-paris/",
+    image: parisBridalEditorial,
+    alt: "Brautkleid Editorial in Paris mit Braut und Eiffelturm",
+    aspect: "portrait",
+  },
+  {
+    title: "Editorial mit Mariam in London",
+    category: "Editorial London",
+    filter: "Peoplefotografie",
+    date: "12.07.2026",
+    href: "/gallery/editorial-london/",
+    image: editorialLondon,
+    alt: "Editorial Portrait von Mariam an der Themse mit Westminster und Big Ben in London",
+    aspect: "portrait",
+  },
+  {
+    title: "Hochzeit Jahrhunderthalle Bochum",
+    category: "Hochzeit",
+    filter: "Hochzeit",
+    date: "04.07.2026",
+    href: "/gallery/hochzeit-jahrhunderhalle-bochum/",
+    image: hochzeitJahrhunderhalleBochum,
+    alt: "Hochzeitsgesellschaft vor der Industriearchitektur der Jahrhunderthalle Bochum",
+    aspect: "portrait",
+  },
+  {
+    title: "Brautpaar-Editorial Fraser Suites Hamburg",
+    category: "Styled Editorial",
+    filter: "Peoplefotografie",
+    date: "04.07.2026",
+    href: "/gallery/elopement-hochzeit-fraser-suites-hamburg/",
+    image: elopementFraserSuitesHamburg,
+    alt: "Brautpaar beim Editorial in den Fraser Suites Hamburg",
+    aspect: "landscape",
+  },
   {
     title: "Brautpaar in Zürich",
     category: "Hochzeit",
@@ -106,7 +164,7 @@ const entries: PortfolioEntry[] = [
   {
     title: "Paarshooting Mallorca",
     category: "Couples",
-    filter: "Travel",
+    filter: "Hochzeit",
     date: "24.11.2019",
     href: "/gallery/paarshooting-mallorca/",
     image: paarshootingMallorca,
@@ -184,6 +242,36 @@ const entries: PortfolioEntry[] = [
     aspect: "landscape",
   },
   {
+    title: "Cityscapes aus Paris",
+    category: "Paris",
+    filter: "Travel",
+    date: "05.07.2019",
+    href: "/gallery/paris/",
+    image: travelParis,
+    alt: "Travel Fotografie und Cityscape aus Paris",
+    aspect: "landscape",
+  },
+  {
+    title: "Cityscapes aus Venedig",
+    category: "Venedig und Murano",
+    filter: "Travel",
+    date: "05.07.2019",
+    href: "/gallery/venedig/",
+    image: travelVenedig,
+    alt: "Travel Fotografie aus Venedig und Murano",
+    aspect: "landscape",
+  },
+  {
+    title: "Landschaftsbilder aus Teneriffa",
+    category: "Kanarische Inseln",
+    filter: "Travel",
+    date: "01.12.2017",
+    href: "/gallery/teneriffa/",
+    image: travelTeneriffa,
+    alt: "Travel Fotografie auf Teneriffa mit Landschaft und Lichtstimmung",
+    aspect: "landscape",
+  },
+  {
     title: "Traumhochzeit in Hamburg",
     category: "Hochzeit",
     filter: "Hochzeit",
@@ -200,7 +288,7 @@ const entries: PortfolioEntry[] = [
     date: "05.07.2019",
     href: "/gallery/traumhochzeit-in-paris/",
     image: paris,
-    alt: "Braut bei einem editorialen Hochzeitsfotoshooting in Paris",
+    alt: "Editoriales Brautbild in einer Pariser Straße",
     aspect: "portrait",
   },
   {

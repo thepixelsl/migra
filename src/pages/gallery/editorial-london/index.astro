@@ -1,0 +1,672 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/editorial-london/*.{jpg,jpeg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/editorial-london/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Editorial mit Mariam in London";
+const title = "Editorial Fotoshooting London mit Mariam | Artbild-Fotografie";
+const description =
+  "Editoriales Fotoshooting mit Mariam in London: Portraits an der Themse, in Westminster und South Kensington, fotografiert von Artbild-Fotografie aus Hamburg.";
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [path.split("/").pop() ?? path, image]),
+) as Record<string, ImageMetadata>;
+
+const heroFile = "ART_7899-Bearbeitet.jpg";
+const galleryFiles = [
+  "ART_7996-Bearbeitet.jpg",
+  "ART_7714-2.jpg",
+  "ART_8311.jpg",
+  "ART_7720-Bearbeitet.jpg",
+  "ART_7773-Bearbeitet.jpg",
+  "ART_8545-Bearbeitet-Bearbeitet.jpg",
+  "ART_8308-Bearbeitet.jpg",
+  "ART_8603-Bearbeitet.jpg",
+  "ART_0044-Bearbeitet.jpg",
+  "ART_8622-Bearbeitet.jpg",
+  "ART_8705-Bearbeitet.jpg",
+  "ART_8638-Bearbeitet.jpg",
+  "ART_8690-Bearbeitet.jpg",
+  "ART_8696-Bearbeitet.jpg",
+  "ART_8731-Bearbeitet.jpg",
+  "ART_8785-Bearbeitet.jpg",
+  "ART_8884-Bearbeitet.jpg",
+  "ART_0799-de-Bearbeitet.jpg",
+  "ART_9787-Bearbeitet-Bearbeitet.jpg",
+  "ART_9892-Bearbeitet.jpg",
+  "ART_9950-Bearbeitet.jpg",
+  "ART_9968-Bearbeitet-Bearbeitet.jpg",
+].filter((file) => modulesByFile[file]);
+
+const altByFile: Record<string, string> = {
+  "ART_7899-Bearbeitet.jpg":
+    "Editorial Portrait von Mariam an der Themse mit Westminster und Big Ben in London",
+  "ART_7996-Bearbeitet.jpg":
+    "Mariam beim Editorial Fotoshooting vor dem Palace of Westminster in London",
+  "ART_7714-2.jpg":
+    "Seitliches Portrait von Mariam in einem weißen Kleid in South Kensington",
+  "ART_8311.jpg":
+    "Editorial Portrait an der Themse mit Westminster Bridge und Big Ben",
+  "ART_7720-Bearbeitet.jpg":
+    "Mariam vor klassischer Londoner Architektur in South Kensington",
+  "ART_7773-Bearbeitet.jpg":
+    "Modeportrait von Mariam auf einer hellen Treppe in South Kensington",
+  "ART_8545-Bearbeitet-Bearbeitet.jpg":
+    "Big Ben und Palace of Westminster als Londoner Kulisse der Editorialserie",
+  "ART_8308-Bearbeitet.jpg":
+    "Mariam im weißen Kleid am Victoria Embankment gegenüber von Westminster",
+  "ART_8603-Bearbeitet.jpg":
+    "Editorial Portrait von Mariam im schwarzen Kleid an der Themse",
+  "ART_0044-Bearbeitet.jpg":
+    "Historischer Fußgängerknopf in London als Detail der Editorialstrecke",
+  "ART_8622-Bearbeitet.jpg":
+    "Lachendes Portrait von Mariam am Victoria Embankment in London",
+  "ART_8705-Bearbeitet.jpg":
+    "Weites Editorialbild von Mariam an der Themse mit Westminster im Hintergrund",
+  "ART_8638-Bearbeitet.jpg":
+    "Mariam im schwarzen Kleid vor der Londoner Flusskulisse",
+  "ART_8690-Bearbeitet.jpg":
+    "Editorial Portrait mit Mariam und dem Palace of Westminster im Hintergrund",
+  "ART_8696-Bearbeitet.jpg":
+    "Ganzkörperportrait von Mariam am Victoria Embankment in London",
+  "ART_8731-Bearbeitet.jpg":
+    "Mariam in natürlicher Pose bei einem Portraitshooting an der Themse",
+  "ART_8785-Bearbeitet.jpg":
+    "Ruhiges Portrait von Mariam mit weichem Londoner Tageslicht",
+  "ART_8884-Bearbeitet.jpg":
+    "Nahes Editorial Portrait von Mariam vor Westminster",
+  "ART_0799-de-Bearbeitet.jpg":
+    "Mariam vor einer blauen Haustür bei einem Editorial Shooting in London",
+  "ART_9787-Bearbeitet-Bearbeitet.jpg":
+    "Elegantes Portrait von Mariam vor klassischer Architektur in South Kensington",
+  "ART_9892-Bearbeitet.jpg":
+    "Lachendes Portrait von Mariam vor einem Londoner Hauseingang",
+  "ART_9950-Bearbeitet.jpg":
+    "Mariam im schwarzen Kleid und mit Statementkette in South Kensington",
+  "ART_9968-Bearbeitet-Bearbeitet.jpg":
+    "Editorial Ganzkörperportrait vor einer klassischen Londoner Fassade",
+};
+
+const heroImage = modulesByFile[heroFile];
+const galleryImages = galleryFiles.map((file, index) => ({
+  id: file.replace(/\.(jpe?g)$/i, ""),
+  image: modulesByFile[file],
+  alt: altByFile[file] ?? `Editorial Fotoshooting mit Mariam in London, Bild ${index + 1}`,
+  aspect:
+    modulesByFile[file].width > modulesByFile[file].height
+      ? "landscape" as const
+      : "portrait" as const,
+  eager: false,
+}));
+const galleryColumns = [galleryImages];
+
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
+
+const londonPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#london`,
+  name: "London",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "London",
+    addressCountry: "GB",
+  },
+  containedInPlace: {
+    "@type": "Country",
+    name: "Vereinigtes Königreich",
+  },
+};
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Editorial Fotoshooting London",
+        "Portraitfotografie London",
+        "Editorial Portrait Mariam",
+        "Westminster Portraits",
+        "South Kensington Portraits",
+      ],
+      datePublished: "2026-07-12T12:00:00+02:00",
+      dateModified: "2026-07-12T12:00:00+02:00",
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: primaryImage,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      contentLocation: { "@id": `${pageUrl}#london` },
+      about: [
+        { "@type": "Thing", name: "Editorial Portraitfotografie" },
+        { "@type": "Place", name: "Westminster" },
+        { "@type": "Place", name: "South Kensington" },
+        { "@type": "Place", name: "Themse" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: heading,
+      description,
+      contentLocation: { "@id": `${pageUrl}#london` },
+      image: [
+        {
+          "@type": "ImageObject",
+          position: 1,
+          caption: altByFile[heroFile],
+          contentUrl: primaryImage,
+          width: heroImage.width,
+          height: heroImage.height,
+        },
+        ...galleryImages.map((item, index) => ({
+          "@type": "ImageObject",
+          position: index + 2,
+          caption: item.alt,
+          contentUrl: new URL(item.image.src, siteUrl).href,
+          width: item.image.width,
+          height: item.image.height,
+        })),
+      ],
+    },
+    londonPlace,
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: "2026-07-12T12:00:00+02:00",
+      dateModified: "2026-07-12T12:00:00+02:00",
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+        caption: altByFile[heroFile],
+      },
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={altByFile[heroFile]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template london-editorial-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+
+      <article class="london-editorial">
+        <header
+          class="london-hero"
+          data-track-section="editorial_london_hero"
+          data-content-topic="editorial_fotoshooting_london"
+          data-user-intent="bildsprache_bewerten"
+          data-journey-stage="entdeckung"
+          data-content-format="gallery_hero"
+          data-position="page_top"
+        >
+          <div class="london-hero__copy">
+            <p class="london-hero__script" aria-hidden="true">London</p>
+            <p class="london-kicker">Editorial · Westminster · South Kensington</p>
+            <h1>{heading}</h1>
+            <p>
+              Eine Londoner Portraitserie zwischen klassischer Architektur,
+              weitem Flusslicht und moderner Editorial-Ästhetik. Mariam wurde
+              an der Themse, in Westminster und in South Kensington fotografiert.
+            </p>
+          </div>
+          <figure class="london-hero__portrait">
+            <Image
+              src={heroImage}
+              widths={[460, 720, 920, 1200]}
+              sizes="(max-width: 760px) 82vw, 38vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt={altByFile[heroFile]}
+            />
+            <figcaption>Editorial Portrait an der Themse · Westminster, London</figcaption>
+          </figure>
+        </header>
+
+        <section
+          class="london-story"
+          aria-labelledby="london-story-title"
+          data-track-section="editorial_london_story"
+          data-content-topic="fotoshooting_london_hamburg"
+          data-user-intent="shooting_kennenlernen"
+          data-journey-stage="auswahl"
+          data-content-format="editorial_story"
+          data-position="before_gallery"
+        >
+          <div class="london-story__heading">
+            <p class="london-kicker">Stationen der Portraitserie</p>
+            <h2 id="london-story-title">Mariam in Westminster und South Kensington</h2>
+          </div>
+          <div class="london-story__copy">
+            <div>
+              <h3>Westminster & Themse</h3>
+              <p>
+                Die Aufnahmen am Victoria Embankment zeigen Mariam mit Big Ben,
+                Westminster Bridge und dem Palace of Westminster im Hintergrund.
+              </p>
+            </div>
+            <div>
+              <h3>South Kensington</h3>
+              <p>
+                In South Kensington entstanden Portraits auf hellen Treppen, vor
+                Hauseingängen und in den Seitenstraßen des Viertels.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="editorial-london"
+          label="Editorial Fotoshooting mit Mariam in London"
+          dialogLabel="London Editorial mit Mariam in Vollansicht"
+          sectionId="editorial_london_gallery"
+          contentTopic="editorial_fotoshooting_london"
+          userIntent="beispielbilder_ansehen"
+          journeyStage="auswahl"
+          position="gallery_body"
+        />
+
+        <aside class="london-meta" aria-label="Themen und Orte der Galerie">
+          <span>Themen:</span>
+          <span>Editorial Fotoshooting London</span>
+          <span>Westminster</span>
+          <span>South Kensington</span>
+          <span>Portraitfotografie</span>
+        </aside>
+
+        <nav class="london-related" aria-label="Weitere Editorials und Galerien">
+          <a href="/gallery/editorial/"><span>Hamburg</span>Editorial Portraits</a>
+          <a href="/gallery/traumhochzeit-in-paris/"><span>Paris</span>Editoriale Hochzeitsbilder</a>
+          <a href="/portfolio/"><span>Übersicht</span>Portfolio Artbild-Fotografie</a>
+        </nav>
+      </article>
+
+      <StoryLanguageCta kind="editorial" />
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .london-editorial {
+    padding-top: clamp(62px, 6.2vw, 96px);
+  }
+
+  .london-hero {
+    width: min(1240px, calc(100% - 72px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1.02fr) minmax(280px, .68fr);
+    gap: clamp(46px, 8vw, 112px);
+    align-items: center;
+  }
+
+  .london-hero__script {
+    margin: 0 0 clamp(28px, 4vw, 54px);
+    color: #30333b;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(50px, 6vw, 92px);
+    line-height: 1;
+  }
+
+  .london-kicker {
+    margin: 0;
+    color: #866b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .london-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 6.1vw, 90px);
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .london-hero__copy > p:last-child {
+    width: min(680px, 100%);
+    margin: 32px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.7;
+  }
+
+  .london-hero__portrait {
+    margin: 0;
+  }
+
+  .london-hero__portrait :global(img) {
+    width: min(100%, 460px);
+    height: auto;
+    display: block;
+    margin-left: auto;
+  }
+
+  .london-hero__portrait figcaption {
+    margin-top: 14px;
+    color: #817a72;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .london-story {
+    width: min(1220px, calc(100% - 92px));
+    margin: clamp(90px, 9vw, 136px) auto 0;
+    padding: clamp(66px, 7vw, 100px) clamp(34px, 6vw, 86px);
+    background: #f4f0ed;
+  }
+
+  .london-story__heading {
+    width: min(850px, 100%);
+  }
+
+  .london-story h2,
+  .london-service h2 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .london-story__copy {
+    margin-top: clamp(50px, 6vw, 78px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(30px, 4vw, 60px);
+  }
+
+  .london-story h3 {
+    margin: 0 0 18px;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2.2vw, 31px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .london-story__copy p,
+  .london-service > div:last-child > p {
+    margin: 0;
+    color: #69635e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(17px, 1.35vw, 20px);
+    line-height: 1.7;
+  }
+
+  .london-meta {
+    width: min(1170px, calc(100% - 48px));
+    margin: 46px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 20px;
+    padding-top: 24px;
+    border-top: 1px solid #dedad4;
+    color: #706b65;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .london-meta span:first-child {
+    color: #2f323c;
+  }
+
+  .london-service {
+    width: min(1110px, calc(100% - 48px));
+    margin: clamp(100px, 10vw, 150px) auto;
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: clamp(46px, 8vw, 110px);
+    align-items: start;
+  }
+
+  .london-service > div:last-child {
+    padding-top: 8px;
+  }
+
+  .london-service > div:last-child > p + p {
+    margin-top: 22px;
+  }
+
+  .london-service__actions {
+    margin-top: 38px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .london-service__actions a {
+    min-height: 50px;
+    padding: 0 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #2c3039;
+    color: #2c3039;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .london-service__actions a.is-primary {
+    background: #2c3039;
+    color: #fff;
+  }
+
+  .london-related {
+    width: min(1180px, calc(100% - 48px));
+    margin: 0 auto clamp(100px, 10vw, 150px);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
+  }
+
+  .london-related a {
+    min-height: 180px;
+    padding: 34px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 2vw, 27px);
+    line-height: 1.3;
+    text-align: center;
+    text-decoration: none;
+  }
+
+  .london-related a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .london-related span {
+    margin-bottom: 14px;
+    color: #8d6e5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .london-related a:hover,
+  .london-related a:focus-visible {
+    background: #f4f0ed;
+  }
+
+  .london-service a:focus-visible,
+  .london-related a:focus-visible {
+    outline: 2px solid #8d6e5a;
+    outline-offset: 4px;
+  }
+
+  @media (max-width: 920px) {
+    .london-hero,
+    .london-service {
+      grid-template-columns: 1fr;
+    }
+
+    .london-hero__copy {
+      text-align: center;
+    }
+
+    .london-hero__copy > p:last-child {
+      margin-inline: auto;
+    }
+
+    .london-hero__portrait {
+      order: -1;
+    }
+
+    .london-hero__portrait :global(img) {
+      margin-inline: auto;
+    }
+
+    .london-hero__portrait figcaption {
+      text-align: center;
+    }
+
+    .london-story__copy,
+    .london-related {
+      grid-template-columns: 1fr;
+    }
+
+    .london-related a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .london-editorial {
+      padding-top: 36px;
+    }
+
+    .london-hero,
+    .london-story,
+    .london-meta,
+    .london-service,
+    .london-related {
+      width: min(100% - 28px, 560px);
+    }
+
+    .london-hero {
+      gap: 44px;
+    }
+
+    .london-hero__portrait :global(img) {
+      width: min(82vw, 350px);
+    }
+
+    .london-hero h1 {
+      font-size: clamp(44px, 13vw, 62px);
+    }
+
+    .london-story {
+      margin-top: 72px;
+      padding: 54px 22px;
+    }
+
+    .london-service__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .london-related a {
+      min-height: 146px;
+    }
+  }
+</style>

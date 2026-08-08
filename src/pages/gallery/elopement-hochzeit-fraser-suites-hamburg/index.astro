@@ -1,0 +1,828 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/elopement-fraser-suites-hamburg/*.{jpg,jpeg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/elopement-hochzeit-fraser-suites-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Brautpaar-Editorial in den Fraser Suites Hamburg";
+const title = "Brautpaar-Editorial Fraser Suites Hamburg | Artbild-Fotografie";
+const description =
+  "Inszenierte Brautpaarserie in den Fraser Suites Hamburg mit Getting-Ready-Motiven, Portraits im Treppenhaus und Blicken über Hamburg.";
+const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
+const datePublished = "2026-07-04T08:30:00+02:00";
+const dateModified = "2026-07-17T12:00:00+02:00";
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [
+    path.split("/").pop() ?? path,
+    image,
+  ]),
+) as Record<string, ImageMetadata>;
+
+const preferredOrder = [
+  "ART_5547-Bearbeitet.jpg",
+  "ART_5317-Bearbeitet.jpg",
+  "ART_4995.jpg",
+  "ART_5105.jpg",
+  "ART_5161-Bearbeitet.jpg",
+  "ART_5202-Bearbeitet.jpg",
+  "ART_5223.jpg",
+  "ART_5249-Bearbeitet.jpg",
+  "ART_5364-Bearbeitet.jpg",
+  "ART_5383.jpg",
+  "ART_5389-Bearbeitet.jpg",
+  "ART_5407-Bearbeitet.jpg",
+  "ART_5421.jpg",
+  "ART_5425-Bearbeitet.jpg",
+  "ART_5452-Bearbeitet.jpg",
+  "ART_5465-Bearbeitet.jpg",
+  "ART_5479-Bearbeitet.jpg",
+  "ART_5487-Bearbeitet-2.jpg",
+  "ART_5491-Bearbeitet.jpg",
+  "ART_5514.jpg",
+  "ART_5528-Bearbeitet.jpg",
+  "ART_5552-Bearbeitet.jpg",
+  "ART_5557-Bearbeitet.jpg",
+  "ART_5563-Bearbeitet.jpg",
+  "ART_5580-Bearbeitet-2.jpg",
+  "ART_5609.jpg",
+  "ART_5663-Bearbeitet.jpg",
+  "ART_5664-Bearbeitet.jpg",
+  "ART_5759-Bearbeitet.jpg",
+  "ART_5802-Bearbeitet-Bearbeitet.jpg",
+  "ART_5803-Bearbeitet-Bearbeitet.jpg",
+  "ART_5809-Bearbeitet-Bearbeitet.jpg",
+  "ART_5813-Bearbeitet.jpg",
+  "ART_5819-Bearbeitet.jpg",
+  "ART_5821-Bearbeitet.jpg",
+  "ART_5823-Bearbeitet.jpg",
+  "ART_5833.jpg",
+  "ART_5844-Bearbeitet.jpg",
+  "ART_5847.jpg",
+  "ART_5849-Bearbeitet.jpg",
+  "ART_5850-Bearbeitet.jpg",
+  "ART_5858.jpg",
+  "ART_5861.jpg",
+  "ART_5883-Bearbeitet-Bearbeitet.jpg",
+  "ART_5901-Bearbeitet.jpg",
+  "ART_5996-Bearbeitet.jpg",
+  "ART_6018-Bearbeitet.jpg",
+];
+
+const imageFiles = [
+  ...preferredOrder.filter((file) => modulesByFile[file]),
+  ...Object.keys(modulesByFile)
+    .filter((file) => !preferredOrder.includes(file))
+    .sort((a, b) => a.localeCompare(b, "de")),
+];
+
+const altByFile: Record<string, string> = {
+  "ART_5547-Bearbeitet.jpg":
+    "Brautpaar beim Editorial im Treppenhaus der Fraser Suites Hamburg",
+  "ART_5317-Bearbeitet.jpg":
+    "Brautportrait im hellen Hotelzimmer der Fraser Suites Hamburg",
+  "ART_4995.jpg":
+    "Blick aus den Fraser Suites Hamburg auf den Michel und die Hamburger Innenstadt",
+  "ART_5105.jpg":
+    "Getting-Ready-Detail im Hotelzimmer der Fraser Suites Hamburg",
+  "ART_5161-Bearbeitet.jpg":
+    "Braut beim Getting Ready in den Fraser Suites Hamburg",
+  "ART_5202-Bearbeitet.jpg":
+    "Brautportrait im Hotelzimmer der Fraser Suites Hamburg",
+  "ART_5223.jpg":
+    "Brautdetails und Hochzeitskleid beim Editorial in Hamburg",
+  "ART_5249-Bearbeitet.jpg":
+    "Brautstyling im natürlichen Licht einer Hotelsuite in Hamburg",
+  "ART_5364-Bearbeitet.jpg":
+    "Braut in Couture-Kleid beim Fotoshooting in Hamburg",
+  "ART_5809-Bearbeitet-Bearbeitet.jpg":
+    "Brautpaarshooting im historischen Treppenhaus der Fraser Suites Hamburg",
+  "ART_6018-Bearbeitet.jpg":
+    "Nahes Brautpaarportrait beim Editorial in Hamburg",
+};
+
+const fallbackAlt = (index: number) =>
+  `Brautpaar-Editorial in den Fraser Suites Hamburg, Bild ${index + 1}`;
+
+const galleryImages = imageFiles.map((file, index) => {
+  const image = modulesByFile[file];
+  return {
+    id: file.replace(/\.(jpe?g)$/i, ""),
+    image,
+    alt: altByFile[file] ?? fallbackAlt(index),
+    aspect: image.width > image.height ? "landscape" as const : "portrait" as const,
+    eager: index < 2,
+  };
+});
+
+const galleryColumns = [galleryImages];
+
+const heroImage = modulesByFile["ART_5547-Bearbeitet.jpg"] ?? galleryImages[0].image;
+const portraitImage = modulesByFile["ART_5317-Bearbeitet.jpg"] ?? galleryImages[1]?.image ?? heroImage;
+const viewImage = modulesByFile["ART_4995.jpg"] ?? galleryImages[2]?.image ?? heroImage;
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const hamburgPlace = {
+  "@type": "City",
+  "@id": `${pageUrl}#hamburg`,
+  name: "Hamburg",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+};
+
+const venuePlace = {
+  "@type": "Hotel",
+  "@id": `${pageUrl}#fraser-suites-hamburg`,
+  name: "Fraser Suites Hamburg",
+  url: "https://www.frasershospitality.com/de/germany/hamburg/fraser-suites-hamburg/",
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Rödingsmarkt 2",
+    postalCode: "20459",
+    addressLocality: "Hamburg",
+    addressRegion: "Hamburg",
+    addressCountry: "DE",
+  },
+  containedInPlace: {
+    "@id": `${pageUrl}#hamburg`,
+  },
+};
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Brautpaar Editorial Hamburg",
+        "Fraser Suites Hamburg Fotoshooting",
+        "Brautportrait Hamburg",
+        "Getting Ready Hamburg",
+        "Brautpaarshooting Fraser Suites",
+      ],
+      datePublished,
+      dateModified,
+      author: {
+        "@type": "Person",
+        name: "York Augustin",
+      },
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      image: primaryImage,
+      mainEntityOfPage: {
+        "@id": `${pageUrl}#webpage`,
+      },
+      contentLocation: [
+        { "@id": `${pageUrl}#hamburg` },
+        { "@id": `${pageUrl}#fraser-suites-hamburg` },
+      ],
+      about: [
+        { "@type": "Thing", name: "Brautpaar-Editorial Hamburg" },
+        { "@type": "Thing", name: "Getting Ready im Hotel" },
+        { "@type": "Thing", name: "Brautportrait Hamburg" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: heading,
+      description,
+      contentLocation: {
+        "@id": `${pageUrl}#fraser-suites-hamburg`,
+      },
+      image: galleryImages.map((item, index) => ({
+        "@type": "ImageObject",
+        position: index + 1,
+        caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href,
+        width: item.image.width,
+        height: item.image.height,
+      })),
+    },
+    hamburgPlace,
+    venuePlace,
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      email: "info@artbild-fotografie.de",
+      logo: {
+        "@type": "ImageObject",
+        url: logoUrl,
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Rahlstedter Bahnhofstraße 27",
+        postalCode: "22143",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Getting Ready Fotografie",
+        "Hochzeitsreportage",
+      ],
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished,
+      dateModified,
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        caption: altByFile["ART_5547-Bearbeitet.jpg"],
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="noindex, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="article:published_time" content={datePublished}>
+    <meta property="article:modified_time" content={dateModified}>
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={altByFile["ART_5547-Bearbeitet.jpg"]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+  </head>
+  <body class="gallery-template elopement-fraser-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} renderJsonLd={false} />
+      <article class="elopement-fraser">
+        <header class="elopement-hero">
+          <div class="elopement-hero__copy">
+            <p class="elopement-kicker">Editorial · Rödingsmarkt · Hamburg</p>
+            <h1>{heading}</h1>
+            <p>
+              Eine inszenierte Brautpaarserie mit Getting-Ready-Motiven,
+              Brautportraits und Aufnahmen im historischen Treppenhaus.
+            </p>
+          </div>
+          <figure>
+            <Image
+              src={heroImage}
+              widths={[760, 1120, 1600, 1920]}
+              sizes="(max-width: 760px) 100vw, 58vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt={altByFile["ART_5547-Bearbeitet.jpg"]}
+            />
+            <figcaption>Brautpaar-Editorial in den Fraser Suites am Rödingsmarkt</figcaption>
+          </figure>
+        </header>
+
+        <section class="elopement-intro" aria-labelledby="elopement-intro-title">
+          <div>
+            <p class="elopement-kicker">Zur Einordnung der Serie</p>
+            <h2 id="elopement-intro-title">Editorial statt Hochzeitsreportage</h2>
+          </div>
+          <div class="elopement-intro__copy">
+            <p>
+              Die Bildstrecke entstand als Editorial. Sie dokumentiert keinen
+              vollständigen Hochzeitstag und keine Trauung.
+            </p>
+            <p>
+              Zu sehen sind vorbereitete Getting-Ready-Szenen, Brautportraits im
+              Hotelzimmer sowie Paarbilder im Treppenhaus der Fraser Suites.
+            </p>
+          </div>
+        </section>
+
+        <section class="elopement-feature" aria-label="Brautportrait in den Fraser Suites Hamburg">
+          <figure>
+            <Image
+              src={portraitImage}
+              widths={[460, 720, 960, 1200]}
+              sizes="(max-width: 760px) 100vw, 40vw"
+              format="webp"
+              quality={86}
+              loading="lazy"
+              decoding="async"
+              alt={altByFile["ART_5317-Bearbeitet.jpg"]}
+            />
+          </figure>
+          <div>
+            <p class="elopement-kicker">Hotelzimmer und Fensterlicht</p>
+            <h2>Brautportrait vor dem Fenster</h2>
+            <p>
+              Im Hotelzimmer entstanden Portraits am Fenster sowie Aufnahmen von
+              Kleid, Styling und weiteren Details der Serie.
+            </p>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="elopement-fraser-suites-hamburg"
+          label="Brautpaar-Editorial in den Fraser Suites Hamburg"
+          dialogLabel="Brautpaar-Editorial Fraser Suites Hamburg in Vollansicht"
+        />
+
+        <aside class="elopement-meta" aria-label="Galeriethemen">
+          <span>Themen:</span>
+          <span>Brautpaar-Editorial</span>
+          <span>Getting Ready</span>
+          <span>Fraser Suites Hamburg</span>
+        </aside>
+
+        <section class="elopement-location" aria-labelledby="elopement-location-title">
+          <div>
+            <Image
+              src={viewImage}
+              widths={[480, 760, 1080]}
+              sizes="(max-width: 760px) 100vw, 36vw"
+              format="webp"
+              quality={84}
+              loading="lazy"
+              decoding="async"
+              alt={altByFile["ART_4995.jpg"]}
+            />
+          </div>
+          <div>
+            <p class="elopement-kicker">Treppenhaus und Stadtblick</p>
+            <h2 id="elopement-location-title">Die Motive innerhalb des Hotels</h2>
+            <p>
+              Die ausgewählten Motive nutzen das geschwungene Treppenhaus, die
+              Fensterflächen der Zimmer und den Blick auf Michel und Hamburger
+              Innenstadt.
+            </p>
+          </div>
+        </section>
+
+        <nav class="elopement-related" aria-label="Weitere Hochzeitsgalerien">
+          <a href="/gallery/getting-ready-hamburg/">
+            <span>Getting Ready</span>
+            Brautstyling und Hochzeitsmorgen in Hamburg
+          </a>
+          <a href="/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/">
+            <span>Standesamt</span>
+            Standesamtliche Trauung in Hamburg-Altona
+          </a>
+          <a href="/hochzeitsfotograf-preise/">
+            <span>Planung</span>
+            Hochzeitsfotograf Hamburg Preise
+          </a>
+        </nav>
+      </article>
+      <StoryLanguageCta kind="editorial" />
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img
+          src="/images/logo-artbild-black.png"
+          width="1200"
+          height="480"
+          alt="Artbild Fotografie"
+        >
+      </a>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .elopement-fraser {
+    padding-top: clamp(60px, 6vw, 92px);
+  }
+
+  .elopement-hero {
+    width: min(1320px, calc(100% - 72px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(320px, .68fr) minmax(0, 1.32fr);
+    gap: clamp(48px, 7.5vw, 118px);
+    align-items: center;
+  }
+
+  .elopement-kicker {
+    margin: 0;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+  }
+
+  .elopement-hero h1 {
+    margin: 20px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(52px, 6.2vw, 92px);
+    font-weight: 400;
+    line-height: .98;
+  }
+
+  .elopement-hero__copy > p:last-child {
+    margin: 32px 0 0;
+    color: #69635e;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.68;
+  }
+
+  .elopement-hero figure,
+  .elopement-feature figure {
+    margin: 0;
+  }
+
+  .elopement-hero figure :global(img),
+  .elopement-feature figure :global(img),
+  .elopement-location :global(img) {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .elopement-hero figcaption {
+    margin-top: 12px;
+    color: #817a72;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .elopement-intro {
+    width: min(1140px, calc(100% - 92px));
+    margin: clamp(92px, 9vw, 142px) auto 0;
+    padding: clamp(62px, 7vw, 92px);
+    display: grid;
+    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
+    gap: clamp(48px, 7vw, 104px);
+    background: #f3f1ed;
+  }
+
+  .elopement-intro h2,
+  .elopement-feature h2,
+  .elopement-location h2,
+  .elopement-guide h2 {
+    margin: 18px 0 0;
+    color: #292c35;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.14;
+  }
+
+  .elopement-intro__copy {
+    display: grid;
+    gap: 26px;
+  }
+
+  .elopement-intro__copy p,
+  .elopement-feature p,
+  .elopement-location p,
+  .elopement-guide > div:last-child p {
+    margin: 0;
+    color: #66605a;
+    font-size: 17px;
+    line-height: 1.75;
+  }
+
+  .elopement-feature {
+    width: min(1180px, calc(100% - 92px));
+    margin: clamp(86px, 9vw, 132px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(260px, .58fr) minmax(0, .78fr);
+    gap: clamp(46px, 7vw, 96px);
+    align-items: center;
+  }
+
+  .elopement-feature figure {
+    background: #eee9e3;
+  }
+
+  .elopement-feature p {
+    margin-top: 28px;
+  }
+
+  .elopement-meta {
+    width: min(1140px, calc(100% - 92px));
+    margin: 44px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 12px 20px;
+    color: #77716b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .elopement-meta a {
+    color: #2f323c;
+    text-decoration: none;
+  }
+
+  .elopement-meta a:hover,
+  .elopement-meta a:focus-visible {
+    color: #846b58;
+  }
+
+  .elopement-location {
+    width: min(1180px, calc(100% - 92px));
+    margin: clamp(104px, 10vw, 164px) auto 0;
+    display: grid;
+    grid-template-columns: minmax(260px, .56fr) minmax(0, 1fr);
+    gap: clamp(46px, 8vw, 112px);
+    align-items: center;
+  }
+
+  .elopement-location > div:first-child {
+    padding: clamp(18px, 3vw, 34px);
+    background: #f3f1ed;
+  }
+
+  .elopement-location p {
+    margin-top: 24px;
+  }
+
+  .elopement-history-quote {
+    margin: 28px 0 0;
+    padding: 22px 0 0 24px;
+    border-top: 1px solid #ded8d0;
+    border-left: 2px solid #9c7b62;
+  }
+
+  .elopement-history-quote p {
+    margin: 0;
+    color: #4f4b47;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(19px, 1.8vw, 25px);
+    line-height: 1.5;
+  }
+
+  .elopement-history-quote cite {
+    margin-top: 12px;
+    display: block;
+    color: #77716b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-style: normal;
+    letter-spacing: .12em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .elopement-history-quote a {
+    color: inherit;
+    text-underline-offset: 3px;
+  }
+
+  .elopement-guide {
+    width: min(1140px, calc(100% - 92px));
+    margin: clamp(100px, 10vw, 152px) auto 0;
+    padding: clamp(58px, 7vw, 92px) 0;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .72fr);
+    gap: clamp(48px, 9vw, 130px);
+    border-top: 1px solid #ded8d0;
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .elopement-guide > div:last-child {
+    align-self: end;
+  }
+
+  .elopement-guide a {
+    min-height: 48px;
+    margin-top: 30px;
+    padding: 13px 18px;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #292c35;
+    background: #292c35;
+    color: #fff;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .elopement-guide a:hover,
+  .elopement-guide a:focus-visible {
+    border-color: #846b58;
+    background: #846b58;
+  }
+
+  .elopement-related {
+    width: min(1140px, calc(100% - 92px));
+    margin: 70px auto 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-top: 1px solid #ded8d0;
+    border-bottom: 1px solid #ded8d0;
+  }
+
+  .elopement-related a {
+    min-height: 152px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: #292c35;
+    font-size: clamp(20px, 2vw, 29px);
+    line-height: 1.18;
+    text-decoration: none;
+  }
+
+  .elopement-related a + a {
+    border-left: 1px solid #ded8d0;
+  }
+
+  .elopement-related span {
+    margin-bottom: 13px;
+    color: #846b58;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+
+  .elopement-related a:hover,
+  .elopement-related a:focus-visible {
+    background: #f3f1ed;
+  }
+
+  .elopement-fraser-page :is(a, button):focus-visible {
+    outline: 2px solid #2c739c;
+    outline-offset: 5px;
+  }
+
+  @media (max-width: 900px) {
+    .elopement-hero,
+    .elopement-intro,
+    .elopement-feature,
+    .elopement-location,
+    .elopement-guide {
+      grid-template-columns: 1fr;
+    }
+
+    .elopement-hero__copy {
+      text-align: center;
+    }
+
+    .elopement-hero__copy > p:last-child {
+      width: min(680px, 100%);
+      margin-inline: auto;
+    }
+
+    .elopement-hero figure {
+      order: -1;
+    }
+
+    .elopement-related {
+      grid-template-columns: 1fr;
+    }
+
+    .elopement-related a + a {
+      border-top: 1px solid #ded8d0;
+      border-left: 0;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .elopement-fraser {
+      padding-top: 34px;
+    }
+
+    .elopement-hero,
+    .elopement-intro,
+    .elopement-feature,
+    .elopement-meta,
+    .elopement-location,
+    .elopement-guide,
+    .elopement-related {
+      width: min(100% - 32px, 1140px);
+    }
+
+    .elopement-hero {
+      gap: 44px;
+    }
+
+    .elopement-hero h1 {
+      font-size: clamp(46px, 14vw, 62px);
+    }
+
+    .elopement-hero figcaption {
+      text-align: left;
+    }
+
+    .elopement-intro {
+      margin-top: 72px;
+      padding: 44px 24px;
+      gap: 36px;
+    }
+
+    .elopement-intro h2,
+    .elopement-feature h2,
+    .elopement-location h2,
+    .elopement-guide h2 {
+      font-size: clamp(34px, 10vw, 46px);
+    }
+
+    .elopement-meta {
+      justify-content: flex-start;
+    }
+
+    .elopement-location > div:first-child {
+      padding: 18px;
+    }
+
+    .elopement-guide {
+      margin-top: 86px;
+      gap: 34px;
+    }
+  }
+</style>

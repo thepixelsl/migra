@@ -1,0 +1,65 @@
+---
+export type BreadcrumbItem = {
+  label: string;
+  href: string;
+};
+
+type Props = {
+  items: BreadcrumbItem[];
+  siteUrl?: string;
+  currentUrl?: string;
+  className?: string;
+  renderJsonLd?: boolean;
+};
+
+const {
+  items,
+  siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de",
+  currentUrl,
+  className = "",
+  renderJsonLd = true,
+} = Astro.props as Props;
+
+const normalizedSiteUrl = siteUrl.replace(/\/$/, "");
+const toAbsoluteUrl = (href: string) => {
+  if (href.startsWith("http://") || href.startsWith("https://")) return href;
+  return `${normalizedSiteUrl}${href.startsWith("/") ? href : `/${href}`}`;
+};
+
+const lastItem = items[items.length - 1];
+const breadcrumbUrl = currentUrl ?? (lastItem ? toAbsoluteUrl(lastItem.href) : normalizedSiteUrl);
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "@id": `${breadcrumbUrl}#breadcrumb`,
+  itemListElement: items.map((item, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    name: item.label,
+    item: toAbsoluteUrl(item.href),
+  })),
+};
+---
+
+{items.length > 1 && (
+  <>
+    {renderJsonLd && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <nav class:list={["site-breadcrumb", className]} aria-label="Breadcrumb">
+      <ol>
+        {items.map((item, index) => {
+          const isCurrent = index === items.length - 1;
+
+          return (
+            <li>
+              {isCurrent ? (
+                <span aria-current="page">{item.label}</span>
+              ) : (
+                <a href={item.href}>{item.label}</a>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  </>
+)}

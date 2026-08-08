@@ -1,0 +1,341 @@
+---
+import FaviconHead from "../../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import "../../../styles/global.css";
+import "../../../styles/editorial-destination.css";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+
+const imageModules = import.meta.glob(
+  "../../../assets/valerie-und-tim/*.{jpg,jpeg}",
+  { eager: true, import: "default" },
+) as Record<string, ImageMetadata>;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/hochzeit-valerie-und-tim/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const heading = "Hochzeit von Valerie und Tim";
+const title = "Hochzeit Valerie und Tim | Hochzeitsreportage Artbild-Fotografie";
+const description =
+  "Hochzeitsreportage von Valerie und Tim mit Brautpaarshooting im Frühlingspark, Schleierportraits, Ringdetail und Bildern von der Abendfeier.";
+const publishedAt = "2026-07-12T15:00:00+02:00";
+
+const modulesByFile = Object.fromEntries(
+  Object.entries(imageModules).map(([path, image]) => [path.split("/").pop() ?? path, image]),
+) as Record<string, ImageMetadata>;
+
+const heroFile = "ART_4449.jpg";
+const preferredOrder = [
+  "ART_4389.jpg",
+  "ART_4477.jpg",
+  "ART_4529.jpg",
+  "ART_4534-Bearbeitet.jpg",
+  "ART_4591.jpg",
+  "ART_4614.jpg",
+  "ART_4618.jpg",
+  "ART_4619-Bearbeitet-2.jpg",
+  "ART_4627.jpg",
+  "ART_4632.jpg",
+  "ART_4833.jpg",
+  "ART_4990.jpg",
+  "ART_7264.jpg",
+  "ART_7306.jpg",
+  "ART_7397-2.jpg",
+  "ART_7411.jpg",
+  "ART_6815.jpg",
+  "ART_7019.jpg",
+  "ART_7022.jpg",
+  "ART_7025.jpg",
+  "ART_7082.jpg",
+  "ART_7089.jpg",
+];
+
+const galleryFiles = [
+  ...preferredOrder.filter((file) => modulesByFile[file]),
+  ...Object.keys(modulesByFile)
+    .filter((file) => file !== heroFile && !preferredOrder.includes(file))
+    .sort((left, right) => left.localeCompare(right, "de")),
+];
+
+const altByFile: Record<string, string> = {
+  "ART_4449.jpg": "Valerie und Tim bei ihrem Brautpaarshooting im Frühlingslicht",
+  "ART_4389.jpg": "Valerie und Tim als Brautpaar vor blühenden Sträuchern",
+  "ART_4477.jpg": "Brautpaarportrait von Valerie und Tim vor historischer Backsteinarchitektur",
+  "ART_4529.jpg": "Valerie und Tim lachen gemeinsam unter dem Brautschleier",
+  "ART_4534-Bearbeitet.jpg": "Natürliches Brautportrait von Valerie mit Schleier und Brautstrauß",
+  "ART_4591.jpg": "Kuss des Brautpaares mit fliegendem Schleier vor einem historischen Gebäude",
+  "ART_4614.jpg": "Intimes Brautpaarportrait von Valerie und Tim mit wehendem Schleier",
+  "ART_4619-Bearbeitet-2.jpg": "Schwarzweißportrait des Brautpaares mit dynamischem Brautschleier",
+  "ART_4627.jpg": "Valerie und Tim beim Paarshooting zwischen alten Bäumen",
+  "ART_4632.jpg": "Brautpaar von hinten mit langem Schleier im Frühlingspark",
+  "ART_4833.jpg": "Detailaufnahme des Eherings bei der Hochzeit von Valerie und Tim",
+  "ART_4990.jpg": "Roséfarbener Sektempfang bei der Frühlingshochzeit",
+  "ART_7264.jpg": "Valerie und Tim gehen gemeinsam durch den Park",
+  "ART_7306.jpg": "Brautpaarspaziergang im natürlichen Licht am Hochzeitstag",
+  "ART_7397-2.jpg": "Valerie und Tim in einem ruhigen Moment während ihrer Hochzeitsreportage",
+  "ART_7411.jpg": "Nahes Brautpaarportrait von Valerie und Tim im Innenraum",
+  "ART_6815.jpg": "Tanzfläche und Hochzeitsgäste im farbigen Licht der Abendfeier",
+  "ART_7019.jpg": "Silhouetten der Hochzeitsgäste im Licht der Feier",
+  "ART_7022.jpg": "Ausgelassene Hochzeitsfeier mit blauem und grünem Licht",
+  "ART_7025.jpg": "Tanzende Gäste bei der abendlichen Hochzeitsfeier",
+  "ART_7082.jpg": "Luftballons am Himmel als Moment der Hochzeitsfeier",
+  "ART_7089.jpg": "Ruhiger Himmel nach der Hochzeitsfeier von Valerie und Tim",
+};
+
+const heroImage = modulesByFile[heroFile];
+const galleryImages = galleryFiles.map((file, index) => {
+  const image = modulesByFile[file];
+  return {
+    id: file.replace(/\.(jpe?g)$/i, ""),
+    image,
+    alt: altByFile[file] ?? `Hochzeitsreportage von Valerie und Tim, Bild ${index + 1}`,
+    aspect:
+      image.width > image.height
+        ? "landscape" as const
+        : image.width === image.height
+          ? "natural" as const
+          : "portrait" as const,
+    eager: false,
+  };
+});
+const galleryColumns = [galleryImages];
+const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": `${pageUrl}#article`,
+      headline: heading,
+      name: title,
+      description,
+      keywords: [
+        "Hochzeit Valerie und Tim",
+        "Hochzeitsreportage",
+        "Hochzeitsfotograf Hamburg",
+        "Brautpaarshooting",
+        "Frühlingshochzeit",
+        "Hochzeitsfotos mit Schleier",
+      ],
+      datePublished: publishedAt,
+      dateModified: publishedAt,
+      author: { "@type": "Person", name: "York Augustin" },
+      publisher: { "@id": `${siteUrl}/#organization` },
+      image: primaryImage,
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      about: [
+        { "@type": "Thing", name: "Frühlingshochzeit" },
+        { "@type": "Thing", name: "Hochzeitsreportage" },
+        { "@type": "Thing", name: "Brautpaarshooting" },
+      ],
+      inLanguage: "de",
+    },
+    {
+      "@type": "ImageGallery",
+      "@id": `${pageUrl}#gallery`,
+      name: heading,
+      description,
+      image: [
+        {
+          "@type": "ImageObject",
+          position: 1,
+          caption: altByFile[heroFile],
+          contentUrl: primaryImage,
+          width: heroImage.width,
+          height: heroImage.height,
+        },
+        ...galleryImages.map((item, index) => ({
+          "@type": "ImageObject",
+          position: index + 2,
+          caption: item.alt,
+          contentUrl: new URL(item.image.src, siteUrl).href,
+          width: item.image.width,
+          height: item.image.height,
+        })),
+      ],
+    },
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      datePublished: publishedAt,
+      dateModified: publishedAt,
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+        caption: altByFile[heroFile],
+      },
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      inLanguage: "de",
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={primaryImage}>
+    <meta property="og:image:width" content={heroImage.width}>
+    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:alt" content={altByFile[heroFile]}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={primaryImage}>
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+  </head>
+  <body class="gallery-template valerie-tim-page">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+
+      <article class="destination-editorial">
+        <header
+          class="destination-hero"
+          data-track-section="valerie_tim_hero"
+          data-content-topic="hochzeit_valerie_tim"
+          data-user-intent="bildsprache_bewerten"
+          data-journey-stage="entdeckung"
+          data-content-format="gallery_hero"
+          data-position="page_top"
+        >
+          <div class="destination-hero__copy">
+            <p class="destination-hero__script" aria-hidden="true">Valerie &amp; Tim</p>
+            <p class="destination-kicker">Frühlingshochzeit · Hochzeitsreportage</p>
+            <h1>{heading}</h1>
+            <p>
+              Die Serie beginnt mit Paarportraits im Frühlingspark und endet mit
+              Tanz, Silhouetten und farbigem Licht bei der Abendfeier.
+            </p>
+          </div>
+          <figure class="destination-hero__portrait">
+            <Image
+              src={heroImage}
+              widths={[460, 720, 920, 1200]}
+              sizes="(max-width: 760px) 82vw, 38vw"
+              format="webp"
+              quality={88}
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              alt={altByFile[heroFile]}
+            />
+            <figcaption>Valerie &amp; Tim · Frühlingshochzeit</figcaption>
+          </figure>
+        </header>
+
+        <section
+          class="destination-story"
+          aria-labelledby="valerie-tim-story-title"
+          data-track-section="valerie_tim_story"
+          data-content-topic="natuerliche_hochzeitsreportage"
+          data-user-intent="reportage_kennenlernen"
+          data-journey-stage="auswahl"
+          data-content-format="editorial_story"
+          data-position="before_gallery"
+        >
+          <div class="destination-story__heading">
+            <p class="destination-kicker">Motive der Serie</p>
+            <h2 id="valerie-tim-story-title">Paarportraits, Schleier und Abendfeier</h2>
+          </div>
+          <div class="destination-story__copy">
+            <div>
+              <h3>Paarbilder im Frühlingslicht</h3>
+              <p>
+                Die Paarbilder zeigen Valerie und Tim vor blühenden Sträuchern,
+                zwischen alten Bäumen und vor einer Backsteinfassade.
+              </p>
+            </div>
+            <div>
+              <h3>Bewegung im Schleier</h3>
+              <p>
+                Der lange Schleier wird zum wiederkehrenden Bildelement und
+                verbindet Nähe, Bewegung und die Weite der Umgebung.
+              </p>
+            </div>
+            <div>
+              <h3>Feier in Farbe</h3>
+              <p>
+                Am Abend wechselt die Reportage von natürlichem Tageslicht zu
+                Silhouetten, Tanz und kräftigen Farben auf der Tanzfläche.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="hochzeit-valerie-und-tim"
+          label="Hochzeitsreportage von Valerie und Tim"
+          dialogLabel="Hochzeit von Valerie und Tim in Vollansicht"
+          sectionId="valerie_tim_gallery"
+          contentTopic="hochzeit_valerie_tim"
+          userIntent="beispielbilder_ansehen"
+          journeyStage="auswahl"
+          position="gallery_body"
+        />
+
+        <aside class="destination-meta" aria-label="Themen der Hochzeitsgalerie">
+          <span>Themen:</span>
+          <span>Frühlingshochzeit</span>
+          <span>Brautpaarshooting</span>
+          <span>Hochzeitsreportage</span>
+          <span>Abendfeier</span>
+        </aside>
+
+        <nav class="destination-related" aria-label="Weitere Hochzeitsreportagen">
+          <a href="/gallery/hochzeitsfotos-hamburg/"><span>Hamburg</span>Hochzeitsreportagen</a>
+          <a href="/gallery/steffi-dominik/"><span>Hochzeit</span>Steffi &amp; Dominik</a>
+          <a href="/portfolio/"><span>Übersicht</span>Hochzeitsportfolio</a>
+        </nav>
+      </article>
+
+      <StoryLanguageCta kind="wedding" sectionId="valerie_tim_bildsprache_preise" />
+    </main>
+
+    <footer class="gallery-footer">
+      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+      </a>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/blog/">Blog</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutzerklärung</a>
+      </nav>
+      <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+    </footer>
+  </body>
+</html>

@@ -9,13 +9,13 @@ test("desktop article migrates the Zurich elopement gallery with lazy images", a
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
-  await expect(page.getByRole("heading", { name: "Brautpaar in Zürich" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Styled Editorial in Zürich" })).toBeVisible();
   await expect(page.locator(".gallery-image-grid__item")).toHaveCount(48);
 
   const state = await page.evaluate(() => {
-    const schema = JSON.parse(
-      document.querySelector('script[type="application/ld+json"]')?.textContent ?? "{}",
-    );
+    const schemas = [...document.querySelectorAll<HTMLScriptElement>(
+      'script[type="application/ld+json"]',
+    )].map((script) => JSON.parse(script.textContent ?? "{}"));
     const viewportCenter = document.documentElement.clientWidth / 2;
     const centerDelta = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -36,7 +36,10 @@ test("desktop article migrates the Zurich elopement gallery with lazy images", a
         hero: centerDelta(".zurich-hero"),
         gallery: centerDelta(".gallery-image-grid"),
       },
-      schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
+      schemaTypes: schemas.flatMap((schema) => [
+        ...(schema["@type"] ? [schema["@type"]] : []),
+        ...(schema["@graph"]?.map((node: { "@type": string }) => node["@type"]) ?? []),
+      ]),
     };
   });
 
@@ -48,7 +51,7 @@ test("desktop article migrates the Zurich elopement gallery with lazy images", a
   expect(state.centers.hero).toBe(0);
   expect(state.centers.gallery).toBe(0);
   expect(state.schemaTypes).toEqual(
-    expect.arrayContaining(["Article", "ImageGallery", "City", "ProfessionalService"]),
+    expect.arrayContaining(["Article", "ImageGallery", "City", "BreadcrumbList", "WebPage"]),
   );
 
   const triggers = page.locator("[data-gallery-trigger='brautpaar-zuerich']");
@@ -76,7 +79,7 @@ test("mobile Zurich article keeps the gallery centered and touch friendly", asyn
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("grid-template-columns", "366px");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
 
   const mobileState = await page.evaluate(() => {
     const viewportCenter = document.documentElement.clientWidth / 2;

@@ -14,13 +14,13 @@ test("planning heading stays inside its desktop column", async ({ page }) => {
   await section.scrollIntoViewIfNeeded();
 
   const title = page.locator("#planning-title");
-  const image = page.locator(".planning-card--large img");
+  const image = page.locator(".planning-card--prices img");
   await expect(title).toBeVisible();
   await expect(image).toBeVisible();
 
   const layout = await page.evaluate(() => {
     const heading = document.querySelector<HTMLElement>("#planning-title");
-    const cardImage = document.querySelector<HTMLElement>(".planning-card--large img");
+    const cardImage = document.querySelector<HTMLElement>(".planning-card--prices img");
     if (!heading || !cardImage) return null;
 
     const headingBounds = heading.getBoundingClientRect();
@@ -44,7 +44,7 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
-  const image = page.locator(".planning-card:not(.planning-card--large) img");
+  const image = page.locator(".planning-card--prices img");
   await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
   await expect
@@ -56,29 +56,53 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
     currentSrc: element.currentSrc,
     naturalWidth: element.naturalWidth,
     naturalHeight: element.naturalHeight,
+    renderedWidth: element.getBoundingClientRect().width,
+    renderedHeight: element.getBoundingClientRect().height,
   }));
 
   expect(imageDetails.alt).toContain("Hochzeitsfotograf Hamburg Preise");
   expect(imageDetails.currentSrc).not.toContain("/images/post-preise.jpg");
-  expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(420);
-  expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(420);
+  expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(Math.floor(imageDetails.renderedWidth));
+  expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(Math.floor(imageDetails.renderedHeight));
 });
 
 for (const viewport of [
   { name: "tablet", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
+  { name: "narrow-mobile", width: 320, height: 720 },
 ]) {
-  test(`planning section has no overflow at ${viewport.name}`, async ({ page }) => {
+  test(`planning section has no overflow or clipped kickers at ${viewport.name}`, async ({
+    page,
+  }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
     const section = page.locator(".planning-section");
     await section.scrollIntoViewIfNeeded();
+    const priceKicker = page.locator(".planning-card--prices .planning-card__kicker");
+    await expect(priceKicker).toBeVisible();
 
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow).toBe(0);
+    const layout = await page.evaluate(() => {
+      const kickers = [
+        ...document.querySelectorAll<HTMLElement>(".planning-card__kicker"),
+      ];
+      const price = document.querySelector<HTMLElement>(
+        ".planning-card--prices .planning-card__kicker",
+      );
+
+      return {
+        pageOverflow:
+          document.documentElement.scrollWidth - document.documentElement.clientWidth,
+        clippedKickers: kickers.filter(
+          (kicker) => kicker.scrollWidth > kicker.clientWidth,
+        ).length,
+        priceFontFamily: price ? getComputedStyle(price).fontFamily : "",
+      };
+    });
+
+    expect(layout.pageOverflow).toBe(0);
+    expect(layout.clippedKickers).toBe(0);
+    expect(layout.priceFontFamily).toContain("Raleway");
 
     await section.screenshot({
       path: `${screenshotDirectory}/${viewport.name}.png`,

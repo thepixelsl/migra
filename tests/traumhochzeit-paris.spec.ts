@@ -10,7 +10,8 @@ test("desktop Paris gallery has SEO structure, local images and lightbox", async
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("heading", { name: "Traumhochzeit in Paris" })).toBeVisible();
-  await expect(page.locator("[data-gallery-trigger='traumhochzeit-paris']")).toHaveCount(4);
+  const galleryItems = page.locator("[data-gallery-trigger='traumhochzeit-paris']");
+  await expect(galleryItems).toHaveCount(20);
 
   const state = await page.evaluate(() => {
     const schema = JSON.parse(
@@ -35,11 +36,14 @@ test("desktop Paris gallery has SEO structure, local images and lightbox", async
         gallery: centerDelta(".gallery-image-grid"),
       },
       missingAlt: [...document.images].filter((image) => !image.alt).length,
+      galleryImageCount: document.querySelectorAll(".gallery-image-grid img").length,
       lazyImages: [...document.querySelectorAll<HTMLImageElement>(".gallery-image-grid img")]
         .filter((image) => image.loading === "lazy").length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
       hasParisPlace: JSON.stringify(schema).includes('"Paris"'),
+      hasDestinationService: JSON.stringify(schema).includes("Destination Wedding Fotografie"),
+      hasAreaServed: JSON.stringify(schema).includes('"areaServed"'),
     };
   });
 
@@ -50,19 +54,19 @@ test("desktop Paris gallery has SEO structure, local images and lightbox", async
   expect(state.centers.story).toBe(0);
   expect(state.centers.gallery).toBe(0);
   expect(state.missingAlt).toBe(0);
-  expect(state.lazyImages).toBe(3);
+  expect(state.lazyImages).toBe(state.galleryImageCount - 2);
   expect(state.overflow).toBe(0);
   expect(state.schemaTypes).toEqual(
     expect.arrayContaining([
       "Article",
       "ImageGallery",
       "City",
-      "ProfessionalService",
-      "BreadcrumbList",
       "WebPage",
     ]),
   );
   expect(state.hasParisPlace).toBe(true);
+  expect(state.hasDestinationService).toBe(false);
+  expect(state.hasAreaServed).toBe(false);
 
   await page.locator("[data-gallery-trigger='traumhochzeit-paris']").first().click();
   const dialog = page.getByRole("dialog", {

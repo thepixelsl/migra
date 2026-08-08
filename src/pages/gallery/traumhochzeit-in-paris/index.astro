@@ -1,31 +1,68 @@
 ---
+import FaviconHead from "../../../components/FaviconHead.astro";
 import "../../../styles/global.css";
 import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+import EditorialReviewQuote from "../../../components/EditorialReviewQuote.astro";
+import { googleReviews } from "../../../data/reviews";
 
 const imageModules = import.meta.glob(
-  "../../../assets/traumhochzeit-paris/*.jpg",
+  "../../../assets/traumhochzeit-paris-2019/*.jpg",
   { eager: true, import: "default" },
 ) as Record<string, ImageMetadata>;
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery/traumhochzeit-in-paris/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const heading = "Traumhochzeit in Paris";
 const title = "Traumhochzeit in Paris | Hochzeitsfotografie Artbild-Fotografie";
 const description =
   "Editoriale Hochzeitsfotografie in Paris: Brautportrait, Destination Wedding Inspiration und moderne Hochzeitsbilder mit französischem Stadtgefühl.";
-const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
 const altByFile: Record<string, string> = {
-  "paris_braut_fotoshooting-17.jpg":
-    "Braut in kurzem Kleid bei einem editorialen Hochzeitsfotoshooting in Paris",
-  "paris_braut_fotoshooting-25.jpg":
-    "Lachende Braut vor dem Eiffelturm bei einer Traumhochzeit in Paris",
-  "paris_braut_fotoshooting-16.jpg":
-    "Braut mit kurzem Hochzeitskleid in einer Pariser Straßenszene",
-  "paris_braut_fotoshooting-31.jpg":
-    "Elegantes Brautportrait bei einem Destination Wedding Shooting in Paris",
+  "ART_3680-Bearbeitet-Wiederhergestellt_web.jpg":
+    "Brautportrait bei einer editorialen Traumhochzeit in Paris",
+  "ART_4059_web.jpg":
+    "Braut in Paris mit elegantem editorialem Hochzeitslook",
+  "ART_4447-Bearbeitet_web.jpg":
+    "Braut mit kurzem Kleid bei einem stilvollen Paris Fotoshooting",
+  "ART_4661-Bearbeitet_web.jpg":
+    "Braut beim Destination Wedding Shooting mit Pariser Stadtgefühl",
+  "ART_4661-Bearbeitet_web_1.jpg":
+    "Moderne Braut in Paris vor heller Architektur",
+  "ART_5057-Bearbeitet_web.jpg":
+    "Braut beim modernen Hochzeitsfotoshooting auf einer Straße in Paris",
+  "ART_5057-Bearbeitet_web_1.jpg":
+    "Braut beim modernen Hochzeitsfotoshooting auf einer Straße in Paris",
+  "ART_5093_web.jpg":
+    "Braut in Paris mit kurzem Hochzeitskleid und klassischer Stadtkulisse",
+  "ART_5093_web_1.jpg":
+    "Braut in Paris mit kurzem Hochzeitskleid und klassischer Stadtkulisse",
+  "ART_5111-Bearbeitet_web.jpg":
+    "Brautportrait in Paris mit moderner Hochzeitsbildsprache",
+  "ART_5851_web.jpg":
+    "Editoriales Brautbild in einer Pariser Straße",
+  "ART_5992-Bearbeitet_web.jpg":
+    "Brautportrait mit französischer Leichtigkeit bei einer Traumhochzeit in Paris",
+  "ART_6065-Bearbeitet_web.jpg":
+    "Editoriales Hochzeitsportrait einer Braut in Paris",
+  "ART_6078-Bearbeitet_web.jpg":
+    "Braut in Paris mit urbaner Destination-Wedding-Stimmung",
+  "ART_6080-Bearbeitet_web.jpg":
+    "Brautportrait in Paris mit elegantem kurzen Hochzeitskleid",
+  "ART_6329-Bearbeitet_web.jpg":
+    "Hochzeitsfoto einer Braut in Paris mit urbaner Eleganz",
+  "ART_6601-Bearbeitet_web.jpg":
+    "Braut in Paris mit editorialer Destination-Wedding-Atmosphäre",
+  "ART_6874-Bearbeitet_web.jpg":
+    "Modernes Brautportrait in Paris mit französischem Stadtlicht",
+  "ART_6929-Bearbeitet_web.jpg":
+    "Brautportrait in Paris mit eleganter Pose",
+  "ART_7009-Bearbeitet_web.jpg":
+    "Editoriales Brautportrait in Paris mit moderner Bildsprache",
 };
 
 const modulesByFile = Object.fromEntries(
@@ -35,18 +72,55 @@ const modulesByFile = Object.fromEntries(
   ]),
 ) as Record<string, ImageMetadata>;
 
-const galleryImages = Object.entries(altByFile).map(([file, alt], index) => ({
-  id: file.replace(/\.jpg$/, ""),
+const preferredFiles = [
+  "ART_5851_web.jpg",
+  "ART_3680-Bearbeitet-Wiederhergestellt_web.jpg",
+  "ART_4059_web.jpg",
+  "ART_4447-Bearbeitet_web.jpg",
+  "ART_4661-Bearbeitet_web.jpg",
+  "ART_4661-Bearbeitet_web_1.jpg",
+  "ART_5057-Bearbeitet_web.jpg",
+  "ART_5057-Bearbeitet_web_1.jpg",
+  "ART_5093_web.jpg",
+  "ART_5093_web_1.jpg",
+  "ART_5111-Bearbeitet_web.jpg",
+  "ART_5992-Bearbeitet_web.jpg",
+  "ART_6065-Bearbeitet_web.jpg",
+  "ART_6078-Bearbeitet_web.jpg",
+  "ART_6080-Bearbeitet_web.jpg",
+  "ART_6329-Bearbeitet_web.jpg",
+  "ART_6601-Bearbeitet_web.jpg",
+  "ART_6874-Bearbeitet_web.jpg",
+  "ART_6929-Bearbeitet_web.jpg",
+  "ART_7009-Bearbeitet_web.jpg",
+];
+
+const galleryFiles = [
+  ...preferredFiles.filter((file) => modulesByFile[file]),
+  ...Object.keys(modulesByFile)
+    .filter((file) => !preferredFiles.includes(file))
+    .sort((a, b) => a.localeCompare(b, "de")),
+];
+
+const galleryImages = galleryFiles.map((file, index) => ({
+  id: file.replace(/\.(jpe?g)$/i, ""),
   image: modulesByFile[file],
-  alt,
-  aspect: "portrait" as const,
-  eager: index === 0,
+  alt:
+    altByFile[file] ??
+    `Hochzeitsfoto aus der Paris-Galerie von Artbild-Fotografie, Bild ${index + 1}`,
+  aspect:
+    modulesByFile[file].width > modulesByFile[file].height
+      ? "landscape" as const
+      : "portrait" as const,
+  eager: index < 2,
 }));
 
-const galleryColumns = [[], [], []] as typeof galleryImages[];
-galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+const galleryColumns = [galleryImages];
 
-const primaryImage = new URL(galleryImages[0].image.src, siteUrl).href;
+const previewImageFile = "ART_5851_web.jpg";
+const primaryGalleryImage = modulesByFile[previewImageFile] ?? galleryImages[0].image;
+const primaryGalleryAlt = altByFile[previewImageFile] ?? galleryImages[0].alt;
+const primaryImage = new URL(primaryGalleryImage.src, siteUrl).href;
 const parisPlace = {
   "@type": "City",
   "@id": `${pageUrl}#paris`,
@@ -61,6 +135,13 @@ const parisPlace = {
     name: "Frankreich",
   },
 };
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -79,7 +160,7 @@ const schemaGraph = {
         "Hochzeitsfotograf Hamburg Destination Wedding",
       ],
       datePublished: "2019-07-05T12:52:02+02:00",
-      dateModified: "2026-06-25T17:55:00+02:00",
+      dateModified: "2026-07-09T15:45:00+02:00",
       author: {
         "@type": "Person",
         name: "York Augustin",
@@ -115,77 +196,19 @@ const schemaGraph = {
     },
     parisPlace,
     {
-      "@type": "ProfessionalService",
-      "@id": `${siteUrl}/#organization`,
-      name: "Artbild-Fotografie",
-      url: siteUrl,
-      email: "info@artbild-fotografie.de",
-      logo: {
-        "@type": "ImageObject",
-        url: logoUrl,
-      },
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Rahlstedter Bahnhofstraße 27",
-        postalCode: "22143",
-        addressLocality: "Hamburg",
-        addressRegion: "Hamburg",
-        addressCountry: "DE",
-      },
-      areaServed: [
-        { "@type": "City", name: "Hamburg" },
-        { "@type": "City", name: "Paris" },
-        { "@type": "Country", name: "Frankreich" },
-        { "@type": "AdministrativeArea", name: "Europa" },
-      ],
-      serviceType: [
-        "Hochzeitsfotografie",
-        "Destination Wedding Fotografie",
-        "Editoriales Brautshooting",
-        "Brautportrait",
-      ],
-      sameAs: [
-        "https://www.instagram.com/artbild/",
-        "https://www.facebook.com/artbildfotografie/",
-        "https://www.pinterest.de/artbildf/",
-      ],
-    },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Portfolio",
-          item: `${siteUrl}/portfolio/`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: heading,
-          item: pageUrl,
-        },
-      ],
-    },
-    {
       "@type": "WebPage",
       "@id": `${pageUrl}#webpage`,
       url: pageUrl,
       name: title,
       description,
       datePublished: "2019-07-05T12:52:02+02:00",
-      dateModified: "2026-06-25T17:55:00+02:00",
+      dateModified: "2026-07-07T16:55:00+02:00",
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
-        caption: "Braut bei einem editorialen Hochzeitsfotoshooting in Paris",
+        width: primaryGalleryImage.width,
+        height: primaryGalleryImage.height,
+        caption: primaryGalleryAlt,
       },
       breadcrumb: {
         "@id": `${pageUrl}#breadcrumb`,
@@ -199,6 +222,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
@@ -212,11 +236,11 @@ const schemaGraph = {
   <meta property="og:url" content={pageUrl}>
   <meta property="og:site_name" content="Artbild-Fotografie">
   <meta property="article:published_time" content="2019-07-05T12:52:02+02:00">
-  <meta property="article:modified_time" content="2026-06-25T17:55:00+02:00">
+  <meta property="article:modified_time" content="2026-07-07T16:55:00+02:00">
   <meta property="og:image" content={primaryImage}>
-  <meta property="og:image:width" content={galleryImages[0].image.width}>
-  <meta property="og:image:height" content={galleryImages[0].image.height}>
-  <meta property="og:image:alt" content={galleryImages[0].alt}>
+  <meta property="og:image:width" content={primaryGalleryImage.width}>
+  <meta property="og:image:height" content={primaryGalleryImage.height}>
+  <meta property="og:image:alt" content={primaryGalleryAlt}>
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
@@ -226,24 +250,11 @@ const schemaGraph = {
 <body class="gallery-template paris-gallery-page">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
     <article class="paris-gallery">
       <header class="paris-hero">
         <p class="paris-hero__script" aria-hidden="true">Paris</p>
@@ -296,6 +307,20 @@ const schemaGraph = {
         dialogLabel="Traumhochzeit in Paris in Vollansicht"
       />
 
+      <EditorialReviewQuote
+        reviews={[
+          googleReviews.kristin,
+          googleReviews.heikeLupkeBoettiger,
+          googleReviews.gunnarJabadabaich,
+        ]}
+        sectionId="paris_review_kristin"
+        heading="Ein entspanntes Fotoshooting in Paris"
+        contentTopic="fotoshooting_paris"
+        userIntent="destination_erfahrung_pruefen"
+        journeyStage="auswahl"
+        position="after_gallery"
+      />
+
       <aside class="paris-meta" aria-label="Galeriethemen">
         <span>Themen:</span>
         <a href="/gallery-tag/paris/">Paris</a>
@@ -342,7 +367,8 @@ const schemaGraph = {
         </a>
       </nav>
     </article>
-  </main>
+      <StoryLanguageCta kind="editorial" />
+    </main>
 
   <footer class="gallery-footer">
     <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">

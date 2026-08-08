@@ -1,0 +1,562 @@
+<dialog
+  class="consent-dialog"
+  data-consent-dialog
+  aria-labelledby="consent-title"
+  aria-describedby="consent-summary"
+>
+  <div class="consent-dialog__shell">
+    <button
+      class="consent-dialog__close"
+      type="button"
+      aria-label="Datenschutz-Einstellungen schließen"
+      data-consent-close
+      hidden
+    >
+      <span aria-hidden="true">×</span>
+    </button>
+
+    <div class="consent-dialog__intro">
+      <p class="consent-dialog__eyebrow">Ihre Privatsphäre</p>
+      <h2 id="consent-title" tabindex="-1">Datenschutz-Einstellungen</h2>
+      <p id="consent-summary">
+        Diese Website wird technisch notwendig über die Infrastruktur und das
+        globale Auslieferungsnetz von <strong>bunny.net</strong> bereitgestellt.
+        Dabei werden insbesondere Ihre IP-Adresse sowie Anfrage-, Verbindungs-
+        und Sicherheitsdaten verarbeitet.
+      </p>
+      <p>
+        Mit Ihrer freiwilligen Einwilligung nutzen wir Google Analytics über
+        den Google Tag Manager und das Meta Pixel. Im erweiterten Google
+        Consent Mode können ohne Einwilligung cookielose Messsignale an Google
+        übertragen werden; Analyse- oder Marketing-Cookies werden dabei nicht
+        gesetzt.
+      </p>
+    </div>
+
+    <div class="consent-dialog__quick-actions" data-consent-quick-actions>
+      <button type="button" data-consent-choice="all">Alle akzeptieren</button>
+      <button type="button" data-consent-choice="necessary">Nur notwendige</button>
+      <button type="button" data-consent-customize>Individuell auswählen</button>
+    </div>
+
+    <section class="consent-dialog__details" data-consent-details hidden>
+      <h3>Individuelle Auswahl</h3>
+
+      <div class="consent-service">
+        <div>
+          <strong>Technisch notwendig</strong>
+          <span>Immer aktiv</span>
+        </div>
+        <label class="consent-switch">
+          <span class="visually-hidden">Technisch notwendige Dienste</span>
+          <input type="checkbox" checked disabled>
+          <span aria-hidden="true"></span>
+        </label>
+        <p>
+          bunny.net für Hosting, Auslieferung und Schutz sowie der First-Party-
+          Cookie <code>artbild_consent</code> zur Speicherung Ihrer Auswahl für
+          sechs Monate.
+        </p>
+      </div>
+
+      <div class="consent-service">
+        <div>
+          <strong>Statistik</strong>
+          <span>Google Analytics 4</span>
+        </div>
+        <label class="consent-switch">
+          <span class="visually-hidden">Google Analytics erlauben</span>
+          <input type="checkbox" data-consent-analytics>
+          <span aria-hidden="true"></span>
+        </label>
+        <p>
+          Der Google Tag Manager steuert Google Analytics und hilft uns zu
+          verstehen, welche Seiten und Elemente genutzt werden. Mögliche
+          Cookies: <code>_ga</code> und <code>_ga_*</code>. Anbieter: Google
+          Ireland Limited.
+        </p>
+      </div>
+
+      <div class="consent-service">
+        <div>
+          <strong>Marketing</strong>
+          <span>Meta Pixel und Google-Werbefunktionen</span>
+        </div>
+        <label class="consent-switch">
+          <span class="visually-hidden">Marketing-Dienste erlauben</span>
+          <input type="checkbox" data-consent-marketing>
+          <span aria-hidden="true"></span>
+        </label>
+        <p>
+          Misst Anfragen und Kontaktaktionen und kann zur Bildung von
+          Zielgruppen verwendet werden. Mögliche Cookies:
+          <code>_fbp</code>, <code>_fbc</code> und <code>_gcl_*</code>.
+        </p>
+      </div>
+
+      <div class="consent-dialog__save-actions">
+        <button type="button" data-consent-save>Auswahl speichern</button>
+        <button type="button" data-consent-choice="necessary">
+          Nur notwendige
+        </button>
+      </div>
+    </section>
+
+    <nav class="consent-dialog__legal" aria-label="Rechtliche Informationen">
+      <a href="/datenschutz/">Datenschutzerklärung</a>
+      <a href="/impressum/">Impressum</a>
+    </nav>
+  </div>
+</dialog>
+
+<button
+  class="consent-settings-button"
+  type="button"
+  aria-label="Datenschutz-Einstellungen öffnen"
+  title="Datenschutz-Einstellungen"
+  data-consent-settings
+  hidden
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 2.8 19 6v5.3c0 4.6-2.8 8.5-7 10-4.2-1.5-7-5.4-7-10V6l7-3.2Z"></path>
+    <path d="M9.4 12.1 11 13.7l3.9-4"></path>
+  </svg>
+</button>
+
+<script is:inline>
+  (() => {
+    const dialog = document.querySelector("[data-consent-dialog]");
+    const settingsButton = document.querySelector("[data-consent-settings]");
+    if (!(dialog instanceof HTMLDialogElement) || !(settingsButton instanceof HTMLButtonElement)) {
+      return;
+    }
+
+    const details = dialog.querySelector("[data-consent-details]");
+    const quickActions = dialog.querySelector("[data-consent-quick-actions]");
+    const analyticsInput = dialog.querySelector("[data-consent-analytics]");
+    const marketingInput = dialog.querySelector("[data-consent-marketing]");
+    const closeButton = dialog.querySelector("[data-consent-close]");
+    const customizeButton = dialog.querySelector("[data-consent-customize]");
+    const saveButton = dialog.querySelector("[data-consent-save]");
+    let openedForExistingDecision = false;
+
+    const api = () => window.artbildConsentApi;
+
+    const syncInputs = () => {
+      const state = api()?.getState?.() || window.ArtbildConsent || {};
+      if (analyticsInput instanceof HTMLInputElement) {
+        analyticsInput.checked = state.analytics === true;
+      }
+      if (marketingInput instanceof HTMLInputElement) {
+        marketingInput.checked = state.marketing === true;
+      }
+    };
+
+    const setDetailsVisible = (visible) => {
+      if (!(details instanceof HTMLElement) || !(quickActions instanceof HTMLElement)) return;
+      details.hidden = !visible;
+      quickActions.hidden = visible;
+      if (visible && analyticsInput instanceof HTMLInputElement) {
+        analyticsInput.focus();
+      }
+    };
+
+    const openDialog = (existingDecision) => {
+      if (window.ArtbildConsent?.enabled === false) return;
+      openedForExistingDecision = existingDecision;
+      syncInputs();
+      setDetailsVisible(existingDecision);
+      if (closeButton instanceof HTMLButtonElement) {
+        closeButton.hidden = !existingDecision;
+      }
+      settingsButton.hidden = true;
+      document.body.classList.add("has-consent-dialog");
+      if (!dialog.open) dialog.showModal();
+      const title = dialog.querySelector("#consent-title");
+      if (title instanceof HTMLElement) title.focus();
+    };
+
+    const closeDialog = () => {
+      if (!dialog.open) return;
+      dialog.close();
+      document.body.classList.remove("has-consent-dialog");
+      settingsButton.hidden = false;
+      settingsButton.focus();
+    };
+
+    const save = (state) => {
+      api()?.setConsent?.(state);
+      closeDialog();
+    };
+
+    dialog.querySelectorAll("[data-consent-choice]").forEach((button) => {
+      button.addEventListener("click", () => {
+        const acceptAll = button.getAttribute("data-consent-choice") === "all";
+        save({ analytics: acceptAll, marketing: acceptAll });
+      });
+    });
+
+    customizeButton?.addEventListener("click", () => {
+      syncInputs();
+      setDetailsVisible(true);
+    });
+
+    saveButton?.addEventListener("click", () => {
+      save({
+        analytics: analyticsInput instanceof HTMLInputElement && analyticsInput.checked,
+        marketing: marketingInput instanceof HTMLInputElement && marketingInput.checked,
+      });
+    });
+
+    settingsButton.addEventListener("click", () => openDialog(true));
+    document.addEventListener("click", (event) => {
+      const trigger = event.target instanceof Element
+        ? event.target.closest("[data-consent-settings]")
+        : null;
+      if (!(trigger instanceof HTMLElement) || trigger === settingsButton) return;
+      event.preventDefault();
+      openDialog(true);
+    });
+    closeButton?.addEventListener("click", () => {
+      if (openedForExistingDecision) closeDialog();
+    });
+
+    dialog.addEventListener("cancel", (event) => {
+      event.preventDefault();
+      if (openedForExistingDecision) closeDialog();
+    });
+
+    window.addEventListener("artbild:consent_settings_open", () => openDialog(true));
+
+    const initialize = () => {
+      if (window.ArtbildConsent?.enabled === false) {
+        settingsButton.hidden = true;
+        return;
+      }
+      if (window.ArtbildConsent?.hasDecision) {
+        settingsButton.hidden = false;
+      } else {
+        openDialog(false);
+      }
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initialize, { once: true });
+    } else {
+      initialize();
+    }
+  })();
+</script>
+
+<style>
+  .consent-dialog {
+    width: min(760px, calc(100% - 32px));
+    max-height: min(92vh, 860px);
+    padding: 0;
+    border: 1px solid rgba(24, 22, 20, .14);
+    border-radius: 2px;
+    background: #f7f4ef;
+    color: #211f1c;
+    box-shadow: 0 30px 90px rgba(18, 15, 12, .28);
+    overflow: auto;
+    z-index: 20000;
+  }
+
+  .consent-dialog::backdrop {
+    background: rgba(17, 15, 13, .66);
+    backdrop-filter: blur(3px);
+  }
+
+  .consent-dialog__shell {
+    position: relative;
+    padding: clamp(28px, 5vw, 54px);
+  }
+
+  .consent-dialog__close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+  }
+
+  .consent-dialog__eyebrow {
+    margin: 0 0 10px;
+    color: #866c52;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  .consent-dialog h2,
+  .consent-dialog h3 {
+    margin: 0;
+    color: #211f1c;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+  }
+
+  .consent-dialog h2 {
+    font-size: clamp(28px, 5vw, 42px);
+    line-height: 1.05;
+  }
+
+  .consent-dialog h2:focus {
+    outline: none;
+  }
+
+  .consent-dialog h3 {
+    margin-bottom: 18px;
+    font-size: 25px;
+  }
+
+  .consent-dialog__intro > p:not(.consent-dialog__eyebrow) {
+    margin: 18px 0 0;
+    color: #554f48;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .consent-dialog__quick-actions,
+  .consent-dialog__save-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .consent-dialog button {
+    min-height: 48px;
+    border: 1px solid #292622;
+    border-radius: 0;
+    background: transparent;
+    color: #292622;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    line-height: 1.35;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .consent-dialog button:hover,
+  .consent-dialog button:focus-visible {
+    background: #292622;
+    color: #fff;
+  }
+
+  .consent-dialog button:focus-visible,
+  .consent-settings-button:focus-visible,
+  .consent-switch input:focus-visible + span {
+    outline: 3px solid #c09a70;
+    outline-offset: 3px;
+  }
+
+  .consent-dialog__details {
+    margin-top: 30px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(41, 38, 34, .15);
+  }
+
+  .consent-service {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px 22px;
+    padding: 18px 0;
+    border-top: 1px solid rgba(41, 38, 34, .12);
+  }
+
+  .consent-service:first-of-type {
+    border-top: 0;
+  }
+
+  .consent-service > div {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .consent-service strong,
+  .consent-service span,
+  .consent-service p {
+    font-family: "Raleway", Arial, sans-serif;
+  }
+
+  .consent-service strong {
+    font-size: 14px;
+  }
+
+  .consent-service > div span {
+    color: #7a7168;
+    font-size: 12px;
+  }
+
+  .consent-service p {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #615a52;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .consent-service code {
+    font-size: 11px;
+  }
+
+  .consent-switch {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .consent-switch input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+  }
+
+  .consent-switch > span:last-child {
+    display: block;
+    position: relative;
+    width: 48px;
+    height: 26px;
+    border: 1px solid #6e665e;
+    border-radius: 20px;
+    background: #ded8d1;
+    cursor: pointer;
+  }
+
+  .consent-switch > span:last-child::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .2);
+    transition: transform .18s ease;
+  }
+
+  .consent-switch input:checked + span {
+    border-color: #4f684e;
+    background: #4f684e;
+  }
+
+  .consent-switch input:checked + span::after {
+    transform: translateX(22px);
+  }
+
+  .consent-switch input:disabled + span {
+    cursor: not-allowed;
+    opacity: .72;
+  }
+
+  .consent-dialog__save-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .consent-dialog__legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 22px;
+    margin-top: 22px;
+  }
+
+  .consent-dialog__legal a {
+    color: #5f574f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .consent-settings-button {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1px solid rgba(33, 31, 28, .35);
+    border-radius: 50%;
+    background: #f7f4ef;
+    color: #292622;
+    box-shadow: 0 8px 28px rgba(18, 15, 12, .17);
+    cursor: pointer;
+    z-index: 2500;
+  }
+
+  .consent-settings-button[hidden] {
+    display: none;
+  }
+
+  .consent-settings-button svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.6;
+  }
+
+  :global(body.has-consent-dialog) {
+    overflow: hidden;
+  }
+
+  :global(body.has-consent-dialog [data-mobile-navigation]),
+  :global(body.has-consent-dialog [data-floating-action]) {
+    pointer-events: none;
+  }
+
+  @media (max-width: 640px) {
+    .consent-dialog {
+      width: 100%;
+      max-width: none;
+      max-height: 92dvh;
+      margin: auto 0 0;
+      border-width: 1px 0 0;
+    }
+
+    .consent-dialog__shell {
+      padding: 28px 20px calc(24px + env(safe-area-inset-bottom));
+    }
+
+    .consent-dialog__quick-actions,
+    .consent-dialog__save-actions {
+      grid-template-columns: 1fr;
+    }
+
+    .consent-dialog__quick-actions button,
+    .consent-dialog__save-actions button {
+      width: 100%;
+    }
+
+    .consent-settings-button {
+      left: 12px;
+      bottom: 12px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .consent-switch > span:last-child::after {
+      transition: none;
+    }
+  }
+</style>

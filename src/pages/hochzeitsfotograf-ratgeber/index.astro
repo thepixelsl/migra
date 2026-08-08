@@ -1,12 +1,14 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import "../../styles/global.css";
 import heroImage from "../../assets/hochzeitsfotograf-ratgeber/hochzeitsfotograf-hamburg-ratgeber-art9666.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-01.jpg";
 import reportImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-02.jpg";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/hochzeitsfotograf-ratgeber/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Hochzeitsfotograf Hamburg: Preise & Budget-Tipps";
@@ -169,6 +171,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -191,21 +194,7 @@ const schemaGraph = {
   <body class="gallery-template advice-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/sicherer-kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>
@@ -218,7 +207,15 @@ const schemaGraph = {
           <span>Budget</span>
         </nav>
 
-        <header class="advice-hero">
+        <header
+          class="advice-hero"
+          data-track-section="advice_hero"
+          data-content-topic="hochzeitsfotografie_budget"
+          data-user-intent="preise_verstehen"
+          data-journey-stage="consideration"
+          data-content-format="article_hero"
+          data-position="hero"
+        >
           <div>
             <p class="advice-kicker">Planung & Budget · Hamburg</p>
             <h1>{heading}</h1>
@@ -227,7 +224,18 @@ const schemaGraph = {
               Mit klaren Paketen, transparenter Bildbearbeitung und sauber geklärten
               Fahrtkosten bleibt das Budget in Hamburg planbar.
             </p>
-            <a class="advice-button" href="/hochzeitsfotograf-preise/">Preise ansehen</a>
+            <a
+              class="advice-button"
+              href="/hochzeitsfotograf-preise/"
+              data-track-event="cta_click"
+              data-cta-id="advice_hero_pricing"
+              data-cta-type="pricing"
+              data-section-id="advice_hero"
+              data-content-topic="hochzeitsfotografie_budget"
+              data-user-intent="preise_ansehen"
+              data-journey-stage="decision"
+              data-position="hero_primary"
+            >Preise ansehen</a>
           </div>
           <figure>
             <Image
@@ -268,12 +276,28 @@ const schemaGraph = {
           </div>
         </section>
 
-        <section class="advice-faq" aria-labelledby="faq-title">
+        <section
+          class="advice-faq"
+          aria-labelledby="faq-title"
+          data-track-section="ratgeber_preise_faq"
+          data-content-topic="preise_pakete"
+          data-user-intent="preisfragen_klaeren"
+          data-journey-stage="information"
+          data-content-format="faq"
+          data-position="advice_faq"
+        >
           <p class="advice-kicker">Kurz beantwortet</p>
           <h2 id="faq-title">Häufige Fragen zu Preisen</h2>
           <div>
-            {faqItems.map((item) => (
-              <article>
+            {faqItems.map((item, index) => (
+              <article
+                data-track-section={`ratgeber_preise_faq_${index + 1}`}
+                data-content-topic="preise_pakete"
+                data-user-intent="preisfragen_lesen"
+                data-journey-stage="information"
+                data-content-format="faq_answer"
+                data-position={`faq_${index + 1}`}
+              >
                 <h3>{item.question}</h3>
                 <p>{item.answer}</p>
               </article>

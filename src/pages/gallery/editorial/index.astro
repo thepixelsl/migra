@@ -1,7 +1,11 @@
 ---
+import FaviconHead from "../../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../../../styles/global.css";
 import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
 
 const imageModules = import.meta.glob(
@@ -9,7 +13,7 @@ const imageModules = import.meta.glob(
   { eager: true, import: "default" },
 ) as Record<string, ImageMetadata>;
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery/editorial/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const heading = "Editorial Portraits Hamburg";
@@ -28,6 +32,13 @@ const modulesByFile = Object.fromEntries(
 const featuredFiles = [
   "ART_9706-Bearbeitet-Bearbeitet.jpg",
   "ART_9806-Bearbeitet.jpg",
+  "ART_6856-Bearbeitet.jpg",
+  "ART_7380-Bearbeitet.jpg",
+  "editorial-portrait-hamburg-blumenstrauss-nahaufnahme.jpg",
+  "editorial-fotoshooting-hamburg-rathaus-querformat.jpg",
+  "editorial-portrait-hamburg-balkon-schwarzes-kleid.jpg",
+  "editorial-portrait-hamburger-rathaus-blumenstrauss.jpg",
+  "editorial-portrait-hamburg-dachterrasse-blumenstrauss.jpg",
 ];
 const originalFiles = Object.keys(modulesByFile)
   .filter((file) => /^\d{3}-/.test(file))
@@ -42,6 +53,20 @@ const altByFile: Record<string, string> = {
     "Editorial Portrait einer Frau in weißem Top vor urbaner Architektur in Hamburg",
   "ART_9806-Bearbeitet.jpg":
     "Nahes Editorial Portrait einer Frau in weißem Top bei einem urbanen Fotoshooting in Hamburg",
+  "ART_6856-Bearbeitet.jpg":
+    "Editorial Portrait einer Frau an den Hohen Bleichen in Hamburg nahe Neuer Wall und Gänsemarkt",
+  "ART_7380-Bearbeitet.jpg":
+    "Lachendes Editorial Portrait an den Hohen Bleichen in Hamburg nahe Neuer Wall und Gänsemarkt",
+  "editorial-portrait-hamburg-blumenstrauss-nahaufnahme.jpg":
+    "Nahes Editorial Portrait einer Frau im schwarzen Kleid mit weißem Blumenstrauß in Hamburg",
+  "editorial-fotoshooting-hamburg-rathaus-querformat.jpg":
+    "Editorial Portrait einer Frau mit weißem Blumenstrauß vor dem Hamburger Rathaus",
+  "editorial-portrait-hamburg-balkon-schwarzes-kleid.jpg":
+    "Sitzendes Editorial Portrait einer Frau im schwarzen Kleid auf einem Balkon in Hamburg",
+  "editorial-portrait-hamburger-rathaus-blumenstrauss.jpg":
+    "Editorial Portrait einer Frau mit weißem Blumenstrauß und Hamburger Rathaus im Hintergrund",
+  "editorial-portrait-hamburg-dachterrasse-blumenstrauss.jpg":
+    "Lächelndes Editorial Portrait einer Frau mit weißem Blumenstrauß über den Dächern Hamburgs",
   "001-ART0921-Bearbeitet_web-684x1024.jpg":
     "Editorial Portrait einer Frau im roten Outfit vor der Kamera in Hamburg",
   "002-schwerin_schloss-820x1024.jpg":
@@ -103,8 +128,7 @@ const galleryImages = galleryFiles.map((file, index) => ({
   eager: false,
 }));
 
-const galleryColumns = [[], [], []] as typeof galleryImages[];
-galleryImages.forEach((item, index) => galleryColumns[index % galleryColumns.length].push(item));
+const galleryColumns = [galleryImages];
 
 const heroImage = modulesByFile["ART_9706-Bearbeitet-Bearbeitet.jpg"] ?? galleryImages[0].image;
 const primaryImage = new URL(heroImage.src, siteUrl).href;
@@ -119,6 +143,13 @@ const hamburgPlace = {
     addressCountry: "DE",
   },
 };
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -137,7 +168,7 @@ const schemaGraph = {
         "Portraits Hamburg",
       ],
       datePublished: "2019-07-08T09:26:18+02:00",
-      dateModified: "2026-06-26T18:45:00+02:00",
+      dateModified: "2026-08-02T16:38:35+02:00",
       author: {
         "@type": "Person",
         name: "York Augustin",
@@ -210,30 +241,7 @@ const schemaGraph = {
         "https://www.pinterest.de/artbildf/",
       ],
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Portfolio",
-          item: `${siteUrl}/portfolio/`,
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: heading,
-          item: pageUrl,
-        },
-      ],
-    },
+
     {
       "@type": "WebPage",
       "@id": `${pageUrl}#webpage`,
@@ -241,7 +249,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: "2019-07-08T09:26:18+02:00",
-      dateModified: "2026-06-26T18:45:00+02:00",
+      dateModified: "2026-08-02T16:38:35+02:00",
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
@@ -259,6 +267,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -275,7 +284,7 @@ const schemaGraph = {
     <meta property="og:url" content={pageUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
     <meta property="article:published_time" content="2019-07-08T09:26:18+02:00">
-    <meta property="article:modified_time" content="2026-06-26T18:45:00+02:00">
+    <meta property="article:modified_time" content="2026-08-02T16:38:35+02:00">
     <meta property="og:image" content={primaryImage}>
     <meta property="og:image:width" content={heroImage.width}>
     <meta property="og:image:height" content={heroImage.height}>
@@ -289,29 +298,11 @@ const schemaGraph = {
   <body class="gallery-template editorial-gallery-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img
-            src="/images/logo-artbild-black.png"
-            width="1200"
-            height="480"
-            alt="Artbild Fotografie"
-          >
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
       <article class="editorial-gallery">
         <header class="editorial-hero">
           <div class="editorial-hero__copy">
@@ -426,6 +417,7 @@ const schemaGraph = {
           </a>
         </nav>
       </article>
+      <StoryLanguageCta kind="editorial" />
     </main>
 
     <footer class="gallery-footer">

@@ -1,0 +1,848 @@
+---
+import FaviconHead from "../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
+import { portfolioEntries } from "../../data/portfolio";
+import { googleReviews } from "../../data/reviews";
+import "../../styles/global.css";
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/about/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Über den Hamburger Fotografen York Augustin | Artbild-Fotografie";
+const description =
+  "York Augustin ist Hochzeitsfotograf aus Hamburg. Er begleitet Hochzeiten, standesamtliche Trauungen und Destination Weddings ruhig, nahbar und reportageorientiert.";
+const heroImage = {
+  src: "/migrated-assets/about/ART_1204.jpg",
+  width: 1435,
+  height: 958,
+  alt: "Seebrücke im Abendlicht als bildstarker Auftakt der About-Seite von Artbild-Fotografie",
+};
+const primaryImage = `${siteUrl}${heroImage.src}`;
+
+const portrait = {
+  src: "/images/portrait-riverside.jpg",
+  width: 520,
+  height: 780,
+  alt: "Portrait von York Augustin, Hochzeitsfotograf aus Hamburg",
+};
+const portraitImage = `${siteUrl}${portrait.src}`;
+
+const reportImage = {
+  src: "/migrated-assets/about/ART3557-Bearbeitet-2.jpg",
+  width: 1384,
+  height: 924,
+  alt: "Schwarzweißes Brautpaarportrait einer Hochzeitsreportage von Artbild-Fotografie",
+};
+
+const calmImage = {
+  src: "/migrated-assets/about/trauung_standesamt_altona_hamburg0746.jpg",
+  width: 1384,
+  height: 924,
+  alt: "Standesamtliche Trauung in Hamburg fotografiert von York Augustin",
+};
+
+const selectedPortfolioItems = [
+  {
+    href: "/gallery/traumhochzeit-in-hamburg/",
+    label: "Traumhochzeit in Hamburg",
+  },
+  {
+    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    label: "Hochzeit in Altona",
+  },
+  {
+    href: "/gallery/steffi-dominik/",
+    label: "Hochzeit in Bucholz in der Nordheide",
+  },
+  {
+    href: "/gallery/paarshooting-mallorca/",
+    label: "Paarshooting Mallorca",
+  },
+];
+
+const aboutPortfolioEntries = selectedPortfolioItems.flatMap((item) => {
+  const entry = portfolioEntries.find((entry) => entry.href === item.href);
+  return entry ? [{ ...entry, label: item.label }] : [];
+});
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "AboutPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      inLanguage: "de",
+      isPartOf: {
+        "@id": `${siteUrl}/#website`,
+      },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: primaryImage,
+        width: heroImage.width,
+        height: heroImage.height,
+        caption: "Bildstarker Auftakt der About-Seite von Artbild-Fotografie",
+      },
+      about: {
+        "@id": `${siteUrl}/#person-york-augustin`,
+      },
+      breadcrumb: {
+        "@id": `${pageUrl}#breadcrumb`,
+      },
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person-york-augustin`,
+      name: "York Augustin",
+      jobTitle: "Hochzeitsfotograf",
+      image: portraitImage,
+      worksFor: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      knowsAbout: [
+        "Hochzeitsfotografie Hamburg",
+        "Hochzeitsreportage",
+        "Standesamtliche Trauung Hamburg",
+        "Paarshooting",
+      ],
+      homeLocation: {
+        "@type": "City",
+        name: "Hamburg",
+      },
+      sameAs: [
+        "https://www.instagram.com/artbild/",
+        "https://www.facebook.com/artbildfotografie/",
+        "https://www.pinterest.de/artbildf/",
+      ],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#organization`,
+      name: "Artbild-Fotografie",
+      url: siteUrl,
+      founder: {
+        "@id": `${siteUrl}/#person-york-augustin`,
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Hamburg",
+        addressRegion: "Hamburg",
+        addressCountry: "DE",
+      },
+      areaServed: [
+        { "@type": "City", name: "Hamburg" },
+        { "@type": "AdministrativeArea", name: "Norddeutschland" },
+        { "@type": "Country", name: "Deutschland" },
+        { "@type": "AdministrativeArea", name: "Europa" },
+      ],
+      serviceType: [
+        "Hochzeitsfotografie",
+        "Hochzeitsreportage",
+        "Standesamtliche Trauung",
+        "Paarshooting",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: "Artbild-Fotografie",
+      publisher: {
+        "@id": `${siteUrl}/#organization`,
+      },
+      inLanguage: "de",
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${pageUrl}#breadcrumb`,
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Startseite",
+          item: siteUrl,
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Über mich",
+          item: pageUrl,
+        },
+      ],
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${pageUrl}#portfolio-selection`,
+      name: "Ausgewählte Hochzeitsreportagen von Artbild-Fotografie",
+      numberOfItems: aboutPortfolioEntries.length,
+      itemListElement: aboutPortfolioEntries.map((entry, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: `${siteUrl}${entry.href}`,
+        name: entry.label,
+        image: `${siteUrl}${entry.image.src}`,
+      })),
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="de">
+<head>
+  <FaviconHead />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{title}</title>
+  <meta name="description" content={description}>
+  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <link rel="canonical" href={pageUrl}>
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:type" content="profile">
+  <meta property="og:title" content={title}>
+  <meta property="og:description" content={description}>
+  <meta property="og:url" content={pageUrl}>
+  <meta property="og:site_name" content="Artbild-Fotografie">
+  <meta property="og:image" content={primaryImage}>
+  <meta property="og:image:alt" content={heroImage.alt}>
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content={title}>
+  <meta name="twitter:description" content={description}>
+  <meta name="twitter:image" content={primaryImage}>
+  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+</head>
+<body class="gallery-template about-template">
+  <header class="gallery-header">
+    <MobileNavigation />
+    <DesktopNavigation />
+  </header>
+
+  <main>
+    <nav class="about-breadcrumb about-breadcrumb--visually-hidden" aria-label="Breadcrumb">
+      <a href="/">Startseite</a>
+      <span aria-hidden="true">/</span>
+      <span>Über mich</span>
+    </nav>
+
+    <section class="about-hero" aria-labelledby="about-title">
+      <figure class="about-hero__image">
+        <img
+          src={heroImage.src}
+          width={heroImage.width}
+          height={heroImage.height}
+          alt={heroImage.alt}
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        >
+      </figure>
+      <div class="about-hero__panel">
+        <div class="about-hero__heading">
+          <h1 id="about-title">Ueber den Fotografen</h1>
+          <p>York Augustin - Hochzeitsfotograf aus Hamburg</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-story about-section" aria-labelledby="about-photographer">
+      <p class="about-kicker">Ueber den Fotografen</p>
+      <h2 id="about-photographer">York Augustin - Hochzeitsfotograf aus Hamburg</h2>
+      <div class="about-copy about-copy--press">
+        <figure class="about-story__portrait">
+          <img
+            src={portrait.src}
+            width={portrait.width}
+            height={portrait.height}
+            alt={portrait.alt}
+            loading="lazy"
+            decoding="async"
+          >
+        </figure>
+        <p>
+          Am liebsten fotografiere ich Hochzeitsreportagen. Das bedeutet, ich begleite Euch den ganzen
+          Tag und dokumentiere fotografisch, was passiert. Dabei  versuche ich so wenig wie möglich in
+          das Geschehen einzugreifen und halte mich auch weitestgehend mit Anweisungen zurück.
+        </p>
+        <p>
+          Dabei möchte ich mich nicht verstecken sondern mich wie ein Hochzeitsgast bewegen dürfen..
+          Ich glaube, dass man den  Kontakt zu den Gästen braucht, um auch von ihnen schöne Fotos zu
+          bekommen. Letztlich sind es die Gäste, die die Hochzeit füllen.
+        </p>
+      </div>
+    </section>
+
+    <EditorialReviewQuote
+      reviews={[
+        googleReviews.florianCole,
+        googleReviews.gunnarJabadabaich,
+        googleReviews.heikeLupkeBoettiger,
+      ]}
+      sectionId="about_review_floriancole"
+      heading="Professionell, erfahren und unkompliziert"
+      contentTopic="arbeitsweise_hochzeitsreportage"
+      userIntent="fotografen_kennenlernen"
+      journeyStage="vertrauen"
+      position="after_about_story"
+    />
+
+    <section class="about-image-band" aria-label="Reportagebild einer Hochzeit">
+      <img
+        src={reportImage.src}
+        width={reportImage.width}
+        height={reportImage.height}
+        alt={reportImage.alt}
+        loading="lazy"
+        decoding="async"
+      >
+    </section>
+
+    <section
+      class="about-duo about-section"
+      aria-labelledby="about-care"
+      data-track-section="about_network"
+      data-content-topic="fotografen_netzwerk"
+      data-user-intent="zusatzleistungen_pruefen"
+      data-journey-stage="consideration"
+      data-content-format="text_image"
+      data-position="after_about_story"
+    >
+      <figure>
+        <img
+          src={calmImage.src}
+          width={calmImage.width}
+          height={calmImage.height}
+          alt={calmImage.alt}
+          loading="lazy"
+          decoding="async"
+        >
+      </figure>
+      <div>
+        <h2 id="about-care">Rundum sorglos</h2>
+        <p>
+          Möchtet Ihr für Eure Hochzeit einen zweiten Fotografen oder eine Fotografin dazu buchen?
+          Das ist kein Problem. Ich bin sehr gut vernetzt und kann im Falle eines Ausfalles jederzeit -
+          schnell und sicher für adäquaten Ersatz sorgen oder einen zweiten Fotografen dazu holen.
+        </p>
+        <p>
+          Auch Videografen habe ich in meinem Netzwerk, wenn es Euer Wunsch ist einen Hochzeitsfilm
+          zu erhalten.
+        </p>
+        <a
+          class="about-text-link"
+          href="/kontakt/"
+          data-track-event="contact_click"
+          data-cta-id="about_network_contact"
+          data-cta-type="contact_form"
+          data-section-id="about_network"
+          data-content-topic="fotografen_netzwerk"
+          data-user-intent="kontakt_aufnehmen"
+          data-journey-stage="conversion"
+          data-position="section_end"
+        >Schreibe mir jetzt!</a>
+      </div>
+    </section>
+
+    <section class="about-longform" aria-labelledby="about-wedding-hamburg">
+      <h2 id="about-wedding-hamburg">Hochzeitsfotograf Hamburg</h2>
+      <div class="about-columns">
+        <p>
+          Von einem Fotografen, der wie ein fremder Dienstleister wirkt, lässt man sich bestimmt
+          nicht so gerne fotografieren, als von einem anderen Gast.
+        </p>
+        <p>
+          Trotz allem bin ich natürlich Dienstleister und mache die Bilder, die Ihr Euch wünscht.
+          Selbstverständlich hat jeder Hochzeitsfotograf seinen Stil und in diesem Stil kann er auch
+          am besten seine Hochzeitsfotografie machen.
+        </p>
+        <p>
+          Am besten funktioniert die Hochzeitsfotografie aus meiner Sicht, wenn Ihr mich zu einfach
+          fotografieren lasst und auf meine Erfahrung vertraut. Damit Ihr trotzdem die Bilder bekommt,
+          die Ihr Euch vorstellt, machen wir natürlich ein Vorgespräch und ein Kennenlernshooting.
+        </p>
+        <p>
+          Das Kennenlernshooting ist nicht nur für Euch wichtig, sondern auch für mich. Nicht nur Ihr
+          lernt mich kennen sondern auch ich Euch. Ich erfahre, wie ich Euch am besten fotografieren
+          kann, welchen Stil Ihr mögt und wir bauen eine Verbindung auf.
+        </p>
+        <p>
+          Bei der Hochzeit ist der Fotograf mehr als nur ein Bildermacher. Weißes Seidenpflaster und
+          Nähzeug, wie man Manschettenknöpfe richtig trägt und ob Krawatte, Haarschmuck und Ring
+          richtig sitzen machen mich zum Lotsen und zum Freund, der für Euch da ist.
+        </p>
+        <p>
+          Ich begleite Eure Hochzeit gerne – bis zu 10 Stunden. Natürlich kann ich Euch auch länger
+          begleiten. Manchmal lohnt es sich auch eine Reportage zu splitten, gerade wenn die Hochzeit
+          in Italien oder Spanien stattfinden soll.
+        </p>
+        <p>
+          Bei mir bekommt Ihr alles an guten Bildern, die am Tag der Hochzeit entstehen. Nirgends steht
+          eine feste Zahl.
+        </p>
+        <p>
+          Natürlich werden alle Bilder bearbeitet und ich erstelle eine Auswahl aus farbigen und
+          schwarzweiß Bildern. Aus den schönsten Bildern erstelle ich eine Diashow, eine Online-Galerie
+          und auch ein Fotobuch. (Diashow und Fotobuch, sowie eine individuelle, von einer Manufaktur
+          handgefertigte Holzschatulle, mit USB-Stick sind für Gasnztagesbuchungen verfügbar).
+        </p>
+        <p>
+          York Augustin ist eingetragener Fotograf in der Handwerksrolle der Hansestadt Hamburg.
+        </p>
+        <p>
+          Es kommen keine weiteren Kosten auf Euch zu. Möchtet Ihr eine Fotobox dazu buchen? Kein
+          Problem, ich empfehle Euch einen guten und sehr günstigen Anbieter hier aus Norddeutschland.
+        </p>
+        <p>
+          Bearbeitung der Bilder bedeutet, dass sie einen farbigen Look oder auch Schwarzweiß-Look
+          meiner Wahl erhalten. Das bedeutet nicht, dass ich Bilder retuschiere. Eine Retusche ist
+          jedoch für wenige, ausgewählte Bilder ohne Aufpreis möglich.
+        </p>
+        <p>
+          Pickel oder ähnliches die Dir an Deinem Hochzeitstag Ärger machen, werde ich natürlich
+          entfernen, das ist selbstverständlich.
+        </p>
+      </div>
+    </section>
+
+    <section class="about-portfolio" aria-labelledby="about-portfolio-title">
+      <h2 id="about-portfolio-title">PORTFOLIO</h2>
+      <div class="about-portfolio__grid" role="list" aria-label="Ausgewählte Portfolio-Galerien">
+        {aboutPortfolioEntries.map((entry, index) => (
+          <article class={`about-portfolio-card is-${entry.aspect}`} role="listitem">
+            <a href={entry.href} aria-label={`${entry.label} ansehen`}>
+              <figure>
+                <Image
+                  src={entry.image}
+                  alt={entry.alt}
+                  widths={[320, 520, 760]}
+                  sizes="(max-width: 720px) 100vw, (max-width: 1100px) 45vw, 25vw"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchpriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
+                />
+              </figure>
+              <div>
+                <span>{entry.category}</span>
+                <h3>{entry.label}</h3>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <footer class="gallery-footer">
+    <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
+      <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
+    </a>
+    <nav aria-label="Footer">
+      <a href="/kontakt/">Kontakt</a>
+      <a href="/blog/">Blog</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutzerklärung</a>
+    </nav>
+    <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
+  </footer>
+</body>
+</html>
+
+<style>
+  .about-template main {
+    padding-bottom: clamp(72px, 10vw, 140px);
+  }
+
+  .about-breadcrumb--visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .about-breadcrumb {
+    width: min(1120px, calc(100% - 44px));
+    margin: clamp(22px, 3vw, 40px) auto 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    color: #8a837b;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .about-breadcrumb a,
+  .about-text-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .about-hero {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+
+  .about-hero__panel {
+    position: relative;
+    z-index: 1;
+    width: min(1280px, calc(100% - 72px));
+    margin: clamp(-112px, -6vw, -76px) auto 0;
+    padding: clamp(58px, 5.2vw, 86px) clamp(34px, 6vw, 96px) 0;
+    background: #fff;
+  }
+
+  .about-hero__heading {
+    text-align: center;
+  }
+
+  .about-hero__heading p {
+    margin: 8px 0 0;
+    color: #5f646e;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.55vw, 25px);
+    font-style: italic;
+    line-height: 1.35;
+  }
+
+  .about-kicker {
+    margin: 0 0 24px;
+    color: #867e76;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .34em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .about-section h2,
+  .about-longform h2 {
+    margin: 0;
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-weight: 400;
+    line-height: 1.03;
+  }
+
+  .about-hero h1 {
+    margin: 0;
+    color: #626873;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(42px, 4.3vw, 68px);
+    font-weight: 400;
+    line-height: .95;
+  }
+
+  .about-hero__intro,
+  .about-portfolio > p {
+    margin: clamp(26px, 4vw, 42px) 0 0;
+    color: #5f5a54;
+    font-size: clamp(18px, 1.55vw, 22px);
+    line-height: 1.72;
+  }
+
+  .about-hero__image,
+  .about-story__portrait {
+    margin: 0;
+  }
+
+  .about-hero__image img,
+  .about-story__portrait img,
+  .about-image-band img,
+  .about-duo img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .about-hero__image img {
+    height: clamp(310px, 31vw, 620px);
+    object-fit: cover;
+    object-position: center 53%;
+  }
+
+  .about-hero__intro {
+    margin-top: clamp(56px, 5.8vw, 88px);
+    padding: clamp(42px, 4.8vw, 72px) clamp(10px, 2vw, 34px) 0;
+    display: grid;
+    gap: clamp(28px, 5vw, 76px);
+    border-top: 1px solid #e8e2da;
+    color: #5f646e;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 1.65vw, 28px);
+    line-height: 1.62;
+  }
+
+  .about-hero__intro p {
+    margin: 0;
+  }
+
+  .about-hero__intro p + p {
+    padding-top: clamp(26px, 3vw, 42px);
+    border-top: 1px solid #ece6de;
+  }
+
+  .about-story__portrait {
+    width: min(100%, 360px);
+    margin: clamp(30px, 4vw, 44px) auto clamp(26px, 4vw, 42px);
+  }
+
+  .about-story__portrait img {
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .about-section,
+  .about-longform,
+  .about-portfolio {
+    width: min(1040px, calc(100% - 44px));
+    margin: clamp(92px, 12vw, 172px) auto 0;
+  }
+
+  .about-story {
+    display: flow-root;
+    padding-top: 0;
+  }
+
+  .about-story > * {
+    min-width: 0;
+  }
+
+  .about-section h2,
+  .about-longform h2 {
+    font-size: clamp(38px, 5vw, 68px);
+  }
+
+  .about-story h2 {
+    max-width: 720px;
+    font-size: clamp(36px, 3vw, 44px);
+    line-height: 1.08;
+  }
+
+  .about-copy--press {
+    margin-top: clamp(34px, 5vw, 64px);
+    color: #5f646e;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(20px, 1.65vw, 27px);
+    line-height: 1.72;
+  }
+
+  .about-copy,
+  .about-duo p,
+  .about-columns,
+  .about-portfolio > p {
+    color: #5f5a54;
+    font-size: clamp(17px, 1.25vw, 20px);
+    line-height: 1.8;
+  }
+
+  .about-copy p,
+  .about-duo p,
+  .about-columns p {
+    margin: 0;
+  }
+
+  .about-copy p + p,
+  .about-duo p + p {
+    margin-top: 24px;
+  }
+
+  .about-image-band {
+    width: min(1180px, calc(100% - 24px));
+    margin: clamp(74px, 10vw, 150px) auto 0;
+  }
+
+  .about-image-band img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .about-duo {
+    display: grid;
+    gap: clamp(36px, 6vw, 86px);
+    align-items: center;
+  }
+
+  .about-duo figure {
+    margin: 0;
+  }
+
+  .about-duo img {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .about-text-link {
+    display: inline-block;
+    margin-top: 30px;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+
+  .about-longform {
+    text-align: center;
+  }
+
+  .about-columns {
+    margin-top: clamp(38px, 6vw, 72px);
+    columns: 1;
+    column-gap: 58px;
+    text-align: left;
+  }
+
+  .about-columns p {
+    break-inside: avoid;
+    margin-bottom: 24px;
+  }
+
+  .about-portfolio {
+    text-align: center;
+  }
+
+  .about-portfolio h2 {
+    margin: 0;
+    color: #867e76;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .38em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .about-portfolio__grid {
+    margin-top: clamp(44px, 6vw, 76px);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(34px, 5vw, 62px);
+    text-align: left;
+  }
+
+  .about-portfolio-card a {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .about-portfolio-card figure {
+    margin: 0;
+    background: #eee9e2;
+    overflow: hidden;
+  }
+
+  .about-portfolio-card figure :global(img) {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 700ms ease, filter 700ms ease;
+  }
+
+  .about-portfolio-card.is-square figure {
+    aspect-ratio: 1 / 1;
+  }
+
+  .about-portfolio-card.is-portrait figure {
+    aspect-ratio: 2 / 3;
+  }
+
+  .about-portfolio-card.is-landscape figure {
+    aspect-ratio: 3 / 2;
+  }
+
+  .about-portfolio-card div {
+    padding-top: 20px;
+  }
+
+  .about-portfolio-card span {
+    color: #867e76;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+  }
+
+  .about-portfolio-card h3 {
+    margin: 10px 0 0;
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 1.85vw, 30px);
+    font-weight: 400;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+
+  .about-portfolio-card a:hover figure :global(img),
+  .about-portfolio-card a:focus-visible figure :global(img) {
+    filter: brightness(.92);
+    transform: scale(1.018);
+  }
+
+  .about-portfolio-card a:focus-visible {
+    outline: 1px solid #827b73;
+    outline-offset: 8px;
+  }
+
+  @media (min-width: 820px) {
+    .about-hero__intro {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .about-hero__intro p + p {
+      padding-top: 0;
+      padding-left: clamp(32px, 4.6vw, 76px);
+      border-top: 0;
+      border-left: 1px solid #ece6de;
+    }
+
+    .about-story {
+      max-width: min(1120px, calc(100% - 72px));
+    }
+
+    .about-copy--press .about-story__portrait {
+      float: right;
+      width: min(35vw, 380px);
+      margin: 0 0 clamp(26px, 3.2vw, 48px) clamp(34px, 5vw, 76px);
+    }
+
+    .about-duo {
+      grid-template-columns: minmax(300px, .88fr) minmax(0, 1.12fr);
+    }
+
+    .about-columns {
+      columns: 2;
+    }
+
+    .about-portfolio__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .about-portfolio-card figure :global(img) {
+      transition: none;
+    }
+
+    .about-portfolio-card a:hover figure :global(img),
+    .about-portfolio-card a:focus-visible figure :global(img) {
+      transform: none;
+    }
+  }
+</style>

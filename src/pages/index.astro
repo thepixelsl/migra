@@ -1,150 +1,333 @@
 ---
+import FaviconHead from "../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
+import HomeAboutYork from "../components/HomeAboutYork.astro";
+import HomeStandesamtFinderFeature from "../components/HomeStandesamtFinderFeature.astro";
+import HeroSliderImage from "../components/HeroSliderImage.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
+import DesktopNavigation from "../components/DesktopNavigation.astro";
+import EditorialReviewQuote from "../components/EditorialReviewQuote.astro";
+import { allGoogleReviews } from "../data/reviews";
 import priceCardImage from "../assets/home/hochzeitsreportage_hamburg_preise.jpg";
-import paarshootingMallorcaImage from "../assets/portfolio/paarshooting-mallorca.jpg";
+import serviceCompassImage from "../assets/portfolio/traumhochzeit-hamburg.jpg";
+import trauterminHamburgImage from "../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-editorial-paar.jpg";
+import valerieTimHomepageImage from "../assets/valerie-und-tim/ART_4449.jpg";
+import steffiDominikHomepageImage from "../assets/steffi-dominik/ART2899.jpg";
+import hochzeitsfotosHamburgHomepageImage from "../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
+import brautpaarZuerichHomepageImage from "../assets/brautpaar-zuerich/ART_7306-Bearbeitet-819x1024.jpg";
+import gettingReadyPlanningImage from "../assets/home/getting-ready-braut-schleier-hochformat.jpg";
+import portfolioParisImage from "../assets/traumhochzeit-paris-2019/ART_6078-Bearbeitet_web.jpg";
+import portfolioAtlanticImage from "../assets/traumhochzeit-hamburg/ART_9474-Bearbeitet_web_1-768x1151.jpg";
+import portfolioLovebirdsImage from "../assets/portfolio/lovebirds-elbstrand.jpg";
+import portfolioGettingReadyImage from "../assets/braut-fotoshooting-hamburg/ART_8427-Bearbeitet-2-1024x683.jpg";
+import portfolioBarberhouseImage from "../assets/portfolio/barberhouse-hamburg.jpg";
+import portfolioFloralImage from "../assets/portfolio/floral-art.jpg";
+import heroOpeningImage from "../assets/home/hero/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg";
+import heroParis17Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-17.jpg";
+import heroParis25Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-25.jpg";
+import heroParis16Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-16.jpg";
+import heroParis31Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-31.jpg";
+import heroStaircase3822Image from "../assets/home/hero/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg";
+import heroStaircase4102Image from "../assets/home/hero/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg";
+import heroCastleGardenImage from "../assets/home/hero/art_4265-bearbeitet-2_web.jpg";
+import heroVeil4632Image from "../assets/home/hero/art_4632.jpg";
+import heroVeil3143Image from "../assets/home/hero/art_3143-bearbeitet-scaled-2.jpg";
+import heroGettingReadyImage from "../assets/home/hero/getting_ready_hochzeitsfotograf_hamburg2372-scaled-2.jpg";
 
-const destinationLinks = [
-  { label: "Venedig", href: "/gallery/venedig/" },
-  { label: "Mallorca", href: "/gallery/mallorca/" },
-  { label: "Hannover im Herbst", href: "/gallery/hannover/" },
-  { label: "Paris", href: "/gallery/paris/" },
-  { label: "Hamburg", href: "/gallery/hamburg/" },
-];
+type StoryCard = {
+  title: string;
+  kicker: string;
+  text: string;
+  href: string;
+  linkLabel: string;
+  image?: string;
+  imageAsset?: ImageMetadata;
+  width: number;
+  height: number;
+  alt: string;
+};
 
-const destinationCards = [
-  {
-    title: "Paarshooting Mallorca",
-    kicker: "Destination Paarfotografie",
-    text: "Mediterranes Licht, ruhige Paarportraits und ein weiter Blick über Dächer, Stadt und Meer.",
-    href: "/gallery/paarshooting-mallorca/",
-    linkLabel: "Paarshooting Mallorca ansehen",
-    image: paarshootingMallorcaImage,
-    alt: "Paarshooting auf Mallorca mit Blick über Stadt und Meer",
-  },
-];
+type PortfolioShowcaseItem = {
+  title: string;
+  category: string;
+  href: string;
+  image: ImageMetadata;
+  alt: string;
+  format: "portrait" | "landscape" | "square";
+};
 
-const storyCards = [
+const trackingSlug = (value: string) => value
+  .toLowerCase()
+  .replace(/ä/g, "ae")
+  .replace(/ö/g, "oe")
+  .replace(/ü/g, "ue")
+  .replace(/ß/g, "ss")
+  .replace(/[^a-z0-9]+/g, "_")
+  .replace(/^_+|_+$/g, "");
+
+const storyCards: StoryCard[] = [
   {
     title: "Hochzeit von Steffi & Dominik",
-    kicker: "Hochzeitsfotografie Hamburg",
-    text: "Eine elegante Hochzeit in Hamburg mit authentischen Momenten, Reportagebildern und viel Nähe zum Brautpaar.",
+    kicker: "Hochzeit in der Nordheide",
+    text: "Oldtimer, Ringtausch, Baumstammsägen, Paarbilder am See und die Feier in einer Hofscheune: die Stationen von Steffi und Dominiks Hochzeit in Buchholz.",
     href: "/gallery/steffi-dominik/",
     linkLabel: "Hochzeit von Steffi & Dominik ansehen",
-    image: "/images/wedding-couple-bouquet.jpg",
-    width: 360,
-    height: 540,
-    alt: "Brautpaar bei einer Hochzeitsreportage in Hamburg",
+    imageAsset: steffiDominikHomepageImage,
+    width: steffiDominikHomepageImage.width,
+    height: steffiDominikHomepageImage.height,
+    alt: "Steffi und Dominik küssen sich bei ihrer Hochzeit in der Nordheide",
   },
   {
-    title: "Paarshooting Mallorca",
-    kicker: "Destination Paarshooting",
-    text: "Xenia und Simon wurden in der Nähe von Porto Cristo auf Mallorca begleitet, natürlich, ruhig und mit mediterranem Licht.",
-    href: "/gallery/paarshooting-mallorca/",
-    linkLabel: "Paarshooting Mallorca ansehen",
+    title: "Hochzeit Jahrhunderthalle Bochum",
+    kicker: "Hochzeit Ruhrgebiet",
+    text: "Getting Ready, Portraits zwischen Backstein und Stahl sowie die Feier im Dampfgebläsehaus an der Jahrhunderthalle Bochum.",
+    href: "/gallery/hochzeit-jahrhunderhalle-bochum/",
+    linkLabel: "Hochzeit Jahrhunderthalle Bochum ansehen",
     image: "/images/wedding-art-1916.jpg",
     width: 360,
     height: 541,
-    alt: "Paarshooting mit warmer Abendstimmung",
+    alt: "Hochzeit an der Jahrhunderthalle Bochum im Ruhrgebiet",
+  },
+  {
+    title: "Hochzeit von Valerie & Tim",
+    kicker: "Frühlingshochzeit",
+    text: "Paarbilder zwischen blühenden Sträuchern und Backstein, der lange Schleier als wiederkehrendes Motiv und die Feier am Abend.",
+    href: "/gallery/hochzeit-valerie-und-tim/",
+    linkLabel: "Hochzeit von Valerie und Tim ansehen",
+    imageAsset: valerieTimHomepageImage,
+    width: valerieTimHomepageImage.width,
+    height: valerieTimHomepageImage.height,
+    alt: "Valerie und Tim bei ihrem Brautpaarshooting im Frühlingslicht",
+  },
+  {
+    title: "Braut-Editorial Fraser Suites",
+    kicker: "Braut-Editorial in Hamburg",
+    text: "Ein Brautkleid-Shooting in den Fraser Suites Hamburg mit Zimmerportraits, Fensterlicht und Aufnahmen im historischen Treppenhaus.",
+    href: "/braut-fotoshooting-fraser-suites-hamburg/",
+    linkLabel: "Braut-Editorial ansehen",
+    imageAsset: hochzeitsfotosHamburgHomepageImage,
+    width: hochzeitsfotosHamburgHomepageImage.width,
+    height: hochzeitsfotosHamburgHomepageImage.height,
+    alt: "Brautportrait mit Blumenstrauß in den Fraser Suites Hamburg",
+  },
+  {
+    title: "Hochzeit im Hotel Atlantic",
+    kicker: "Hochzeit an der Alster",
+    text: "Getrenntes Getting Ready im Hotel, Paarportraits an der Alster und der Anschnitt der Hochzeitstorte als Abschluss der Bildstrecke.",
+    href: "/gallery/traumhochzeit-in-hamburg/",
+    linkLabel: "Hochzeit im Hotel Atlantic ansehen",
+    imageAsset: portfolioAtlanticImage,
+    width: portfolioAtlanticImage.width,
+    height: portfolioAtlanticImage.height,
+    alt: "Brautpaar bei seiner Hochzeit im Hotel Atlantic Hamburg",
+  },
+  {
+    title: "Brautpaar in Zürich",
+    kicker: "Styled Editorial in Zürich",
+    text: "Das Styled Editorial mit Stephanie und Laurin führte an die Limmat und durch Zürich; beteiligt waren Connection-of-Us und Yildiz Duman-Werner.",
+    href: "/brautpaar-in-zuerich/",
+    linkLabel: "Brautpaarshooting in Zürich ansehen",
+    imageAsset: brautpaarZuerichHomepageImage,
+    width: brautpaarZuerichHomepageImage.width,
+    height: brautpaarZuerichHomepageImage.height,
+    alt: "Brautpaar unterwegs durch Zürich mit eleganter Hochzeitsinspiration",
   },
 ];
 
 const articleCards = [
   {
     title: "Das perfekte Getting Ready für deine Hochzeit in Hamburg",
-    text: "Was ist die beste Location, wer sollte dabei sein und worauf kommt es fotografisch beim Brautstyling wirklich an?",
+    tileKicker: "Hochzeit",
+    tileTitle: "Getting Ready",
+    tileClass: "planning-card--getting-ready",
+    tileText: "Vorbereitung und Tipps",
+    text: "Eine Planungshilfe zu Zimmerwahl, verfügbarem Licht, beteiligten Personen und dem zeitlichen Ablauf am Hochzeitsmorgen.",
     href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
-    image: "/images/getting-ready-hamburg-hero.jpg",
-    width: 924,
-    height: 1384,
+    image: gettingReadyPlanningImage,
+    width: gettingReadyPlanningImage.width,
+    height: gettingReadyPlanningImage.height,
     alt: "Braut beim Getting Ready in Hamburg",
+    ctaLabel: "Tipps ansehen",
+    ctaType: "planning_article",
+    topic: "getting_ready_hamburg",
+    intent: "ratgeber_lesen",
+    stage: "information",
+  },
+  {
+    title: "Trautermin Hamburg online reservieren",
+    tileKicker: "Standesamt",
+    tileTitle: "Hamburg",
+    tileClass: "planning-card--hamburg",
+    tileText: "Trautermin online reservieren",
+    text: "Der Ratgeber führt zu den offiziellen Hamburger Buchungswegen und ordnet die nächsten Planungsschritte nach der Terminwahl ein.",
+    href: "/trautermin-hamburg-online-reservieren/",
+    image: trauterminHamburgImage,
+    width: trauterminHamburgImage.width,
+    height: trauterminHamburgImage.height,
+    alt: "Brautpaar im Gegenlicht am Hamburger Wasser",
+    ctaLabel: "Traukalender Ratgeber ansehen",
+    ctaType: "official_service_guide",
+    topic: "standesamttermin_hamburg",
+    intent: "termin_finden",
+    stage: "vor_reservierung",
   },
   {
     title: "Hochzeitsfotograf Hamburg Preise",
-    text: "Antworten auf die wichtigsten Fragen zu Festpreisen, enthaltenen Leistungen und planbaren Kosten für Hochzeitsfotos.",
+    tileKicker: "Hochzeitsfotograf",
+    tileTitle: "Preise",
+    tileClass: "planning-card--prices",
+    tileText: "Pakete und Leistungen",
+    text: "Die drei angebotenen Pakete mit Dauer, Preis und den jeweils aufgeführten Leistungen im direkten Vergleich.",
     href: "/hochzeitsfotograf-preise/",
     image: priceCardImage,
     width: 924,
     height: 924,
     alt: "Braut mit Brautstrauß als Hinweis auf Hochzeitsfotograf Hamburg Preise",
+    ctaLabel: "Preise ansehen",
+    ctaType: "pricing_link",
+    topic: "preise_pakete",
+    intent: "preise_pruefen",
+    stage: "vergleich",
   },
 ];
 
-const relatedLinks = [
-  { label: "Editorial Traumhochzeit in Paris", href: "/gallery/traumhochzeit-in-paris/" },
-  { label: "Hochzeit im Hotel Atlantic Hamburg", href: "/gallery/traumhochzeit-in-hamburg/" },
-  { label: "Lovebirds am Elbstrand", href: "/gallery/lovebirds-am-elbstrand/" },
-  { label: "Getting Ready Hamburg", href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/" },
-];
+const planningCards = [...articleCards].sort((a, b) =>
+  Number(b.href === "/hochzeitsfotograf-preise/") - Number(a.href === "/hochzeitsfotograf-preise/")
+);
 
-const miniPortfolio = [
+const serviceCards = [
   {
-    title: "Engagement Shooting Conny & Alex",
-    category: "Portfolio",
-    href: "/gallery/engagement-shooting-in-hamburg/",
-    image: "/images/wedding-lauenbrueck.jpg",
-    width: 360,
-    height: 539,
-    alt: "Engagement Shooting in Norddeutschland",
+    title: "Hochzeitsreportagen",
+    text: "In den Reportagegalerien seht ihr nicht nur Paarportraits, sondern auch Vorbereitungen, Trauung, Gratulationen und Feier als zusammenhängende Serie.",
+    href: "/portfolio/",
+    linkLabel: "Hochzeitsreportagen ansehen",
+    topic: "hochzeitsreportage_hamburg",
+    intent: "reportage_verstehen",
+    stage: "orientierung",
+    schemaType: "Hochzeitsreportage",
+    areaServed: ["Hamburg", "Norddeutschland"],
   },
   {
-    title: "Groom Getting Ready Barber House Hamburg",
-    category: "Portfolio",
+    title: "Standesamtliche Trauungen in Hamburg",
+    text: "Die Galerie aus dem Standesamt Altona zeigt Trauung, Gratulationen, Gruppenbilder und das anschließende Paarshooting.",
+    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    linkLabel: "Standesamtliche Trauung in Altona ansehen",
+    topic: "standesamtliche_trauung_hamburg",
+    intent: "standesamt_reportage_ansehen",
+    stage: "auswahl",
+    schemaType: "Standesamtliche Trauung",
+    areaServed: ["Hamburg"],
+  },
+  {
+    title: "Verlobungsshooting",
+    text: "Die Lovebirds-Galerie am Elbstrand zeigt ein Paarshooting am Wasser mit Spaziergang, Bewegung und Portraits zu zweit.",
+    href: "/gallery/lovebirds-am-elbstrand/",
+    linkLabel: "Verlobungsshooting ansehen",
+    topic: "verlobungsshooting_hamburg",
+    intent: "paarshooting_planen",
+    stage: "inspiration",
+    schemaType: "Verlobungsshooting",
+    areaServed: ["Hamburg", "Elbstrand"],
+  },
+];
+
+const portfolioShowcase: PortfolioShowcaseItem[] = [
+  {
+    title: "Traumhochzeit in Paris",
+    category: "Editorial",
+    href: "/gallery/traumhochzeit-in-paris/",
+    image: portfolioParisImage,
+    alt: "Braut vor der Glaspyramide des Louvre bei einer Traumhochzeit in Paris",
+    format: "portrait",
+  },
+  {
+    title: "Hotel Atlantic Hamburg",
+    category: "Hochzeit im Hotel Atlantic",
+    href: "/gallery/traumhochzeit-in-hamburg/",
+    image: portfolioAtlanticImage,
+    alt: "Brautpaar bei seiner Hochzeit im Hotel Atlantic Hamburg",
+    format: "portrait",
+  },
+  {
+    title: "Lovebirds am Elbstrand",
+    category: "Lovebirds",
+    href: "/gallery/lovebirds-am-elbstrand/",
+    image: portfolioLovebirdsImage,
+    alt: "Inniger Moment eines Paares beim Lovebirds-Shooting am Elbstrand",
+    format: "landscape",
+  },
+  {
+    title: "Getting Ready Hamburg",
+    category: "Getting Ready",
+    href: "/gallery/hochzeit-braut-fotoshooting-hamburg/",
+    image: portfolioGettingReadyImage,
+    alt: "Braut beim Getting Ready und Brautstyling in einem Hamburger Hotel",
+    format: "landscape",
+  },
+  {
+    title: "Bräutigam im Barberhouse Hamburg",
+    category: "Groom Getting Ready",
     href: "/gallery/braeutigam-im-barberhouse-hamburg/",
-    image: "/images/portrait-riverside.jpg",
-    width: 520,
-    height: 780,
-    alt: "Elegantes Portrait eines Bräutigams in Hamburg",
+    image: portfolioBarberhouseImage,
+    alt: "Bräutigam beim Getting Ready im Barberhouse Hamburg",
+    format: "landscape",
   },
   {
     title: "Florale Portraits",
-    category: "Florals",
+    category: "Floral Art",
     href: "/gallery/floral-art/",
-    image: "/images/art_4265-bearbeitet-2_web.jpg",
-    width: 1386,
-    height: 924,
-    alt: "Florales Editorial Portraitshooting",
+    image: portfolioFloralImage,
+    alt: "Künstlerisches Portrait mit floralem Kopfschmuck",
+    format: "square",
   },
 ];
 
 const vendors = [
   {
     name: "Katharina Seidl",
-    text: "Botanical Art, Designstudio und florale Gestaltung für moderne Hochzeiten.",
+    text: "Florale Arbeiten von Katharina Seidl sind in der Floral-Art-Bildstrecke zu sehen.",
     href: "https://www.instagram.com/katharina.seidl/",
-    cta: "Instagram Profil",
+    cta: "Instagram-Profil öffnen",
   },
   {
     name: "Foboxy",
-    text: "Fotobox für Hochzeiten in Hamburg mit Bildern zum Ausdrucken oder als Online-Galerie.",
+    text: "Externer Anbieter einer Fotobox, der auf der früheren Artbild-Seite empfohlen wurde.",
     href: "https://foboxy.de/",
-    cta: "Jetzt reservieren",
+    cta: "Anbieter öffnen",
   },
   {
     name: "Ella Deck Couture",
-    text: "Maßgeschneiderte und individuell angefertigte Modekonzepte für Hochzeiten.",
-    href: "https://elladeck.de/",
-    cta: "Jetzt ansehen",
+    text: "Die Galerie zeigt Portraits und Kleider aus dem Editorial mit Ella Deck Couture.",
+    href: "/gallery/ella-deck-couture/",
+    cta: "Editorial ansehen",
   },
   {
     name: "Visagistin Manija Biebow",
-    text: "Friseurmeisterin und Dipl.-Visagistin für hochwertiges Brautstyling in Hamburg.",
+    text: "Die Bildstrecke dokumentiert das Brautstyling mit Manija Biebow in den Fraser Suites Hamburg.",
     href: "/gallery/visagistin-manja-biebow/",
-    cta: "Über Manija Biebow",
+    cta: "Bildstrecke ansehen",
+  },
+  {
+    name: "Yildiz Duman-Werner",
+    text: "Yildiz Duman-Werner war am Styling des Zürcher Editorials mit Stephanie und Laurin beteiligt.",
+    href: "/gallery/yildiz-duman-werner/",
+    cta: "Zusammenarbeit ansehen",
   },
 ];
+
+const homepageSiteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 
 const homepageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "ProfessionalService",
-      "@id": "/#organization",
+      "@id": `${homepageSiteUrl}/#organization`,
       name: "Artbild-Fotografie",
-      url: "/",
-      image: "/images/logo-artbild-black.png",
+      url: `${homepageSiteUrl}/`,
+      image: `${homepageSiteUrl}/images/logo-artbild-black.png`,
       email: "info@artbild-fotografie.de",
       address: {
         "@type": "PostalAddress",
@@ -157,40 +340,75 @@ const homepageSchema = {
       areaServed: [
         { "@type": "City", name: "Hamburg" },
         { "@type": "AdministrativeArea", name: "Norddeutschland" },
-        { "@type": "Place", name: "Mallorca" },
-        { "@type": "Place", name: "Venedig" },
-        { "@type": "Place", name: "Paris" },
       ],
       serviceType: [
         "Hochzeitsfotografie",
         "Hochzeitsreportage",
         "Standesamtliche Trauung",
+        "Standesamtfotografie",
+        "Ganztägige Hochzeitsbegleitung",
         "Paarshooting",
+        "Verlobungsshooting",
         "Getting Ready Fotografie",
       ],
+      hasOfferCatalog: { "@id": `${homepageSiteUrl}/#hochzeitsfotografie-leistungen` },
+    },
+    {
+      "@type": "OfferCatalog",
+      "@id": `${homepageSiteUrl}/#hochzeitsfotografie-leistungen`,
+      name: "Leistungen Hochzeitsfotografie Hamburg",
+      description: "Leistungsübersicht mit belegten Beispielen für Hochzeitsreportagen, standesamtliche Trauungen und Verlobungsshootings von Artbild-Fotografie.",
+      itemListElement: serviceCards.map((service, index) => ({
+        "@type": "Offer",
+        position: index + 1,
+        url: `${homepageSiteUrl}${service.href}`,
+        itemOffered: {
+          "@type": "Service",
+          "@id": `${homepageSiteUrl}/#service-${trackingSlug(service.title)}`,
+          name: service.title,
+          description: service.text,
+          serviceType: service.schemaType,
+          provider: { "@id": `${homepageSiteUrl}/#organization` },
+          audience: {
+            "@type": "Audience",
+            audienceType: "Brautpaare und Paare mit Interesse an Hochzeitsfotografie",
+          },
+          areaServed: service.areaServed.map((name) => ({
+            "@type": "Place",
+            name,
+          })),
+          url: `${homepageSiteUrl}${service.href}`,
+        },
+      })),
     },
     {
       "@type": "ItemList",
-      "@id": "/#home-lower-sections",
-      name: "Hochzeitsfotografie Hamburg, Destination Wedding und Empfehlungen",
+      "@id": `${homepageSiteUrl}/#home-lower-sections`,
+      name: "Hochzeitsfotografie Hamburg und Empfehlungen",
       itemListElement: [
         ...storyCards.map((item, index) => ({
           "@type": "ListItem",
           position: index + 1,
           name: item.title,
-          url: item.href,
+          url: `${homepageSiteUrl}${item.href}`,
         })),
         ...articleCards.map((item, index) => ({
           "@type": "ListItem",
           position: storyCards.length + index + 1,
           name: item.title,
-          url: item.href.startsWith("http") ? item.href : `https://artbild-fotografie.de${item.href}`,
+          url: item.href.startsWith("http") ? item.href : `${homepageSiteUrl}${item.href}`,
         })),
-        ...destinationCards.map((item, index) => ({
+        {
           "@type": "ListItem",
-          position: storyCards.length + articleCards.length + index + 1,
+          position: storyCards.length + articleCards.length + 1,
+          name: "Standesamtfinder Hamburg",
+          url: `${homepageSiteUrl}/standesamt-hamburg/`,
+        },
+        ...portfolioShowcase.map((item, index) => ({
+          "@type": "ListItem",
+          position: storyCards.length + articleCards.length + index + 2,
           name: item.title,
-          url: `https://artbild-fotografie.de${item.href}`,
+          url: `${homepageSiteUrl}${item.href}`,
         })),
       ],
     },
@@ -200,185 +418,225 @@ const homepageSchema = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Hochzeitsfotograf Hamburg. Kreative und emotionale Hochzeitsfotos in Hamburg und europaweit.">
+  <meta name="description" content="Hochzeitsfotograf York Augustin aus Hamburg: Reportagegalerien, standesamtliche Trauungen, Preise und Kontakt zu Artbild-Fotografie.">
   <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
-  <link rel="canonical" href="/">
+  <link rel="canonical" href={`${homepageSiteUrl}/`}>
   <title>Hochzeitsfotograf Hamburg</title>
   <script type="application/ld+json" set:html={JSON.stringify(homepageSchema)}></script>
   <script src="/js/hero-slider.js" defer></script>
+  <script src="/js/home-reveal.js" defer></script>
+  <script src="/js/story-carousel.js" defer></script>
+  <script src="/js/portfolio-showcase-carousel.js" defer></script>
+  <script src="/js/vendor-carousel.js" defer></script>
 </head>
 <body id="top">
-  <header class="site-header">
-    <a class="booking-strip" href="#kontakt">Jetzt für 2026/2027 buchen</a>
+  <header class="gallery-header">
     <MobileNavigation />
-    <div class="nav-shell">
-      <a class="brand" href="#" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie Logo">
-      </a>
-      <nav class="main-nav" aria-label="Hauptnavigation">
-        <ul>
-          <li><a href="/">Start</a></li>
-          <li>
-            <a href="/portfolio/">Portfolio</a>
-            <ul>
-              <li>
-                <a href="/gallery-category/travel/">Travel</a>
-                <ul>
-                  <li><a href="/gallery/hamburg/">Hamburg</a></li>
-                  <li><a href="/gallery/hannover/">Hannover</a></li>
-                  <li><a href="/gallery/der-norden-und-die-kueste/">Norddeutschland</a></li>
-                  <li><a href="/gallery/mallorca/">Mallorca</a></li>
-                  <li><a href="/gallery/teneriffa/">Teneriffa</a></li>
-                  <li><a href="/gallery/venedig/">Venedig</a></li>
-                </ul>
-              </li>
-              <li>
-                <a href="/gallery-category/hochzeit/">Hochzeit</a>
-                <ul>
-                  <li><a href="/hochzeitsfotograf-hochzeit-schessel-hamburg/">Hochzeitsfotograf Hochzeit Scheeßel Hamburg</a></li>
-                  <li><a href="/gallery/lovebirds-am-elbstrand/">5 Gründe für ein Verlobungsshooting</a></li>
-                  <li><a href="/hochzeitsfotograf-standesamt-hamburg-altona/">Hochzeitsfotograf Standesamt Hamburg Altona</a></li>
-                  <li><a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Das perfekte Getting Ready für deine Hochzeit in Hamburg</a></li>
-                  <li><a href="/standesamt-hamburg/">Standesamt Hamburg</a></li>
-                  <li><a href="/hochzeitsfotograf-preise/">Preise für Hochzeitsreportagen</a></li>
-                </ul>
-              </li>
-              <li><a href="/brautstyling-hamburg/">Dienstleister für das Brautstyling in Hamburg</a></li>
-              <li><a href="/gallery-category/peoplefotografie/">Peoplefotografie</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="/kontakt/">Kontakt</a>
-            <ul>
-              <li><a href="/kontakt/">Kontakt</a></li>
-              <li><a href="/sicherer-kontakt/">Sicherer Kontakt</a></li>
-              <li><a href="/kundengalerie/">Kundengalerie</a></li>
-              <li><a href="/about/">Über den Hamburger Fotografen York Augustin</a></li>
-              <li><a href="/impressum/">Impressum</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="/blog/">Blog</a>
-            <ul>
-              <li><a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Das perfekte Getting Ready für deine Hochzeit in Hamburg</a></li>
-              <li>
-                <a href="/standesamt-hamburg/">Standesämter in Hamburg</a>
-                <ul>
-                  <li><a href="/hochzeitsfotograf-standesamt-hamburg-altona/">Hochzeitsfotograf Standesamt Hamburg Altona</a></li>
-                </ul>
-              </li>
-              <li><a href="/hochzeitsfotograf-ratgeber/">Geld sparen beim Hochzeitsfotografen</a></li>
-              <li><a href="/blog/">Blog</a></li>
-            </ul>
-          </li>
-          <li>
-            <a href="/about/">Über mich</a>
-            <ul>
-              <li><a href="/about/">Über den Hamburger Fotografen York Augustin</a></li>
-              <li><a href="/impressum/">Impressum</a></li>
-              <li><a href="/datenschutz/">Datenschutzerklärung</a></li>
-              <li><a href="/kontakt/">Kontakt</a></li>
-              <li><a href="/hochzeitsfotograf-preise/">Preise für Hochzeitsreportagen</a></li>
-            </ul>
-          </li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-          <li><a href="/?s=">Suche</a></li>
-        </ul>
-      </nav>
-    </div>
+    <DesktopNavigation />
   </header>
 
   <main>
-    <section class="hero-slider hero-slider--desktop" data-hero-slider data-mode="desktop" aria-label="Hero Slider Desktop">
+    <section
+      class="hero-slider hero-slider--desktop"
+      data-hero-slider
+      data-mode="desktop"
+      aria-label="Hero Slider Desktop"
+      data-track-section="home_hero_slider_desktop"
+      data-content-topic="hochzeitsfotograf_hamburg"
+      data-user-intent="bildstil_erleben"
+      data-journey-stage="orientierung"
+      data-content-format="image_slider"
+      data-position="hero"
+    >
       <div class="hero-slider__viewport">
         <div class="hero-slider__stage">
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="Brautportrait mit Blumenstrauß" decoding="async">
+            <HeroSliderImage
+              src={heroOpeningImage}
+              fallbackSrc="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg"
+              alt="Brautportrait mit Blumenstrauß"
+            />
           </figure>
           <figure class="hero-slider__slide is-initial" data-focus-x="72" data-focus-y="98">
-            <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="Braut beim Fotoshooting in Paris" loading="eager" fetchpriority="high" decoding="async">
+            <HeroSliderImage
+              src={heroParis17Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-17.jpg"
+              alt="Braut beim Fotoshooting in Paris"
+              deferred={false}
+              priority
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="97" data-focus-y="61">
-            <img data-src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="Lachende Braut vor dem Eiffelturm" decoding="async">
+            <HeroSliderImage
+              src={heroParis25Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-25.jpg"
+              alt="Lachende Braut vor dem Eiffelturm"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="Braut in kurzem Kleid in Paris" decoding="async">
+            <HeroSliderImage
+              src={heroParis16Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-16.jpg"
+              alt="Braut in kurzem Kleid in Paris"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Portrait einer Braut am See" decoding="async">
+            <HeroSliderImage
+              src={heroParis31Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-31.jpg"
+              alt="Portrait einer Braut am See"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut auf einer eleganten Treppe" decoding="async">
+            <HeroSliderImage
+              src={heroStaircase3822Image}
+              fallbackSrc="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg"
+              alt="Braut auf einer eleganten Treppe"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut mit Bouquet im Treppenhaus" decoding="async">
+            <HeroSliderImage
+              src={heroStaircase4102Image}
+              fallbackSrc="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg"
+              alt="Braut mit Bouquet im Treppenhaus"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Brautjungfer im Schweriner Schlossgarten" decoding="async">
+            <HeroSliderImage
+              src={heroCastleGardenImage}
+              fallbackSrc="/images/art_4265-bearbeitet-2_web.jpg"
+              alt="Brautjungfer im Schweriner Schlossgarten"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4632.jpg" width="924" height="1386" alt="Brautportrait mit Schleier" decoding="async">
+            <HeroSliderImage
+              src={heroVeil4632Image}
+              fallbackSrc="/images/art_4632.jpg"
+              alt="Brautportrait mit Schleier"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_3143-bearbeitet-scaled-2.jpg" width="924" height="1384" alt="Braut mit Schleier" decoding="async">
+            <HeroSliderImage
+              src={heroVeil3143Image}
+              fallbackSrc="/images/art_3143-bearbeitet-scaled-2.jpg"
+              alt="Braut mit Schleier"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/getting_ready_hochzeitsfotograf_hamburg2372-scaled-2.jpg" width="924" height="1384" alt="Getting-ready-Moment vor der Hochzeit" decoding="async">
+            <HeroSliderImage
+              src={heroGettingReadyImage}
+              fallbackSrc="/images/getting_ready_hochzeitsfotograf_hamburg2372-scaled-2.jpg"
+              alt="Getting-ready-Moment vor der Hochzeit"
+            />
           </figure>
         </div>
       </div>
       <div class="hero-slider__controls" aria-label="Slider Steuerung">
-        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild">‹</button>
-        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false">Pause</button>
-        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild">›</button>
+        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild" data-track-event="gallery_interaction" data-cta-id="home_hero_desktop_prev" data-cta-type="slider_prev" data-section-id="home_hero_slider_desktop" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_navigieren" data-journey-stage="orientierung">‹</button>
+        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false" data-track-event="gallery_interaction" data-cta-id="home_hero_desktop_toggle" data-cta-type="slider_toggle" data-section-id="home_hero_slider_desktop" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_steuern" data-journey-stage="orientierung">Pause</button>
+        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild" data-track-event="gallery_interaction" data-cta-id="home_hero_desktop_next" data-cta-type="slider_next" data-section-id="home_hero_slider_desktop" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_navigieren" data-journey-stage="orientierung">›</button>
       </div>
     </section>
 
-    <section class="hero-slider hero-slider--mobile" data-hero-slider data-mode="mobile" aria-label="Hero Slider Mobile">
+    <section
+      class="hero-slider hero-slider--mobile"
+      data-hero-slider
+      data-mode="mobile"
+      aria-label="Hero Slider Mobile"
+      data-track-section="home_hero_slider_mobile"
+      data-content-topic="hochzeitsfotograf_hamburg"
+      data-user-intent="bildstil_erleben"
+      data-journey-stage="orientierung"
+      data-content-format="image_slider"
+      data-position="hero"
+    >
       <div class="hero-slider__viewport">
         <div class="hero-slider__stage">
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="Brautportrait mit Blumenstrauß" decoding="async">
+            <HeroSliderImage
+              src={heroOpeningImage}
+              fallbackSrc="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg"
+              alt="Brautportrait mit Blumenstrauß"
+            />
           </figure>
           <figure class="hero-slider__slide is-initial" data-focus-x="97" data-focus-y="99">
-            <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="Braut beim Fotoshooting in Paris" loading="eager" fetchpriority="high" decoding="async">
+            <HeroSliderImage
+              src={heroParis17Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-17.jpg"
+              alt="Braut beim Fotoshooting in Paris"
+              deferred={false}
+              priority
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="98" data-focus-y="99">
-            <img data-src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="Lachende Braut vor dem Eiffelturm" decoding="async">
+            <HeroSliderImage
+              src={heroParis25Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-25.jpg"
+              alt="Lachende Braut vor dem Eiffelturm"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="Braut in kurzem Kleid in Paris" decoding="async">
+            <HeroSliderImage
+              src={heroParis16Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-16.jpg"
+              alt="Braut in kurzem Kleid in Paris"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Portrait einer Braut am See" decoding="async">
+            <HeroSliderImage
+              src={heroParis31Image}
+              fallbackSrc="/images/paris_braut_fotoshooting-31.jpg"
+              alt="Portrait einer Braut am See"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut auf einer eleganten Treppe" decoding="async">
+            <HeroSliderImage
+              src={heroStaircase3822Image}
+              fallbackSrc="/images/art_3822-verbessert-rr-bearbeitet-bearbeitet-scaled-1.jpg"
+              alt="Braut auf einer eleganten Treppe"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg" width="924" height="1386" alt="Braut mit Bouquet im Treppenhaus" decoding="async">
+            <HeroSliderImage
+              src={heroStaircase4102Image}
+              fallbackSrc="/images/art_4102-verbessert-rr-bearbeitet-scaled-1.jpg"
+              alt="Braut mit Bouquet im Treppenhaus"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Brautjungfer im Schweriner Schlossgarten" decoding="async">
+            <HeroSliderImage
+              src={heroCastleGardenImage}
+              fallbackSrc="/images/art_4265-bearbeitet-2_web.jpg"
+              alt="Brautjungfer im Schweriner Schlossgarten"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_4632.jpg" width="924" height="1386" alt="Brautportrait mit Schleier" decoding="async">
+            <HeroSliderImage
+              src={heroVeil4632Image}
+              fallbackSrc="/images/art_4632.jpg"
+              alt="Brautportrait mit Schleier"
+            />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="50" data-focus-y="50">
-            <img data-src="/images/art_3143-bearbeitet-scaled-2.jpg" width="924" height="1384" alt="Braut mit Schleier" decoding="async">
+            <HeroSliderImage
+              src={heroVeil3143Image}
+              fallbackSrc="/images/art_3143-bearbeitet-scaled-2.jpg"
+              alt="Braut mit Schleier"
+            />
           </figure>
         </div>
       </div>
       <div class="hero-slider__controls" aria-label="Slider Steuerung">
-        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild">‹</button>
-        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false">Pause</button>
-        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild">›</button>
+        <button class="hero-slider__button" type="button" data-slider-prev aria-label="Vorheriges Bild" data-track-event="gallery_interaction" data-cta-id="home_hero_mobile_prev" data-cta-type="slider_prev" data-section-id="home_hero_slider_mobile" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_navigieren" data-journey-stage="orientierung">‹</button>
+        <button class="hero-slider__button" type="button" data-slider-toggle aria-label="Slider pausieren" aria-pressed="false" data-track-event="gallery_interaction" data-cta-id="home_hero_mobile_toggle" data-cta-type="slider_toggle" data-section-id="home_hero_slider_mobile" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_steuern" data-journey-stage="orientierung">Pause</button>
+        <button class="hero-slider__button" type="button" data-slider-next aria-label="Nächstes Bild" data-track-event="gallery_interaction" data-cta-id="home_hero_mobile_next" data-cta-type="slider_next" data-section-id="home_hero_slider_mobile" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="hero_slider_navigieren" data-journey-stage="orientierung">›</button>
       </div>
     </section>
 
-    <section class="intro section-narrow" id="hochzeitsfotograf-hamburg">
+    <section class="intro section-narrow" id="hochzeitsfotograf-hamburg" data-track-section="home_intro_hamburg" data-content-topic="hochzeitsfotograf_hamburg" data-user-intent="angebot_verstehen" data-journey-stage="orientierung" data-content-format="intro" data-position="after_hero">
       <div class="intro-title">
         <p class="eyebrow">ARTBILD-FOTOGRAFIE</p>
         <h1>Hochzeitsfotograf</h1>
@@ -387,97 +645,22 @@ const homepageSchema = {
       <FeaturedPortfolioLinks />
     </section>
 
-    <section class="home-editorial home-lower-section" id="editorial" aria-labelledby="editorial-title">
-      <div class="home-editorial__copy">
-        <p class="eyebrow">Editorial</p>
-        <h2 id="editorial-title">Hamburg Bilder aus Editorial Fotoshootings</h2>
-        <p>Als Hochzeitsfotograf bin ich nicht nur in Hamburg, Niedersachsen und Schleswig-Holstein unterwegs, sondern auch in Spanien, Italien und Frankreich.</p>
-        <p>Wenn Du Dir Bilder wünschst, die in Erinnerung bleiben, egal ob in den Dörfern Mallorcas, an den Kanälen Venedigs, an der Großen Elbstraße, den Landungsbrücken oder beim Römischen Garten in Blankenese, bist Du bei Artbild-Fotografie richtig.</p>
-        <a class="button ghost" href="/gallery/editorial/" aria-label="Editorial Fotoshootings von Artbild-Fotografie ansehen">Editorial ansehen</a>
-      </div>
-      <div class="home-editorial__media" role="group" aria-label="Editorial und Destination Hochzeitsfotografie">
-        <img src="/images/art_4265-bearbeitet-2_web.jpg" width="1386" height="924" alt="Editorial Fotoshooting mit Brautjungfer im Schlossgarten" loading="lazy" decoding="async">
-        <img src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="Brautportrait bei einem Destination Shooting in Paris" loading="lazy" decoding="async">
-      </div>
-    </section>
+    <HomeAboutYork />
 
-    <section class="destination-section home-lower-section" aria-labelledby="destination-title">
-      <div class="section-heading">
-        <p class="eyebrow">Destinations</p>
-        <h2 id="destination-title">Hochzeitsfotografie in Hamburg, Mallorca, Venedig und Paris</h2>
-        <p>Artbild-Fotografie begleitet Hochzeiten, Paarshootings und Editorials lokal in Hamburg sowie europaweit an Orten, die zur Geschichte des Paares passen.</p>
-      </div>
-      <ul class="destination-links" aria-label="Destination Portfolio Orte">
-        {destinationLinks.map((item) => (
-          <li>
-            <a href={item.href}>{item.label}</a>
-          </li>
-        ))}
-      </ul>
-      <div class="destination-card-grid" aria-label="Empfohlene Destination Galerien">
-        {destinationCards.map((item) => (
-          <article class="destination-card">
-            <a href={item.href} aria-label={item.linkLabel}>
-              <Image
-                src={item.image}
-                alt={item.alt}
-                widths={[360, 620, 768]}
-                sizes="(max-width: 620px) calc(100vw - 28px), (max-width: 980px) calc(100vw - 44px), 520px"
-                loading="lazy"
-                decoding="async"
-                format="webp"
-                quality={88}
-              />
-              <div>
-                <p class="eyebrow">{item.kicker}</p>
-                <h3>{item.title}</h3>
-                <p>{item.text}</p>
-                <span>Galerie ansehen</span>
-              </div>
-            </a>
-          </article>
-        ))}
-      </div>
-      <div class="destination-actions">
-        <a href="/hochzeitsfotograf-preise/">Hochzeitsfotograf Preise ansehen</a>
-        <a href="/gallery/hamburg/">Mein schönes Hamburg ansehen</a>
-        <a href="/gallery/floral-art/">Florale Styled Shootings ansehen</a>
-      </div>
-    </section>
-
-    <section class="story-section home-lower-section" aria-labelledby="stories-title">
-      <div class="section-heading">
-        <p class="eyebrow">Hochzeitsgeschichten</p>
-        <h2 id="stories-title">Reportagen, Paarshootings und echte Momente</h2>
-        <p>Ich erzähle Eure Geschichte in Bildern: natürlich, unverfälscht und mit Blick für die großen und kleinen Gänsehaut-Momente.</p>
-      </div>
-      <div class="story-grid">
-        {storyCards.map((story) => (
-          <article class="story-card">
-            <a href={story.href} aria-label={story.linkLabel}>
-              <img src={story.image} width={story.width} height={story.height} alt={story.alt} loading="lazy" decoding="async">
-              <div>
-                <p class="eyebrow">{story.kicker}</p>
-                <h3>{story.title}</h3>
-                <p>{story.text}</p>
-                <span>Jetzt ansehen</span>
-              </div>
-            </a>
-          </article>
-        ))}
-      </div>
-    </section>
-
-    <section class="planning-section home-lower-section" aria-labelledby="planning-title">
-      <div class="planning-section__intro">
+    <section class="planning-section home-lower-section" aria-labelledby="planning-title" data-track-section="home_planning_prices" data-content-topic="hochzeitsplanung" data-user-intent="planung_und_preise_pruefen" data-journey-stage="vergleich" data-content-format="info_cards" data-position="home_planning">
+      <div class="planning-section__intro" data-home-reveal>
         <p class="eyebrow">Planung & Preise</p>
-        <h2 id="planning-title">Hilfen für Eure Hochzeitsplanung in Hamburg</h2>
+        <h2 id="planning-title">Tipps &amp; Tricks für tolle Hochzeitsfotos</h2>
         <p>Die wichtigsten Einstiege für Paare, die gerade Getting Ready, Ablauf, Budget oder fotografische Begleitung planen.</p>
       </div>
-      <div class="planning-grid">
-        {articleCards.map((article, index) => (
-          <article class:list={["planning-card", index === 0 && "planning-card--large"]}>
-            <a href={article.href}>
+      <div class="planning-grid" data-home-reveal data-home-reveal-delay="90">
+        {planningCards.map((article, index) => (
+          <article class:list={[
+            "planning-card",
+            article.tileClass,
+            index % 2 === 1 && "planning-card--text-first",
+          ]}>
+            <a href={article.href} aria-label={`${article.title}: ${article.ctaLabel}`} data-track-event="cta_click" data-cta-id={`home_planning_${trackingSlug(article.title)}`} data-cta-type={article.ctaType} data-section-id="home_planning_prices" data-content-topic={article.topic} data-user-intent={article.intent} data-journey-stage={article.stage} data-position={`planning_card_${index + 1}`}>
               {typeof article.image === "string" ? (
                 <img src={article.image} width={article.width} height={article.height} alt={article.alt} loading="lazy" decoding="async">
               ) : (
@@ -485,17 +668,18 @@ const homepageSchema = {
                   src={article.image}
                   alt={article.alt}
                   widths={[420, 640, 768, 924]}
-                  sizes="(max-width: 620px) calc(100vw - 60px), (max-width: 900px) calc(100vw - 64px), 420px"
+                  sizes="(max-width: 620px) 44vw, (max-width: 900px) 30vw, 260px"
                   loading="lazy"
                   decoding="async"
                   format="webp"
                   quality={96}
                 />
               )}
-              <div>
-                <h3>{article.title}</h3>
-                <p>{article.text}</p>
-                <span>{index === 0 ? "Tipps ansehen" : "Preise ansehen"}</span>
+              <div class="planning-card__text">
+                <p class="planning-card__kicker">{article.tileKicker}</p>
+                <h3>{article.tileTitle}</h3>
+                <span class="planning-card__rule" aria-hidden="true"></span>
+                <p class="planning-card__summary">{article.tileText}</p>
               </div>
             </a>
           </article>
@@ -503,102 +687,506 @@ const homepageSchema = {
       </div>
     </section>
 
-    <section class="related-section home-lower-section" aria-labelledby="related-title">
-      <div class="section-heading">
-        <p class="eyebrow">Vielleicht gefällt Dir auch</p>
-        <h2 id="related-title">Weitere Galerien und Geschichten</h2>
+    <HomeStandesamtFinderFeature />
+
+    <section
+      class="services-compass-section home-lower-section"
+      id="hochzeitsfotografie-leistungen"
+      aria-labelledby="hochzeitsfotografie-leistungen-title"
+      data-track-section="home_services_compass"
+      data-content-topic="leistungen_hochzeitsfotografie"
+      data-user-intent="leistungen_verstehen"
+      data-journey-stage="orientierung"
+      data-content-format="service_compass"
+      data-position="home_services_compass"
+    >
+      <div class="services-compass__content" data-home-reveal data-home-reveal-delay="100">
+        <p class="eyebrow">Hochzeitsfotografie in Hamburg</p>
+        <h2 id="hochzeitsfotografie-leistungen-title">So arbeite ich am Hochzeitstag</h2>
+        <p>
+          Am liebsten fotografiere ich Hochzeitsreportagen. Ich begleite Euch durch den Tag,
+          dokumentiere, was passiert, greife möglichst wenig ein und halte mich mit Anweisungen zurück.
+        </p>
+
+        <div class="services-compass__list" aria-label="Leistungsübersicht Hochzeitsfotografie">
+          {serviceCards.map((service, index) => (
+            <details
+              class="services-compass__item"
+              data-position={`service_${index + 1}`}
+              data-track-event="service_accordion_toggle"
+              data-section-id="home_services_compass"
+              data-content-topic={service.topic}
+              data-user-intent={service.intent}
+              data-journey-stage={service.stage}
+            >
+              <summary class="services-compass__summary">
+                <span class="services-compass__index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                <h3>{service.title}</h3>
+                <span class="services-compass__toggle" aria-hidden="true"></span>
+              </summary>
+              <div class="services-compass__panel">
+                <p>{service.text}</p>
+                <a
+                  href={service.href}
+                  data-track-event="cta_click"
+                  data-cta-id={`home_service_${trackingSlug(service.title)}`}
+                  data-cta-type="service_link"
+                  data-section-id="home_services_compass"
+                  data-content-topic={service.topic}
+                  data-user-intent={service.intent}
+                  data-journey-stage={service.stage}
+                  data-position={`service_link_${index + 1}`}
+                >
+                  {service.linkLabel}
+                </a>
+              </div>
+            </details>
+          ))}
+        </div>
       </div>
-      <nav class="related-links" aria-label="Weitere empfohlene Galerien">
-        {relatedLinks.map((item) => (
-          <a href={item.href}>{item.label}</a>
-        ))}
-      </nav>
-      <a class="button ghost" href="/portfolio/" aria-label="Gesamtes Portfolio von Artbild-Fotografie ansehen">Portfolio ansehen</a>
+
+      <figure class="services-compass__media" data-home-reveal>
+        <Image
+          src={serviceCompassImage}
+          alt="Brautpaar bei einer Hochzeitsreportage in Hamburg von Artbild-Fotografie"
+          widths={[420, 640, 768, 960]}
+          sizes="(max-width: 620px) calc(88vw - 56px), (max-width: 900px) min(calc(88vw - 39px), 560px), (max-width: 1180px) 42vw, 500px"
+          loading="lazy"
+          decoding="async"
+          format="webp"
+          quality={90}
+        />
+        <figcaption>Hochzeitsreportage in Hamburg</figcaption>
+      </figure>
     </section>
 
-    <section class="social-section home-lower-section" aria-labelledby="social-title">
-      <p class="eyebrow">Folge mir auf Social Media</p>
-      <h2 id="social-title">Aktuelle Arbeiten, freie Termine und TFP-Shootings</h2>
-      <div class="social-links" aria-label="Social Media Profile von Artbild-Fotografie">
-        <a href="https://www.facebook.com/artbildfotografie/" rel="me">Facebook</a>
-        <a href="https://instagram.com/artbild" rel="me">Instagram</a>
-        <a href="https://www.pinterest.de/artbild/" rel="me">Pinterest</a>
+    <section class="story-section home-lower-section" aria-labelledby="stories-title" data-track-section="home_story_cards" data-content-topic="hochzeitsreportagen" data-user-intent="reportagen_ansehen" data-journey-stage="auswahl" data-content-format="story_carousel" data-position="home_stories">
+      <div class="section-heading" data-home-reveal>
+        <p class="eyebrow">Hochzeitsgeschichten</p>
+        <h2 id="stories-title">Reportagen und Editorials als vollständige Serien</h2>
+        <p>Die Galerien zeigen den Ablauf, die beteiligten Menschen und die Orte einer Bildstrecke – über einzelne Lieblingsbilder hinaus.</p>
+      </div>
+      <div class="story-carousel" data-story-carousel data-home-reveal data-home-reveal-delay="100">
+        <p class="visually-hidden" id="story-carousel-instructions">
+          Nutze die Pfeiltasten, wische horizontal oder wähle eine Galerie über die Navigation.
+        </p>
+        <span class="visually-hidden" role="status" aria-atomic="true" data-story-status>
+          Galerien 1 bis 4 von {storyCards.length}
+        </span>
+        <div class="story-carousel__toolbar" data-story-controls>
+          <span class="story-carousel__control-label">Galerien durchblättern</span>
+          <div class="story-carousel__navigation" role="group" aria-label="Karussellsteuerung">
+            <button
+              class="story-carousel__button"
+              type="button"
+              aria-label="Vorherige Hochzeitsgeschichte"
+              aria-controls="home-story-carousel"
+              data-story-previous
+              data-track-event="content_slider_interaction"
+              data-slider-id="home_story_cards"
+              data-slider-action="previous"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                <path d="M19 12H5m6-6-6 6 6 6"></path>
+              </svg>
+            </button>
+            <div
+              class="story-carousel__dots"
+              role="group"
+              aria-label="Hochzeitsgeschichte auswählen"
+              data-story-pagination
+            >
+              {storyCards.map((story, index) => (
+                <button
+                  class="story-carousel__dot"
+                  type="button"
+                  aria-label={`Galerie ${index + 1} von ${storyCards.length} anzeigen: ${story.title}`}
+                  aria-controls="home-story-carousel"
+                  aria-current={index === 0 ? "true" : undefined}
+                  data-story-dot={index}
+                  data-track-event="content_slider_interaction"
+                  data-slider-id="home_story_cards"
+                  data-slider-action="jump"
+                  data-slider-index={index + 1}
+                >
+                  <span aria-hidden="true"></span>
+                </button>
+              ))}
+            </div>
+            <button
+              class="story-carousel__button"
+              type="button"
+              aria-label="Nächste Hochzeitsgeschichte"
+              aria-controls="home-story-carousel"
+              data-story-next
+              data-track-event="content_slider_interaction"
+              data-slider-id="home_story_cards"
+              data-slider-action="next"
+            >
+              <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+              </svg>
+            </button>
+            <div class="story-carousel__position" aria-hidden="true">
+              <span data-story-current>01–04</span>
+              <span> / </span>
+              <span>{String(storyCards.length).padStart(2, "0")}</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="story-carousel__viewport"
+          id="home-story-carousel"
+          tabindex="0"
+          role="region"
+          aria-roledescription="Karussell"
+          aria-label="Hochzeitsgeschichten"
+          aria-describedby="story-carousel-instructions"
+          data-story-viewport
+        >
+          <div class="story-grid" data-story-track>
+            {storyCards.map((story, index) => (
+              <article
+                class="story-card"
+                aria-roledescription="Folie"
+                aria-labelledby={`story-card-position-${index + 1} story-card-title-${index + 1}`}
+                data-story-card
+              >
+                <span class="visually-hidden" id={`story-card-position-${index + 1}`}>
+                  {index + 1} von {storyCards.length}:
+                </span>
+                <a href={story.href} aria-label={story.linkLabel} data-track-event="cta_click" data-cta-id={`home_story_${trackingSlug(story.title)}`} data-cta-type="gallery_card" data-section-id="home_story_cards" data-content-topic="hochzeitsreportagen" data-user-intent="reportage_ansehen" data-journey-stage="auswahl" data-position={`story_card_${index + 1}`}>
+                  <div class="story-card__media">
+                    {story.imageAsset ? (
+                      <Image
+                        src={story.imageAsset}
+                        alt={story.alt}
+                        widths={[360, 520, 760, 980]}
+                        sizes="(max-width: 620px) calc(100vw - 44px), (max-width: 900px) 44vw, 24vw"
+                        loading="lazy"
+                        decoding="async"
+                        format="webp"
+                        quality={88}
+                      />
+                    ) : (
+                      <img src={story.image} width={story.width} height={story.height} alt={story.alt} loading="lazy" decoding="async">
+                    )}
+                  </div>
+                  <div>
+                    <p class="eyebrow">{story.kicker}</p>
+                    <h3 id={`story-card-title-${index + 1}`}>{story.title}</h3>
+                    <p>{story.text}</p>
+                    <span>Jetzt ansehen</span>
+                  </div>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="mini-portfolio-section home-lower-section" aria-labelledby="mini-portfolio-title">
-      <div class="section-heading">
-        <p class="eyebrow">Portfolio</p>
-        <h2 id="mini-portfolio-title">Ausgewählte weitere Arbeiten</h2>
+    <section class="home-editorial home-lower-section" id="editorial" aria-labelledby="editorial-title" data-track-section="home_editorial" data-content-topic="editorial_fotoshooting" data-user-intent="editorial_ansehen" data-journey-stage="inspiration" data-content-format="feature_section" data-position="home_editorial">
+      <div class="home-editorial__copy" data-home-reveal>
+        <p class="eyebrow">Editorial</p>
+        <h2 id="editorial-title">Editorial-Bildstrecken aus Hamburg, Paris und Zürich</h2>
+        <p>Die Hamburger Serie verbindet Rathaus, Dachterrasse, Blumenarrangements und Portraits zu einer zusammenhängenden Strecke.</p>
+        <p>Weitere Editorials entstanden mit einem Brautkleid in Paris sowie mit Stephanie und Laurin an der Limmat in Zürich.</p>
+        <a class="button ghost" href="/gallery/editorial/" aria-label="Editorial Fotoshootings von Artbild-Fotografie ansehen" data-track-event="cta_click" data-cta-id="home_editorial_gallery" data-cta-type="gallery_link" data-section-id="home_editorial" data-content-topic="editorial_fotoshooting" data-user-intent="editorial_ansehen" data-journey-stage="inspiration">Editorial ansehen</a>
       </div>
-      <div class="mini-portfolio-grid">
-        {miniPortfolio.map((item) => (
-          <article>
-            <a href={item.href} aria-label={`${item.title} ansehen`}>
-              <img src={item.image} width={item.width} height={item.height} alt={item.alt} loading="lazy" decoding="async">
-              <p>{item.category}</p>
-              <h3>{item.title}</h3>
-            </a>
-          </article>
-        ))}
+      <div class="home-editorial__media" role="group" aria-label="Editorial-Fotografie in Hamburg, Paris und Zürich" data-home-reveal data-home-reveal-delay="110">
+        <Image
+          src={heroCastleGardenImage}
+          alt="Editorial Fotoshooting mit Brautjungfer im Schlossgarten"
+          widths={[320, 480, 640, 800, 960, 1080, 1280, 1386]}
+          sizes="(max-width: 700px) calc(100vw - 44px), (max-width: 900px) 58vw, 34vw"
+          loading="lazy"
+          decoding="async"
+          format="webp"
+          quality={82}
+        />
+        <Image
+          src={heroParis31Image}
+          alt="Brautportrait beim Editorial in Paris"
+          widths={[240, 320, 480, 640, 800, 960, 1068]}
+          sizes="(max-width: 700px) calc(100vw - 44px), (max-width: 900px) 38vw, 24vw"
+          loading="lazy"
+          decoding="async"
+          format="webp"
+          quality={82}
+        />
       </div>
     </section>
 
-    <section class="vendor-section home-lower-section" aria-labelledby="vendor-title">
-      <div class="section-heading">
+    <section class="portfolio-showcase home-lower-section" aria-labelledby="portfolio-showcase-title" data-track-section="home_portfolio_showcase" data-content-topic="portfolio" data-user-intent="weitere_arbeiten_ansehen" data-journey-stage="auswahl" data-content-format="portfolio_carousel" data-position="home_portfolio_showcase">
+      <header class="portfolio-showcase__heading" data-home-reveal>
+        <h2 id="portfolio-showcase-title">Vielleicht gefällt Dir auch</h2>
+      </header>
+
+      <div class="portfolio-showcase__carousel" data-portfolio-showcase-carousel data-home-reveal data-home-reveal-delay="90">
+        <p class="visually-hidden" id="portfolio-showcase-instructions">
+          Nutze die Pfeiltasten, wische horizontal oder verwende die Schaltflächen, um weitere Arbeiten anzusehen.
+        </p>
+        <span class="visually-hidden" role="status" aria-atomic="true" data-portfolio-showcase-status>
+          Arbeiten 1 bis 4 von {portfolioShowcase.length}
+        </span>
+
+        <div class="portfolio-showcase__controls" role="group" aria-label="Karussellsteuerung" data-portfolio-showcase-controls>
+          <button
+            type="button"
+            aria-label="Vorherige Arbeiten"
+            aria-controls="home-portfolio-showcase"
+            data-portfolio-showcase-previous
+            data-track-event="content_slider_interaction"
+            data-slider-id="home_portfolio_showcase"
+            data-slider-action="previous"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M19 12H5m6-6-6 6 6 6"></path>
+            </svg>
+          </button>
+          <div class="portfolio-showcase__position" aria-hidden="true">
+            <span data-portfolio-showcase-current>1–4</span>
+            <span> / </span>
+            <span>{portfolioShowcase.length}</span>
+          </div>
+          <button
+            type="button"
+            aria-label="Nächste Arbeiten"
+            aria-controls="home-portfolio-showcase"
+            data-portfolio-showcase-next
+            data-track-event="content_slider_interaction"
+            data-slider-id="home_portfolio_showcase"
+            data-slider-action="next"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="portfolio-showcase__viewport"
+          id="home-portfolio-showcase"
+          tabindex="0"
+          role="region"
+          aria-roledescription="Karussell"
+          aria-label="Weitere Galerien und ausgewählte Arbeiten"
+          aria-describedby="portfolio-showcase-instructions"
+          data-portfolio-showcase-viewport
+        >
+          <div class="portfolio-showcase__track" data-portfolio-showcase-track>
+            {portfolioShowcase.map((item, index) => (
+              <article
+                class={`portfolio-showcase__card portfolio-showcase__card--${item.format}`}
+                aria-roledescription="Folie"
+                aria-labelledby={`portfolio-card-position-${index + 1} portfolio-card-title-${index + 1}`}
+                data-portfolio-showcase-card
+              >
+                <span class="visually-hidden" id={`portfolio-card-position-${index + 1}`}>
+                  {index + 1} von {portfolioShowcase.length}:
+                </span>
+                <a
+                  href={item.href}
+                  aria-label={`${item.title} ansehen`}
+                  data-track-event="cta_click"
+                  data-cta-id={`home_portfolio_showcase_${trackingSlug(item.title)}`}
+                  data-cta-type="gallery_card"
+                  data-section-id="home_portfolio_showcase"
+                  data-content-topic="portfolio"
+                  data-user-intent="galerie_ansehen"
+                  data-journey-stage="auswahl"
+                  data-position={`portfolio_showcase_${index + 1}`}
+                >
+                  <p>{item.category}</p>
+                  <div class="portfolio-showcase__media">
+                    <Image
+                      src={item.image}
+                      alt={item.alt}
+                      widths={[320, 480, 720, 960]}
+                      sizes="(max-width: 620px) 78vw, (max-width: 900px) 42vw, 22vw"
+                      loading="lazy"
+                      decoding="async"
+                      format="webp"
+                      quality={88}
+                    />
+                  </div>
+                  <h3 id={`portfolio-card-title-${index + 1}`}>{item.title}</h3>
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <a class="portfolio-showcase__link" href="/portfolio/" aria-label="Gesamtes Portfolio von Artbild-Fotografie ansehen" data-home-reveal data-track-event="cta_click" data-cta-id="home_portfolio_showcase_all" data-cta-type="portfolio_link" data-section-id="home_portfolio_showcase" data-content-topic="portfolio" data-user-intent="portfolio_ansehen" data-journey-stage="auswahl">Sieh Dir mein Portfolio an.</a>
+    </section>
+
+    <section class="vendor-section home-lower-section" aria-labelledby="vendor-title" data-track-section="home_vendor_recommendations" data-content-topic="hochzeitsdienstleister_hamburg" data-user-intent="dienstleister_finden" data-journey-stage="planung" data-content-format="vendor_carousel" data-position="home_vendor">
+      <div class="section-heading" data-home-reveal>
         <p class="eyebrow">Empfehlungen für Eure Hochzeit</p>
         <h2 id="vendor-title">Dienstleister in Hamburg und Umgebung</h2>
-        <p>Eine kuratierte Auswahl hilfreicher Kontakte für Hochzeiten, Brautstyling, Floristik, Mode und Gästefotos.</p>
+        <p>Menschen und Anbieter, die an den gezeigten Shootings beteiligt waren oder bereits auf der früheren Artbild-Seite empfohlen wurden.</p>
       </div>
-      <div class="vendor-grid">
-        {vendors.map((vendor) => (
-          <article>
-            <h3>{vendor.name}</h3>
-            <p>{vendor.text}</p>
-            <a href={vendor.href}>{vendor.cta}</a>
-          </article>
-        ))}
+      <div class="vendor-carousel" data-vendor-carousel data-home-reveal data-home-reveal-delay="90">
+        <p class="visually-hidden" id="vendor-carousel-instructions">
+          Nutze die Pfeiltasten, wische horizontal oder verwende die Schaltflächen, um weitere Dienstleister anzusehen.
+        </p>
+        <span class="visually-hidden" role="status" aria-atomic="true" data-vendor-carousel-status>
+          Dienstleister 1 bis 4 von {vendors.length}
+        </span>
+
+        <div class="vendor-carousel__controls" role="group" aria-label="Karussellsteuerung">
+          <button
+            type="button"
+            aria-label="Vorherige Dienstleister"
+            aria-controls="home-vendor-carousel"
+            data-vendor-carousel-previous
+            data-track-event="content_slider_interaction"
+            data-slider-id="home_vendor_recommendations"
+            data-slider-action="previous"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M19 12H5m6-6-6 6 6 6"></path>
+            </svg>
+          </button>
+          <div class="vendor-carousel__position" aria-hidden="true">
+            <span data-vendor-carousel-current>1–4</span>
+            <span> / </span>
+            <span>{vendors.length}</span>
+          </div>
+          <button
+            type="button"
+            aria-label="Nächste Dienstleister"
+            aria-controls="home-vendor-carousel"
+            data-vendor-carousel-next
+            data-track-event="content_slider_interaction"
+            data-slider-id="home_vendor_recommendations"
+            data-slider-action="next"
+          >
+            <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+              <path d="M5 12h14m-6-6 6 6-6 6"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div
+          class="vendor-carousel__viewport"
+          id="home-vendor-carousel"
+          tabindex="0"
+          role="region"
+          aria-roledescription="Karussell"
+          aria-label="Dienstleister in Hamburg und Umgebung"
+          aria-describedby="vendor-carousel-instructions"
+          data-vendor-carousel-viewport
+        >
+          <div class="vendor-grid vendor-carousel__track" data-vendor-carousel-track>
+            {vendors.map((vendor, index) => (
+              <article
+                aria-roledescription="Folie"
+                aria-labelledby={`vendor-card-position-${index + 1} vendor-card-title-${index + 1}`}
+                data-vendor-carousel-card
+              >
+                <span class="visually-hidden" id={`vendor-card-position-${index + 1}`}>
+                  {index + 1} von {vendors.length}:
+                </span>
+                <h3 id={`vendor-card-title-${index + 1}`}>{vendor.name}</h3>
+                <p>{vendor.text}</p>
+                <a
+                  href={vendor.href}
+                  rel={vendor.href.startsWith("http") ? "noopener" : undefined}
+                  data-track-event={vendor.href.startsWith("http") ? "external_resource_click" : "cta_click"}
+                  data-resource-id={vendor.href.startsWith("http") ? `vendor_${trackingSlug(vendor.name)}` : undefined}
+                  data-resource-type={vendor.href.startsWith("http") ? "vendor_website" : undefined}
+                  data-cta-id={`home_vendor_${trackingSlug(vendor.name)}`}
+                  data-cta-type="vendor_link"
+                  data-section-id="home_vendor_recommendations"
+                  data-content-topic="hochzeitsdienstleister_hamburg"
+                  data-user-intent="dienstleister_ansehen"
+                  data-journey-stage="planung"
+                  data-position={`vendor_${index + 1}`}
+                >
+                  {vendor.cta}
+                </a>
+              </article>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="contact-note home-lower-section" id="kontakt" aria-labelledby="contact-note-title">
-      <div>
+    <section class="social-section home-lower-section" aria-labelledby="social-title" data-track-section="home_social_links" data-content-topic="social_media" data-user-intent="aktuelle_arbeiten_verfolgen" data-journey-stage="bindung" data-content-format="social_links" data-position="home_social">
+      <p class="eyebrow" data-home-reveal>Folge mir auf Social Media</p>
+      <h2 id="social-title" data-home-reveal data-home-reveal-delay="70">Aktuelle Arbeiten und Einblicke</h2>
+      <div class="social-links" aria-label="Social Media Profile von Artbild-Fotografie" data-home-reveal data-home-reveal-delay="130">
+        <a href="https://www.facebook.com/artbildfotografie/" rel="me" data-track-event="external_resource_click" data-resource-id="facebook_artbild" data-resource-type="social_profile" data-cta-id="home_social_facebook" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Facebook</a>
+        <a href="https://instagram.com/artbild" rel="me" data-track-event="external_resource_click" data-resource-id="instagram_artbild" data-resource-type="social_profile" data-cta-id="home_social_instagram" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Instagram</a>
+        <a href="https://www.pinterest.de/artbild/" rel="me" data-track-event="external_resource_click" data-resource-id="pinterest_artbild" data-resource-type="social_profile" data-cta-id="home_social_pinterest" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Pinterest</a>
+      </div>
+    </section>
+
+    <EditorialReviewQuote
+      reviews={allGoogleReviews}
+      sectionId="home_review_lara_friedrichs"
+      heading="Ein Hochzeitstag, der sich leicht anfühlen darf"
+      contentTopic="hochzeitsreportage_hamburg"
+      userIntent="erfahrung_verstehen"
+      journeyStage="orientierung"
+      position="after_services"
+      mergeFollowingSection
+    />
+
+    <section class="contact-note home-lower-section" id="kontakt" aria-labelledby="contact-note-title" data-track-section="home_contact_options" data-content-topic="kontaktmoeglichkeiten" data-user-intent="kontakt_aufnehmen" data-journey-stage="anfrage" data-content-format="contact_cta" data-position="home_bottom">
+      <div data-home-reveal>
         <p class="eyebrow">Kontakt</p>
         <h2 id="contact-note-title">Kurzfristige Hochzeitsanfragen</h2>
-        <p>Für sehr kurzfristige Hochzeitsanfragen bin ich über WhatsApp sowie über Instagram schnell erreichbar. Für Anfragen für 2027 und 2028 sowie für alle weiteren Fragen könnt Ihr natürlich auch das Kontaktformular nutzen.</p>
+        <p>Für kurzfristige Anfragen nutzt Ihr am besten den Kontakt-Button unten rechts. Dort könnt Ihr WhatsApp, Kontaktformular oder E-Mail wählen. Über „Termin noch frei?“ prüft Ihr vorab, ob Euer Hochzeitstag nach aktuellem Kalenderstand verfügbar ist.</p>
       </div>
-      <div class="contact-note__actions">
-        <a href="https://ig.me/m/artbild" aria-label="Artbild-Fotografie per Instagram kontaktieren">Instagram</a>
-        <a href="/kontakt/" aria-label="Kontaktformular von Artbild-Fotografie öffnen">Kontaktformular</a>
-        <a href="mailto:info@artbild-fotografie.de" aria-label="Artbild-Fotografie per E-Mail kontaktieren">E-Mail</a>
+      <div class="contact-note__actions" data-home-reveal data-home-reveal-delay="100">
+        <a href="/kontakt/" aria-label="Schnellkontakt über den Kontakt-Button öffnen" data-floating-action-external-open data-track-event="cta_click" data-cta-id="home_contact_fab" data-cta-type="floating_action_trigger" data-section-id="home_contact_options" data-content-topic="kontaktmoeglichkeiten" data-user-intent="schnellkontakt_oeffnen" data-journey-stage="anfrage">Kontakt-Button öffnen</a>
+        <a href="/kontakt/" aria-label="Terminprüfung im Kontakt-Button öffnen" data-floating-action-external-availability data-track-event="cta_click" data-cta-id="home_contact_availability" data-cta-type="availability_check" data-section-id="home_contact_options" data-content-topic="terminverfuegbarkeit" data-user-intent="termin_pruefen" data-journey-stage="anfrage">Termin prüfen</a>
       </div>
     </section>
   </main>
 
+  <a class="site-footer-return" href="#top" aria-label="Zurück zum Seitenanfang">
+    <svg viewBox="0 0 14 24" aria-hidden="true" focusable="false">
+      <path d="M1.5 7 7 1.5 12.5 7M7 1.5v21" />
+    </svg>
+  </a>
+
   <footer class="site-footer">
     <div>
       <h2>Artbild-Fotografie</h2>
-      <p><a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a></p>
+      <p><a
+        href="mailto:info@artbild-fotografie.de"
+        data-track-event="contact_click"
+        data-cta-id="home_footer_email"
+        data-cta-type="email"
+        data-section-id="home_footer"
+        data-content-topic="kontaktmoeglichkeiten"
+        data-user-intent="email_schreiben"
+        data-journey-stage="conversion"
+      >info@artbild-fotografie.de</a></p>
       <p>Rahlstedter Bahnhofstraße 27, 22143 Hamburg</p>
     </div>
     <nav aria-label="Footer">
-      <a href="/kontakt/">Kontakt</a>
+      <a
+        href="/kontakt/"
+        data-track-event="contact_click"
+        data-cta-id="home_footer_contact"
+        data-cta-type="contact_form"
+        data-section-id="home_footer"
+        data-content-topic="kontaktmoeglichkeiten"
+        data-user-intent="kontaktseite_oeffnen"
+        data-journey-stage="conversion"
+      >Kontakt</a>
       <a href="/blog/">Blog</a>
       <a href="/impressum/">Impressum</a>
       <a href="/datenschutz/">Datenschutz</a>
-      <a href="#top">Nach oben</a>
     </nav>
     <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
   </footer>
 
-  <noscript>
-    <section aria-label="Hero Slider Bilder">
-      <img src="/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg" width="640" height="853" alt="hochzeitsreportage hamburg festpreis">
-      <img src="/images/paris_braut_fotoshooting-17.jpg" width="1068" height="1600" alt="paris braut fotoshooting 17 Hochzeitsfotograf Hamburg">
-      <img src="/images/paris_braut_fotoshooting-25.jpg" width="1068" height="1600" alt="paris braut fotoshooting 25 Hochzeitsfotograf Hamburg">
-      <img src="/images/paris_braut_fotoshooting-16.jpg" width="1068" height="1600" alt="paris braut fotoshooting 16 Hochzeitsfotograf Hamburg">
-      <img src="/images/paris_braut_fotoshooting-31.jpg" width="1068" height="1600" alt="paris braut fotoshooting 31 Hochzeitsfotograf Hamburg">
-    </section>
-  </noscript>
 </body>
 </html>

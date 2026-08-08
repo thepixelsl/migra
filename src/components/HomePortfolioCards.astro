@@ -12,15 +12,47 @@ const toDateTime = (date: string) => {
   const [day, month, year] = date.split(".");
   return `${year}-${month}-${day}`;
 };
+
+const trackingSlug = (href: string) => href
+  .replace(/^\/|\/$/g, "")
+  .replace(/\//g, "_")
+  .replace(/[^a-z0-9_]+/g, "_");
 ---
 
-<div class="portfolio-grid" role="list" aria-label="Portfolio-Auswahl Hochzeitsfotografie Hamburg">
+<div
+  class="portfolio-grid"
+  role="list"
+  aria-label="Portfolio-Auswahl Hochzeitsfotografie Hamburg"
+  data-track-section="home_portfolio_cards"
+  data-content-topic="portfolio"
+  data-user-intent="beispielbilder_ansehen"
+  data-journey-stage="auswahl"
+  data-content-format="portfolio_cards"
+  data-position="home"
+>
   {entries.map((entry, index) => (
-    <article class:list={["portfolio-card", index === 0 && "tall"]} role="listitem">
+    <article
+      class:list={["portfolio-card", index === 0 && "tall"]}
+      role="listitem"
+      data-track-section={`home_portfolio_card_${trackingSlug(entry.href)}`}
+      data-content-topic="portfolio"
+      data-user-intent="galerie_auswaehlen"
+      data-journey-stage="auswahl"
+      data-content-format="portfolio_card"
+      data-position={`home_portfolio_${index + 1}`}
+    >
       <a
         class="portfolio-card__link"
         href={entry.href}
         aria-label={`${entry.title} ansehen, ${entry.category} aus dem Portfolio von Artbild-Fotografie`}
+        data-track-event="cta_click"
+        data-cta-id={`home_portfolio_${trackingSlug(entry.href)}`}
+        data-cta-type="gallery_card"
+        data-section-id={`home_portfolio_card_${trackingSlug(entry.href)}`}
+        data-content-topic="portfolio"
+        data-user-intent="galerie_ansehen"
+        data-journey-stage="auswahl"
+        data-position={`home_portfolio_${index + 1}`}
       >
         <Image
           src={entry.image}

@@ -1,45 +1,77 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import "../../styles/global.css";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
+import { googleReviews } from "../../data/reviews";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
-import pureMomentsImage from "../../assets/hochzeitsfotograf-preise/trauung_standesamt_altona_hamburg0091.jpg";
+import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
 import reportageImage from "../../assets/hochzeitsfotograf-preise/ART_3680-Bearbeitet-Wiederhergestellt_web.jpg";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/hochzeitsfotograf-preise/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Hochzeitsfotograf Hamburg Preise";
 const description =
-  "Preise und Pakete für Hochzeitsfotografie in Hamburg: standesamtliche Trauung, Hochzeitsreportage, Bildbearbeitung, Fahrtkosten und FAQ ohne versteckte Kosten.";
+  "Preise und Pakete für Hochzeitsfotografie in Hamburg mit dem jeweils aufgeführten Leistungsumfang und Hinweisen zum individuellen Angebot.";
 const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const reportageFeatures = (duration: string) => [
+  duration,
+  "Persönliches Vorgespräch und Beratung",
+  "Kennenlernshooting",
+  "Getting Ready auf Wunsch",
+  "Trauung, Brautpaarshooting und Gruppenfotos",
+  "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
+  "Passwortgeschützte Onlinegalerie für 6 Monate",
+  "Mindestens 300 bearbeitete Bilder",
+  "Retusche einzelner Bilder nach Absprache",
+  "Fahrtkosten innerhalb Hamburgs inklusive",
+];
 
 const packages = [
   {
+    id: "pure-moments",
     name: "Pure Moments",
-    price: "299 €",
+    priceValue: 299,
     priceLabel: "ab 299 €",
-    intro: "Kompakte fotografische Begleitung für eine kleine standesamtliche Hochzeit in Hamburg.",
+    priceNote: "Einstiegspaket ab 299 Euro",
+    serviceType: "Fotografische Begleitung",
+    duration: "1 Stunde",
+    intro: "1 Stunde fotografische Begleitung.",
+    showIntro: false,
     image: pureMomentsImage,
-    alt: "Standesamtliche Trauung in Hamburg mit Hochzeitsfotograf",
+    alt: "Brautpaar in Lauenbrück als Beispiel für das Pure Moments Paket",
+    imageOrientation: "portrait",
     features: [
+      "1 Stunde fotografische Begleitung",
       "Persönliches Vorgespräch und Beratung",
-      "Trauung, Brautpaarshooting und Gruppenfotos",
-      "Passwortgeschützte Onlinegalerie für 3 Monate",
-      "Mindestens 30 bearbeitete Bilder",
-      "RAW-Bearbeitung aller final ausgewählten Bilder",
-      "Retusche einzelner Bilder nach Absprache",
-      "Keine Fahrtkosten innerhalb Hamburgs",
+      "Trauung, Brautpaarshooting, Gruppenfotos",
+      "passwortgeschützte Onlinegallerie für 3 Monate",
+      "mindestens 30 Bilder",
+      "inklusive RAW-Bearbeitung für alle Bilder",
+      "Retusche für ausgewählte Bilder",
+      "keine Extra- oder versteckten Kosten (Festpreis)",
+      "keine Fahrtkosten innerhalb Hamburgs",
+      "nicht mit anderen Paketen kombinierbar",
     ],
   },
   {
+    id: "standesamt-paket",
     name: "Standesamt Paket",
-    price: "649 €",
+    priceValue: 649,
     priceLabel: "649 € Festpreis",
+    priceNote: "Festpreis fuer standesamtliche Trauungen",
+    serviceType: "Standesamtliche Trauung mit Hochzeitsreportage",
+    duration: "2 Stunden",
     intro: "Für standesamtliche Trauungen mit mehr Zeit für Getting Ready, Paarbilder und Familie.",
     image: standesamtImage,
     alt: "Brautportrait als Beispiel für das Standesamt Paket in Hamburg",
+    imageOrientation: "portrait",
     features: [
       "2 Stunden Hochzeitsreportage",
       "Persönliches Vorgespräch und Beratung",
@@ -48,69 +80,79 @@ const packages = [
       "Trauung, Brautpaarshooting und Gruppenfotos",
       "Passwortgeschützte Onlinegalerie für 3 Monate",
       "Mindestens 100 bearbeitete Bilder",
+      "Retusche einzelner Bilder nach Absprache",
       "Keine Extra- oder versteckten Kosten",
     ],
   },
   {
+    id: "rundum-sorglos-paket",
     name: "Rundum-Sorglos-Paket",
-    price: "249 €",
+    priceValue: 249,
     priceLabel: "249 € pro Stunde",
+    priceNote: "Stundenpreis fuer laengere Hochzeitsreportagen",
+    serviceType: "Hochzeitsreportage",
+    duration: "3 bis 10 Stunden",
     intro: "Für längere Hochzeitsreportagen vom Getting Ready bis zur Feier.",
     image: reportageImage,
-    alt: "Hochzeitsreportage in Hamburg für ein Rundum-Sorglos-Paket",
-    features: [
-      "Mindestens 3 bis höchstens 10 Stunden",
-      "Persönliches Vorgespräch und Beratung",
-      "Kennenlernshooting",
-      "Getting Ready auf Wunsch",
-      "Trauung, Brautpaarshooting und Gruppenfotos",
-      "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
-      "Passwortgeschützte Onlinegalerie für 6 Monate",
-      "Mindestens 300 bearbeitete Bilder",
-      "Fahrtkosten innerhalb Hamburgs inklusive",
-    ],
+    alt: "Brautpaarshooting als Beispiel für eine längere Hochzeitsreportage",
+    imageOrientation: "portrait",
+    features: reportageFeatures("Mindestens 3 bis höchstens 10 Stunden"),
   },
 ];
 
+const packageOffers = packages.map((item, index) => ({
+  "@type": "Offer",
+  "@id": `${pageUrl}#angebot-${item.id}`,
+  name: item.name,
+  description: item.intro,
+  url: `${pageUrl}#paket-${item.id}`,
+  priceCurrency: "EUR",
+  price: item.priceValue,
+  category: "Hochzeitsfotografie",
+  position: index + 1,
+  image: new URL(item.image.src, siteUrl).href,
+  priceSpecification: {
+    "@type": "PriceSpecification",
+    priceCurrency: "EUR",
+    price: item.priceValue,
+    description: item.priceNote,
+  },
+  itemOffered: {
+    "@type": "Service",
+    "@id": `${pageUrl}#leistung-${item.id}`,
+    name: item.name,
+    serviceType: item.serviceType,
+    description: `${item.intro} Dauer: ${item.duration}. Enthalten sind: ${item.features.join(", ")}.`,
+    provider: {
+      "@id": `${siteUrl}/#organization`,
+    },
+    areaServed: [
+      { "@type": "City", name: "Hamburg" },
+      { "@type": "AdministrativeArea", name: "Norddeutschland" },
+    ],
+  },
+}));
+
 const faqItems = [
   {
-    question: "Was berechnest du für die Anfahrt in Hamburg?",
-    answer: "Innerhalb Hamburgs ist die Anfahrt in den genannten Paketen inklusive.",
+    question: "Welche Leistungen sind verbindlich enthalten?",
+    answer:
+      "Maßgeblich sind die Leistungen, die beim gewählten Paket aufgeführt und im individuellen Angebot bestätigt werden. Abweichende Wünsche sollten vor der Buchung schriftlich festgehalten werden.",
   },
   {
-    question: "Welche Fahrtkosten entstehen außerhalb Hamburgs?",
+    question: "Sind Fahrtkosten immer enthalten?",
     answer:
-      "Außerhalb Hamburgs berechne ich nur tatsächlich angefallene Kosten. Eine pauschale Reisekosten-Gebühr gibt es nicht.",
+      "Nur wenn dies beim jeweiligen Paket ausdrücklich genannt wird. Für Termine außerhalb des dort beschriebenen Bereichs werden mögliche Reise- und Übernachtungskosten im individuellen Angebot festgehalten.",
   },
   {
-    question: "Berechnest du die Fahrzeit als Arbeitszeit?",
+    question: "Wie werden Bildbearbeitung und Retusche vereinbart?",
     answer:
-      "Nein. Die Fahrzeit wird nicht als fotografische Arbeitszeit berechnet.",
+      "Der enthaltene Umfang steht in der jeweiligen Paketliste. Zusätzliche Retuschen oder besondere Bearbeitungswünsche werden nur nach vorheriger Absprache Teil des Auftrags.",
   },
   {
-    question: "Sind Bildbearbeitung und Retusche enthalten?",
+    question: "Was gilt bei einem anderen Ablauf oder zusätzlichen Stunden?",
     answer:
-      "Ja. Die dezente RAW-Bearbeitung der finalen Bilder ist enthalten. Einzelne ausgewählte Bilder können nach Absprache zusätzlich retuschiert werden.",
-  },
-  {
-    question: "Gibt es versteckte Kosten oder einen Preis pro Bild?",
-    answer:
-      "Nein. Artbild-Fotografie arbeitet mit klaren Paketen. Auf versteckte Kosten und Preis-pro-Bild-Modelle verzichte ich bewusst.",
-  },
-  {
-    question: "Ab wie vielen Stunden kann ich dich buchen?",
-    answer:
-      "Die passende Buchungsdauer hängt vom Paket und vom Ablauf ab. Für standesamtliche Trauungen sind kurze Begleitungen möglich, längere Reportagen beginnen ab mehreren Stunden.",
-  },
-  {
-    question: "Was passiert, wenn du erkrankst?",
-    answer:
-      "Ich bin mit professionellen Fotografen vernetzt und unterstütze euch dabei, im Notfall eine geeignete Vertretung zu finden.",
-  },
-  {
-    question: "Was kostet ein Hochzeitsfotograf?",
-    answer:
-      "Bei Artbild-Fotografie liegen die Kosten je nach Umfang und Paket zwischen einer kompakten Festpreis-Begleitung und einer längeren Reportage mit Stundenpreis.",
+      "Dann wird vor der Buchung ein passendes Angebot erstellt. Die Paketübersicht ersetzt keine individuelle Vereinbarung für einen abweichenden Ablauf.",
   },
 ];
 
@@ -133,6 +175,12 @@ const relatedLinks = [
   },
 ];
 
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Preise & Leistungen", href: pagePath },
+];
+
 const schemaGraph = {
   "@context": "https://schema.org",
   "@graph": [
@@ -142,8 +190,11 @@ const schemaGraph = {
       url: pageUrl,
       name: title,
       description,
+      mainEntity: {
+        "@id": `${pageUrl}#service`,
+      },
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-06-28T09:30:00+02:00",
+      dateModified: "2026-08-08T00:00:00+02:00",
       inLanguage: "de",
       primaryImageOfPage: {
         "@type": "ImageObject",
@@ -171,30 +222,10 @@ const schemaGraph = {
       ],
       offers: {
         "@type": "OfferCatalog",
+        "@id": `${pageUrl}#pakete`,
         name: "Pakete für Hochzeitsfotografie in Hamburg",
-        itemListElement: packages.map((item) => ({
-          "@type": "Offer",
-          name: item.name,
-          priceCurrency: "EUR",
-          price: item.price.replace(/[^\d]/g, ""),
-          category: "Hochzeitsfotografie",
-          url: pageUrl,
-          availability: "https://schema.org/InStock",
-        })),
+        itemListElement: packageOffers,
       },
-    },
-    {
-      "@type": "FAQPage",
-      "@id": `${pageUrl}#faq`,
-      mainEntity: faqItems.map((item) => ({
-        "@type": "Question",
-        name: item.question,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: item.answer,
-        },
-      })),
-      inLanguage: "de",
     },
     {
       "@type": "ProfessionalService",
@@ -216,28 +247,11 @@ const schemaGraph = {
         { "@type": "City", name: "Hamburg" },
         { "@type": "AdministrativeArea", name: "Norddeutschland" },
         { "@type": "Place", name: "Mallorca" },
-        { "@type": "Place", name: "Italien" },
+        { "@type": "Country", name: "Deutschland" },
       ],
       serviceType: ["Hochzeitsfotografie", "Hochzeitsreportage", "Standesamtliche Trauung"],
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Startseite",
-          item: siteUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: title,
-          item: pageUrl,
-        },
-      ],
-    },
+
   ],
 };
 ---
@@ -245,6 +259,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -273,37 +288,53 @@ const schemaGraph = {
   <body class="gallery-template pricing-page">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
       <article class="pricing">
         <header class="pricing-hero">
           <div class="pricing-hero__copy">
             <p class="pricing-kicker">Hochzeitsfotograf Hamburg · Preise & Pakete</p>
             <h1>{title}</h1>
             <p>
-              Klare Festpreise, transparente Leistungen und keine versteckten
-              Kosten: Hier findet ihr die wichtigsten Pakete für eure
-              Hochzeitsreportage in Hamburg.
+              Hier findet ihr drei Pakete mit dem jeweils aufgeführten Preis und
+              Leistungsumfang. Für einen abweichenden Ablauf erhaltet ihr ein
+              individuelles Angebot vor der Buchung.
             </p>
-            <div class="pricing-hero__actions" aria-label="Preis-Seite Aktionen">
-              <a href="#pakete">Pakete ansehen</a>
-              <a href="/kontakt/">Termin anfragen</a>
+            <div
+              class="pricing-hero__actions"
+              aria-label="Preis-Seite Aktionen"
+              data-track-section="pricing_hero_actions"
+              data-content-topic="hochzeitsfotografie_preise"
+              data-user-intent="angebot_pruefen"
+              data-journey-stage="decision"
+              data-content-format="cta_group"
+              data-position="hero"
+            >
+              <a
+                href="#pakete"
+                data-track-event="cta_click"
+                data-cta-id="pricing_hero_packages"
+                data-cta-type="anchor_navigation"
+                data-section-id="pricing_hero_actions"
+                data-content-topic="hochzeitsfotografie_preise"
+                data-user-intent="pakete_ansehen"
+                data-journey-stage="decision"
+                data-position="hero_primary"
+              >Pakete ansehen</a>
+              <a
+                href="/kontakt/"
+                data-track-event="contact_click"
+                data-cta-id="pricing_hero_contact"
+                data-cta-type="contact_form"
+                data-section-id="pricing_hero_actions"
+                data-content-topic="hochzeitsfotografie_preise"
+                data-user-intent="termin_anfragen"
+                data-journey-stage="conversion"
+                data-position="hero_secondary"
+              >Termin anfragen</a>
             </div>
           </div>
           <figure class="pricing-hero__image">
@@ -320,12 +351,20 @@ const schemaGraph = {
           </figure>
         </header>
 
-        <nav class="pricing-toc" aria-label="Inhaltsübersicht Hochzeitsfotograf Preise">
-          <a href="#pakete">Pakete</a>
-          <a href="#enthalten">Enthaltene Leistungen</a>
-          <a href="#kosten">Kosten verstehen</a>
-          <a href="#faq">FAQ</a>
-          <a href="#anfrage">Anfrage</a>
+        <nav
+          class="pricing-toc"
+          aria-label="Inhaltsübersicht Hochzeitsfotograf Preise"
+          data-track-section="pricing_table_of_contents"
+          data-content-topic="hochzeitsfotografie_preise"
+          data-user-intent="preisdetails_navigieren"
+          data-journey-stage="consideration"
+          data-content-format="table_of_contents"
+          data-position="after_hero"
+        >
+          <a href="#pakete" data-track-event="cta_click" data-cta-id="pricing_toc_packages" data-cta-type="anchor_navigation">Pakete</a>
+          <a href="#enthalten" data-track-event="cta_click" data-cta-id="pricing_toc_included" data-cta-type="anchor_navigation">Enthaltene Leistungen</a>
+          <a href="#faq" data-track-event="cta_click" data-cta-id="pricing_toc_faq" data-cta-type="anchor_navigation">FAQ</a>
+          <a href="#anfrage" data-track-event="contact_click" data-cta-id="pricing_toc_contact" data-cta-type="anchor_navigation">Anfrage</a>
         </nav>
 
         <section class="pricing-intro" aria-labelledby="pricing-intro-title">
@@ -333,15 +372,14 @@ const schemaGraph = {
           <h2 id="pricing-intro-title">Was ist im Preis enthalten?</h2>
           <div class="pricing-copy">
             <p>
-              Alle Preise sind Kundenendpreise. Sie beinhalten die fotografische
-              Begleitung, ein persönliches Vorgespräch, die Auswahl und
-              dezente Bearbeitung der finalen Bilder sowie die Bereitstellung
-              in einer passwortgeschützten Onlinegalerie.
+              Der konkrete Leistungsumfang steht direkt beim jeweiligen Paket.
+              Maßgeblich für eure Buchung sind anschließend das individuelle
+              Angebot und die darin bestätigten Vereinbarungen.
             </p>
             <p>
-              Innerhalb Hamburgs fallen bei den genannten Paketen keine
-              zusätzlichen Fahrtkosten an. Außerhalb Hamburgs werden nur
-              tatsächlich entstandene Reise- oder Übernachtungskosten berechnet.
+              Leistungen, die nicht ausdrücklich in der Paketliste stehen – etwa
+              zusätzliche Zeiten, besondere Retuschen oder Reisekosten – werden
+              vor der Buchung geklärt und gegebenenfalls im Angebot ergänzt.
             </p>
           </div>
         </section>
@@ -353,8 +391,14 @@ const schemaGraph = {
           </div>
           <div class="pricing-package-grid">
             {packages.map((item, index) => (
-              <article class="pricing-package">
-                <figure>
+              <article
+                class={`pricing-package is-${item.imageOrientation}`}
+                id={`paket-${item.id}`}
+                aria-labelledby={`paket-${item.id}-name paket-${item.id}-title`}
+                aria-describedby={item.showIntro === false ? undefined : `paket-${item.id}-intro`}
+                data-schema-id={`${pageUrl}#angebot-${item.id}`}
+              >
+                <figure aria-label={`${item.name} Beispielbild`}>
                   <Image
                     src={item.image}
                     widths={[360, 520, 760]}
@@ -367,10 +411,10 @@ const schemaGraph = {
                   />
                 </figure>
                 <div class="pricing-package__body">
-                  <p>{item.name}</p>
-                  <h3>{item.priceLabel}</h3>
-                  <p>{item.intro}</p>
-                  <ul>
+                  <p id={`paket-${item.id}-name`}>{item.name}</p>
+                  <h3 id={`paket-${item.id}-title`}>{item.priceLabel}</h3>
+                  {item.showIntro !== false && <p id={`paket-${item.id}-intro`}>{item.intro}</p>}
+                  <ul aria-label={`Enthaltene Leistungen: ${item.name}`}>
                     {item.features.map((feature) => <li>{feature}</li>)}
                   </ul>
                 </div>
@@ -379,70 +423,135 @@ const schemaGraph = {
           </div>
         </section>
 
+        <EditorialReviewQuote
+          reviews={[
+            googleReviews.manuelR,
+            googleReviews.laraFriedrichs,
+            googleReviews.freddyNa,
+          ]}
+          sectionId="preise_review_manuel_r"
+          heading="Sicher vor der Kamera und gut vorbereitet"
+          contentTopic="hochzeitspakete"
+          userIntent="leistung_einschaetzen"
+          journeyStage="vergleich"
+          position="after_pricing_packages"
+        />
+
         <section class="pricing-split" id="enthalten" aria-labelledby="included-title">
           <div>
             <p class="pricing-kicker">Leistungen</p>
-            <h2 id="included-title">Keine Extra- oder versteckten Kosten</h2>
+            <h2 id="included-title">Der Paketumfang auf einen Blick</h2>
           </div>
           <div class="pricing-copy">
             <p>
-              Bei Artbild-Fotografie gibt es keinen Preis pro Bild und keine
-              überraschenden Zusatzkosten für die Basisbearbeitung. Die
-              Bildauswahl, die natürliche Farb- und Tonwertbearbeitung und die
-              Onlinegalerie sind bereits Teil der Pakete.
+              Jede Paketkarte nennt die dafür vorgesehenen Stunden, Bilder und
+              Leistungen. So könnt ihr die drei Varianten direkt vergleichen.
             </p>
             <p>
-              Einzelne Retuschen stimmen wir vorab ab. So bleibt die Planung
-              nachvollziehbar und ihr wisst vor der Hochzeit, womit ihr rechnen
-              könnt.
+              Wenn euer Ablauf davon abweicht, klärt bitte vorab, welche Leistungen
+              zusätzlich benötigt werden. Die Bestätigung erfolgt im persönlichen
+              Angebot.
             </p>
           </div>
         </section>
 
-        <section class="pricing-split" id="kosten" aria-labelledby="cost-title">
-          <div>
-            <p class="pricing-kicker">Kosten verstehen</p>
-            <h2 id="cost-title">Warum kostet ein Hochzeitsfotograf so viel?</h2>
-          </div>
-          <div class="pricing-copy">
-            <p>
-              Eine Hochzeitsreportage endet nicht mit dem letzten Foto vor Ort.
-              Nach der Hochzeit folgen Sicherung, Auswahl, RAW-Bearbeitung,
-              Export, Galerieerstellung und oft einzelne Retuschen. Diese
-              Arbeitszeit ist in professionellen Preisen enthalten.
-            </p>
-            <p>
-              Gute Hochzeitsfotografie deckt außerdem Erfahrung, zuverlässige
-              Technik, Datensicherung, Kommunikation und die Verantwortung ab,
-              einmalige Momente sicher festzuhalten.
-            </p>
-          </div>
-        </section>
+        <section
+          class="pricing-faq"
+          id="faq"
+          aria-labelledby="faq-title"
+          data-track-section="preise_faq"
+          data-content-topic="preise_pakete"
+          data-user-intent="preisfragen_klaeren"
+          data-journey-stage="vergleich"
+          data-content-format="faq"
+          data-position="pricing_faq"
+        >
+          <figure class="pricing-faq__media">
+            <Image
+              src={reportageImage}
+              alt="Brautpaarshooting als Beispiel für eine Hochzeitsreportage mit klaren Preisen"
+              widths={[420, 640, 768, 960]}
+              sizes="(max-width: 760px) calc(100vw - 48px), (max-width: 1180px) 40vw, 470px"
+              loading="lazy"
+              decoding="async"
+              format="webp"
+              quality={90}
+            />
+            <figcaption>Transparente Pakete, klare Leistungen und planbare Kosten</figcaption>
+          </figure>
 
-        <section class="pricing-faq" id="faq" aria-labelledby="faq-title">
-          <div class="pricing-section-heading">
+          <div class="pricing-faq__content">
             <p class="pricing-kicker">Fragen & Antworten</p>
             <h2 id="faq-title">Häufige Fragen zu Hochzeitsfotograf Preisen</h2>
+            <p>
+              Hier wird bewusst zwischen der Paketübersicht und dem verbindlichen
+              individuellen Angebot unterschieden.
+            </p>
+
+            <div class="pricing-faq__list" aria-label="Häufige Fragen zu Hochzeitsfotograf Preisen">
+              {faqItems.map((item, index) => (
+                <details
+                  class="pricing-faq__item"
+                  data-track-event="faq_open"
+                  data-faq-id={`preise_faq_${index + 1}`}
+                  data-section-id="preise_faq"
+                  data-content-topic="preise_pakete"
+                  data-user-intent="preisfragen_klaeren"
+                  data-journey-stage="vergleich"
+                >
+                  <summary class="pricing-faq__summary">
+                    <span class="pricing-faq__index" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+                    <span>{item.question}</span>
+                    <span class="pricing-faq__toggle" aria-hidden="true"></span>
+                  </summary>
+                  <div class="pricing-faq__panel">
+                    <p>{item.answer}</p>
+                  </div>
+                </details>
+              ))}
+            </div>
           </div>
-          <div class="pricing-faq__list">
-            {faqItems.map((item) => (
-              <details>
-                <summary>{item.question}</summary>
-                <p>{item.answer}</p>
-              </details>
+        </section>
+
+        <section
+          class="pricing-related"
+          aria-labelledby="related-title"
+          data-track-section="preise_related_links"
+          data-content-topic="hochzeitsplanung"
+          data-user-intent="weiter_planen"
+          data-journey-stage="vergleich"
+          data-content-format="related_links"
+          data-position="after_faq"
+        >
+          <p class="pricing-kicker">Weiter planen</p>
+          <h2 id="related-title">Hilfreiche Seiten für eure Hochzeit</h2>
+          <div>
+            {relatedLinks.map((item, index) => (
+              <a
+                href={item.href}
+                data-track-event="cta_click"
+                data-cta-id={`preise_related_${index + 1}`}
+                data-cta-type="internal_resource"
+                data-section-id="preise_related_links"
+                data-content-topic="hochzeitsplanung"
+                data-user-intent="weiter_planen"
+                data-journey-stage="vergleich"
+              >{item.label}</a>
             ))}
           </div>
         </section>
 
-        <section class="pricing-related" aria-labelledby="related-title">
-          <p class="pricing-kicker">Weiter planen</p>
-          <h2 id="related-title">Hilfreiche Seiten für eure Hochzeit</h2>
-          <div>
-            {relatedLinks.map((item) => <a href={item.href}>{item.label}</a>)}
-          </div>
-        </section>
-
-        <section class="pricing-cta" id="anfrage" aria-labelledby="cta-title">
+        <section
+          class="pricing-cta"
+          id="anfrage"
+          aria-labelledby="cta-title"
+          data-track-section="preise_anfrage_cta"
+          data-content-topic="terminverfuegbarkeit"
+          data-user-intent="termin_anfragen"
+          data-journey-stage="anfrage"
+          data-content-format="cta_section"
+          data-position="page_bottom"
+        >
           <p class="pricing-kicker">Ist euer Termin noch frei?</p>
           <h2 id="cta-title">Fragt euren Hochzeitstermin unverbindlich an</h2>
           <p>
@@ -450,8 +559,26 @@ const schemaGraph = {
             euch wünscht und ob bereits eine Location feststeht.
           </p>
           <div>
-            <a href="/kontakt/">Jetzt Termin anfragen</a>
-            <a href="/sicherer-kontakt/">Sicherer Kontakt</a>
+            <a
+              href="/kontakt/"
+              data-track-event="cta_click"
+              data-cta-id="preise_termin_anfragen"
+              data-cta-type="contact_request"
+              data-section-id="preise_anfrage_cta"
+              data-content-topic="terminverfuegbarkeit"
+              data-user-intent="termin_anfragen"
+              data-journey-stage="anfrage"
+            >Hochzeitstermin anfragen</a>
+            <a
+              href="/kontakt/"
+              data-track-event="cta_click"
+              data-cta-id="preise_verfuegbarkeit_pruefen"
+              data-cta-type="availability_check"
+              data-section-id="preise_anfrage_cta"
+              data-content-topic="terminverfuegbarkeit"
+              data-user-intent="verfuegbarkeit_pruefen"
+              data-journey-stage="anfrage"
+            >Verfügbarkeit prüfen</a>
           </div>
         </section>
       </article>
@@ -461,16 +588,16 @@ const schemaGraph = {
 
 <style>
   .pricing {
-    width: min(var(--max), calc(100% - 48px));
+    width: min(var(--max), calc(100% - clamp(56px, 8vw, 128px)));
     margin: 0 auto;
-    padding: clamp(48px, 7vw, 96px) 0 clamp(72px, 9vw, 132px);
+    padding: clamp(64px, 8vw, 112px) 0 clamp(92px, 10vw, 156px);
     overflow-x: clip;
   }
 
   .pricing-hero {
     display: grid;
     grid-template-columns: minmax(0, .86fr) minmax(320px, 1fr);
-    gap: clamp(30px, 5vw, 82px);
+    gap: clamp(42px, 6vw, 96px);
     align-items: center;
   }
 
@@ -572,7 +699,7 @@ const schemaGraph = {
     flex-wrap: wrap;
     justify-content: center;
     gap: 12px;
-    margin: clamp(42px, 6vw, 88px) 0;
+    margin: clamp(58px, 7vw, 108px) 0;
     padding: 18px 0;
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
@@ -595,14 +722,14 @@ const schemaGraph = {
   .pricing-faq,
   .pricing-related,
   .pricing-cta {
-    margin-top: clamp(58px, 8vw, 120px);
+    margin-top: clamp(74px, 10vw, 148px);
   }
 
   .pricing-intro,
   .pricing-split {
     display: grid;
     grid-template-columns: minmax(0, .82fr) minmax(0, 1fr);
-    gap: clamp(24px, 5vw, 72px);
+    gap: clamp(36px, 6vw, 92px);
     align-items: start;
   }
 
@@ -612,13 +739,13 @@ const schemaGraph = {
 
   .pricing-section-heading {
     max-width: 840px;
-    margin-bottom: clamp(26px, 4vw, 48px);
+    margin-bottom: clamp(36px, 5vw, 68px);
   }
 
   .pricing-package-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(18px, 2.2vw, 30px);
+    gap: clamp(34px, 4.2vw, 64px);
   }
 
   .pricing-package {
@@ -631,16 +758,41 @@ const schemaGraph = {
   .pricing-package figure {
     margin: 0;
     background: var(--soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
 
   .pricing-package figure :global(img) {
+    display: block;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .pricing-package.is-landscape figure :global(img) {
     width: 100%;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+  }
+
+  .pricing-package.is-portrait figure {
+    padding: clamp(24px, 3vw, 42px) 0;
+  }
+
+  .pricing-package.is-portrait figure :global(img) {
+    width: min(78%, 360px);
+    aspect-ratio: 323 / 484;
     object-fit: cover;
   }
 
   .pricing-package__body {
-    padding: clamp(18px, 2.2vw, 30px);
+    padding: clamp(24px, 3vw, 42px);
+  }
+
+  .pricing-package__body h3 {
+    font-size: clamp(31px, 2.8vw, 46px);
+    line-height: 1.04;
   }
 
   .pricing-package__body > p:first-child {
@@ -669,28 +821,156 @@ const schemaGraph = {
     line-height: 1.6;
   }
 
+  .pricing-package__body h3 + ul {
+    margin-top: clamp(28px, 2.4vw, 36px);
+  }
+
   .pricing-faq__list {
+    margin-top: clamp(32px, 4.2vw, 56px);
     display: grid;
-    gap: 12px;
+    border-top: 1px solid var(--line);
   }
 
-  .pricing-faq details {
-    border: 1px solid var(--line);
-    background: #fff;
+  .pricing-faq {
+    display: grid;
+    grid-template-columns: minmax(260px, .42fr) minmax(0, .58fr);
+    gap: clamp(38px, 6vw, 92px);
+    align-items: start;
+    padding: clamp(5rem, 8vw, 9rem) 0;
   }
 
-  .pricing-faq summary {
-    cursor: pointer;
-    padding: 20px 22px;
-    color: var(--ink);
-    font-size: clamp(22px, 2.6vw, 34px);
-    line-height: 1.1;
-  }
-
-  .pricing-faq details p {
+  .pricing-faq__media {
+    position: relative;
     margin: 0;
-    padding: 0 22px 22px;
-    font-size: clamp(18px, 1.8vw, 24px);
+  }
+
+  .pricing-faq__media :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    background: var(--soft);
+    object-fit: cover;
+  }
+
+  .pricing-faq__media figcaption {
+    max-width: 82%;
+    margin: 18px 0 0;
+    color: rgba(32, 38, 51, .58);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .18em;
+    line-height: 1.65;
+    text-transform: uppercase;
+  }
+
+  .pricing-faq__content {
+    min-width: 0;
+  }
+
+  .pricing-faq__content > .pricing-kicker {
+    margin-bottom: 22px;
+  }
+
+  .pricing-faq__content > h2 {
+    max-width: 760px;
+    margin: 0;
+    color: #202633;
+    font-size: clamp(40px, 4.4vw, 68px);
+    line-height: 1.02;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .pricing-faq__content > p {
+    max-width: 720px;
+    margin: clamp(22px, 3vw, 34px) 0 0;
+    color: var(--muted);
+    font-size: clamp(18px, 1.35vw, 21px);
+    line-height: 1.72;
+  }
+
+  .pricing-faq__item {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .pricing-faq__summary {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) 34px;
+    gap: clamp(14px, 2.4vw, 28px);
+    align-items: center;
+    min-height: 82px;
+    padding: clamp(18px, 2.4vw, 28px) 0;
+    cursor: pointer;
+    list-style: none;
+    color: var(--ink);
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(25px, 2.25vw, 36px);
+    line-height: 1.14;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .pricing-faq__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pricing-faq__index {
+    margin: .34em 0 0;
+    color: rgba(32, 38, 51, .42);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    line-height: 1;
+  }
+
+  .pricing-faq__toggle {
+    position: relative;
+    display: block;
+    width: 28px;
+    height: 28px;
+    border: 1px solid rgba(32, 38, 51, .22);
+    border-radius: 999px;
+  }
+
+  .pricing-faq__toggle::before,
+  .pricing-faq__toggle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 11px;
+    height: 1px;
+    background: #202633;
+    transform: translate(-50%, -50%);
+    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  .pricing-faq__toggle::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+
+  .pricing-faq__item[open] .pricing-faq__toggle::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+
+  .pricing-faq__panel {
+    max-width: 650px;
+    margin: -4px 0 clamp(22px, 2.6vw, 32px) calc(52px + clamp(14px, 2.4vw, 28px));
+  }
+
+  .pricing-faq__panel p {
+    margin: 0;
+    color: var(--muted);
+    font-size: clamp(17px, 1.18vw, 19px);
+    line-height: 1.68;
+  }
+
+  .pricing-faq__summary:focus-visible {
+    outline: 2px solid #202633;
+    outline-offset: 5px;
   }
 
   .pricing-related {
@@ -701,12 +981,12 @@ const schemaGraph = {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
-    margin-top: 28px;
+    gap: 16px;
+    margin-top: 34px;
   }
 
   .pricing-cta {
-    padding: clamp(34px, 5vw, 64px);
+    padding: clamp(42px, 6vw, 78px);
     background: #f5f2ed;
     text-align: center;
   }
@@ -719,12 +999,13 @@ const schemaGraph = {
     .pricing-hero,
     .pricing-intro,
     .pricing-split,
+    .pricing-faq,
     .pricing-package-grid {
       grid-template-columns: 1fr;
     }
 
     .pricing-package-grid {
-      gap: 22px;
+      gap: clamp(38px, 7vw, 56px);
     }
   }
 
@@ -735,8 +1016,8 @@ const schemaGraph = {
     }
 
     .pricing {
-      width: min(100% - 28px, var(--max));
-      padding-top: 36px;
+      width: min(100% - 48px, var(--max));
+      padding-top: 44px;
     }
 
     .pricing h1 {
@@ -767,6 +1048,25 @@ const schemaGraph = {
     .pricing-toc a {
       flex: 1 1 calc(50% - 12px);
       text-align: center;
+    }
+
+    .pricing-faq {
+      padding: clamp(44px, 12vw, 72px) 0;
+    }
+
+    .pricing-faq__media figcaption {
+      max-width: 100%;
+    }
+
+    .pricing-faq__summary {
+      grid-template-columns: 36px minmax(0, 1fr) 30px;
+      gap: 12px;
+      min-height: 72px;
+      font-size: clamp(24px, 7vw, 32px);
+    }
+
+    .pricing-faq__panel {
+      margin-left: 48px;
     }
   }
 </style>

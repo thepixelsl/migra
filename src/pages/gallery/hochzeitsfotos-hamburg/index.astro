@@ -1,6 +1,10 @@
 ---
+import FaviconHead from "../../../components/FaviconHead.astro";
 import "../../../styles/global.css";
 import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import StoryLanguageCta from "../../../components/StoryLanguageCta.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
 
 import img0 from "../../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
@@ -33,7 +37,7 @@ import img26 from "../../../assets/hochzeitsfotos-hamburg/2cf7ca5fbb071b4d.jpg";
 import img27 from "../../../assets/hochzeitsfotos-hamburg/2f89e6a94004dc66.jpg";
 import img28 from "../../../assets/hochzeitsfotos-hamburg/e67b1f9d22527396.jpg";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery/hochzeitsfotos-hamburg/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Hochzeitsfotos Hamburg - Artbild-Fotografie";
@@ -78,11 +82,14 @@ const galleryImages = [
   eager: index === 0,
 }));
 
-const galleryColumns = [
-  ["img0", "img4", "img8", "img11", "img13", "img16", "img20", "img23", "img26"],
-  ["img1", "img5", "img7", "img10", "img14", "img17", "img19", "img21", "img24", "img27"],
-  ["img2", "img3", "img6", "img9", "img12", "img15", "img18", "img22", "img25", "img28"],
-].map((column) => column.map((id) => galleryImages.find((item) => item.id === id)).filter(Boolean));
+const galleryColumns = [galleryImages];
+
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Hochzeitsportfolio", href: "/portfolio/" },
+  { label: heading, href: pagePath },
+];
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -190,28 +197,7 @@ const schemaGraph = {
         inLanguage: "de",
       },
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${pageUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          item: {
-            "@id": siteUrl,
-            name: "Startseite",
-          },
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          item: {
-            "@id": pageUrl,
-            name: heading,
-          },
-        },
-      ],
-    },
+
     {
       "@type": "ImageObject",
       "@id": `${pageUrl}#primaryimage`,
@@ -243,11 +229,12 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
 <head>
+  <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
   <meta name="description" content={description}>
-  <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
+  <meta name="robots" content="noindex, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
   <link rel="canonical" href={pageUrl}>
   <meta property="og:locale" content="de_DE">
   <meta property="og:type" content="article">
@@ -265,40 +252,23 @@ const schemaGraph = {
   <meta name="twitter:title" content={title}>
   <meta name="twitter:description" content={description}>
   <meta name="twitter:image" content={ogImage}>
-  <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
 </head>
 <body class="gallery-template wedding-gallery-page">
   <header class="gallery-header">
     <MobileNavigation />
-    <nav class="gallery-nav" aria-label="Hauptnavigation">
-      <ul class="gallery-nav__group">
-        <li><a href="/">Start</a></li>
-        <li><a href="/portfolio/">Portfolio</a></li>
-        <li><a href="/kontakt/">Kontakt</a></li>
-      </ul>
-      <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-        <img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie">
-      </a>
-      <ul class="gallery-nav__group">
-        <li><a href="/blog/">Blog</a></li>
-        <li><a href="/about/">Über mich</a></li>
-        <li><a href="/newsletter/">Newsletter</a></li>
-      </ul>
-    </nav>
+    <DesktopNavigation />
   </header>
 
   <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} renderJsonLd={false} />
     <article class="wedding-gallery">
       <header class="wedding-hero">
         <p class="wedding-hero__script" aria-hidden="true">Hochzeitsfotos Hamburg</p>
         <h1>{heading}</h1>
         <p>
           Hier zeige ich Euch Bilder aus einem Brautshooting, das in der eleganten
-          Atmosphäre der
-          <a href="https://www.frasershospitality.com/de/germany/hamburg/fraser-suites-hamburg/">
-            Fraser Suites Hamburg
-          </a>
-          entstanden ist.
+          Atmosphäre der&nbsp;<a href="https://www.frasershospitality.com/de/germany/hamburg/fraser-suites-hamburg/">Fraser
+            Suites Hamburg</a>&nbsp;entstanden ist.
         </p>
       </header>
 
@@ -337,11 +307,11 @@ const schemaGraph = {
         <div>
           <span>Teilen:</span>
           <a
-            href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fhochzeitsfotos-hamburg%2F"
+            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}`}
             aria-label="Hochzeitsfotos Hamburg auf Facebook teilen"
           >f</a>
           <a
-            href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Fartbild-fotografie.de%2Fgallery%2Fhochzeitsfotos-hamburg%2F"
+            href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(pageUrl)}`}
             aria-label="Hochzeitsfotos Hamburg auf Pinterest teilen"
           >p</a>
         </div>
@@ -370,7 +340,8 @@ const schemaGraph = {
         </div>
       </section>
     </article>
-  </main>
+      <StoryLanguageCta kind="editorial" />
+    </main>
 
   <footer class="gallery-footer">
     <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">

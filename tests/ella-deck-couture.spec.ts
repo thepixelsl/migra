@@ -13,9 +13,9 @@ test("desktop Ella Deck Couture gallery has SEO structure, local images and ligh
   await expect(page.locator("[data-gallery-trigger='ella-deck-couture']")).toHaveCount(7);
 
   const state = await page.evaluate(() => {
-    const schema = JSON.parse(
-      document.querySelector('script[type="application/ld+json"]')?.textContent ?? "{}",
-    );
+    const schemas = [...document.querySelectorAll<HTMLScriptElement>(
+      'script[type="application/ld+json"]',
+    )].map((script) => JSON.parse(script.textContent ?? "{}"));
     const viewportCenter = document.documentElement.clientWidth / 2;
     const centerDelta = (selector: string) => {
       const element = document.querySelector<HTMLElement>(selector);
@@ -41,8 +41,11 @@ test("desktop Ella Deck Couture gallery has SEO structure, local images and ligh
       lazyImages: galleryImages.filter((image) => image.loading === "lazy").length,
       naturalItems: document.querySelectorAll(".gallery-image-grid__item.is-natural").length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      schemaTypes: schema["@graph"]?.map((node: { "@type": string }) => node["@type"]),
-      hasGeoContext: JSON.stringify(schema).includes("Hamburg-Eppendorf"),
+      schemaTypes: schemas.flatMap((schema) => [
+        ...(schema["@type"] ? [schema["@type"]] : []),
+        ...(schema["@graph"]?.map((node: { "@type": string }) => node["@type"]) ?? []),
+      ]),
+      hasGeoContext: JSON.stringify(schemas).includes("Hamburg-Eppendorf"),
       localGalleryImages: galleryImages.every(
         (image) =>
           !image.currentSrc.includes("wp-content") &&

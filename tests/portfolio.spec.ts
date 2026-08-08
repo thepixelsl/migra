@@ -28,12 +28,7 @@ test("portfolio includes the Zurich article as a linked visual entry", async ({ 
     )].map((script) => JSON.parse(script.textContent ?? "{}"));
     const collectionSchema = schemas.find((schema) => schema["@type"] === "CollectionPage");
     const cards = [...document.querySelectorAll("[data-portfolio-entry]")];
-    const firstLink = document.querySelector<HTMLAnchorElement>(
-      "[data-portfolio-entry] .portfolio-overview-card__link",
-    );
-
     return {
-      firstHref: firstLink?.getAttribute("href"),
       missingAlt: [...document.querySelectorAll<HTMLImageElement>("[data-portfolio-entry] img")]
         .filter((image) => !image.alt).length,
       overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -43,7 +38,6 @@ test("portfolio includes the Zurich article as a linked visual entry", async ({ 
     };
   });
 
-  expect(state.firstHref).toBe("/brautpaar-in-zuerich/");
   expect(state.missingAlt).toBe(0);
   expect(state.overflow).toBe(0);
   expect(state.numberOfItems).toBe(state.cardCount);

@@ -46,7 +46,7 @@ test("mobile gallery remains readable and has no horizontal overflow", async ({ 
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("grid-template-columns", "366px");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

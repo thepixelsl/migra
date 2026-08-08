@@ -193,6 +193,35 @@ async function sendSmtpMail(env, payload, request, requestId) {
     throw new Error("smtp_not_configured");
   }
 
+  const message = {
+    from: {
+      name: "Artbild Kontaktformular",
+      email: smtp.from,
+    },
+    to: {
+      name: "Artbild-Fotografie",
+      email: smtp.to,
+    },
+    reply: {
+      name: cleanHeaderText(payload.name, 120),
+      email: payload.email,
+    },
+    subject: CONTACT_SUBJECT,
+    text: buildMailText(payload, request, requestId),
+    attachments: payload.attachments.map((attachment) => ({
+      filename: attachment.filename,
+      content: attachment.base64,
+      mimeType: attachment.contentType,
+    })),
+  };
+
+  // Non-Cloudflare runtimes can inject their own SMTP transport while the
+  // existing Worker continues to use worker-mailer and cloudflare:sockets.
+  if (typeof env.CONTACT_MAILER === "function") {
+    await env.CONTACT_MAILER(message);
+    return;
+  }
+
   const { WorkerMailer, LogLevel } = await import("worker-mailer");
   await WorkerMailer.send(
     {
@@ -209,27 +238,7 @@ async function sendSmtpMail(env, payload, request, requestId) {
       socketTimeoutMs: 15000,
       responseTimeoutMs: 15000,
     },
-    {
-      from: {
-        name: "Artbild Kontaktformular",
-        email: smtp.from,
-      },
-      to: {
-        name: "Artbild-Fotografie",
-        email: smtp.to,
-      },
-      reply: {
-        name: cleanHeaderText(payload.name, 120),
-        email: payload.email,
-      },
-      subject: CONTACT_SUBJECT,
-      text: buildMailText(payload, request, requestId),
-      attachments: payload.attachments.map((attachment) => ({
-        filename: attachment.filename,
-        content: attachment.base64,
-        mimeType: attachment.contentType,
-      })),
-    },
+    message,
   );
 }
 
@@ -502,6 +511,75 @@ async function forwardToWebhook(url, payload, requestId) {
   return response.ok;
 }
 
+function configuredContactRelay(env, request) {
+  if (request.headers.get("x-artbild-contact-relay-hop") === "1") return null;
+
+  try {
+    const relayUrl = new URL(String(env.CONTACT_RELAY_URL || ""));
+    if (relayUrl.protocol !== "https:" || relayUrl.username || relayUrl.password) return null;
+
+    const requestUrl = new URL(request.url);
+    if (relayUrl.origin === requestUrl.origin && relayUrl.pathname === requestUrl.pathname) return null;
+    return relayUrl.toString();
+  } catch {
+    return null;
+  }
+}
+
+function relayAttachmentBlob(attachment) {
+  const binary = atob(attachment.base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) {
+    bytes[index] = binary.charCodeAt(index);
+  }
+  return new Blob([bytes], { type: attachment.contentType });
+}
+
+async function forwardToContactRelay(url, payload, requestId) {
+  const form = new FormData();
+  form.set("name", payload.name);
+  form.set("email", payload.email);
+  form.set("request_type", payload.requestType);
+  form.set("event_date", payload.eventDate);
+  form.set("location", payload.location);
+  form.set("message", payload.message);
+  form.set("security_year", payload.securityYear);
+  form.set("privacy", "yes");
+  form.set("website", "");
+  form.set("form_loaded_at", "0");
+  form.set("js_enabled", "0");
+  form.set("source_path", payload.sourcePath || "/kontakt/");
+
+  for (const attachment of payload.attachments) {
+    form.append(
+      "tfp_images",
+      relayAttachmentBlob(attachment),
+      attachment.filename,
+    );
+  }
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "artbild-bunny-contact-relay/1.0",
+      "X-Artbild-Contact-Relay-Hop": "1",
+      "X-Artbild-Relay-Request-Id": requestId,
+      "X-Requested-With": "fetch",
+    },
+    body: form,
+    signal: AbortSignal.timeout(15_000),
+  });
+  if (!response.ok) return false;
+
+  try {
+    const result = await response.json();
+    return result?.ok === true;
+  } catch {
+    return false;
+  }
+}
+
 export function onRequestOptions() {
   return new Response(null, {
     status: 204,
@@ -582,8 +660,12 @@ export async function onRequestPost({ request, env }) {
     }
   }
 
-  const hasWebhook = typeof env.CONTACT_WEBHOOK_URL === "string" && env.CONTACT_WEBHOOK_URL.startsWith("https://");
-  if (!smtp && !hasWebhook) {
+  const isRelayedRequest = request.headers.get("x-artbild-contact-relay-hop") === "1";
+  const hasWebhook = !isRelayedRequest
+    && typeof env.CONTACT_WEBHOOK_URL === "string"
+    && env.CONTACT_WEBHOOK_URL.startsWith("https://");
+  const contactRelayUrl = configuredContactRelay(env, request);
+  if (!smtp && !hasWebhook && !contactRelayUrl) {
     return reply(request, {
       ok: false,
       title: "Kontaktformular noch nicht aktiv",
@@ -594,8 +676,11 @@ export async function onRequestPost({ request, env }) {
   try {
     const requestId = db ? await storeInD1(db, payload, ipHash, userAgent) : crypto.randomUUID();
     if (smtp) await sendSmtpMail(env, payload, request, requestId);
+    const relayOk = !smtp && contactRelayUrl
+      ? await forwardToContactRelay(contactRelayUrl, payload, requestId)
+      : true;
     const webhookOk = hasWebhook ? await forwardToWebhook(env.CONTACT_WEBHOOK_URL, payload, requestId) : true;
-    if (!webhookOk) throw new Error("webhook_failed");
+    if (!relayOk || !webhookOk) throw new Error("contact_delivery_failed");
 
     return reply(request, {
       ok: true,

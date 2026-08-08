@@ -1,10 +1,12 @@
 ---
+import FaviconHead from "../../components/FaviconHead.astro";
 import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import anchorSignet from "../../assets/impressum/anker-york-augustin.jpg";
 import "../../styles/global.css";
 
-const siteUrl = "https://artbild-fotografie.de";
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pageUrl = `${siteUrl}/impressum/`;
 const title = "Impressum | Artbild-Fotografie Hamburg";
 const description =
@@ -88,6 +90,7 @@ const schemaGraph = {
 <!doctype html>
 <html lang="de">
   <head>
+    <FaviconHead />
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{title}</title>
@@ -113,33 +116,7 @@ const schemaGraph = {
   <body class="gallery-template legal-template">
     <header class="gallery-header">
       <MobileNavigation />
-      <nav class="gallery-nav" aria-label="Hauptnavigation">
-        <ul class="gallery-nav__group">
-          <li><a href="/">Start</a></li>
-          <li><a href="/portfolio/">Portfolio</a></li>
-          <li><a href="/kontakt/">Kontakt</a></li>
-        </ul>
-        <a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite">
-          <img
-            src="/images/logo-artbild-black.png"
-            width="1200"
-            height="480"
-            alt="Artbild Fotografie"
-          >
-        </a>
-        <ul class="gallery-nav__group">
-          <li><a href="/blog/">Blog</a></li>
-          <li><a href="/about/">Über mich</a></li>
-          <li><a href="/newsletter/">Newsletter</a></li>
-          <li>
-            <a
-              class="gallery-search"
-              href="/?s="
-              aria-label="Suche"
-            >⌕</a>
-          </li>
-        </ul>
-      </nav>
+      <DesktopNavigation />
     </header>
 
     <main id="main-content">

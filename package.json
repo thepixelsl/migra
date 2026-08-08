@@ -5,20 +5,29 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "build": "astro build",
+    "prebuild": "node scripts/validate-tracking-config.mjs",
+    "build": "astro build && npm run social:cards && npm run social:cards:validate",
+    "social:cards": "node scripts/generate-social-cards.mjs",
+    "social:cards:validate": "node scripts/validate-social-cards.mjs",
     "deploy": "npm run build && wrangler deploy",
     "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",
+    "start:bunny": "node server/bunny-server.mjs",
+    "test:bunny": "node --test tests/bunny-runtime.test.mjs",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0",
+    "@libsql/client": "^0.15.15",
+    "astro": "^7.1.6",
+    "nodemailer": "^9.0.4",
     "worker-mailer": "^1.2.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
-    "wrangler": "^4.107.0"
+    "cheerio": "^1.2.0",
+    "sharp": "^0.35.3",
+    "wrangler": "^4.111.0"
   }
 }

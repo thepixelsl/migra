@@ -1,0 +1,100 @@
+---
+type Props = {
+  sectionId?: string;
+  position?: string;
+  kind?: "wedding" | "editorial" | "travel" | "vendor" | "portfolio";
+};
+
+const {
+  sectionId = "bildsprache_preise",
+  position = "after_content",
+  kind = "wedding",
+} = Astro.props as Props;
+
+const variants = {
+  wedding: {
+    kicker: "Hochzeitsreportage planen",
+    heading: "Möchtet ihr eure Hochzeit in dieser Bildsprache festhalten?",
+    text: "Auf der Preis- und Leistungsseite findet ihr die verfügbaren Begleitungen für euren Hochzeitstag.",
+    href: "/hochzeitsfotograf-preise/",
+    label: "Preise & Leistungen ansehen",
+    topic: "hochzeitsreportage_bildsprache",
+    intent: "preise_leistungen_pruefen",
+    ctaId: "preise_leistungen_ansehen",
+    ctaType: "internal_pricing",
+  },
+  editorial: {
+    kicker: "Weitere Bildstrecken",
+    heading: "Editorials und Portraitserien im Überblick",
+    text: "Im Portfolio findet ihr weitere Arbeiten aus Hamburg sowie fotografische Serien aus anderen Städten.",
+    href: "/portfolio/",
+    label: "Portfolio ansehen",
+    topic: "editorial_portraitfotografie",
+    intent: "weitere_arbeiten_ansehen",
+    ctaId: "editorial_portfolio_ansehen",
+    ctaType: "internal_portfolio",
+  },
+  travel: {
+    kicker: "Weitere Reisebilder",
+    heading: "Mehr Orte und Landschaften entdecken",
+    text: "Die Travel-Übersicht führt zu weiteren Serien mit Stadtansichten, Architektur und Landschaften.",
+    href: "/gallery-category/travel/",
+    label: "Travel-Galerien ansehen",
+    topic: "travel_fotografie",
+    intent: "weitere_reisebilder_ansehen",
+    ctaId: "travel_galerien_ansehen",
+    ctaType: "internal_gallery_category",
+  },
+  vendor: {
+    kicker: "Hochzeitsmorgen planen",
+    heading: "Brautstyling und Getting Ready",
+    text: "Der Brautstyling-Überblick bündelt fotografierte Beispiele und weiterführende Informationen für Hamburg.",
+    href: "/brautstyling-hamburg/",
+    label: "Brautstyling-Überblick ansehen",
+    topic: "brautstyling_getting_ready",
+    intent: "weitere_informationen_ansehen",
+    ctaId: "brautstyling_ueberblick_ansehen",
+    ctaType: "internal_guide",
+  },
+  portfolio: {
+    kicker: "Reportage planen",
+    heading: "Welche Begleitung passt zu eurem Hochzeitstag?",
+    text: "Die Preis- und Leistungsseite zeigt die verfügbaren Pakete und den jeweiligen Umfang.",
+    href: "/hochzeitsfotograf-preise/",
+    label: "Preise & Leistungen ansehen",
+    topic: "hochzeitsportfolio",
+    intent: "preise_leistungen_pruefen",
+    ctaId: "portfolio_preise_ansehen",
+    ctaType: "internal_pricing",
+  },
+} as const;
+
+const variant = variants[kind];
+---
+
+<section
+  class="story-language-cta"
+  aria-labelledby={`${sectionId}-title`}
+  data-track-section={sectionId}
+  data-content-topic={variant.topic}
+  data-user-intent={variant.intent}
+  data-journey-stage="entscheidung"
+  data-content-format="cta_module"
+  data-position={position}
+>
+  <p class="story-language-cta__kicker">{variant.kicker}</p>
+  <h2 id={`${sectionId}-title`}>{variant.heading}</h2>
+  <p>{variant.text}</p>
+  <a
+    href={variant.href}
+    data-track-event="cta_click"
+    data-cta-id={variant.ctaId}
+    data-cta-type={variant.ctaType}
+    data-section-id={sectionId}
+    data-content-topic={variant.topic}
+    data-user-intent={variant.intent}
+    data-journey-stage="entscheidung"
+  >
+    {variant.label}
+  </a>
+</section>

@@ -41,7 +41,7 @@ Anlegen per Wrangler:
 wrangler kv namespace create AVAILABILITY_KV
 ```
 
-Danach den Namespace in Cloudflare Pages und im Worker als Binding setzen:
+Danach den Namespace im Worker als Binding setzen:
 
 ```text
 Binding name: AVAILABILITY_KV
@@ -59,12 +59,20 @@ npm run build
 wrangler dev --config wrangler.worker.toml
 ```
 
-Für Pages Functions lokal:
+Der Cloudflare-Worker bleibt das bestehende Produktionsziel:
 
-```bash
-npm run build
-wrangler pages dev dist
+```text
+https://migra.fancy-wildflower-0608.workers.dev
 ```
+
+Worker-Preview-URLs sind deaktiviert. Cloudflare Pages wird für dieses Projekt
+nicht als zusätzliches Deployment-Ziel verwendet.
+
+Daneben gibt es die getrennte Bunny-Dev-App `artbild-dev`. Sie wird als
+Linux/amd64-Container gebaut und bewusst mit `DEV_NOINDEX=true` betrieben.
+`npm run deploy` veröffentlicht ausschließlich den Cloudflare-Worker und darf
+nicht für den Bunny-Rollout verwendet werden. Der vollständige Bunny-Ablauf
+steht in [`docs/bunny-dev-deploy.md`](docs/bunny-dev-deploy.md).
 
 Lokale Secrets gehören in `.dev.vars`. Eine Vorlage liegt in `.dev.vars.example`. Keine echten Secrets committen.
 
@@ -110,3 +118,21 @@ Beispielwert in KV:
 ```
 
 Es werden keine Kundennamen, keine Kontaktdaten und keine Notizen gespeichert.
+
+## Social Cards
+
+Der Build erzeugt fuer jede indexierbare Seite eine statische Social Card im
+Format 1200 x 630 Pixel und vereinheitlicht die Open-Graph- und Twitter-Tags.
+Seitenspezifische Angaben werden zentral in `src/data/socialCards.mjs`
+gepflegt. Die vollstaendige Dokumentation steht unter
+[`docs/social-cards.md`](docs/social-cards.md).
+
+## Consent und Tracking
+
+Der Cookie-Banner, Google Consent Mode, Google Tag Manager, GA4 und das Meta
+Pixel werden über eine zentrale, hostgebundene Build-Konfiguration gesteuert.
+Ohne vollständige Kennungen werden keine Anbieter geladen. Production-Builds
+prüfen Kennungen und Domainfreigabe vor dem Build.
+
+Einrichtung, Data-Layer-Vertrag und Live-Umschaltung:
+[`docs/tracking-consent.md`](docs/tracking-consent.md).

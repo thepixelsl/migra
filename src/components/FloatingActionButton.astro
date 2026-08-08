@@ -11,6 +11,12 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
   data-availability-max-months="24"
   data-availability-request-timeout="8000"
   data-availability-min-loading="600"
+  data-track-section="floating_action_button"
+  data-content-topic="kontaktmoeglichkeiten"
+  data-user-intent="kontakt_aufnehmen"
+  data-journey-stage="anfrage"
+  data-content-format="floating_action"
+  data-position="floating_bottom_right"
 >
   <button
     class="floating-action__toggle"
@@ -19,6 +25,14 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
     aria-controls="floating-action-menu"
     aria-label="Schnellkontakt öffnen"
     data-floating-action-toggle
+    data-track-event="cta_click"
+    data-cta-id="fab_toggle"
+    data-cta-type="floating_action_toggle"
+    data-section-id="floating_action_button"
+    data-content-topic="kontaktmoeglichkeiten"
+    data-user-intent="schnellkontakt_oeffnen"
+    data-journey-stage="anfrage"
+    data-position="floating_bottom_right"
   >
     <img
       class="floating-action__badge"
@@ -43,11 +57,25 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
       class="floating-action__view"
       aria-label="Schnellkontakt"
       data-floating-action-contact-view
+      data-track-section="fab_contact_options"
+      data-content-topic="kontaktmoeglichkeiten"
+      data-user-intent="kontaktweg_waehlen"
+      data-journey-stage="anfrage"
+      data-content-format="contact_options"
+      data-position="fab_menu"
     >
       <a
         class="floating-action__item is-availability"
         href="/kontakt/"
         data-floating-action-availability-open
+        data-track-event="cta_click"
+        data-cta-id="fab_termin_pruefen"
+        data-cta-type="availability_check"
+        data-section-id="fab_contact_options"
+        data-content-topic="terminverfuegbarkeit"
+        data-user-intent="termin_pruefen"
+        data-journey-stage="anfrage"
+        data-position="fab_option_1"
       >
         <span class="floating-action__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
@@ -64,6 +92,14 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         rel="noopener"
         aria-label="WhatsApp Chat öffnen"
         data-floating-action-link
+        data-track-event="contact_click"
+        data-cta-id="fab_whatsapp"
+        data-cta-type="messenger"
+        data-section-id="fab_contact_options"
+        data-content-topic="kontaktmoeglichkeiten"
+        data-user-intent="whatsapp_starten"
+        data-journey-stage="anfrage"
+        data-position="fab_option_2"
       >
         <span class="floating-action__icon" aria-hidden="true">
           <img
@@ -81,7 +117,19 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         <span>WhatsApp</span>
       </a>
 
-      <a class="floating-action__item is-form" href="/kontakt/" data-floating-action-link>
+      <a
+        class="floating-action__item is-form"
+        href="/kontakt/"
+        data-floating-action-link
+        data-track-event="contact_click"
+        data-cta-id="fab_contact_form"
+        data-cta-type="contact_form"
+        data-section-id="fab_contact_options"
+        data-content-topic="anfrageformular"
+        data-user-intent="formular_oeffnen"
+        data-journey-stage="anfrage"
+        data-position="fab_option_3"
+      >
         <span class="floating-action__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
             <path fill="currentColor" d="M4 4h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-6l-4 4v-4H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm2 4h12v2H6V8Zm0 4h12v2H6v-2Z"></path>
@@ -95,6 +143,14 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         href="mailto:info@artbild-fotografie.de?subject=Anfrage%20%C3%BCber%20Website"
         aria-label="E-Mail an Artbild-Fotografie schreiben"
         data-floating-action-link
+        data-track-event="contact_click"
+        data-cta-id="fab_email"
+        data-cta-type="email"
+        data-section-id="fab_contact_options"
+        data-content-topic="kontaktmoeglichkeiten"
+        data-user-intent="email_schreiben"
+        data-journey-stage="anfrage"
+        data-position="fab_option_4"
       >
         <span class="floating-action__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24">
@@ -112,6 +168,12 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
       aria-hidden="true"
       hidden
       data-floating-action-availability-view
+      data-track-section="fab_availability_check"
+      data-content-topic="terminverfuegbarkeit"
+      data-user-intent="termin_pruefen"
+      data-journey-stage="anfrage"
+      data-content-format="availability_form"
+      data-position="fab_dialog"
     >
       <header class="floating-action__dialog-header">
         <button
@@ -119,6 +181,13 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
           type="button"
           aria-label="Zurück zum Kontaktmenü"
           data-floating-action-back
+          data-track-event="cta_click"
+          data-cta-id="fab_availability_back"
+          data-cta-type="dialog_navigation"
+          data-section-id="fab_availability_check"
+          data-content-topic="terminverfuegbarkeit"
+          data-user-intent="zurueck_zum_kontaktmenue"
+          data-journey-stage="anfrage"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path fill="currentColor" d="m15.4 5.4-1.4-1.4-8 8 8 8 1.4-1.4L8.8 12l6.6-6.6Z"></path>
@@ -130,6 +199,13 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
           type="button"
           aria-label="Schnellkontakt schließen"
           data-floating-action-close
+          data-track-event="cta_click"
+          data-cta-id="fab_availability_close"
+          data-cta-type="dialog_close"
+          data-section-id="fab_availability_check"
+          data-content-topic="terminverfuegbarkeit"
+          data-user-intent="schnellkontakt_schliessen"
+          data-journey-stage="anfrage"
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path fill="currentColor" d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z"></path>
@@ -140,7 +216,19 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
       <div class="floating-action__dialog-body">
         <p class="floating-action__intro">Für welchen Tag möchtet ihr die Verfügbarkeit prüfen?</p>
 
-        <form data-floating-action-availability-form novalidate>
+        <form
+          data-floating-action-availability-form
+          data-track-form
+          data-form-id="fab_availability_check"
+          data-form-type="availability_check"
+          data-track-section="fab_availability_check_form"
+          data-content-topic="terminverfuegbarkeit"
+          data-user-intent="termin_pruefen"
+          data-journey-stage="anfrage"
+          data-content-format="availability_form"
+          data-position="fab_dialog"
+          novalidate
+        >
           <label for="floating-action-availability-date">Hochzeitsdatum</label>
           <input
             id="floating-action-availability-date"
@@ -168,7 +256,18 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
             hidden
             data-floating-action-error
           ></p>
-          <button class="floating-action__primary" type="submit" data-floating-action-submit>
+          <button
+            class="floating-action__primary"
+            type="submit"
+            data-floating-action-submit
+            data-track-event="cta_click"
+            data-cta-id="fab_availability_submit"
+            data-cta-type="availability_submit"
+            data-section-id="fab_availability_check_form"
+            data-content-topic="terminverfuegbarkeit"
+            data-user-intent="termin_pruefen"
+            data-journey-stage="anfrage"
+          >
             Termin prüfen
           </button>
         </form>
@@ -183,7 +282,19 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
             <h3>Ergebnis der Terminprüfung</h3>
             <p class="floating-action__bubble floating-action__bubble--result" aria-hidden="true" data-floating-action-result-text></p>
             <p class="visually-hidden" aria-live="polite" data-floating-action-live></p>
-            <a class="floating-action__primary" href="/kontakt/" hidden data-floating-action-action></a>
+            <a
+              class="floating-action__primary"
+              href="/kontakt/"
+              hidden
+              data-floating-action-action
+              data-track-event="contact_click"
+              data-cta-id="fab_availability_result_contact"
+              data-cta-type="contact_form"
+              data-section-id="fab_availability_check"
+              data-content-topic="terminverfuegbarkeit"
+              data-user-intent="termin_anfragen"
+              data-journey-stage="anfrage"
+            ></a>
           </div>
         </div>
       </div>
@@ -573,6 +684,9 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         if (activeRequest === requestContext) activeRequest = null;
 
         if (response.error === "invalid_date" || response.status === "invalid_date") {
+          window.dispatchEvent(new CustomEvent("artbild:availability_result", {
+            detail: { result: "invalid_date" },
+          }));
           if (elements.error instanceof HTMLElement) {
             setState(states.DATE_SELECTION);
             elements.form.hidden = false;
@@ -588,12 +702,24 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         const state = typeof response.available === "boolean"
           ? (response.available ? states.AVAILABLE : states.UNAVAILABLE)
           : response.status;
+        window.dispatchEvent(new CustomEvent("artbild:availability_result", {
+          detail: {
+            result: state === states.AVAILABLE
+              ? "available"
+              : state === states.UNAVAILABLE
+                ? "unavailable"
+                : "unknown",
+          },
+        }));
         showResult(state, formattedDate, expectedOperation, response);
       } catch (error) {
         window.clearTimeout(requestContext.timeoutId);
         if (activeRequest === requestContext) activeRequest = null;
         if (expectedOperation !== operationId || currentState !== states.SUBMITTING) return;
         if (error && error.name === "AbortError" && !requestContext.timedOut) return;
+        window.dispatchEvent(new CustomEvent("artbild:availability_result", {
+          detail: { result: "technical_error" },
+        }));
         showResult(states.TECHNICAL_ERROR, formattedDate, expectedOperation);
       }
     }
@@ -614,6 +740,25 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
         openAvailability();
       });
     }
+
+    document.querySelectorAll("[data-floating-action-external-open]").forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openMenu();
+        if (elements.availabilityOpen instanceof HTMLElement) elements.availabilityOpen.focus();
+      });
+    });
+
+    document.querySelectorAll("[data-floating-action-external-availability]").forEach((trigger) => {
+      trigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        openMenu();
+        openAvailability();
+      });
+    });
+
     if (elements.back instanceof HTMLButtonElement) elements.back.addEventListener("click", returnToMenu);
     if (elements.close instanceof HTMLButtonElement) elements.close.addEventListener("click", () => closeMenu(true));
     if (elements.form instanceof HTMLFormElement) elements.form.addEventListener("submit", submitAvailability);

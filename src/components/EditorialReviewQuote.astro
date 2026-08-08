@@ -1,0 +1,674 @@
+---
+import type { GoogleReview } from "../data/reviews";
+
+interface Props {
+  reviews: GoogleReview[];
+  sectionId: string;
+  heading?: string;
+  kicker?: string;
+  contentTopic?: string;
+  userIntent?: string;
+  journeyStage?: string;
+  position?: string;
+  useFullText?: boolean;
+  mergeFollowingSection?: boolean;
+}
+
+const {
+  reviews,
+  sectionId,
+  heading = "Was Kundinnen und Kunden sagen",
+  kicker = "Google Rezensionen",
+  contentTopic = "kundenstimme",
+  userIntent = "vertrauen_aufbauen",
+  journeyStage = "orientierung",
+  position = "after_content",
+  useFullText = false,
+  mergeFollowingSection = false,
+} = Astro.props;
+
+const sliderId = `${sectionId}-slider`;
+const reviewSlides = reviews.filter(Boolean);
+---
+
+<section
+  id={sectionId}
+  class:list={[
+    "editorial-review",
+    mergeFollowingSection && "editorial-review--merge-following",
+  ]}
+  aria-labelledby={`${sectionId}-title`}
+  data-review-slider
+  data-track-section={sectionId}
+  data-content-topic={contentTopic}
+  data-user-intent={userIntent}
+  data-journey-stage={journeyStage}
+  data-content-format="review_slider"
+  data-position={position}
+>
+  <header class="editorial-review__heading">
+    <p>{kicker}</p>
+    <h2 id={`${sectionId}-title`}>{heading}</h2>
+
+    {reviewSlides.length > 1 && (
+      <div class="editorial-review__controls" data-review-controls>
+        <button
+          type="button"
+          aria-label="Vorherige Rezension"
+          aria-controls={sliderId}
+          data-review-previous
+          data-track-event="content_slider_interaction"
+          data-slider-id={sectionId}
+          data-slider-action="previous"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M19 12H5m6-6-6 6 6 6" />
+          </svg>
+        </button>
+        <div
+          class="editorial-review__position"
+          role="status"
+          aria-atomic="true"
+          data-review-position
+        >
+          <span class="editorial-review__sr-only" data-review-status>
+            Rezension 1 von {reviewSlides.length}
+          </span>
+          <span aria-hidden="true">
+            <span data-review-current>1</span>
+            <span> / </span>
+            <span data-review-total>{reviewSlides.length}</span>
+          </span>
+        </div>
+        <button
+          type="button"
+          aria-label="Nächste Rezension"
+          aria-controls={sliderId}
+          data-review-next
+          data-track-event="content_slider_interaction"
+          data-slider-id={sectionId}
+          data-slider-action="next"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+            <path d="M5 12h14m-6-6 6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+    )}
+  </header>
+
+  <div
+    class="editorial-review__viewport"
+    id={sliderId}
+    tabindex="0"
+    role="region"
+    aria-roledescription="Karussell"
+    aria-label="Google Rezensionen"
+    data-review-viewport
+  >
+    <div class="editorial-review__track">
+      {reviewSlides.map((review, index) => {
+        const quote = useFullText ? review.text : review.excerpt;
+        const reviewNumber = index + 1;
+
+        return (
+          <article
+            class:list={[
+              "editorial-review__slide",
+              index > 0 && "editorial-review__slide--initially-hidden",
+            ]}
+            data-review-state={index === 0 ? "active" : "inactive"}
+            data-review-slide
+            data-content-format="customer_quote"
+            data-position={`slide_${reviewNumber}`}
+          >
+            <h3 class="editorial-review__sr-only">
+              Google Rezension von {review.author}
+            </h3>
+            <span class="editorial-review__quote-mark" aria-hidden="true"></span>
+            <div class="editorial-review__trustline">
+              <div
+                class="editorial-review__stars"
+                role="img"
+                aria-label={`${review.rating} von 5 Sternen`}
+              >
+                <span aria-hidden="true">★★★★★</span>
+              </div>
+              <span class="editorial-review__trust-separator" aria-hidden="true">·</span>
+              <a
+                href={review.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer external"
+                aria-label={`Originalrezension von ${review.author} auf Google ansehen`}
+                data-track-event="external_resource_click"
+                data-resource-id={`google_review_${sectionId}_${reviewNumber}`}
+                data-resource-type="google_review"
+                data-cta-id={`google_review_${sectionId}_${reviewNumber}`}
+                data-cta-type="external_review_source"
+                data-section-id={sectionId}
+                data-content-topic={contentTopic}
+                data-user-intent="rezension_pruefen"
+                data-journey-stage={journeyStage}
+              >Original auf Google ansehen</a>
+            </div>
+            <blockquote cite={review.sourceUrl}>
+              <p>„{quote}“</p>
+            </blockquote>
+            <footer>
+              <cite>{review.author}</cite>
+            </footer>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+  <noscript>
+    <style is:inline>
+      .editorial-review__slide--initially-hidden { display: flex !important; }
+    </style>
+  </noscript>
+</section>
+
+<script>
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const transitionDuration = 420;
+
+  document.querySelectorAll<HTMLElement>("[data-review-slider]").forEach((slider) => {
+    if (slider.dataset.reviewReady === "true") return;
+
+    const viewport = slider.querySelector<HTMLElement>("[data-review-viewport]");
+    const track = slider.querySelector<HTMLElement>(".editorial-review__track");
+    const slides = Array.from(slider.querySelectorAll<HTMLElement>("[data-review-slide]"));
+    const previous = slider.querySelector<HTMLButtonElement>("[data-review-previous]");
+    const next = slider.querySelector<HTMLButtonElement>("[data-review-next]");
+    const current = slider.querySelector<HTMLElement>("[data-review-current]");
+    const status = slider.querySelector<HTMLElement>("[data-review-status]");
+
+    if (!viewport || !track || slides.length === 0) return;
+
+    slider.dataset.reviewReady = "true";
+    let activeIndex = 0;
+    let isTransitioning = false;
+
+    const setSlideAccessibility = (slide: HTMLElement, isActive: boolean) => {
+      slide.setAttribute("aria-hidden", String(!isActive));
+      slide.querySelectorAll<HTMLElement>("a, button, [tabindex]").forEach((element) => {
+        if (isActive) {
+          element.removeAttribute("tabindex");
+        } else {
+          element.setAttribute("tabindex", "-1");
+        }
+      });
+    };
+
+    const updateControls = (index: number) => {
+      activeIndex = Math.max(0, Math.min(index, slides.length - 1));
+      if (current) current.textContent = String(activeIndex + 1);
+      if (status) status.textContent = `Rezension ${activeIndex + 1} von ${slides.length}`;
+      if (previous) previous.disabled = isTransitioning || activeIndex === 0;
+      if (next) next.disabled = isTransitioning || activeIndex === slides.length - 1;
+    };
+
+    const goToSlide = (index: number) => {
+      const targetIndex = Math.max(0, Math.min(index, slides.length - 1));
+      if (targetIndex === activeIndex || isTransitioning) return;
+
+      const outgoingSlide = slides[activeIndex];
+      const incomingSlide = slides[targetIndex];
+      const direction = targetIndex > activeIndex ? 1 : -1;
+      const currentHeight = outgoingSlide.getBoundingClientRect().height;
+
+      isTransitioning = true;
+      updateControls(activeIndex);
+      incomingSlide.style.setProperty("--review-enter-offset", `${direction * 14}px`);
+      outgoingSlide.style.setProperty("--review-leave-offset", `${direction * -14}px`);
+      incomingSlide.dataset.reviewState = "entering";
+      setSlideAccessibility(outgoingSlide, false);
+      setSlideAccessibility(incomingSlide, true);
+      const targetHeight = incomingSlide.getBoundingClientRect().height;
+
+      if (reduceMotion.matches) {
+        outgoingSlide.dataset.reviewState = "inactive";
+        incomingSlide.dataset.reviewState = "active";
+        track.style.removeProperty("height");
+        isTransitioning = false;
+        updateControls(targetIndex);
+        return;
+      }
+
+      track.style.height = `${currentHeight}px`;
+      track.getBoundingClientRect();
+
+      window.requestAnimationFrame(() => {
+        track.style.height = `${targetHeight}px`;
+        outgoingSlide.dataset.reviewState = "leaving";
+        incomingSlide.dataset.reviewState = "active";
+      });
+
+      window.setTimeout(() => {
+        outgoingSlide.dataset.reviewState = "inactive";
+        outgoingSlide.style.removeProperty("--review-leave-offset");
+        incomingSlide.style.removeProperty("--review-enter-offset");
+        track.style.removeProperty("height");
+        isTransitioning = false;
+        updateControls(targetIndex);
+      }, transitionDuration);
+
+      updateControls(targetIndex);
+    };
+
+    previous?.addEventListener("click", () => goToSlide(activeIndex - 1));
+    next?.addEventListener("click", () => goToSlide(activeIndex + 1));
+
+    viewport.addEventListener("keydown", (event) => {
+      if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+      event.preventDefault();
+      goToSlide(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+    });
+
+    slides.forEach((slide, index) => {
+      const isActive = index === 0;
+      slide.dataset.reviewState = isActive ? "active" : "inactive";
+      setSlideAccessibility(slide, isActive);
+    });
+    slider.classList.add("is-enhanced");
+    slides.forEach((slide) => slide.classList.remove("editorial-review__slide--initially-hidden"));
+
+    slider.classList.add("is-reveal-ready");
+    if (reduceMotion.matches || !("IntersectionObserver" in window)) {
+      slider.classList.add("is-visible");
+    } else {
+      const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+          if (!entries.some((entry) => entry.isIntersecting)) return;
+          slider.classList.add("is-visible");
+          observer.disconnect();
+        },
+        { threshold: 0.12 },
+      );
+      revealObserver.observe(slider);
+    }
+
+    updateControls(0);
+  });
+</script>
+
+<style is:inline>
+  .editorial-review {
+    --review-bronze: #966a49;
+    --review-surface: rgb(255 255 255 / .66);
+    --review-border: rgb(70 62 54 / .1);
+    width: min(1180px, calc(100% - 44px));
+    margin: clamp(76px, 9vw, 132px) auto;
+    padding: clamp(42px, 5vw, 68px) clamp(24px, 4.5vw, 58px);
+    display: grid;
+    grid-template-columns: minmax(190px, .58fr) minmax(0, 1.42fr);
+    gap: clamp(34px, 6vw, 78px);
+    border-top: 1px solid rgb(112 94 77 / .12);
+    border-bottom: 1px solid rgb(112 94 77 / .12);
+    background:
+      radial-gradient(circle at 85% 15%, rgb(181 150 119 / .1), transparent 32%),
+      #f7f4ef;
+  }
+
+  .editorial-review--merge-following {
+    margin-top: clamp(36px, 3vw, 52px);
+    margin-bottom: clamp(88px, 8vw, 120px);
+  }
+
+  .editorial-review__heading > p {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+  }
+
+  .editorial-review h2 {
+    margin: 0;
+    color: #222631;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(26px, 2.75vw, 38px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .editorial-review__controls {
+    margin-top: 32px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .editorial-review.is-enhanced .editorial-review__controls {
+    display: flex;
+  }
+
+  .editorial-review__controls button {
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    display: inline-grid;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: transparent;
+    color: #222631;
+    font: inherit;
+    font-size: 19px;
+    cursor: pointer;
+  }
+
+  .editorial-review__controls button svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    overflow: visible;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.5;
+  }
+
+  .editorial-review__controls button:hover:not(:disabled),
+  .editorial-review__controls button:focus-visible {
+    border-color: #222631;
+    background: #222631;
+    color: #fff;
+  }
+
+  .editorial-review__controls button:disabled {
+    opacity: .32;
+    cursor: default;
+  }
+
+  .editorial-review__controls button:focus-visible,
+  .editorial-review a:focus-visible,
+  .editorial-review__viewport:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .editorial-review__position {
+    min-width: 48px;
+    margin: 0;
+    color: var(--muted);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-align: center;
+  }
+
+  .editorial-review__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .editorial-review__viewport {
+    position: relative;
+    min-width: 0;
+    transition:
+      opacity 700ms ease,
+      transform 700ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .editorial-review__track {
+    display: grid;
+    gap: 24px;
+  }
+
+  .editorial-review__slide--initially-hidden {
+    display: none;
+  }
+
+  .editorial-review__slide {
+    position: relative;
+    isolation: isolate;
+    min-width: 0;
+    padding: clamp(32px, 5vw, 58px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--review-border);
+    border-radius: 2px;
+    background: var(--review-surface);
+    box-shadow: 0 24px 70px rgb(40 33 27 / .06);
+  }
+
+  .editorial-review__quote-mark {
+    position: absolute;
+    z-index: 0;
+    top: -.06em;
+    left: .03em;
+    color: rgb(155 116 82 / .075);
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(8rem, 18vw, 14rem);
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .editorial-review__quote-mark::before {
+    content: "„";
+  }
+
+  .editorial-review__slide > :not(.editorial-review__quote-mark) {
+    position: relative;
+    z-index: 1;
+  }
+
+  .editorial-review.is-enhanced .editorial-review__track {
+    position: relative;
+    display: block;
+    transition: height 390ms cubic-bezier(.22, 1, .36, 1);
+  }
+
+  .editorial-review.is-enhanced .editorial-review__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(var(--review-enter-offset, 0));
+    transition:
+      opacity 390ms ease,
+      transform 390ms cubic-bezier(.22, 1, .36, 1),
+      visibility 0s linear 420ms;
+  }
+
+  .editorial-review.is-enhanced .editorial-review__slide[data-review-state="active"] {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0s;
+  }
+
+  .editorial-review.is-enhanced .editorial-review__slide[data-review-state="entering"] {
+    opacity: 0;
+    visibility: visible;
+    transform: translateX(var(--review-enter-offset, 14px));
+    transition: none;
+  }
+
+  .editorial-review.is-enhanced .editorial-review__slide[data-review-state="leaving"] {
+    opacity: 0;
+    visibility: visible;
+    transform: translateX(var(--review-leave-offset, -14px));
+  }
+
+  .editorial-review.is-reveal-ready .editorial-review__viewport {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  .editorial-review.is-reveal-ready.is-visible .editorial-review__viewport {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .editorial-review__trustline {
+    margin-bottom: clamp(20px, 3vw, 30px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    align-items: center;
+    color: var(--review-bronze);
+  }
+
+  .editorial-review__stars {
+    color: var(--review-bronze);
+    font-family: Georgia, serif;
+    font-size: 15px;
+    letter-spacing: .08em;
+    line-height: 1;
+  }
+
+  .editorial-review__trust-separator {
+    color: rgb(112 78 53 / .62);
+    font-family: Georgia, serif;
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  .editorial-review__trustline a {
+    color: var(--review-bronze);
+    text-decoration-color: rgb(150 106 73 / .35);
+  }
+
+  .editorial-review blockquote {
+    margin: 0;
+  }
+
+  .editorial-review blockquote p {
+    margin: 0;
+    color: #393633;
+    font-size: clamp(17px, 1.55vw, 20px);
+    line-height: 1.72;
+    white-space: pre-line;
+  }
+
+  .editorial-review footer {
+    margin-top: auto;
+    padding-top: clamp(24px, 3vw, 34px);
+    display: block;
+  }
+
+  .editorial-review cite,
+  .editorial-review__trustline a {
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: .17em;
+    text-transform: uppercase;
+  }
+
+  .editorial-review cite {
+    color: #222631;
+  }
+
+  .editorial-review__trustline a {
+    text-underline-offset: 6px;
+  }
+
+  .editorial-review__trustline a:hover,
+  .editorial-review__trustline a:focus-visible {
+    color: #222631;
+  }
+
+  @media (max-width: 720px) {
+    .editorial-review {
+      width: min(100% - 2 * var(--home-mobile-gutter), 1040px);
+      grid-template-columns: 1fr;
+      gap: 28px;
+      margin-block: 72px;
+      padding: 34px clamp(18px, 5vw, 24px) 38px;
+    }
+
+    .editorial-review--merge-following {
+      margin-top: 36px;
+      margin-bottom: 84px;
+    }
+
+    .editorial-review__heading {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0 20px;
+      align-items: end;
+    }
+
+    .editorial-review__heading > p,
+    .editorial-review__heading h2 {
+      grid-column: 1 / -1;
+    }
+
+    .editorial-review__heading > p {
+      margin-bottom: 12px;
+    }
+
+    .editorial-review__controls {
+      grid-column: 1 / -1;
+      margin-top: 22px;
+    }
+
+    .editorial-review h2 {
+      max-width: 15em;
+      font-size: clamp(25px, 7.4vw, 32px);
+    }
+
+    .editorial-review blockquote p {
+      font-size: clamp(16px, 4.45vw, 18px);
+      line-height: 1.68;
+    }
+
+    .editorial-review__slide {
+      padding: clamp(26px, 7vw, 34px) clamp(22px, 6.5vw, 30px);
+    }
+
+    .editorial-review__quote-mark {
+      top: -.02em;
+      left: .015em;
+      font-size: clamp(7rem, 34vw, 10rem);
+    }
+
+    .editorial-review__trustline {
+      margin-bottom: 22px;
+      gap: 6px;
+    }
+
+    .editorial-review__stars {
+      font-size: 13px;
+    }
+
+    .editorial-review__trustline a {
+      font-size: 8px;
+      letter-spacing: .14em;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .editorial-review__viewport,
+    .editorial-review.is-enhanced .editorial-review__track,
+    .editorial-review.is-enhanced .editorial-review__slide {
+      transition: none;
+    }
+
+    .editorial-review.is-reveal-ready .editorial-review__viewport {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>

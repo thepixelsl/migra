@@ -13,7 +13,7 @@
       this.viewport = root.querySelector(".hero-slider__viewport");
       this.slides = [...root.querySelectorAll(".hero-slider__slide")];
       this.index = Math.max(0, this.slides.findIndex((slide) => slide.classList.contains("is-initial")));
-      this.interval = 1500;
+      this.interval = this.mode === "mobile" ? 4800 : 5200;
       this.timer = 0;
       this.hoverPaused = false;
       this.userPaused = false;
@@ -22,7 +22,6 @@
       this.startY = 0;
       this.deltaX = 0;
       this.dragOffset = 0;
-      this.slideWidth = 0;
       this.preloadTimer = 0;
       this.neighborTimer = 0;
       this.preloadQueue = [];
@@ -30,7 +29,6 @@
       this.previousButton = root.querySelector("[data-slider-prev]");
       this.nextButton = root.querySelector("[data-slider-next]");
       this.toggleButton = root.querySelector("[data-slider-toggle]");
-      this.onResize = this.onResize.bind(this);
       this.onPointerDown = this.onPointerDown.bind(this);
       this.onPointerMove = this.onPointerMove.bind(this);
       this.onPointerUp = this.onPointerUp.bind(this);
@@ -40,7 +38,6 @@
       this.onPreviousClick = this.onPreviousClick.bind(this);
       this.onNextClick = this.onNextClick.bind(this);
       this.onToggleClick = this.onToggleClick.bind(this);
-      this.resizeObserver = "ResizeObserver" in window ? new ResizeObserver(this.onResize) : null;
     }
 
     start() {
@@ -72,25 +69,13 @@
       this.nextButton?.addEventListener("click", this.onNextClick);
       this.toggleButton?.addEventListener("click", this.onToggleClick);
 
-      if (this.resizeObserver) {
-        this.resizeObserver.observe(this.viewport);
-      } else {
-        window.addEventListener("resize", this.onResize, { passive: true });
-      }
-
-      this.measure();
       this.render(true);
       this.queueNeighborImages();
       this.queueDeferredImages();
       this.root.classList.add("is-ready");
       this.updateToggleButton();
 
-      if (!reducedMotionQuery.matches) {
-        this.play();
-      } else {
-        this.userPaused = true;
-        this.updateToggleButton();
-      }
+      if (!reducedMotionQuery.matches) this.play();
     }
 
     stop() {
@@ -99,12 +84,6 @@
       this.clearNeighborTimer();
       this.root.classList.remove("is-ready", "is-dragging");
       this.root.hidden = true;
-
-      if (this.resizeObserver) {
-        this.resizeObserver.disconnect();
-      } else {
-        window.removeEventListener("resize", this.onResize);
-      }
 
       this.root.removeEventListener("mouseenter", this.onMouseEnter);
       this.root.removeEventListener("mouseleave", this.onMouseLeave);
@@ -118,10 +97,6 @@
       this.previousButton?.removeEventListener("click", this.onPreviousClick);
       this.nextButton?.removeEventListener("click", this.onNextClick);
       this.toggleButton?.removeEventListener("click", this.onToggleClick);
-    }
-
-    measure() {
-      this.slideWidth = this.slides[0]?.getBoundingClientRect().width || 1;
     }
 
     offsetFor(slideIndex) {
@@ -138,10 +113,10 @@
     render(loadActive = false) {
       this.slides.forEach((slide, slideIndex) => {
         const offset = this.offsetFor(slideIndex);
-        const offsetX = offset * this.slideWidth + this.dragOffset;
         const isActive = offset === 0;
 
-        slide.style.setProperty("--offset-x", `${offsetX}px`);
+        slide.style.setProperty("--offset-x", `${offset * 100}%`);
+        slide.style.setProperty("--drag-x", `${this.dragOffset}px`);
         slide.style.zIndex = String(100 - Math.abs(offset));
         slide.setAttribute("aria-hidden", isActive ? "false" : "true");
 
@@ -151,23 +126,40 @@
       });
     }
 
-    onResize() {
-      this.measure();
-      this.render();
+    imageIsReady(slide) {
+      const image = slide?.querySelector("img");
+      if (!image) return true;
+      return Boolean((image.currentSrc || image.src) && image.complete && image.naturalWidth > 0);
+    }
+
+    prepareSlide(slideIndex, isPriority = false) {
+      const slide = this.slides[slideIndex];
+      if (!slide) return false;
+      this.loadImage(slide, isPriority);
+      return this.imageIsReady(slide);
+    }
+
+    goTo(slideIndex) {
+      const count = this.slides.length;
+      const targetIndex = (slideIndex + count) % count;
+
+      if (!this.prepareSlide(targetIndex, true)) {
+        this.queueNeighborImages();
+        return;
+      }
+
+      this.index = targetIndex;
+      this.dragOffset = 0;
+      this.render(true);
+      this.queueNeighborImages();
     }
 
     next() {
-      this.index = (this.index + 1) % this.slides.length;
-      this.dragOffset = 0;
-      this.render(true);
-      this.queueNeighborImages();
+      this.goTo(this.index + 1);
     }
 
     previous() {
-      this.index = (this.index - 1 + this.slides.length) % this.slides.length;
-      this.dragOffset = 0;
-      this.render(true);
-      this.queueNeighborImages();
+      this.goTo(this.index - 1);
     }
 
     play() {
@@ -181,7 +173,7 @@
     }
 
     isPaused() {
-      return this.hoverPaused || this.userPaused;
+      return this.hoverPaused || this.userPaused || reducedMotionQuery.matches;
     }
 
     onMouseEnter() {
@@ -277,14 +269,26 @@
       image.decoding = "async";
       if (isPriority) image.setAttribute("fetchpriority", "high");
 
-      if (image.dataset.src) {
+      if (image.dataset.srcset) {
+        image.srcset = image.dataset.srcset;
+        image.removeAttribute("data-srcset");
+      } else if (image.dataset.src) {
         image.src = image.dataset.src;
         image.removeAttribute("data-src");
       }
+
     }
 
     queueDeferredImages() {
-      this.preloadQueue = this.slides.filter((slide) => slide.querySelector("img[data-src]"));
+      this.preloadQueue = this.slides.filter(
+        (slide) => slide.querySelector("img[data-src], img[data-srcset]"),
+      );
+
+      if (this.mode === "mobile") {
+        this.preloadQueue = [];
+        return;
+      }
+
       this.scheduleNextDeferredImage();
     }
 
@@ -292,7 +296,11 @@
       const radius = this.mode === "desktop" ? 3 : 1;
       const neighbors = this.slides
         .map((slide, slideIndex) => ({ slide, distance: Math.abs(this.offsetFor(slideIndex)) }))
-        .filter((item) => item.distance > 0 && item.distance <= radius && item.slide.querySelector("img[data-src]"))
+        .filter((item) =>
+          item.distance > 0
+          && item.distance <= radius
+          && item.slide.querySelector("img[data-src], img[data-srcset]")
+        )
         .sort((a, b) => a.distance - b.distance)
         .map((item) => item.slide);
 
@@ -365,6 +373,16 @@
     });
   };
 
+  const syncMotionPreference = () => {
+    instances.forEach((instance) => {
+      if (reducedMotionQuery.matches) {
+        instance.pause();
+      } else if (!instance.isPaused()) {
+        instance.play();
+      }
+    });
+  };
+
   const listenToMediaQuery = (query, callback) => {
     if (query.addEventListener) {
       query.addEventListener("change", callback);
@@ -430,7 +448,7 @@
   };
 
   listenToMediaQuery(mobileQuery, sync);
-  listenToMediaQuery(reducedMotionQuery, sync);
+  listenToMediaQuery(reducedMotionQuery, syncMotionPreference);
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", () => {

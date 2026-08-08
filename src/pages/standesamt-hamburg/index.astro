@@ -1,0 +1,2547 @@
+---
+import FaviconHead from "../../components/FaviconHead.astro";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { hamburgStadtteile } from "../../data/hamburgStadtteile";
+import { standesaemter } from "../../data/standesaemter";
+import { trauorte, type Trauort } from "../../data/trauorte";
+import "../../styles/global.css";
+
+const siteUrl =
+  Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/standesamt-hamburg/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Standesamtfinder Hamburg: Adressen & Kontakt";
+const description =
+  "Standesamtfinder Hamburg: Wohnsitzstandesamt finden und besondere Trauorte in Hamburg und Umgebung mit Buchungsweg, Adresse und offiziellen Links vergleichen.";
+const dateModified = "2026-08-08";
+const heroImagePath =
+  "/migrated-assets/standesamt-hamburg/rathaus-altona.jpg";
+const heroImageUrl = `${siteUrl}${heroImagePath}`;
+const traueCalendarUrl = "https://standesamtstermine.hamburg.de/";
+const officialJurisdictionUrl =
+  "https://www.hamburg.de/service/info/11266636/n0/";
+const sortedHamburgStadtteile = [...hamburgStadtteile].sort((a, b) =>
+  a.name.localeCompare(b.name, "de"),
+);
+const sortedTrauorte = [...trauorte].sort((a, b) => {
+  if (a.region !== b.region) return a.region === "hamburg" ? -1 : 1;
+  return a.name.localeCompare(b.name, "de");
+});
+const hamburgTrauorte = sortedTrauorte.filter((venue) => venue.region === "hamburg");
+const umlandTrauorte = sortedTrauorte.filter((venue) => venue.region === "umland");
+const compactPhoneSlots = [0, 1, 2];
+
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Blog", href: "/blog/" },
+  { label: "Standesamtfinder Hamburg", href: pagePath },
+];
+
+const addressQuery = (office: (typeof standesaemter)[number]) =>
+  `${office.name}, ${office.street}, ${office.postalCode} ${office.city}`;
+
+const googleMapsUrl = (office: (typeof standesaemter)[number]) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressQuery(office))}`;
+
+const appleMapsUrl = (office: (typeof standesaemter)[number]) =>
+  `https://maps.apple.com/?q=${encodeURIComponent(office.name)}&address=${encodeURIComponent(
+    `${office.street}, ${office.postalCode} ${office.city}`,
+  )}`;
+
+const trauortAddress = (venue: Trauort) =>
+  venue.address
+    ? `${venue.address.street}, ${venue.address.postalCode} ${venue.address.city}`
+    : venue.meetingPoint ?? "Ort vor der Buchung bestätigen";
+
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": `${pageUrl}#webpage`,
+      url: pageUrl,
+      name: title,
+      description,
+      dateModified,
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` },
+      primaryImageOfPage: {
+        "@type": "ImageObject",
+        url: heroImageUrl,
+        width: 1384,
+        height: 924,
+      },
+      mainEntity: { "@id": `${pageUrl}#standesaemter` },
+      inLanguage: "de",
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${pageUrl}#standesaemter`,
+      name: "Standesämter in Hamburg und Norderstedt",
+      numberOfItems: standesaemter.length,
+      itemListElement: standesaemter.map((office, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "GovernmentOffice",
+          name: office.name,
+          url: office.officialUrl,
+          email: office.email,
+          telephone: office.phones[0]?.href.replace(/^tel:/, ""),
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: office.street,
+            postalCode: office.postalCode,
+            addressLocality: office.city,
+            addressCountry: "DE",
+          },
+        },
+      })),
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{title}</title>
+    <meta name="description" content={description}>
+    <meta
+      name="robots"
+      content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large"
+    >
+    <link rel="canonical" href={pageUrl}>
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:url" content={pageUrl}>
+    <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={heroImageUrl}>
+    <meta property="og:image:width" content="1384">
+    <meta property="og:image:height" content="924">
+    <meta
+      property="og:image:alt"
+      content="Rathaus Altona mit dem Kaiser-Wilhelm-Denkmal"
+    >
+    <meta name="twitter:card" content="summary_large_image">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
+    <script src="/js/standesamt-finder-fixed-20260731.js" defer></script>
+    <script src="/js/standesamt-trauorte.js" defer></script>
+  </head>
+  <body class="standesamt-page">
+    <header class="gallery-header">
+      <MobileNavigation showFloatingAction={false} />
+      <DesktopNavigation />
+    </header>
+
+    <main>
+      <Breadcrumbs
+        items={breadcrumbs}
+        siteUrl={siteUrl}
+        currentUrl={pageUrl}
+      />
+
+      <article class="standesamt-finder" data-standesamt-finder>
+        <header class="finder-hero">
+          <div class="finder-hero__copy">
+            <p class="eyebrow">Hamburg & Umgebung</p>
+            <h1>
+              <span>Standesamtfinder</span>
+              {" "}
+              <span>Hamburg</span>
+            </h1>
+            <p class="finder-hero__lead">
+              Findet zuerst das Amt für die Anmeldung – und prüft danach
+              besondere Trauorte mit Buchungsweg und offiziellen Links.
+            </p>
+            <p class="finder-hero__meta">
+              {standesaemter.length} Standesämter
+              <span aria-hidden="true">·</span>
+              Hinweise zu besonderen Trauorten
+              <span aria-hidden="true">·</span>
+              Planungshilfe mit offiziellen Links
+            </p>
+          </div>
+
+          <figure class="finder-hero__image">
+            <img
+              src={heroImagePath}
+              width="1384"
+              height="924"
+              alt="Rathaus Altona mit dem Kaiser-Wilhelm-Denkmal"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            >
+            <figcaption>Rathaus Altona · Platz der Republik</figcaption>
+          </figure>
+        </header>
+
+        <section
+          class="finder-section finder-task finder-task--office"
+          aria-labelledby="finder-heading"
+        >
+          <header class="finder-task__header">
+            <div class="finder-task__heading">
+              <div class="finder-task__step">
+                <span class="finder-task__number" aria-hidden="true">1</span>
+                <p class="eyebrow">Für die Anmeldung</p>
+              </div>
+              <h2 id="finder-heading"><span>Wohnsitz</span><wbr><span>standesamt finden</span></h2>
+            </div>
+            <div class="finder-task__explanation">
+              <p class="finder-task__question">Welches Amt ist zuständig?</p>
+              <p>
+                Wählt euren Wohnstadtteil. Das Ergebnis zeigt das Amt für die
+                Anmeldung samt Kontaktdaten.
+              </p>
+            </div>
+          </header>
+
+          <div class="finder-task__body">
+
+          <div class="finder-interaction">
+            <div class="finder-toolbar">
+              <form
+                class="finder-search"
+                aria-label="Standesamt anhand des Wohnstadtteils finden"
+                data-finder-form
+              >
+                <div class="finder-search__label">
+                  <label for="standesamt-district">
+                    Wohnstadtteil
+                  </label>
+                </div>
+                <div class="finder-district__field">
+                  <select
+                    id="standesamt-district"
+                    aria-controls="standesamt-finder-result"
+                    aria-describedby="standesamt-district-help"
+                    data-finder-district
+                  >
+                    <option value="">Stadtteil auswählen</option>
+                    {sortedHamburgStadtteile.map((district) => (
+                      <option
+                        value={district.officeId}
+                        data-district={district.name}
+                      >
+                        {district.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div class="finder-search__meta">
+                  <p
+                    class="finder-search__help"
+                    id="standesamt-district-help"
+                  >
+                    Wohnsitz entscheidet
+                  </p>
+
+                  <div class="finder-search__actions">
+                    <button type="button" data-finder-clear hidden>
+                      Auswahl zurücksetzen
+                    </button>
+                    <a
+                      class="finder-jurisdiction-link"
+                      href={officialJurisdictionUrl}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label="Zuständiges Standesamt mit Straße und Hausnummer auf hamburg.de prüfen"
+                      data-track-event="external_resource_click"
+                      data-resource-id="hamburg_service_standesamt_zustaendigkeit"
+                      data-resource-type="official_city_service"
+                      data-cta-id="standesamtfinder_adresspruefung"
+                      data-cta-type="external_official_service"
+                      data-section-id="standesamtfinder_toolbar"
+                      data-content-topic="standesamt_zustaendigkeit"
+                      data-user-intent="zustaendigkeit_pruefen"
+                      data-journey-stage="orientierung"
+                    >
+                      Mit Straße und Hausnummer amtlich prüfen
+                    </a>
+                  </div>
+                </div>
+
+                <noscript>
+                  <p class="finder-noscript">
+                    Die automatische Auswahl benötigt JavaScript. Alternativ könnt
+                    ihr die amtliche Adressprüfung oder die Kontaktliste darunter
+                    nutzen.
+                  </p>
+                </noscript>
+              </form>
+            </div>
+
+            <section
+              class="finder-result"
+              id="standesamt-finder-result"
+              data-finder-result
+              data-state="empty"
+              aria-labelledby="standesamt-finder-result-heading"
+            >
+              <header class="finder-result__header">
+                <h3 id="standesamt-finder-result-heading">
+                  Zuständiges Standesamt
+                </h3>
+                <span
+                  class="finder-result__state"
+                  aria-hidden="true"
+                  data-finder-result-state
+                >
+                  Bitte wählen
+                </span>
+              </header>
+
+              <div class="finder-result__body">
+                <div
+                  class="finder-result__placeholder"
+                  data-finder-result-placeholder
+                  aria-hidden="false"
+                >
+                  <p class="finder-result__placeholder-title">
+                    Stadtteil auswählen
+                  </p>
+                  <p class="finder-result__placeholder-copy">
+                    Das zuständige Standesamt erscheint genau hier.
+                  </p>
+                  <dl class="finder-result__preview" aria-hidden="true">
+                    <div><dt>Adresse</dt><dd>—</dd></div>
+                    <div><dt>Telefon</dt><dd>—</dd></div>
+                    <div><dt>E-Mail</dt><dd>—</dd></div>
+                  </dl>
+                </div>
+
+                <div
+                  class="finder-result__content"
+                  data-finder-result-content
+                >
+                  {standesaemter.map((office) => (
+                    <article
+                      class="finder-compact-card"
+                      data-finder-result-card
+                      data-office-id={office.id}
+                      data-office-name={office.name}
+                      aria-hidden="true"
+                      inert
+                    >
+                      <header class="finder-compact-card__header">
+                        <h4>{office.name}</h4>
+                        <p>
+                          Zuständig für <strong data-finder-result-district>&nbsp;</strong>
+                        </p>
+                      </header>
+
+                      <dl class="finder-compact-card__contacts">
+                        <div>
+                          <dt>Adresse</dt>
+                          <dd>
+                            <address>
+                              {office.street}<br>
+                              {office.postalCode} {office.city}
+                            </address>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Telefon</dt>
+                          <dd>
+                            <ul>
+                              {compactPhoneSlots.map((slot) => {
+                                const phone = office.phones[slot];
+                                return (
+                                  <li class:list={{ "is-empty": !phone }}>
+                                    {phone ? (
+                                      <a
+                                        href={phone.href}
+                                        aria-label={phone.label
+                                          ? `${phone.label}: ${phone.display}`
+                                          : phone.display}
+                                      >
+                                        {phone.display}
+                                      </a>
+                                    ) : (
+                                      <span aria-hidden="true">&nbsp;</span>
+                                    )}
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>E-Mail</dt>
+                          <dd>
+                            <a href={`mailto:${office.email}`}>{office.email}</a>
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <nav
+                        class="finder-compact-card__links"
+                        aria-label={`Links für ${office.name}`}
+                      >
+                        <a
+                          href={googleMapsUrl(office)}
+                          target="_blank"
+                          rel="noopener"
+                          aria-label={`${office.name} in Google Maps öffnen`}
+                        >
+                          Route öffnen
+                        </a>
+                        <a
+                          href={office.officialUrl}
+                          target="_blank"
+                          rel="noopener"
+                          aria-label={`Offizielle Seite von ${office.name} öffnen`}
+                        >
+                          Behördenseite
+                        </a>
+                      </nav>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              <p
+                class="finder-status"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                data-finder-status
+              ></p>
+
+            </section>
+          </div>
+
+          </div>
+        </section>
+
+        <section
+          class="trauort-section finder-task finder-task--venue"
+          data-trauort-finder
+          aria-labelledby="trauort-heading"
+        >
+          <header class="finder-task__header">
+            <div class="finder-task__heading">
+              <div class="finder-task__step">
+                <span class="finder-task__number" aria-hidden="true">2</span>
+                <p class="eyebrow">Für die Trauung</p>
+              </div>
+              <h2 id="trauort-heading">Besonderen Trauort prüfen</h2>
+            </div>
+            <div class="finder-task__explanation">
+              <p class="finder-task__question">Wo möchtet ihr heiraten?</p>
+              <p>
+                Wählt eine Location. Ihr seht Buchungsweg, zuständiges Amt und
+                offizielle Anlaufstellen.
+              </p>
+              <p class="finder-task__notice">
+                Diese Seite nennt bewusst keine Preise, Kapazitäten oder festen
+                Trautage. Prüft diese Angaben vor jeder Buchung in der amtlichen
+                Quelle und gegebenenfalls direkt bei der Location.
+              </p>
+            </div>
+          </header>
+
+          <div class="finder-task__body">
+          <div class="trauort-interaction">
+            <form
+              class="trauort-search"
+              aria-label="Besonderen standesamtlichen Trauort vergleichen"
+            >
+              <div class="trauort-search__label">
+                <label for="besonderer-trauort">
+                  Besonderen Trauort auswählen
+                </label>
+              </div>
+
+              <div class="trauort-search__field">
+                <select
+                  id="besonderer-trauort"
+                  data-trauort-select
+                  aria-controls="trauort-finder-result"
+                  aria-describedby="trauort-search-help"
+                >
+                  <option value="">Trauort auswählen</option>
+                  <optgroup label="Hamburg">
+                    {hamburgTrauorte.map((venue) => (
+                      <option value={venue.id}>{venue.name}</option>
+                    ))}
+                  </optgroup>
+                  <optgroup label="Hamburger Umland">
+                    {umlandTrauorte.map((venue) => (
+                      <option value={venue.id}>{venue.name}</option>
+                    ))}
+                  </optgroup>
+                </select>
+              </div>
+
+              <p class="trauort-search__help" id="trauort-search-help">
+                Anmeldung der Ehe weiterhin beim Wohnsitzstandesamt
+              </p>
+
+              <div class="trauort-search__reset-slot">
+                <button
+                  class="trauort-search__reset"
+                  type="button"
+                  data-trauort-reset
+                  hidden
+                  aria-hidden="true"
+                >
+                  Auswahl zurücksetzen
+                </button>
+              </div>
+
+              <noscript>
+                <p class="finder-noscript">
+                  Die Auswahl benötigt JavaScript. Alle Trauorte und
+                  Buchungswege stehen auch im Verzeichnis darunter.
+                </p>
+              </noscript>
+            </form>
+
+            <section
+              class="trauort-result"
+              id="trauort-finder-result"
+              data-trauort-result
+              data-state="empty"
+              aria-labelledby="trauort-result-heading"
+            >
+              <header class="trauort-result__header">
+                <h3 id="trauort-result-heading">Buchung des Trauorts</h3>
+                <span
+                  class="trauort-result__state"
+                  aria-hidden="true"
+                  data-trauort-result-state
+                >
+                  Bitte wählen
+                </span>
+              </header>
+
+              <div class="trauort-result__body">
+                <div
+                  class="trauort-result__placeholder"
+                  data-trauort-placeholder
+                  aria-hidden="false"
+                >
+                  <p class="trauort-result__placeholder-title">
+                    Trauort auswählen
+                  </p>
+                  <p class="trauort-result__placeholder-copy">
+                    Buchungsweg, zuständiges Amt und die nötige Bestätigung
+                    erscheinen genau hier.
+                  </p>
+                  <dl class="trauort-result__preview" aria-hidden="true">
+                    <div><dt>Buchung</dt><dd>—</dd></div>
+                    <div><dt>Standesamt</dt><dd>—</dd></div>
+                    <div><dt>Bestätigung</dt><dd>—</dd></div>
+                  </dl>
+                </div>
+
+                <div class="trauort-result__content">
+                  {sortedTrauorte.map((venue) => (
+                    <article
+                      class="trauort-compact-card"
+                      data-trauort-result-card
+                      data-trauort-id={venue.id}
+                      data-active="false"
+                      hidden
+                      aria-hidden="true"
+                    >
+                      <header class="trauort-compact-card__header">
+                        <div class="trauort-compact-card__meta">
+                          <span>{venue.region === "hamburg" ? "Hamburg" : "Umland"}</span>
+                        </div>
+                        <h4>{venue.name}</h4>
+                        <p>{trauortAddress(venue)}</p>
+                      </header>
+
+                      <dl class="trauort-compact-card__facts">
+                        <div>
+                          <dt>Buchung</dt>
+                          <dd>{venue.bookingModeLabel}</dd>
+                        </div>
+                        <div>
+                          <dt>Standesamt</dt>
+                          <dd>{venue.officeName}</dd>
+                        </div>
+                        <div>
+                          <dt>Bestätigung</dt>
+                          <dd>
+                            Termin und Konditionen aktuell beim Standesamt und
+                            gegebenenfalls bei der Location bestätigen.
+                          </dd>
+                        </div>
+                      </dl>
+
+                      <nav
+                        class="trauort-compact-card__links"
+                        aria-label={`Buchungslinks für ${venue.name}`}
+                      >
+                        <a
+                          href={venue.bookingUrl ?? venue.officialAuthorityUrl}
+                          target="_blank"
+                          rel="noopener"
+                          aria-label={`Trautermin für ${venue.name} beim zuständigen Standesamt prüfen`}
+                          data-track-event="external_resource_click"
+                          data-resource-id={`trauort_${venue.id}_standesamt`}
+                          data-resource-type="official_authority"
+                          data-cta-id={`trauortfinder_${venue.id}_termin`}
+                          data-cta-type="external_official_service"
+                          data-section-id="trauortfinder_ergebnis"
+                          data-content-topic="aussentrauort_buchung"
+                          data-user-intent="trautermin_pruefen"
+                          data-journey-stage="vor_reservierung"
+                        >
+                          Trautermin prüfen
+                        </a>
+                        {venue.officialVenueUrl && (
+                          <a
+                            href={venue.officialVenueUrl}
+                            target="_blank"
+                            rel="noopener"
+                            aria-label={`Offizielle Locationseite von ${venue.name} öffnen`}
+                            data-track-event="external_resource_click"
+                            data-resource-id={`trauort_${venue.id}_location`}
+                            data-resource-type="venue_website"
+                            data-cta-id={`trauortfinder_${venue.id}_location`}
+                            data-cta-type="external_venue_information"
+                            data-section-id="trauortfinder_ergebnis"
+                            data-content-topic="aussentrauort_buchung"
+                            data-user-intent="location_pruefen"
+                            data-journey-stage="orientierung"
+                          >
+                            Location ansehen
+                          </a>
+                        )}
+                      </nav>
+                    </article>
+                  ))}
+                </div>
+              </div>
+
+              <p
+                class="finder-status"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                data-trauort-status
+              ></p>
+            </section>
+          </div>
+
+          </div>
+        </section>
+
+        <section class="finder-more" aria-labelledby="finder-more-heading">
+          <header class="finder-more__header">
+            <div>
+              <p class="eyebrow">Planung & offizielle Quellen</p>
+              <h2 id="finder-more-heading">Weitere Informationen</h2>
+            </div>
+            <p>
+              Die ausführlichen Listen bleiben geschlossen, bis ihr sie
+              benötigt. Alle Kontaktdaten und Buchungswege sind dennoch
+              vollständig auf der Seite vorhanden.
+            </p>
+          </header>
+
+          <div class="finder-more__resources">
+          <details class="office-directory" data-finder-directory>
+            <summary>Alle Standesämter und Kontaktdaten</summary>
+
+            <div class="office-grid" id="standesamt-results">
+              {standesaemter.map((office, index) => (
+                <article
+                  class="office-card"
+                  id={office.id}
+                  data-standesamt-card
+                  data-office-id={office.id}
+                  data-office-name={office.name}
+                >
+                  <header class="office-card__header">
+                    <p class="office-card__number" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <div>
+                      <p class="office-card__location">{office.location}</p>
+                      <h3>{office.name}</h3>
+                    </div>
+                  </header>
+
+                  <dl class="office-card__contacts">
+                    <div>
+                      <dt>Adresse</dt>
+                      <dd>
+                        <address>
+                          {office.street}<br>
+                          {office.postalCode} {office.city}
+                        </address>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>Telefon</dt>
+                      <dd>
+                        <ul>
+                          {office.phones.map((phone) => (
+                            <li>
+                              <a href={phone.href}>{phone.display}</a>
+                              {phone.label && <span>{phone.label}</span>}
+                            </li>
+                          ))}
+                        </ul>
+                      </dd>
+                    </div>
+                    <div>
+                      <dt>E-Mail</dt>
+                      <dd>
+                        <a href={`mailto:${office.email}`}>{office.email}</a>
+                      </dd>
+                    </div>
+                  </dl>
+
+                  <nav
+                    class="office-card__links"
+                    aria-label={`Links für ${office.name}`}
+                  >
+                    <a
+                      href={googleMapsUrl(office)}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={`${office.name} in Google Maps öffnen`}
+                    >
+                      Google Maps
+                    </a>
+                    <a
+                      href={appleMapsUrl(office)}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={`${office.name} in Apple Karten öffnen`}
+                    >
+                      Apple Karten
+                    </a>
+                    <a
+                      href={office.officialUrl}
+                      target="_blank"
+                      rel="noopener"
+                      aria-label={`Offizielle Seite von ${office.name} öffnen`}
+                    >
+                      Offizielle Seite
+                    </a>
+                  </nav>
+                </article>
+              ))}
+            </div>
+          </details>
+
+          <details class="trauort-directory" data-trauort-directory>
+            <summary>
+              Mögliche Trauorte und offizielle Anlaufstellen
+            </summary>
+
+            <div class="trauort-directory__body">
+              <p class="trauort-directory__intro">
+                Die Einträge dienen als Ausgangspunkt für eure eigene Prüfung.
+                Ob ein Ort aktuell für eine standesamtliche Trauung angeboten
+                wird, erfahrt ihr ausschließlich beim zuständigen Standesamt und
+                – falls nötig – direkt bei der Location. Diese Seite veröffentlicht
+                deshalb keine Preise, Kapazitäten, Fristen oder festen Trautage.
+              </p>
+
+              {[
+                { id: "hamburg", title: "Hamburg", venues: hamburgTrauorte },
+                { id: "umland", title: "Hamburger Umland", venues: umlandTrauorte },
+              ].map((group) => (
+                <section
+                  class="trauort-directory__group"
+                  aria-labelledby={`trauort-group-${group.id}`}
+                >
+                  <h3 id={`trauort-group-${group.id}`}>{group.title}</h3>
+
+                  <div class="trauort-directory__grid">
+                    {group.venues.map((venue) => (
+                      <article
+                        class="trauort-card"
+                        id={`trauort-${venue.id}`}
+                        aria-labelledby={`trauort-${venue.id}-heading`}
+                      >
+                        <header class="trauort-card__header">
+                          <div>
+                            <p>{venue.bookingModeLabel}</p>
+                            <h4 id={`trauort-${venue.id}-heading`}>{venue.name}</h4>
+                          </div>
+                        </header>
+
+                        <p class="trauort-card__address">{trauortAddress(venue)}</p>
+
+                        <div class="trauort-card__booking">
+                          <h5>So bucht ihr</h5>
+                          <ol>
+                            {venue.bookingSteps.map((step) => (
+                              <li>
+                                <span>{step.actor === "standesamt" ? "Standesamt" : "Location"}</span>
+                                <strong>{step.label}</strong>
+                                <p>{step.description}</p>
+                              </li>
+                            ))}
+                          </ol>
+                        </div>
+
+                        <dl class="trauort-card__details">
+                          <div>
+                            <dt>Zuständiges Amt</dt>
+                            <dd>{venue.officeName}</dd>
+                          </div>
+                          <div>
+                            <dt>Vor der Buchung</dt>
+                            <dd>
+                              Termin, Fristen, Gebühren und Kapazität direkt
+                              beim Standesamt und gegebenenfalls bei der Location
+                              bestätigen.
+                            </dd>
+                          </div>
+                        </dl>
+
+                        <nav
+                          class="trauort-card__links"
+                          aria-label={`Offizielle Informationen für ${venue.name}`}
+                        >
+                          <a
+                            href={venue.officialAuthorityUrl}
+                            target="_blank"
+                            rel="noopener"
+                            aria-label={`Amtliche Informationen zu ${venue.name} öffnen`}
+                            data-track-event="external_resource_click"
+                            data-resource-id={`trauort_${venue.id}_quelle_amt`}
+                            data-resource-type="official_authority"
+                            data-cta-id={`trauortverzeichnis_${venue.id}_amt`}
+                            data-cta-type="external_official_information"
+                            data-section-id="trauortverzeichnis"
+                            data-content-topic="aussentrauort_buchung"
+                            data-user-intent="quelle_pruefen"
+                            data-journey-stage="orientierung"
+                          >
+                            Amtliche Quelle
+                          </a>
+                          {venue.officialVenueUrl && (
+                            <a
+                              href={venue.officialVenueUrl}
+                              target="_blank"
+                              rel="noopener"
+                              aria-label={`Offizielle Seite von ${venue.name} öffnen`}
+                              data-track-event="external_resource_click"
+                              data-resource-id={`trauort_${venue.id}_quelle_location`}
+                              data-resource-type="venue_website"
+                              data-cta-id={`trauortverzeichnis_${venue.id}_location`}
+                              data-cta-type="external_venue_information"
+                              data-section-id="trauortverzeichnis"
+                              data-content-topic="aussentrauort_buchung"
+                              data-user-intent="location_pruefen"
+                              data-journey-stage="orientierung"
+                            >
+                              Locationseite
+                            </a>
+                          )}
+                        </nav>
+
+                      </article>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
+          </details>
+
+          <nav
+            class="finder-utility-links"
+            aria-label="Weitere Standesamt-Services"
+          >
+            <a
+              class="calendar-link"
+              href={traueCalendarUrl}
+              target="_blank"
+              rel="noopener"
+              aria-label="Offiziellen Traukalender Hamburg in einem neuen Tab öffnen"
+              data-track-event="external_resource_click"
+              data-resource-id="traukalender_hamburg"
+              data-resource-type="official_city_service"
+              data-cta-id="standesamtfinder_traukalender"
+              data-cta-type="external_official_service"
+              data-section-id="standesamtfinder_services"
+              data-content-topic="standesamttermin_hamburg"
+              data-user-intent="termin_finden"
+              data-journey-stage="vor_reservierung"
+            >
+              Offiziellen Traukalender öffnen
+            </a>
+            <a class="calendar-link" href="/trautermin-hamburg-online-reservieren/">
+              Terminreservierung erklärt
+            </a>
+          </nav>
+          </div>
+
+        </section>
+      </article>
+    </main>
+  </body>
+</html>
+
+<style>
+  :global(html) {
+    overflow-x: clip;
+  }
+
+  .standesamt-page {
+    overflow-x: clip;
+    background: var(--paper);
+    color: #202633;
+  }
+
+  .standesamt-finder {
+    width: min(1180px, calc(100% - 44px));
+    margin: 0 auto clamp(84px, 10vw, 150px);
+  }
+
+  .standesamt-finder [hidden] {
+    display: none !important;
+  }
+
+  .eyebrow {
+    margin: 0 0 18px;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .25em;
+    line-height: 1.7;
+    text-transform: uppercase;
+  }
+
+  .finder-hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, .82fr);
+    gap: clamp(38px, 6vw, 88px);
+    align-items: end;
+    padding: clamp(48px, 7vw, 96px) 0 clamp(76px, 9vw, 132px);
+  }
+
+  .finder-hero__copy,
+  .finder-hero__image {
+    min-width: 0;
+  }
+
+  .finder-hero h1,
+  .finder-intro h2,
+  .office-card h3 {
+    margin: 0;
+    color: #202633;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .finder-hero h1 {
+    font-size: clamp(54px, 6.3vw, 92px);
+    line-height: .96;
+  }
+
+  .finder-hero h1 span {
+    display: block;
+  }
+
+  .finder-hero h1 span:first-child {
+    font-size: .85em;
+  }
+
+  .finder-hero__lead {
+    max-width: 680px;
+    margin: clamp(26px, 4vw, 40px) 0 0;
+    color: #68635e;
+    font-size: clamp(20px, 1.75vw, 27px);
+    line-height: 1.7;
+  }
+
+  .finder-hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    margin: clamp(24px, 3vw, 36px) 0 0;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.7;
+    text-transform: uppercase;
+  }
+
+  .finder-hero__image {
+    margin: 0;
+  }
+
+  .finder-hero__image img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: 59% center;
+    background: var(--soft);
+  }
+
+  .finder-hero__image figcaption {
+    margin-top: 12px;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.6;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .finder-task {
+    --task-accent: #80563d;
+    --task-tint: #f6f0ea;
+    overflow: clip;
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--task-accent);
+    background: #fff;
+    box-shadow: 0 22px 64px rgba(32, 38, 51, .055);
+  }
+
+  .finder-task--venue {
+    --task-accent: #46596b;
+    --task-tint: #eef2f4;
+  }
+
+  .finder-task__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(300px, .72fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+    padding: clamp(30px, 4.2vw, 50px);
+    border-bottom: 1px solid var(--line);
+    background:
+      linear-gradient(115deg, var(--task-tint) 0%, rgba(255, 255, 255, .72) 74%);
+  }
+
+  .finder-task__heading {
+    min-width: 0;
+  }
+
+  .finder-task__step {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .finder-task__number {
+    display: grid;
+    width: 52px;
+    height: 52px;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--task-accent);
+    color: #fff;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1;
+  }
+
+  .finder-task__header .eyebrow {
+    margin: 0;
+    color: var(--task-accent);
+    font-size: 10px;
+    letter-spacing: .2em;
+  }
+
+  .finder-task__heading h2 {
+    max-width: 650px;
+    margin: 0;
+    color: #202633;
+    font-size: clamp(34px, 3.8vw, 52px);
+    font-weight: 400;
+    letter-spacing: 0;
+    line-height: 1.04;
+    overflow-wrap: normal;
+  }
+
+  .finder-task__explanation {
+    min-width: 0;
+    padding-left: clamp(18px, 2.5vw, 30px);
+    border-left: 3px solid color-mix(in srgb, var(--task-accent) 58%, white);
+  }
+
+  .finder-task__explanation p {
+    margin: 0;
+    color: #6f6a64;
+    font-size: clamp(15px, 1.15vw, 18px);
+    line-height: 1.65;
+  }
+
+  .finder-task__explanation .finder-task__question {
+    margin-bottom: 7px;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .finder-task__explanation .finder-task__notice {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid color-mix(in srgb, var(--task-accent) 28%, white);
+    color: #4f5b66;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .035em;
+    line-height: 1.55;
+  }
+
+  .finder-task__body {
+    padding: clamp(22px, 3.2vw, 38px);
+  }
+
+  .finder-interaction,
+  .trauort-interaction {
+    display: grid;
+    grid-template-columns: minmax(310px, .72fr) minmax(0, 1.28fr);
+    max-width: none;
+    margin: 0;
+    overflow: clip;
+    border: 1px solid #d8d0c8;
+    background: #fff;
+  }
+
+  .finder-toolbar {
+    min-width: 0;
+    border-right: 1px solid var(--line);
+    background: var(--task-tint);
+  }
+
+  .finder-search {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+    padding: clamp(22px, 3vw, 30px);
+  }
+
+  .finder-search__label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 30px;
+    gap: 16px;
+    margin-bottom: 2px;
+  }
+
+  .finder-search__label label {
+    color: #5f5a55;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .finder-district__field {
+    padding: 0 14px;
+    border: 1px solid #a99e93;
+    background: #fff;
+  }
+
+  .finder-search select {
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    padding: 5px 34px 6px 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(19px, 1.5vw, 23px);
+    cursor: pointer;
+  }
+
+  .finder-district__field:focus-within {
+    border-color: #202633;
+    outline: 0;
+    box-shadow: 0 0 0 2px #202633;
+  }
+
+  .finder-search__meta {
+    display: grid;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .finder-search__help {
+    margin: 0;
+    color: #625d57;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .finder-search__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    align-items: center;
+    min-height: 44px;
+    margin-top: auto;
+  }
+
+  .finder-search button {
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    background: transparent;
+    color: #202633;
+    cursor: pointer;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
+  .finder-noscript {
+    margin: 18px 0 0;
+    color: #777069;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  .finder-jurisdiction-link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    margin: 0;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    line-height: 1.45;
+    text-decoration-color: #bda189;
+    text-underline-offset: .28em;
+    text-transform: uppercase;
+  }
+
+  .finder-search button:focus-visible,
+  .finder-jurisdiction-link:focus-visible,
+  .finder-compact-card a:focus-visible,
+  .office-directory summary:focus-visible,
+  .calendar-link:focus-visible,
+  .office-card a:focus-visible {
+    outline: 2px solid #202633;
+    outline-offset: 4px;
+  }
+
+  .finder-result {
+    background: #fff;
+  }
+
+  .finder-result__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    gap: 16px;
+    padding: 10px clamp(20px, 3vw, 28px);
+    border-bottom: 1px solid var(--line);
+    background: #fbf9f6;
+  }
+
+  .finder-result__header h3 {
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(19px, 2.1vw, 24px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .finder-result__state {
+    display: inline-grid;
+    flex: 0 0 86px;
+    min-height: 26px;
+    padding: 4px 8px;
+    place-items: center;
+    border: 1px solid #d9cec4;
+    border-radius: 999px;
+    color: #777069;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    line-height: 1.35;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .finder-result[data-state="selected"] .finder-result__state {
+    border-color: #80563d;
+    background: #80563d;
+    color: #fff;
+  }
+
+  .finder-result__body {
+    display: grid;
+    min-width: 0;
+    background: #fff;
+  }
+
+  .finder-result__placeholder,
+  .finder-result__content {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .finder-result__placeholder {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    padding: 17px clamp(20px, 3vw, 28px) 18px;
+    background: #fff;
+  }
+
+  .finder-result__placeholder[aria-hidden="true"] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .finder-result__placeholder-title {
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.8vw, 29px);
+    line-height: 1.15;
+  }
+
+  .finder-result__placeholder-copy {
+    margin: 5px 0 12px;
+    color: #777069;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .finder-result__preview {
+    display: grid;
+    margin: 18px 0 0;
+  }
+
+  .finder-result__preview > div,
+  .finder-compact-card__contacts > div {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr);
+    gap: 12px;
+    padding: 6px 0;
+    border-top: 1px solid #eee8e1;
+  }
+
+  .finder-result__preview dt,
+  .finder-compact-card__contacts dt {
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  .finder-result__preview dd {
+    margin: 0;
+    color: #b9b0a7;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .finder-result__content {
+    display: grid;
+  }
+
+  .finder-compact-card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 300px;
+    padding: 17px clamp(20px, 3vw, 28px) 18px;
+    background: #fff;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .finder-compact-card[data-active] {
+    z-index: 2;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .finder-compact-card__header h4 {
+    display: flex;
+    align-items: flex-end;
+    min-height: 2.3em;
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.8vw, 29px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .finder-compact-card__header p {
+    min-height: 1.45em;
+    margin: 4px 0 0;
+    overflow: hidden;
+    color: #777069;
+    font-size: 13px;
+    line-height: 1.45;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .finder-compact-card__header strong {
+    color: #5f5a55;
+    font-weight: 600;
+  }
+
+  .finder-compact-card__contacts {
+    display: grid;
+    margin: 10px 0 0;
+  }
+
+  .finder-compact-card__contacts dd {
+    min-width: 0;
+    margin: 0;
+    color: #5f5a55;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .finder-compact-card__contacts address {
+    font-style: normal;
+  }
+
+  .finder-compact-card__contacts ul {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .finder-compact-card__contacts li {
+    min-height: 20px;
+  }
+
+  .finder-compact-card__contacts li.is-empty {
+    visibility: hidden;
+  }
+
+  .finder-compact-card__contacts a {
+    overflow-wrap: anywhere;
+    text-decoration-color: #bda189;
+    text-underline-offset: .18em;
+  }
+
+  .finder-compact-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    align-items: flex-end;
+    min-height: 40px;
+    margin-top: auto;
+    padding-top: 6px;
+  }
+
+  .finder-compact-card__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    line-height: 1.5;
+    text-decoration-color: #bda189;
+    text-underline-offset: .28em;
+    text-transform: uppercase;
+  }
+
+  .finder-status {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .office-directory {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .office-directory summary {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 54px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    color: #202633;
+    cursor: pointer;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    line-height: 1.6;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .office-directory summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .office-directory summary::after {
+    flex: 0 0 auto;
+    color: #9b6f4f;
+    content: "+";
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .office-directory[open] summary::after {
+    content: "−";
+  }
+
+  .calendar-link {
+    display: flex;
+    min-height: 54px;
+    align-items: center;
+    padding: 12px 18px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.5;
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  .finder-utility-links {
+    display: grid;
+    min-width: 0;
+    gap: 10px;
+    margin: 0;
+  }
+
+  .finder-more {
+    margin-top: clamp(56px, 7vw, 88px);
+    padding-top: clamp(38px, 5vw, 58px);
+    border-top: 1px solid var(--line);
+  }
+
+  .finder-more__header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .7fr);
+    gap: clamp(28px, 5vw, 70px);
+    align-items: end;
+  }
+
+  .finder-more__header .eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .finder-more__header h2 {
+    margin: 0;
+    color: #202633;
+    font-size: clamp(31px, 3.4vw, 45px);
+    font-weight: 400;
+    line-height: 1.08;
+  }
+
+  .finder-more__header > p {
+    margin: 0;
+    color: #6f6a64;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  .finder-more__resources {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: start;
+    margin-top: 26px;
+  }
+
+  .finder-more__resources .trauort-directory {
+    margin: 0;
+  }
+
+  .finder-more__resources .office-directory[open],
+  .finder-more__resources .trauort-directory[open] {
+    grid-column: 1 / -1;
+  }
+
+  .finder-more__resources .finder-utility-links {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .office-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .office-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 100%;
+    padding: clamp(26px, 4vw, 46px);
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .office-card__header {
+    display: grid;
+    grid-template-columns: 38px minmax(0, 1fr);
+    gap: 18px;
+    align-items: start;
+  }
+
+  .office-card__number,
+  .office-card__location {
+    margin: 0;
+    font-family: "Raleway", Arial, sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .office-card__number {
+    color: #b2a79c;
+    font-size: 10px;
+    letter-spacing: .16em;
+    line-height: 1.8;
+  }
+
+  .office-card__location {
+    margin-bottom: 10px;
+    color: #9b6f4f;
+    font-size: 9px;
+    letter-spacing: .19em;
+    line-height: 1.6;
+  }
+
+  .office-card h3 {
+    font-size: clamp(27px, 2.6vw, 38px);
+    line-height: 1.08;
+  }
+
+  .office-card__contacts {
+    display: grid;
+    gap: 0;
+    margin: clamp(28px, 4vw, 40px) 0 0 56px;
+  }
+
+  .office-card__contacts > div {
+    display: grid;
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 18px;
+    padding: 15px 0;
+    border-top: 1px solid #eee8e1;
+  }
+
+  .office-card dt {
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  .office-card dd {
+    min-width: 0;
+    margin: 0;
+    color: #5f5a55;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+
+  .office-card address {
+    font-style: normal;
+  }
+
+  .office-card__contacts ul {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .office-card__contacts li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px 9px;
+    align-items: baseline;
+  }
+
+  .office-card__contacts li span {
+    color: #918980;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .office-card__contacts a {
+    overflow-wrap: anywhere;
+    text-decoration-color: #bda189;
+    text-underline-offset: .18em;
+  }
+
+  .office-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin: auto 0 0 56px;
+    padding-top: clamp(26px, 3vw, 38px);
+  }
+
+  .office-card__links a {
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.7;
+    text-decoration-color: #bda189;
+    text-underline-offset: .28em;
+    text-transform: uppercase;
+  }
+
+  .trauort-section {
+    margin-top: clamp(42px, 5vw, 62px);
+  }
+
+  .trauort-interaction {
+    min-width: 0;
+  }
+
+  .trauort-search {
+    display: flex;
+    min-width: 0;
+    min-height: 100%;
+    flex-direction: column;
+    padding: clamp(22px, 3vw, 30px);
+    border-right: 1px solid var(--line);
+    background: var(--task-tint);
+  }
+
+  .trauort-search__label {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 30px;
+    margin-bottom: 2px;
+  }
+
+  .trauort-search__label label {
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    line-height: 1.6;
+    text-transform: uppercase;
+    color: #4f5b66;
+  }
+
+  .trauort-search__field {
+    padding: 0 14px;
+    border: 1px solid #9da8b0;
+    background: #fff;
+  }
+
+  .trauort-search__field:focus-within {
+    border-color: #202633;
+    outline: 0;
+    box-shadow: 0 0 0 2px #202633;
+  }
+
+  .trauort-search select {
+    width: 100%;
+    min-width: 0;
+    min-height: 54px;
+    padding: 5px 34px 6px 0;
+    border: 0;
+    outline: 0;
+    box-shadow: none;
+    background: transparent;
+    color: #202633;
+    cursor: pointer;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(19px, 1.5vw, 23px);
+  }
+
+  .trauort-search__help {
+    min-height: 20px;
+    margin: 10px 0 0;
+    color: #5f6870;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .trauort-search__reset-slot {
+    min-height: 44px;
+    margin-top: auto;
+  }
+
+  .trauort-search__reset {
+    min-height: 44px;
+    padding: 8px 0;
+    border: 0;
+    background: transparent;
+    color: #202633;
+    cursor: pointer;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .trauort-result {
+    background: #fff;
+  }
+
+  .trauort-result__header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 10px clamp(20px, 3vw, 28px);
+    border-bottom: 1px solid var(--line);
+    background: #fbf9f6;
+  }
+
+  .trauort-result__header h3 {
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(19px, 2.1vw, 24px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .trauort-result__state {
+    display: inline-grid;
+    flex: 0 0 86px;
+    min-height: 26px;
+    padding: 4px 8px;
+    place-items: center;
+    border: 1px solid #d9cec4;
+    border-radius: 999px;
+    color: #777069;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    line-height: 1.35;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .trauort-result[data-state="selected"] .trauort-result__state {
+    border-color: #46596b;
+    background: #46596b;
+    color: #fff;
+  }
+
+  .trauort-result__body {
+    display: grid;
+    min-width: 0;
+  }
+
+  .trauort-result__placeholder,
+  .trauort-result__content {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  .trauort-result__placeholder,
+  .trauort-compact-card {
+    min-height: 360px;
+    padding: 18px clamp(20px, 3vw, 28px) 20px;
+    background: #fff;
+  }
+
+  .trauort-result__placeholder {
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .trauort-result__placeholder[aria-hidden="true"] {
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .trauort-result__placeholder-title {
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(24px, 2.8vw, 29px);
+    line-height: 1.15;
+  }
+
+  .trauort-result__placeholder-copy {
+    margin: 6px 0 16px;
+    color: #777069;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .trauort-result__preview {
+    display: grid;
+    margin: 8px 0 0;
+  }
+
+  .trauort-result__preview > div,
+  .trauort-compact-card__facts > div {
+    display: grid;
+    grid-template-columns: 86px minmax(0, 1fr);
+    gap: 14px;
+    padding: 8px 0;
+    border-top: 1px solid #eee8e1;
+  }
+
+  .trauort-result__preview dt,
+  .trauort-compact-card__facts dt {
+    color: #625d57;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    line-height: 1.8;
+    text-transform: uppercase;
+  }
+
+  .trauort-result__preview dd {
+    margin: 0;
+    color: #b9b0a7;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .trauort-result__content {
+    display: grid;
+  }
+
+  .trauort-compact-card {
+    grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .trauort-compact-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    min-height: 25px;
+    color: #5f6870;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .trauort-compact-card__header h4 {
+    margin: 4px 0 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(25px, 2.8vw, 31px);
+    font-weight: 400;
+    line-height: 1.15;
+  }
+
+  .trauort-compact-card__header > p {
+    min-height: 1.45em;
+    margin: 5px 0 0;
+    color: #777069;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  .trauort-compact-card__facts {
+    display: grid;
+    margin: 14px 0 0;
+  }
+
+  .trauort-compact-card__facts dd {
+    min-width: 0;
+    margin: 0;
+    color: #5f5a55;
+    font-size: 14px;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+  }
+
+  .trauort-compact-card__links,
+  .trauort-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+
+  .trauort-compact-card__links {
+    min-height: 40px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
+  .trauort-compact-card__links a,
+  .trauort-card__links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .1em;
+    line-height: 1.5;
+    text-decoration-color: #bda189;
+    text-underline-offset: .28em;
+    text-transform: uppercase;
+  }
+
+  .trauort-directory {
+    margin-top: clamp(24px, 4vw, 42px);
+  }
+
+  .trauort-directory > summary {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 54px;
+    padding: 14px 18px;
+    border: 1px solid var(--line);
+    color: #202633;
+    cursor: pointer;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    line-height: 1.6;
+    list-style: none;
+    text-transform: uppercase;
+  }
+
+  .trauort-directory > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .trauort-directory > summary::after {
+    flex: 0 0 auto;
+    color: #9b6f4f;
+    content: "+";
+    font-family: Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1;
+  }
+
+  .trauort-directory[open] > summary::after {
+    content: "−";
+  }
+
+  .trauort-directory__body {
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .trauort-directory__intro {
+    max-width: 820px;
+    margin: 0;
+    padding: clamp(24px, 4vw, 42px);
+    color: #777069;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  .trauort-directory__group {
+    padding: 0 clamp(24px, 4vw, 42px) clamp(34px, 5vw, 54px);
+  }
+
+  .trauort-directory__group + .trauort-directory__group {
+    padding-top: clamp(34px, 5vw, 54px);
+    border-top: 1px solid var(--line);
+  }
+
+  .trauort-directory__group > h3 {
+    margin: 0 0 22px;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .2em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .trauort-directory__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--line);
+    background: var(--line);
+  }
+
+  .trauort-card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(24px, 3vw, 36px);
+    background: #fff;
+  }
+
+  .trauort-card__header {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .trauort-card__header p {
+    margin: 0 0 8px;
+    color: #9b6f4f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .13em;
+    line-height: 1.55;
+    text-transform: uppercase;
+  }
+
+  .trauort-card__header h4 {
+    margin: 0;
+    color: #202633;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: clamp(25px, 2.4vw, 34px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .trauort-card__address {
+    margin: 14px 0 0;
+    color: #6f6a64;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .trauort-card__booking {
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid #eee8e1;
+  }
+
+  .trauort-card__booking h5 {
+    margin: 0 0 14px;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .16em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .trauort-card__booking ol {
+    display: grid;
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    counter-reset: booking-step;
+    list-style: none;
+  }
+
+  .trauort-card__booking li {
+    position: relative;
+    min-width: 0;
+    padding-left: 35px;
+    counter-increment: booking-step;
+  }
+
+  .trauort-card__booking li::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: grid;
+    width: 24px;
+    height: 24px;
+    place-items: center;
+    border-radius: 50%;
+    background: #9b6f4f;
+    color: #fff;
+    content: counter(booking-step);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 8px;
+    font-weight: 800;
+  }
+
+  .trauort-card__booking li > span {
+    display: block;
+    color: #9b6f4f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 7px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.5;
+    text-transform: uppercase;
+  }
+
+  .trauort-card__booking strong {
+    display: block;
+    margin-top: 2px;
+    color: #202633;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .trauort-card__booking li p {
+    margin: 4px 0 0;
+    color: #6f6a64;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .trauort-card__details {
+    display: grid;
+    margin: 26px 0 0;
+  }
+
+  .trauort-card__details > div {
+    display: grid;
+    grid-template-columns: 108px minmax(0, 1fr);
+    gap: 15px;
+    padding: 11px 0;
+    border-top: 1px solid #eee8e1;
+  }
+
+  .trauort-card__details dt {
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    line-height: 1.7;
+    text-transform: uppercase;
+  }
+
+  .trauort-card__details dd {
+    min-width: 0;
+    margin: 0;
+    color: #5f5a55;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+  }
+
+  .trauort-card__links {
+    margin-top: auto;
+    padding-top: 26px;
+  }
+
+  .trauort-search button:focus-visible,
+  .trauort-compact-card a:focus-visible,
+  .trauort-directory summary:focus-visible,
+  .trauort-card a:focus-visible {
+    outline: 2px solid #202633;
+    outline-offset: 4px;
+  }
+
+  @media (forced-colors: active) {
+    .finder-district__field:focus-within,
+    .trauort-search__field:focus-within {
+      outline: 2px solid Highlight;
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+  }
+
+  @media (max-width: 860px) {
+    .finder-hero {
+      grid-template-columns: 1fr;
+      gap: 44px;
+      padding-top: 46px;
+    }
+
+    .finder-hero__image img {
+      aspect-ratio: 4 / 3;
+      object-position: center;
+    }
+
+    .finder-task__header,
+    .finder-interaction,
+    .trauort-interaction,
+    .finder-more__header,
+    .finder-more__resources {
+      grid-template-columns: 1fr;
+    }
+
+    .finder-toolbar,
+    .trauort-search {
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .finder-more__resources .finder-utility-links {
+      grid-template-columns: 1fr;
+    }
+
+    .office-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .trauort-directory__grid {
+      grid-template-columns: 1fr;
+    }
+
+  }
+
+  @media (max-width: 600px) {
+    .standesamt-finder {
+      width: min(100%, calc(100% - 40px));
+    }
+
+    .finder-hero {
+      padding: 42px 0 78px;
+    }
+
+    .finder-hero h1 {
+      font-size: clamp(42px, 12.4vw, 58px);
+      line-height: 1;
+    }
+
+    .finder-hero h1 span:first-child {
+      font-size: .76em;
+    }
+
+    .finder-hero__lead {
+      font-size: 20px;
+    }
+
+    .finder-task__header {
+      gap: 22px;
+      padding: 24px 20px;
+    }
+
+    .finder-task__heading {
+      min-width: 0;
+    }
+
+    .finder-task__step {
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .finder-task__number {
+      width: 40px;
+      height: 40px;
+      font-size: 12px;
+    }
+
+    .finder-task__heading h2 {
+      font-size: clamp(30px, 9vw, 38px);
+    }
+
+    .finder-task__explanation {
+      padding-left: 14px;
+    }
+
+    .finder-task__body {
+      padding: 16px;
+    }
+
+    .trauort-interaction {
+      width: 100%;
+    }
+
+    .finder-search {
+      padding: 18px;
+    }
+
+    .finder-search__actions {
+      display: grid;
+      min-height: 96px;
+      align-content: start;
+      gap: 8px;
+    }
+
+    .finder-search select {
+      width: 100%;
+      padding-bottom: 5px;
+    }
+
+    .finder-result__header {
+      min-height: 50px;
+      padding: 9px 20px;
+    }
+
+    .finder-result__state {
+      flex-basis: 80px;
+    }
+
+    .finder-result__placeholder,
+    .finder-compact-card {
+      min-height: 294px;
+      padding: 14px 20px 16px;
+    }
+
+    .trauort-result__placeholder,
+    .trauort-compact-card {
+      min-height: 420px;
+      padding: 16px 18px 18px;
+    }
+
+    .trauort-result__header {
+      min-height: 50px;
+      padding: 9px 18px;
+    }
+
+    .trauort-result__state {
+      flex-basis: 80px;
+    }
+
+    .trauort-result__preview > div,
+    .trauort-compact-card__facts > div {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 3px;
+      padding: 7px 0;
+    }
+
+    .trauort-directory__group {
+      padding-right: 18px;
+      padding-left: 18px;
+    }
+
+    .trauort-directory__intro {
+      padding-right: 18px;
+      padding-left: 18px;
+    }
+
+    .trauort-card {
+      padding: 26px 20px 30px;
+    }
+
+    .trauort-card__header {
+      flex-direction: column-reverse;
+      gap: 10px;
+    }
+
+    .trauort-card__details > div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .finder-result__preview > div,
+    .finder-compact-card__contacts > div {
+      grid-template-columns: 62px minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .finder-compact-card__links {
+      gap: 6px 16px;
+    }
+
+    .finder-more {
+      margin-top: 48px;
+      padding-top: 34px;
+    }
+
+    .finder-more__header h2 {
+      font-size: 32px;
+    }
+
+    .office-grid {
+      margin-right: -20px;
+      margin-left: -20px;
+      border-left: 0;
+    }
+
+    .office-card {
+      padding: 30px 20px 34px;
+      border-right: 0;
+    }
+
+    .office-card__header {
+      grid-template-columns: 30px minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .office-card h3 {
+      font-size: clamp(27px, 8vw, 34px);
+    }
+
+    .office-card__contacts {
+      margin-left: 42px;
+    }
+
+    .office-card__contacts > div {
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
+
+    .office-card__links {
+      margin-left: 42px;
+    }
+
+  }
+</style>

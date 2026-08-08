@@ -79,7 +79,7 @@ test("mobile Getting Ready gallery is touch friendly and has no overflow", async
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("grid-template-columns", "366px");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
 
   const layout = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,

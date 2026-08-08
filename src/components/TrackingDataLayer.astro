@@ -1,0 +1,338 @@
+---
+import ConsentBanner from "./ConsentBanner.astro";
+---
+
+<ConsentBanner />
+
+<script is:inline>
+  (() => {
+    if (window.__artbildTrackingReady) return;
+    window.__artbildTrackingReady = true;
+
+    const DATA_LAYER_NAME = "dataLayer";
+    const observedSections = new WeakSet();
+    const observedForms = new WeakSet();
+    const startedForms = new WeakSet();
+
+    window[DATA_LAYER_NAME] = window[DATA_LAYER_NAME] || [];
+    window[DATA_LAYER_NAME].push({
+      event: "artbild_tracking_ready",
+      consent_mode: "advanced",
+      tracking_schema: "artbild_v2",
+    });
+
+    const sanitize = (value) => {
+      if (!value) return undefined;
+      return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/ä/g, "ae")
+        .replace(/ö/g, "oe")
+        .replace(/ü/g, "ue")
+        .replace(/ß/g, "ss")
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "")
+        .slice(0, 80) || undefined;
+    };
+
+    const pageType = () => {
+      const explicit = document.body?.dataset.pageType;
+      if (explicit) return sanitize(explicit);
+
+      const path = window.location.pathname;
+      if (path === "/") return "home";
+      if (path.startsWith("/gallery/")) return "gallery";
+      if (path.startsWith("/gallery-category/")) return "gallery_category";
+      if (path === "/portfolio/") return "portfolio";
+      if (path === "/kontakt/" || path === "/sicherer-kontakt/") return "contact";
+      if (path === "/hochzeitsfotograf-preise/") return "pricing";
+      if (path === "/blog/") return "blog_index";
+      return "content_page";
+    };
+
+    const pageId = () => {
+      const explicit = document.body?.dataset.pageId;
+      if (explicit) return sanitize(explicit);
+      return window.location.pathname === "/"
+        ? "home"
+        : sanitize(window.location.pathname);
+    };
+
+    const journeyStage = (value) => {
+      const normalized = sanitize(value);
+      const stageMap = {
+        awareness: "awareness",
+        inspiration: "awareness",
+        entdeckung: "awareness",
+        consideration: "consideration",
+        orientierung: "consideration",
+        information: "consideration",
+        planung: "consideration",
+        vertrauen: "consideration",
+        decision: "decision",
+        auswahl: "decision",
+        vergleich: "decision",
+        entscheidung: "decision",
+        vor_reservierung: "decision",
+        validierung: "decision",
+        conversion: "conversion",
+        anfrage: "conversion",
+        retention: "retention",
+        bindung: "retention",
+        all: "cross_journey",
+      };
+      return normalized ? stageMap[normalized] || normalized : undefined;
+    };
+
+    const contextFrom = (element) => {
+      const source = element?.closest?.("[data-track-section]") || element;
+      const cta = element?.closest?.("[data-track-event], [data-cta-id], [data-resource-id]");
+
+      return {
+        page_id: pageId(),
+        page_type: pageType(),
+        section_id: sanitize(cta?.dataset.sectionId || source?.dataset.trackSection),
+        content_topic: sanitize(cta?.dataset.contentTopic || source?.dataset.contentTopic),
+        user_intent: sanitize(cta?.dataset.userIntent || source?.dataset.userIntent),
+        journey_stage: journeyStage(
+          cta?.dataset.journeyStage || source?.dataset.journeyStage,
+        ),
+        cta_id: sanitize(cta?.dataset.ctaId),
+        cta_type: sanitize(cta?.dataset.ctaType),
+        resource_id: sanitize(cta?.dataset.resourceId),
+        resource_type: sanitize(cta?.dataset.resourceType),
+        content_format: sanitize(source?.dataset.contentFormat),
+        position: sanitize(cta?.dataset.position || source?.dataset.position),
+        interaction_action: sanitize(
+          cta?.dataset.sliderAction
+          || cta?.dataset.galleryAction
+          || cta?.dataset.interactionAction,
+        ),
+        slider_id: sanitize(cta?.dataset.sliderId || source?.dataset.sliderId),
+        item_index: sanitize(
+          cta?.dataset.sliderIndex
+          || cta?.dataset.galleryIndex
+          || cta?.dataset.itemIndex,
+        ),
+      };
+    };
+
+    const compact = (payload) => Object.fromEntries(
+      Object.entries(payload).filter(([, value]) => value !== undefined && value !== ""),
+    );
+
+    const isTrackableVisible = (element) => {
+      if (!(element instanceof Element)) return false;
+      if (element.closest("[hidden], [aria-hidden='true']")) return false;
+      return element.getClientRects().length > 0;
+    };
+
+    const pushEvent = (payload) => {
+      const eventPayload = compact({
+        page_id: pageId(),
+        page_type: pageType(),
+        ...payload,
+      });
+      if (!eventPayload.event) return;
+
+      eventPayload.consent_analytics = window.ArtbildConsent?.analytics === true
+        ? "granted"
+        : "denied";
+      eventPayload.consent_marketing = window.ArtbildConsent?.marketing === true
+        ? "granted"
+        : "denied";
+      window[DATA_LAYER_NAME].push(eventPayload);
+      window.artbildMetaPixel?.track?.(eventPayload);
+    };
+
+    window.artbildTracking = {
+      track: pushEvent,
+      flush: () => {},
+      grantAnalyticsConsent: () => {
+        window.artbildConsentApi?.setConsent?.({
+          analytics: true,
+          marketing: window.ArtbildConsent?.marketing === true,
+        });
+      },
+      revokeAnalyticsConsent: () => {
+        window.artbildConsentApi?.setConsent?.({
+          analytics: false,
+          marketing: window.ArtbildConsent?.marketing === true,
+        });
+      },
+    };
+
+    window.addEventListener("artbild:consent_update", (event) => {
+      document.documentElement.dataset.analyticsConsent =
+        event.detail?.analytics === true ? "granted" : "denied";
+      document.documentElement.dataset.marketingConsent =
+        event.detail?.marketing === true ? "granted" : "denied";
+    });
+
+    const observeSections = () => {
+      const sections = [...document.querySelectorAll("[data-track-section]")];
+      if (!sections.length) return;
+
+      const emitView = (section) => {
+        if (observedSections.has(section)) return;
+        if (!isTrackableVisible(section)) return;
+        observedSections.add(section);
+        pushEvent({
+          event: "section_view",
+          ...contextFrom(section),
+        });
+      };
+
+      if (!("IntersectionObserver" in window)) {
+        sections.forEach(emitView);
+        return;
+      }
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          emitView(entry.target);
+          observer.unobserve(entry.target);
+        });
+      }, {
+        rootMargin: "0px 0px -12% 0px",
+        threshold: 0.05,
+      });
+
+      sections.forEach((section) => observer.observe(section));
+    };
+
+    document.addEventListener("click", (event) => {
+      const target = event.target instanceof Element
+        ? event.target.closest("[data-track-event], [data-cta-id], [data-resource-id]")
+        : null;
+      if (!(target instanceof HTMLElement)) return;
+      if (!isTrackableVisible(target)) return;
+      if (
+        target instanceof HTMLDetailsElement
+        && target.dataset.trackEvent === "faq_open"
+      ) {
+        return;
+      }
+
+      const eventName = sanitize(target.dataset.trackEvent) || "cta_click";
+      pushEvent({
+        event: eventName,
+        ...contextFrom(target),
+      });
+    }, { capture: true });
+
+    document.addEventListener("toggle", (event) => {
+      const details = event.target;
+      if (!(details instanceof HTMLDetailsElement) || !details.open) return;
+      if (details.dataset.trackEvent !== "faq_open") return;
+      if (!isTrackableVisible(details)) return;
+
+      pushEvent({
+        event: "faq_open",
+        ...contextFrom(details),
+        faq_id: sanitize(details.dataset.faqId),
+      });
+    }, true);
+
+    document.addEventListener("focusin", (event) => {
+      const form = event.target instanceof Element
+        ? event.target.closest("[data-track-form]")
+        : null;
+      if (!(form instanceof HTMLFormElement) || startedForms.has(form)) return;
+      if (!isTrackableVisible(form)) return;
+      startedForms.add(form);
+
+      pushEvent({
+        event: "form_start",
+        ...contextFrom(form),
+        form_id: sanitize(form.dataset.formId),
+        form_type: sanitize(form.dataset.formType),
+      });
+    });
+
+    document.addEventListener("submit", (event) => {
+      const form = event.target;
+      if (!(form instanceof HTMLFormElement) || !form.matches("[data-track-form]")) return;
+      if (!isTrackableVisible(form)) return;
+
+      pushEvent({
+        event: "form_submit_attempt",
+        ...contextFrom(form),
+        form_id: sanitize(form.dataset.formId),
+        form_type: sanitize(form.dataset.formType),
+      });
+    }, { capture: true });
+
+    window.addEventListener("artbild:form_success", (event) => {
+      pushEvent({
+        event: "form_success",
+        page_type: pageType(),
+        form_id: sanitize(event.detail?.formId),
+        form_type: sanitize(event.detail?.formType),
+        section_id: sanitize(event.detail?.sectionId),
+        content_topic: sanitize(event.detail?.contentTopic),
+        journey_stage: "conversion",
+      });
+    });
+
+    window.addEventListener("artbild:form_error", (event) => {
+      pushEvent({
+        event: "form_error",
+        page_type: pageType(),
+        form_id: sanitize(event.detail?.formId),
+        form_type: sanitize(event.detail?.formType),
+        result: sanitize(event.detail?.result),
+        section_id: sanitize(event.detail?.sectionId),
+        content_topic: sanitize(event.detail?.contentTopic),
+      });
+    });
+
+    window.addEventListener("artbild:availability_result", (event) => {
+      pushEvent({
+        event: "availability_check_result",
+        page_type: pageType(),
+        result: sanitize(event.detail?.result),
+        section_id: "availability_dialog",
+        content_topic: "terminverfuegbarkeit",
+        user_intent: "termin_pruefen",
+        journey_stage: "decision",
+      });
+    });
+
+    const init = () => {
+      observeSections();
+
+      const emitFormView = (form) => {
+        if (observedForms.has(form) || !isTrackableVisible(form)) return;
+        observedForms.add(form);
+        pushEvent({
+          event: "form_view",
+          ...contextFrom(form),
+          form_id: sanitize(form.dataset.formId),
+          form_type: sanitize(form.dataset.formType),
+        });
+      };
+
+      const forms = [...document.querySelectorAll("[data-track-form]")];
+      if (!("IntersectionObserver" in window)) {
+        forms.forEach(emitFormView);
+      } else {
+        const formObserver = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            emitFormView(entry.target);
+            formObserver.unobserve(entry.target);
+          });
+        }, { threshold: 0.15 });
+        forms.forEach((form) => formObserver.observe(form));
+      }
+    };
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init, { once: true });
+    } else {
+      init();
+    }
+  })();
+</script>
