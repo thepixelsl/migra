@@ -55,18 +55,12 @@ Copy the names from `bunny.env.example`. Replace every placeholder. Store the
 database token, admin password, SMTP password, and hash salt as secrets. Keep
 `DEV_NOINDEX=true` for the development URL.
 
-Until Bunny enables outbound SMTP port 465, set
-`CONTACT_RELAY_URL=https://artbild-fotografie.ch/api/contact`. The Bunny runtime
-validates and stores the request first, then forwards the normalized form over
-HTTPS to the existing production Worker for mail delivery. Do not configure
-SMTP credentials and the relay at the same time; direct SMTP takes precedence.
-Keep this variable on the Bunny app only, leave `CONTACT_WEBHOOK_URL` unset, and
-use the exact URL above without `www`, a redirect, or a trailing slash.
-
-For a later Cloudflare-independent setup, request an outbound port 465 unlock
-from Bunny Support, add the Strato SMTP secrets, verify delivery, and remove
-`CONTACT_RELAY_URL`. Magic Containers blocks ports 25, 465, 587, and 2525 by
-default.
+Request an outbound port 465 unlock from Bunny Support before enabling the
+contact form. Configure the STRATO SMTP secrets and verify delivery with a real
+end-to-end test. The application deliberately has no HTTP relay or webhook
+fallback; without a working direct SMTP transport, it returns a temporary
+configuration error and does not accept the request as delivered. Magic
+Containers blocks ports 25, 465, 587, and 2525 by default.
 
 ## 5. Health checks
 

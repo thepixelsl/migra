@@ -218,6 +218,7 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 
         <form
           data-floating-action-availability-form
+          data-clarity-mask
           data-track-form
           data-form-id="fab_availability_check"
           data-form-type="availability_check"
@@ -602,11 +603,9 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 
       typeResult(result.text, expectedOperation).then(() => {
         if (expectedOperation !== operationId || currentState !== state) return;
-        const contactUrl = new URL("/kontakt/", window.location.origin);
-        contactUrl.searchParams.set("termin", elements.date.value);
         elements.live.textContent = result.text;
         elements.action.textContent = result.action;
-        elements.action.href = typeof serverResult.action_href === "string" ? serverResult.action_href : contactUrl.pathname + contactUrl.search;
+        elements.action.href = typeof serverResult.action_href === "string" ? serverResult.action_href : "/kontakt/";
         elements.action.hidden = false;
       });
     }

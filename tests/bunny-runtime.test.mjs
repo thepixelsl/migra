@@ -40,7 +40,7 @@ before(async () => {
       ADMIN_USERNAME: "york",
       BUNNY_DATABASE_URL: `file:${path.join(temporaryDirectory, "runtime.db")}`,
       CONTACT_FROM: "mail@example.com",
-      CONTACT_HASH_SALT: "test-only-random-salt",
+      CONTACT_HASH_SALT: "test-only-random-salt-with-32-characters",
       CONTACT_TO: "info@example.com",
       DEV_NOINDEX: "true",
       STRATO_SMTP_PASS: "not-used-by-test-mailer",
@@ -71,6 +71,10 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
   assert.equal(homepage.status, 200);
   assert.match(await homepage.text(), /Start/);
   assert.equal(homepage.headers.get("x-content-type-options"), "nosniff");
+  const contentSecurityPolicy = homepage.headers.get("content-security-policy") || "";
+  assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/\*\.clarity\.ms/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.clarity\.ms/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/c\.bing\.com/);
 
   const redirect = await fetch(`${baseUrl}/about`, { redirect: "manual" });
   assert.equal(redirect.status, 308);
@@ -160,115 +164,87 @@ test("accepts a valid contact request through the injected Node mailer", async (
   assert.equal(sentMessages.length, 1);
   assert.equal(sentMessages[0].to.email, "info@example.com");
   assert.equal(sentMessages[0].reply.email, "test@example.com");
+
+  const stored = await runtime.database.client.execute({
+    sql: `SELECT status, security_year, user_agent, ip_hash
+      FROM contact_requests
+      WHERE email = ?
+      ORDER BY created_at DESC
+      LIMIT 1`,
+    args: ["test@example.com"],
+  });
+  assert.equal(stored.rows[0].status, "delivered");
+  assert.equal(stored.rows[0].security_year, null);
+  assert.equal(stored.rows[0].user_agent, null);
+  assert.match(String(stored.rows[0].ip_hash), /^[0-9a-f]{64}$/);
 });
 
-test("relays a validated TFP request and attachment as multipart form data", async () => {
-  const form = new FormData();
-  form.set("name", "Relay Test");
-  form.set("email", "relay@example.com");
-  form.set("request_type", "tfp");
-  form.set("event_date", "");
-  form.set("location", "Hamburg");
-  form.set("message", "Kontrollierte Relay-Testanfrage");
-  form.set("security_year", String(new Date().getFullYear()));
-  form.set("privacy", "yes");
-  form.set("website", "");
-  form.set("js_enabled", "0");
-  form.set("source_path", "/kontakt/");
-  form.append(
-    "tfp_images",
-    new Blob([Uint8Array.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])], { type: "image/png" }),
-    "relay-test.png",
-  );
+test("removes short-lived security data and expires database copies", async () => {
+  await runtime.database.client.execute({
+    sql: `INSERT INTO contact_requests (
+      id, created_at, name, email, message, security_year, user_agent, ip_hash
+    ) VALUES (?, datetime('now', '-31 minutes'), ?, ?, ?, ?, ?, ?)`,
+    args: [
+      "security-expired",
+      "Security Test",
+      "security@example.com",
+      "Test",
+      "2026",
+      "test-browser",
+      "hash-value",
+    ],
+  });
+  await runtime.database.client.execute({
+    sql: `INSERT INTO contact_requests (
+      id, created_at, name, email, message
+    ) VALUES (?, datetime('now', '-31 days'), ?, ?, ?)`,
+    args: ["request-expired", "Old Test", "old@example.com", "Test"],
+  });
 
-  const originalFetch = globalThis.fetch;
-  let relayCalls = 0;
-  globalThis.fetch = async (url, options) => {
-    relayCalls += 1;
-    assert.equal(url, "https://relay.example/api/contact");
-    assert.equal(options.method, "POST");
-    assert.equal(options.headers["X-Artbild-Contact-Relay-Hop"], "1");
-    assert.equal(options.headers["X-Requested-With"], "fetch");
-    assert.match(options.headers["X-Artbild-Relay-Request-Id"], /^[0-9a-f-]{36}$/);
-    const serializedRequest = new Request(url, options);
-    assert.match(serializedRequest.headers.get("content-type") || "", /^multipart\/form-data; boundary=/);
-    const serializedForm = await serializedRequest.formData();
-    assert.equal(serializedForm.get("name"), "Relay Test");
-    assert.equal(serializedForm.get("request_type"), "tfp");
-    assert.equal(serializedForm.get("privacy"), "yes");
+  await runtime.database.cleanupContactRequests();
 
-    const attachment = serializedForm.get("tfp_images");
-    assert.equal(attachment.name, "relay-test.png");
-    assert.equal(attachment.type, "image/png");
-    assert.equal(attachment.size, 8);
+  const securityExpired = await runtime.database.client.execute({
+    sql: `SELECT security_year, user_agent, ip_hash
+      FROM contact_requests
+      WHERE id = ?`,
+    args: ["security-expired"],
+  });
+  assert.equal(securityExpired.rows.length, 1);
+  assert.equal(securityExpired.rows[0].security_year, null);
+  assert.equal(securityExpired.rows[0].user_agent, null);
+  assert.equal(securityExpired.rows[0].ip_hash, null);
 
-    return new Response(JSON.stringify({ ok: true }), {
-      headers: { "Content-Type": "application/json" },
-    });
-  };
-
-  try {
-    const response = await handleContactPost({
-      request: new Request("https://dev.example/api/contact", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "X-Requested-With": "fetch",
-        },
-        body: form,
-      }),
-      env: {
-        CONTACT_HASH_SALT: "test-only-random-salt",
-        CONTACT_RELAY_URL: "https://relay.example/api/contact",
-      },
-    });
-
-    assert.equal(response.status, 200);
-    assert.equal((await response.json()).ok, true);
-    assert.equal(relayCalls, 1);
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+  const requestExpired = await runtime.database.client.execute({
+    sql: "SELECT id FROM contact_requests WHERE id = ?",
+    args: ["request-expired"],
+  });
+  assert.equal(requestExpired.rows.length, 0);
 });
 
-test("does not recursively forward an already relayed request", async () => {
+test("rejects a valid request when direct STRATO SMTP is not configured", async () => {
   const form = new FormData();
-  form.set("name", "Relay Schutz");
-  form.set("email", "relay-schutz@example.com");
+  form.set("name", "SMTP Test");
+  form.set("email", "smtp@example.com");
   form.set("request_type", "hochzeit");
   form.set("event_date", "2030-08-22");
   form.set("location", "Hamburg");
-  form.set("message", "Kontrollierte Schleifenschutz-Anfrage");
+  form.set("message", "Kontrollierte Testanfrage ohne Mailtransport");
   form.set("security_year", String(new Date().getFullYear()));
   form.set("privacy", "yes");
-
-  const originalFetch = globalThis.fetch;
-  let relayCalls = 0;
-  globalThis.fetch = async () => {
-    relayCalls += 1;
-    return new Response(JSON.stringify({ ok: true }));
-  };
-
-  try {
-    const response = await handleContactPost({
-      request: new Request("https://dev.example/api/contact", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "X-Artbild-Contact-Relay-Hop": "1",
-          "X-Requested-With": "fetch",
-        },
-        body: form,
-      }),
-      env: {
-        CONTACT_RELAY_URL: "https://relay.example/api/contact",
-        CONTACT_WEBHOOK_URL: "https://webhook.example/contact",
+  const response = await handleContactPost({
+    request: new Request("https://dev.example/api/contact", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "fetch",
       },
-    });
+      body: form,
+    }),
+    env: {
+      CONTACT_HASH_SALT: "test-only-random-salt-with-32-characters",
+    },
+  });
 
-    assert.equal(response.status, 503);
-    assert.equal(relayCalls, 0);
-  } finally {
-    globalThis.fetch = originalFetch;
-  }
+  assert.equal(response.status, 503);
+  assert.equal((await response.json()).ok, false);
 });

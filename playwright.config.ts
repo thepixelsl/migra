@@ -2,7 +2,7 @@ import { defineConfig } from "@playwright/test";
 
 const consentCookieValue = encodeURIComponent(
   JSON.stringify({
-    version: process.env.PUBLIC_CONSENT_VERSION ?? "2026-07-29.1",
+    version: process.env.PUBLIC_CONSENT_VERSION ?? "2026-08-08.1",
     necessary: true,
     analytics: false,
     marketing: false,

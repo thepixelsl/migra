@@ -17,6 +17,10 @@ const publicConfig = trackingExcluded
       gtmContainerId: "",
       googleAnalyticsId: "",
       metaPixelId: "",
+      clarityProjectId: "",
+      googleTrackingConfigured: false,
+      metaTrackingConfigured: false,
+      clarityTrackingConfigured: false,
     }
   : trackingConfig;
 
@@ -57,8 +61,8 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
     const COOKIE_NAME = "artbild_consent";
     const GOOGLE_ANALYTICS_COOKIE_PREFIXES = ["_ga", "_gid", "_gat"];
-    const GOOGLE_MARKETING_COOKIE_PREFIXES = ["_gcl", "_gac"];
     const META_COOKIE_PREFIXES = ["_fbp", "_fbc"];
+    const CLARITY_COOKIE_PREFIXES = ["_clck", "_clsk"];
 
     const hostMatches = (hostname, rule) => {
       if (!rule) return false;
@@ -71,38 +75,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const hostname = window.location.hostname.toLowerCase();
     const hostAllowed = Array.isArray(config.allowedHosts)
       && config.allowedHosts.some((rule) => hostMatches(hostname, String(rule).toLowerCase()));
-    let providersEnabled = config.environment !== "disabled" && hostAllowed;
-
-    const sanitizeTrackingUrl = () => {
-      try {
-        const url = new URL(window.location.href);
-        if (!url.searchParams.has("termin")) return true;
-
-        const requestedDate = url.searchParams.get("termin");
-        if (requestedDate && /^\d{4}-\d{2}-\d{2}$/.test(requestedDate)) {
-          try {
-            window.sessionStorage.setItem("artbild_requested_date", requestedDate);
-          } catch (_) {
-            // The URL still needs to be scrubbed if storage is unavailable.
-          }
-        }
-
-        url.searchParams.delete("termin");
-        window.history.replaceState(
-          window.history.state,
-          "",
-          `${url.pathname}${url.search}${url.hash}`,
-        );
-        return !new URL(window.location.href).searchParams.has("termin");
-      } catch (_) {
-        // URL and history APIs may be unavailable in hardened browser modes.
-        return false;
-      }
-    };
-
-    if (!sanitizeTrackingUrl()) {
-      providersEnabled = false;
-    }
+    const providersEnabled = config.environment !== "disabled" && hostAllowed;
 
     const readCookie = (name) => {
       const prefix = `${name}=`;
@@ -171,9 +144,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const googleConsentState = (state, includeWait) => {
       const consent = {
         analytics_storage: state.analytics ? "granted" : "denied",
-        ad_storage: state.marketing ? "granted" : "denied",
-        ad_user_data: state.marketing ? "granted" : "denied",
-        ad_personalization: state.marketing ? "granted" : "denied",
+        ad_storage: "denied",
+        ad_user_data: "denied",
+        ad_personalization: "denied",
         functionality_storage: "denied",
         personalization_storage: "denied",
         security_storage: "granted",
@@ -195,7 +168,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       tracking_environment: config.environment,
       google_analytics_id: config.googleAnalyticsId || undefined,
       meta_pixel_id: config.metaPixelId || undefined,
-      consent_mode: "advanced",
+      clarity_project_id: config.clarityProjectId || undefined,
+      ga4_data_retention_months: config.ga4DataRetentionMonths,
+      consent_mode: "basic",
       consent_version: config.consentVersion,
     });
 
@@ -206,7 +181,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         analytics: state.analytics === true,
         marketing: state.marketing === true,
         version: config.consentVersion,
-        mode: "advanced",
+        mode: "basic",
       };
 
       window.ArtbildConsent = publicState;
@@ -220,9 +195,73 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       return publicState;
     };
 
+    const loadGoogleTagManager = () => {
+      if (
+        !providersEnabled
+        || window.ArtbildConsent?.analytics !== true
+        || config.googleTrackingConfigured !== true
+        || !/^GTM-[A-Z0-9]{4,}$/i.test(config.gtmContainerId || "")
+        || !/^G-[A-Z0-9]{6,}$/i.test(config.googleAnalyticsId || "")
+      ) {
+        return;
+      }
+
+      if (window.__artbildGoogleTagManagerLoaded) return;
+      window.__artbildGoogleTagManagerLoaded = true;
+
+      window.dataLayer.push({
+        "gtm.start": Date.now(),
+        event: "gtm.js",
+      });
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmContainerId)}`;
+      script.dataset.artbildProvider = "google-tag-manager";
+      document.head.appendChild(script);
+    };
+
+    const clarityConsentState = (granted) => ({
+      ad_Storage: "denied",
+      analytics_Storage: granted ? "granted" : "denied",
+    });
+
+    const updateClarityConsent = (granted) => {
+      if (typeof window.clarity !== "function") return;
+      window.clarity("consentv2", clarityConsentState(granted));
+    };
+
+    const loadClarity = () => {
+      if (
+        !providersEnabled
+        || window.ArtbildConsent?.analytics !== true
+        || config.clarityTrackingConfigured !== true
+        || !/^[a-z0-9]{5,32}$/i.test(config.clarityProjectId || "")
+      ) {
+        return;
+      }
+
+      if (window.__artbildClarityLoaded) {
+        updateClarityConsent(true);
+        return;
+      }
+
+      window.__artbildClarityLoaded = true;
+      window.clarity = window.clarity || function clarity() {
+        (window.clarity.q = window.clarity.q || []).push(arguments);
+      };
+      updateClarityConsent(true);
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.clarity.ms/tag/${encodeURIComponent(config.clarityProjectId)}`;
+      script.dataset.artbildProvider = "microsoft-clarity";
+      document.head.appendChild(script);
+    };
+
     const loadMetaPixel = () => {
       if (
         !providersEnabled
+        || window.ArtbildConsent?.marketing !== true
         || !/^\d{5,20}$/.test(config.metaPixelId || "")
       ) {
         return;
@@ -310,6 +349,8 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     };
 
     const updateConsent = (nextState) => {
+      const analyticsWasGranted = window.ArtbildConsent?.analytics === true;
+      const marketingWasGranted = window.ArtbildConsent?.marketing === true;
       const state = {
         analytics: nextState.analytics === true,
         marketing: nextState.marketing === true,
@@ -325,8 +366,13 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       publishState(state, true);
       window.gtag("consent", "update", googleConsentState(state, false));
 
-      if (!state.analytics) {
+      if (state.analytics) {
+        loadGoogleTagManager();
+        loadClarity();
+      } else {
+        updateClarityConsent(false);
         clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
+        clearProviderCookies(CLARITY_COOKIE_PREFIXES);
       }
 
       if (state.marketing) {
@@ -335,7 +381,6 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         if (typeof window.fbq === "function") {
           window.fbq("consent", "revoke");
         }
-        clearProviderCookies(GOOGLE_MARKETING_COOKIE_PREFIXES);
         clearProviderCookies(META_COOKIE_PREFIXES);
       }
 
@@ -343,25 +388,45 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         analytics: state.analytics,
         marketing: state.marketing,
         necessary: true,
-        mode: "advanced",
+        mode: "basic",
         version: config.consentVersion,
       };
       window.dataLayer.push({
         event: "artbild_consent_update",
         consent_analytics: state.analytics ? "granted" : "denied",
         consent_marketing: state.marketing ? "granted" : "denied",
-        consent_mode: "advanced",
+        consent_mode: "basic",
       });
       window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
-      return publishState(state, true);
+      const publishedState = publishState(state, true);
+
+      if (
+        (
+          analyticsWasGranted
+          && !state.analytics
+          && (
+            window.__artbildGoogleTagManagerLoaded
+            || window.__artbildClarityLoaded
+          )
+        )
+        || (
+          marketingWasGranted
+          && !state.marketing
+          && window.__artbildMetaPixelLoaded
+        )
+      ) {
+        window.setTimeout(() => window.location.reload(), 0);
+      }
+
+      return publishedState;
     };
 
     publishState(initialState, Boolean(storedDecision));
     if (!initialState.analytics) {
       clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
+      clearProviderCookies(CLARITY_COOKIE_PREFIXES);
     }
     if (!initialState.marketing) {
-      clearProviderCookies(GOOGLE_MARKETING_COOKIE_PREFIXES);
       clearProviderCookies(META_COOKIE_PREFIXES);
     }
 
@@ -380,19 +445,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       consent_decision_present: Boolean(storedDecision),
     });
 
-    if (
-      providersEnabled
-      && /^GTM-[A-Z0-9]{4,}$/i.test(config.gtmContainerId || "")
-    ) {
-      window.dataLayer.push({
-        "gtm.start": Date.now(),
-        event: "gtm.js",
-      });
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmContainerId)}`;
-      script.dataset.artbildProvider = "google-tag-manager";
-      document.head.appendChild(script);
+    if (storedDecision?.analytics) {
+      loadGoogleTagManager();
+      loadClarity();
     }
 
     if (storedDecision?.marketing) {

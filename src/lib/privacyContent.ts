@@ -1,3 +1,100 @@
+import { trackingConfig } from "../config/tracking";
+
+let nextSectionNumber = 7;
+
+const numberedSection = (id: string, title: string, body: string) => {
+  const sectionNumber = nextSectionNumber;
+  nextSectionNumber += 1;
+  return `<h2 id="${id}">${sectionNumber}. ${title}</h2>\n${body}`;
+};
+
+const consentSection = numberedSection(
+  "cookies-und-einwilligungen",
+  "Cookies und Einwilligungen",
+  `<p>Für technisch nicht erforderliche Statistik- und Marketingdienste holen wir vor dem Laden des jeweiligen Dienstes Ihre Einwilligung ein. Statistik und Marketing können getrennt gewählt werden. Eine Ablehnung hat keinen Einfluss auf die grundlegende Nutzung dieser Website.</p>
+<p>Eine von Ihnen getroffene Auswahl wird im Cookie <code>artbild_consent</code> gespeichert, das ausschließlich von dieser Website gesetzt wird. Das Cookie enthält die gewählten Kategorien, eine Versionsangabe und den Zeitpunkt Ihrer Entscheidung. Es enthält weder Kontaktdaten noch Inhalte aus Formularen und hat eine maximale Laufzeit von 180 Tagen.</p>
+<p>Die Speicherung dieser Auswahl ist erforderlich, um Ihre Entscheidung zu beachten und nachweisen zu können. Sie beruht auf Art. 6 Abs. 1 lit. c DSGVO in Verbindung mit Art. 7 Abs. 1 DSGVO sowie § 25 Abs. 2 Nr. 2 TDDDG. Über „Datenschutz-Einstellungen“ können Sie Ihre Auswahl jederzeit ändern. Ein Widerruf wirkt für die Zukunft.</p>
+<p>Eine Verbindung zu den nachfolgend beschriebenen optionalen Anbietern wird nur hergestellt, wenn Sie in die jeweils genannte Kategorie eingewilligt haben.</p>`,
+);
+
+const tagManagerSection = numberedSection(
+  "google-tag-manager",
+  "Google Tag Manager",
+  `<p>Der Google Tag Manager dient auf dieser Website ausschließlich dazu, Google Analytics 4 zu laden und dessen Messereignisse zu steuern. Anbieter für Personen im Europäischen Wirtschaftsraum ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.</p>
+<p>Der Tag Manager wird ausschließlich nach Ihrer Einwilligung in die Kategorie „Statistik“ geladen. Weder vor Ihrer Entscheidung noch nach einer Ablehnung wird eine Verbindung zum Tag Manager hergestellt.</p>
+<p>Beim Abruf des Tag Managers können insbesondere IP-Adresse, Datum und Uhrzeit sowie Browser-, Betriebssystem- und Geräteangaben als gewöhnliche HTTP-Protokolldaten an Google übermittelt werden. Die von dieser Website bereitgestellten Messereignisse enthalten keine Werte aus Formularfeldern. Google gibt an, die HTTP-Protokolldaten innerhalb von 14 Tagen nach ihrem Eingang zu löschen. Daneben kann Google aggregierte Diagnosedaten zur Stabilität und Ausführungsqualität von Tags verarbeiten; diese enthalten nach Angaben von Google keine IP-Adressen oder personenbezogenen Messkennungen.</p>
+<p>Rechtsgrundlagen sind Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO und, soweit Informationen auf Ihrem Endgerät gespeichert oder ausgelesen werden, § 25 Abs. 1 TDDDG. Weitere Angaben enthält Googles Dokumentation zu <a href="https://support.google.com/tagmanager/answer/9323295?hl=de" rel="noopener noreferrer" target="_blank">Datenschutz und Sicherheit im Tag Manager</a> sowie die <a href="https://policies.google.com/privacy?hl=de" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von Google</a>.</p>`,
+);
+
+const googleAnalyticsSection = numberedSection(
+  "google-analytics",
+  "Google Analytics 4",
+  `<p>Google Analytics 4 soll uns zeigen, wie häufig Seiten aufgerufen werden und wie Besucherinnen und Besucher durch das Angebot navigieren. Anbieter für Personen im Europäischen Wirtschaftsraum ist Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.</p>
+<p>Übermittelt werden können insbesondere IP-Adresse, aufgerufene Seiten, Referrer, Zeitpunkt und Dauer von Aufrufen, Interaktionen mit Seitenelementen, ungefähre Region sowie Angaben zu Browser, Betriebssystem und Gerät. Hinzu kommen pseudonyme Nutzer- und Sitzungskennungen. Die von dieser Website erzeugten Messereignisse enthalten keine Namen, E-Mail-Adressen, Nachrichten oder hochgeladenen Dateien aus unseren Formularen.</p>
+<p>Google Analytics 4 wird ausschließlich nach Ihrer Einwilligung in „Statistik“ geladen. Rechtsgrundlagen sind Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG. Sie können die Einwilligung jederzeit über „Datenschutz-Einstellungen“ für die Zukunft widerrufen.</p>
+<p>Google nennt für die mit <code>_ga</code> beginnenden Analytics-Cookies standardmäßig eine Ablaufzeit von zwei Jahren; diese Frist kann verkürzt werden. Die für diese Website festgelegte Aufbewahrungsfrist für Nutzer- und Ereignisdaten beträgt ${trackingConfig.ga4DataRetentionMonths} Monate. Nach Ablauf löscht Google die betroffenen Daten im monatlichen Verfahren. Aggregierte Standardberichte sind nach Angaben von Google von dieser Frist nicht erfasst. Weitere Informationen finden Sie in den <a href="https://support.google.com/analytics/answer/7667196?hl=de" rel="noopener noreferrer" target="_blank">Hinweisen zur Datenaufbewahrung</a> und der <a href="https://policies.google.com/privacy?hl=de" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von Google</a>.</p>`,
+);
+
+const metaTrackingSection = numberedSection(
+  "meta-pixel",
+  "Meta Pixel",
+  `<p>Das Meta Pixel soll die Reichweite und Wirksamkeit unserer Werbung auf Angeboten von Meta messen sowie die Bildung von Zielgruppen und Remarketing ermöglichen. Anbieter für Personen im Europäischen Wirtschaftsraum ist Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland.</p>
+<p>Übermittelt werden können insbesondere IP-Adresse, aufgerufene Seite, Referrer, Zeitpunkt des Aufrufs, Browser- und Geräteangaben, Cookie-Kennungen sowie von uns festgelegte Ereignisse wie der Aufruf einer Kontakt-, Anfrage- oder Preisseite. Die von unserem lokalen Messskript übergebenen Ereignisparameter enthalten keine Inhalte aus Kontakt- oder Anfrageformularen und keine hochgeladenen Dateien.</p>
+<p>Das Meta Pixel wird ausschließlich nach Ihrer Einwilligung in „Marketing“ geladen. Rechtsgrundlagen sind Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG. Sie können die Einwilligung jederzeit über „Datenschutz-Einstellungen“ für die Zukunft widerrufen.</p>
+<p>Soweit Meta die Ereignisdaten für Zielgruppen-, Werbe- oder Remarketingzwecke zu eigenen Zwecken verarbeitet, sind wir und Meta Platforms Ireland Limited für die Erhebung auf dieser Website und die anschließende Übermittlung gemeinsam verantwortlich. Die Aufteilung der Pflichten für diesen Verarbeitungsschritt beschreibt das <a href="https://www.facebook.com/legal/controller_addendum" rel="noopener noreferrer" target="_blank">Controller Addendum von Meta</a>. Betroffenenrechte können sowohl bei uns als auch bei Meta geltend gemacht werden. Für die weitere Verarbeitung bei Meta sowie die dazugehörigen Informations- und Betroffenenrechte ist Meta verantwortlich.</p>
+<p>Die Cookies <code>_fbp</code> und <code>_fbc</code> haben nach den Angaben von Meta eine Laufzeit von bis zu 90 Tagen. Die Bedingungen für Meta-Unternehmenstools sehen für übermittelte Ereignisdaten eine Speicherdauer von höchstens zwei Jahren vor. Aus diesen Daten gebildete Zielgruppen bleiben bestehen, bis sie im Meta-Konto gelöscht werden. Weitere Angaben finden Sie in den <a href="https://www.facebook.com/legal/terms/businesstools" rel="noopener noreferrer" target="_blank">Bedingungen für Meta-Unternehmenstools</a>, der <a href="https://www.facebook.com/privacy/policies/cookies/" rel="noopener noreferrer" target="_blank">Cookie-Richtlinie</a> und der <a href="https://www.facebook.com/privacy/policy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von Meta</a>.</p>`,
+);
+
+const claritySection = numberedSection(
+  "microsoft-clarity",
+  "Microsoft Clarity",
+  `<p>Microsoft Clarity soll uns anhand von Heatmaps und nachgebildeten Nutzungssitzungen helfen, die Bedienbarkeit dieser Website zu beurteilen. Dabei handelt es sich nicht um eine Videoaufnahme Ihres Bildschirms, sondern um eine technische Rekonstruktion von Seitenelementen und Interaktionen. Anbieter für Personen im Europäischen Wirtschaftsraum ist Microsoft Ireland Operations Limited, One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland.</p>
+<p>Übermittelt werden können insbesondere IP-Adresse, aufgerufene Seiten, Referrer, Datum und Uhrzeit, Klicks, Scrollbewegungen, Mausbewegungen, Fenstergröße, technische Fehler sowie Angaben zu Browser, Betriebssystem und Gerät. Clarity verarbeitet außerdem Seitenstruktur, Layout, Attribute und Inhalte nicht ausgeblendeter Seitenbereiche, soweit dies für die technische Rekonstruktion erforderlich ist. Die Kontakt-, Anfrage- und Terminformulare dieser Website sind als maskierte Bereiche gekennzeichnet; dort eingegebene Inhalte werden dadurch nicht im Klartext für die Sitzungsrekonstruktion erfasst.</p>
+<p>Clarity wird ausschließlich nach Ihrer Einwilligung in „Statistik“ geladen. Rechtsgrundlagen sind Art. 6 Abs. 1 lit. a DSGVO und § 25 Abs. 1 TDDDG. Sie können die Einwilligung jederzeit über „Datenschutz-Einstellungen“ für die Zukunft widerrufen. Microsoft Advertising (ehemals Bing Ads) und das UET-Tracking sind nicht Bestandteil der hier beschriebenen Clarity-Nutzung.</p>
+<p>Microsoft gibt derzeit folgende Speicherdauern an: Wiedergabedaten werden 30 Tage gespeichert; Klick- und Heatmap-Daten sowie markierte oder favorisierte Sitzungen werden neun Monate gespeichert. Weitere Informationen finden Sie in der <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/data-retention" rel="noopener noreferrer" target="_blank">Clarity-Dokumentation zur Datenaufbewahrung</a> und der <a href="https://www.microsoft.com/de-de/privacy/privacystatement" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von Microsoft</a>.</p>`,
+);
+
+const thirdCountrySection = numberedSection(
+  "drittlanduebermittlungen-tracking",
+  "Drittlandübermittlungen bei Statistik- und Marketingdiensten",
+  `<p>Bei Google, Meta und Microsoft kann nicht ausgeschlossen werden, dass Daten an verbundene Unternehmen oder andere Empfänger außerhalb der Europäischen Union und des Europäischen Wirtschaftsraums, insbesondere in den USA, übermittelt oder dort verarbeitet werden.</p>
+<p>Google LLC, Meta Platforms, Inc. und Microsoft Corporation sind nach den derzeitigen Angaben der Anbieter für das EU-US Data Privacy Framework zertifiziert. Für von der jeweiligen Zertifizierung erfasste Datenübermittlungen in die USA gilt deshalb der Angemessenheitsbeschluss der Europäischen Kommission. Die Anbieter informieren über ihre Zertifizierungen und Übermittlungsgrundlagen bei <a href="https://policies.google.com/privacy/frameworks?hl=de" rel="noopener noreferrer" target="_blank">Google</a>, <a href="https://www.facebook.com/privacy/policies/data_privacy_framework/" rel="noopener noreferrer" target="_blank">Meta</a> und <a href="https://www.microsoft.com/de-de/privacy/privacystatement" rel="noopener noreferrer" target="_blank">Microsoft</a>. Der aktuelle Status kann zusätzlich in der <a href="https://www.dataprivacyframework.gov/list" rel="noopener noreferrer" target="_blank">offiziellen Data-Privacy-Framework-Liste</a> geprüft werden.</p>
+<p>Für Übermittlungen, die nicht von einem Angemessenheitsbeschluss erfasst sind, beschreiben die Anbieter weitere Schutzinstrumente. Google verweist in seinen <a href="https://policies.google.com/privacy/frameworks?hl=de" rel="noopener noreferrer" target="_blank">Rahmenbedingungen für Datenübermittlungen</a> auf EU-Standardvertragsklauseln. Meta veröffentlicht ein <a href="https://www.facebook.com/legal/terms/Privacy/GDTA" rel="noopener noreferrer" target="_blank">Global Data Transfer Addendum</a>. Microsoft erläutert die zwischen Microsoft Ireland Operations Limited und Microsoft Corporation verwendeten Standardvertragsklauseln in den <a href="https://learn.microsoft.com/en-us/clarity/faq" rel="noopener noreferrer" target="_blank">Datenschutzhinweisen zu Clarity</a>. Welche Übermittlungsgrundlage im Einzelfall greift, richtet sich nach Empfänger, Zielstaat und den jeweils geltenden Anbieterbedingungen.</p>
+<p>Trotz solcher Instrumente kann bei einer Verarbeitung in einem Drittland ein Risiko bestehen, dass Behörden nach dem dortigen Recht auf Daten zugreifen und europäische Betroffenenrechte nicht in gleicher Weise durchgesetzt werden können.</p>`,
+);
+
+const picDropSection = numberedSection(
+  "picdrop",
+  "Kundengalerien über PicDrop",
+  `<p>Für die Bereitstellung und Abstimmung von Kundengalerien verwenden wir PicDrop. Anbieter ist die PicDrop GmbH, Am Kupfergraben 4/4a, 10117 Berlin. Beim Aufruf einer separat bereitgestellten PicDrop-Galerie können insbesondere Bilder, Galerie- und Zugriffsdaten, IP-Adresse, Zeitpunkt, Referrer, Browserangaben sowie von Ihnen vorgenommene Auswahlen verarbeitet werden.</p>
+<p>Die Verarbeitung erfolgt zur Vertragserfüllung nach Art. 6 Abs. 1 lit. b DSGVO und, soweit erforderlich, aufgrund unseres berechtigten Interesses an einer sicheren und übersichtlichen Bildauslieferung nach Art. 6 Abs. 1 lit. f DSGVO. PicDrop gibt für technische Protokolldaten eine Löschung nach 90 Tagen an. Die Bereitstellungsdauer einer Kundengalerie richtet sich nach der jeweiligen Vereinbarung; anschließend werden die Daten gelöscht, soweit keine gesetzlichen Pflichten oder berechtigten Gründe für eine weitere Aufbewahrung bestehen. Weitere Informationen finden Sie in der <a href="https://www.picdrop.com/web/de/privacy" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von PicDrop</a>.</p>`,
+);
+
+const externalLinksSection = numberedSection(
+  "externe-links",
+  "Externe Links und soziale Netzwerke",
+  `<p>Auf der Website befinden sich Links zu externen Angeboten, insbesondere Instagram, Facebook und Pinterest. Beim bloßen Anzeigen unserer Seiten wird durch diese Links keine Verbindung zum jeweiligen Netzwerk hergestellt. Erst wenn Sie einen externen Link öffnen, verarbeitet der jeweilige Anbieter den Aufruf nach seinen eigenen Datenschutzbestimmungen. Dies gilt ebenso für Schaltflächen, mit denen Inhalte bei einem sozialen Netzwerk geteilt werden.</p>`,
+);
+
+const storageSection = numberedSection(
+  "speicherdauer",
+  "Speicherdauer",
+  `<p>Für jede Verarbeitung gilt: Entfällt der Zweck, werden die betreffenden personenbezogenen Daten gelöscht oder anonymisiert. Eine weitere Aufbewahrung erfolgt nur, wenn gesetzliche Fristen einzuhalten sind, Daten für die Geltendmachung oder Abwehr von Ansprüchen benötigt werden oder ein anderer gesetzlich zulässiger Grund fortbesteht.</p>`,
+);
+
+const rightsSection = numberedSection(
+  "rechte",
+  "Ihre Rechte",
+  `<p>Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere das Recht auf Auskunft nach Art. 15 DSGVO, Berichtigung nach Art. 16 DSGVO, Löschung nach Art. 17 DSGVO, Einschränkung der Verarbeitung nach Art. 18 DSGVO und Datenübertragbarkeit nach Art. 20 DSGVO. Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen.</p>
+<p>Durch den Widerruf wird die Rechtmäßigkeit der Verarbeitung bis zum Zeitpunkt des Widerrufs nicht berührt. Sie können einer Verarbeitung, die auf Art. 6 Abs. 1 lit. f DSGVO beruht, aus Gründen Ihrer besonderen Situation nach Art. 21 DSGVO widersprechen. Gegen die Verarbeitung für Zwecke der Direktwerbung einschließlich eines damit verbundenen Profilings können Sie jederzeit widersprechen. Wenden Sie sich dazu an <a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a>.</p>`,
+);
+
+const complaintSection = numberedSection(
+  "beschwerderecht",
+  "Beschwerderecht",
+  `<p>Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Für Hamburg ist dies der Hamburgische Beauftragte für Datenschutz und Informationsfreiheit. Aktuelle Kontaktdaten finden Sie unter <a href="https://datenschutz-hamburg.de/" rel="noopener noreferrer" target="_blank">datenschutz-hamburg.de</a>.</p>`,
+);
+
 const privacyContent = `
 <p><strong>Stand: 8. August 2026</strong></p>
 <p>Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten beim Besuch dieser Website und bei der Kontaktaufnahme verarbeitet werden.</p>
@@ -13,73 +110,44 @@ const privacyContent = `
 <p>E-Mail: <a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a></p>
 <p>Weitere Angaben finden Sie im <a href="/impressum/">Impressum</a>.</p>
 
-<h2 id="bunny-hosting">2. Hosting und Auslieferung über bunny.net</h2>
-<p>Diese Website wird als statisch erzeugte Astro-Website in einem Node.js-Container über <strong>bunny.net Magic Containers</strong> bereitgestellt. HTML, Stylesheets, JavaScript, Bilder und lokal eingebundene Schriftarten werden über einen <strong>Bunny-CDN-Endpunkt</strong> ausgeliefert. Für Anwendungsdaten, insbesondere Kontaktanfragen und die Terminverfügbarkeit, wird <strong>Bunny Database</strong> eingesetzt.</p>
-<p>Anbieter ist BunnyWay d.o.o., Dunajska cesta 165, 1000 Ljubljana, Slowenien. Bunny.net verarbeitet Daten bei diesen Leistungen typischerweise als Auftragsverarbeiter.</p>
-<p>Beim Aufruf der Website werden die technisch erforderlichen Anfrage- und Verbindungsdaten verarbeitet. Abhängig von Anfrage und Dienst können dazu insbesondere IP-Adresse beziehungsweise ihre in bereitgestellten Protokollen anonymisierte Form, Datum und Uhrzeit, aufgerufene Adresse einschließlich etwaiger URL-Parameter, Referrer, Browser- und Geräteangaben im User-Agent, HTTP-Status, übertragene Datenmenge, Cache-Status, ausliefernder CDN-Standort, Ländercode und Anfrage-ID gehören.</p>
-<p>Die Verarbeitung dient der sicheren und effizienten Auslieferung, der Abwehr von Missbrauch sowie der Fehleranalyse. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in einem sicheren, stabilen und leistungsfähigen Internetangebot.</p>
-<p>Die Inhaltsauslieferung erfolgt über ein globales CDN. Eine Verarbeitung außerhalb der Europäischen Union oder des Europäischen Wirtschaftsraums kann deshalb nicht ausgeschlossen werden. Bunny.net veröffentlicht eine <a href="https://bunny.net/gdpr/sub-processors/" rel="noopener noreferrer" target="_blank">aktuelle Liste seiner Unterauftragsverarbeiter</a>.</p>
-<p>Die Dauer der technischen Protokollierung richtet sich nach dem verwendeten Bunny-Dienst, der Kontokonfiguration und dem jeweiligen Verarbeitungszweck. Von uns abgerufene Protokolle werden nur so lange aufbewahrt, wie sie für Betrieb, Sicherheit oder Fehleranalyse benötigt werden, soweit keine gesetzlichen Pflichten oder die Bearbeitung eines konkreten Sicherheitsvorfalls eine längere Aufbewahrung erfordern. Weitere Informationen finden Sie in den <a href="https://bunny.net/gdpr/" rel="noopener noreferrer" target="_blank">Datenschutzhinweisen zur Auftragsverarbeitung</a> und der <a href="https://bunny.net/privacy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von bunny.net</a>.</p>
+<h2 id="bunny-hosting">2. Webhosting bei bunny.net</h2>
+<p>Für das Webhosting dieser Website nutzen wir bunny.net. Anbieter ist BunnyWay d.o.o. mit Sitz in der Dunajska cesta 165, 1000 Ljubljana, Slowenien.</p>
+<p>Der von uns gewählte Standort des Webservers ist Frankfurt am Main, Deutschland. Auch die Datenbank dieser Website wird nach unserer Konfiguration ausschließlich in Frankfurt am Main gespeichert. Diese Standortangabe bezieht sich auf den Webserver und die Website-Datenbank.</p>
+<p>Beim Besuch der Website werden insbesondere Ihre IP-Adresse, Datum und Uhrzeit des Aufrufs, die aufgerufene Seite oder Datei, die zuvor besuchte Seite (Referrer) sowie Angaben zu Browser, Betriebssystem und verwendetem Gerät an bunny.net übermittelt.</p>
+<p>Die Verarbeitung erfolgt, um die Website bereitzustellen, ihre Stabilität und Sicherheit zu gewährleisten sowie Missbrauch und technische Fehler zu erkennen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt in einem sicheren und zuverlässigen Internetangebot.</p>
+<p>Die Daten werden nur so lange gespeichert, wie dies für die genannten Zwecke erforderlich ist, sofern keine gesetzlichen Pflichten oder die Bearbeitung eines konkreten Sicherheitsvorfalls eine längere Speicherung erfordern. Weitere Informationen finden Sie in der <a href="https://bunny.net/privacy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von bunny.net</a>.</p>
 
 <h2 id="kontaktformular">3. Kontaktformular</h2>
-<p>Wenn Sie das Kontaktformular verwenden, verarbeiten wir die von Ihnen eingegebenen Angaben. Dazu gehören Name, E-Mail-Adresse und Anfrageart sowie – soweit von Ihnen angegeben – Wunschdatum, Veranstaltungsort, Nachricht und bis zu drei Bilddateien bei einer TFP-Anfrage.</p>
-<p>Zusätzlich werden Zeitpunkt, Status, Quellseite, Browserkennung im User-Agent, Anzahl und Dateinamen der Anhänge sowie ein mit einem geheimen Salt gebildeter SHA-256-Hash der IP-Adresse in Bunny Database gespeichert. Der Hash dient der zeitlich begrenzten Erkennung wiederholter Anfragen und ist nicht die vollständige IP-Adresse. Die Inhalte hochgeladener Dateien werden nicht in Bunny Database gespeichert; sie werden für den Versand verarbeitet und als E-Mail-Anhang weitergegeben.</p>
+<p>Wenn Sie das Kontaktformular verwenden, verarbeiten wir die von Ihnen eingegebenen Angaben. Pflichtangaben sind Anfrageart, Name, E-Mail-Adresse, Veranstaltungsort und die Antwort auf die Sicherheitsfrage. Das Wunschdatum ist außer bei TFP-Anfragen ebenfalls erforderlich. Nachricht und bis zu drei Bilddateien bei einer TFP-Anfrage sind freiwillig. Es besteht keine gesetzliche Pflicht, diese Daten bereitzustellen. Ohne die erforderlichen Angaben kann das Formular nicht versendet und die Anfrage nicht bearbeitet werden.</p>
+<p>Zusätzlich werden Zeitpunkt und Quellseite der Anfrage, die Antwort auf die Sicherheitsfrage, Anzahl und Dateinamen der Anhänge sowie eine aus der IP-Adresse gebildete pseudonymisierte Kennung verarbeitet. Die Inhalte hochgeladener Dateien werden für den Versand verarbeitet und als E-Mail-Anhang weitergegeben; sie werden nicht zusammen mit dem Formulardatensatz gespeichert.</p>
 <p>Wir verwenden diese Daten, um Ihre Anfrage zu beantworten, ein gewünschtes Vertragsverhältnis vorzubereiten und das Formular gegen automatisierten Missbrauch zu schützen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf einen Vertrag oder vorvertragliche Maßnahmen gerichtet ist. Im Übrigen erfolgt die Verarbeitung nach Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres Interesses an einer zuverlässigen und missbrauchsgeschützten Kommunikation.</p>
-<p>Kontaktanfragen werden in Bunny Database vor der technischen Zustellung der E-Mail gespeichert. Eine feste automatische Löschroutine ist derzeit nicht eingerichtet. Die Speicherdauer richtet sich nach der Bearbeitung der Anfrage, möglichen Vertrags- und Nachweiserfordernissen sowie gesetzlichen Aufbewahrungspflichten.</p>
+<p>Die Formulardaten werden im Rahmen des Webhostings in Frankfurt am Main vorübergehend gespeichert und an unser E-Mail-Postfach bei STRATO übermittelt. Die pseudonymisierte IP-Kennung dient ausschließlich der Begrenzung wiederholter Einsendungen und wird spätestens nach 30 Minuten entfernt. Sobald die Speicherdauer von 30 Tagen überschritten ist, wird die technische Datenbankkopie der Anfrage in einem regelmäßigen Bereinigungslauf automatisch gelöscht.</p>
+<p>Die an STRATO übermittelte Korrespondenz speichern wir so lange, wie dies für die Bearbeitung der Anfrage, ein mögliches Vertragsverhältnis, die Erfüllung gesetzlicher Aufbewahrungspflichten oder die Geltendmachung beziehungsweise Abwehr von Ansprüchen erforderlich ist.</p>
 
-<h2 id="email-versand">4. E-Mail-Kommunikation und technische Weiterleitung</h2>
-<p>Unser E-Mail-Postfach wird bei STRATO betrieben. Anbieter ist die STRATO GmbH, Otto-Ostrowski-Straße 7, 10249 Berlin. Beim Versand einer Kontaktanfrage werden die Formulardaten und etwaige Anhänge an dieses Postfach übermittelt. Weitere Informationen enthält die <a href="https://www.strato.de/datenschutz/" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von STRATO</a>.</p>
-<p>Abhängig von der für das Bunny-System aktiven Versandkonfiguration erfolgt die Zustellung direkt über den STRATO-Mailserver oder zunächst über einen technischen HTTPS-Relay auf Cloudflare Workers. Ist dieser Relay aktiviert, verarbeitet Cloudflare die Formulardaten und Anhänge zur Weiterleitung an das E-Mail-Postfach. Der Relay dient ausschließlich dem Transport der Anfrage und ist nicht das Hosting dieser Website. Weitere Informationen finden Sie in der <a href="https://www.cloudflare.com/de-de/privacypolicy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von Cloudflare</a>.</p>
-<p>Bei einer Kontaktaufnahme per E-Mail oder Telefon verarbeiten wir die von Ihnen mitgeteilten Daten zur Bearbeitung Ihres Anliegens. Es gelten dieselben Rechtsgrundlagen wie für das Kontaktformular.</p>
+<h2 id="email-versand">4. E-Mail-Kommunikation</h2>
+<p>Für die Verarbeitung und Speicherung von E-Mails nutzen wir STRATO. Anbieter ist die STRATO GmbH, Otto-Ostrowski-Straße 7, 10249 Berlin. Beim Versand einer Kontaktanfrage werden die Formulardaten und etwaige Anhänge an unser dort geführtes E-Mail-Postfach übermittelt.</p>
+<p>Wenn Sie uns per E-Mail kontaktieren, verarbeiten wir insbesondere Ihre E-Mail-Adresse, den Inhalt Ihrer Nachricht, etwaige Anhänge sowie die bei der E-Mail-Kommunikation anfallenden Verbindungs- und Zeitdaten. Bei einer Kontaktaufnahme per Telefon verarbeiten wir die von Ihnen mitgeteilten Daten zur Bearbeitung Ihres Anliegens. Es gelten dieselben Rechtsgrundlagen wie für das Kontaktformular. Weitere Informationen enthält die <a href="https://www.strato.de/datenschutz/" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von STRATO</a>.</p>
 
 <h2 id="whatsapp">5. Kontakt über WhatsApp</h2>
-<p>Die Website enthält Links, über die Sie freiwillig einen WhatsApp-Chat mit uns beginnen können. Beim bloßen Anzeigen der Website wird keine Verbindung zu WhatsApp hergestellt. Erst wenn Sie den Link öffnen, werden Sie zu WhatsApp weitergeleitet.</p>
+<p>Die Website enthält Links, über die Sie freiwillig einen WhatsApp-Chat mit uns beginnen können. Beim bloßen Anzeigen der Website wird keine Verbindung zu WhatsApp hergestellt. Erst wenn Sie den Link öffnen, werden Sie zu WhatsApp weitergeleitet. Dabei wird auch der im jeweiligen Link vorgegebene Nachrichtentext an WhatsApp übermittelt; Sie können ihn vor dem Absenden der Nachricht verändern.</p>
 <p>Wenn Sie uns über WhatsApp kontaktieren, verarbeiten wir insbesondere Ihre Telefonnummer, Ihren Profilnamen, den Nachrichteninhalt, übermittelte Dateien sowie Kommunikationszeitpunkte zur Bearbeitung Ihrer Anfrage. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit es um einen Vertrag oder vorvertragliche Maßnahmen geht, ansonsten Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres Interesses an einer von Ihnen gewählten, direkten Kommunikation.</p>
-<p>Anbieter für die Region Europa ist WhatsApp Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. WhatsApp verarbeitet zusätzlich eigene Konto-, Geräte-, Verbindungs- und Nutzungsdaten und kann Informationen weltweit übermitteln. Maßgeblich sind die <a href="https://www.whatsapp.com/legal/privacy-policy-eea?lang=de_DE" rel="noopener noreferrer" target="_blank">Datenschutzhinweise von WhatsApp</a>.</p>
+<p>Anbieter für die Region Europa ist WhatsApp Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. WhatsApp verarbeitet zusätzlich eigene Konto-, Geräte-, Verbindungs- und Nutzungsdaten und kann Informationen weltweit übermitteln.</p>
+<p>Nach der aktuellen Datenschutzrichtlinie von WhatsApp sind WhatsApp LLC und Meta Platforms, Inc. für das EU-US Data Privacy Framework zertifiziert. Für Übermittlungen, die nicht von einem Angemessenheitsbeschluss erfasst sind, gibt WhatsApp den Einsatz der von der Europäischen Kommission genehmigten Standardvertragsklauseln an. Einzelheiten finden Sie in der <a href="https://www.whatsapp.com/legal/privacy-policy-eea?lang=de_DE" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von WhatsApp</a>.</p>
 
 <h2 id="terminverfuegbarkeit">6. Terminverfügbarkeit</h2>
-<p>Die öffentliche Terminabfrage übermittelt das ausgewählte Datum an eine gleichnamige Schnittstelle dieser Website. Die dafür gespeicherte Verfügbarkeitsliste enthält gesperrte Daten, aber keine personenbezogenen Angaben der abfragenden Person.</p>
-<p>Wird ein Datum im URL-Parameter <code>termin</code> übergeben, entfernt die lokale Website-Logik diesen Parameter vor dem Laden konfigurierter Statistik- oder Marketingdienste. Das Datum kann für die weitere Navigation vorübergehend im <code>sessionStorage</code> Ihres Browsers gespeichert werden und wird mit dem Ende der Browsersitzung gelöscht.</p>
+<p>Wenn Sie die öffentliche Terminabfrage nutzen, wird das von Ihnen ausgewählte Datum an den Server dieser Website übermittelt und dort mit bereits gesperrten Daten abgeglichen. Für diese Abfrage sind weder Ihr Name noch Ihre Kontaktdaten erforderlich.</p>
 
-<h2 id="cookies-und-einwilligungen">7. Cookies und Einwilligungen</h2>
-<p>Die Website speichert Ihre Auswahl im technisch erforderlichen First-Party-Cookie <code>artbild_consent</code>. Darin werden die gewählten Kategorien, eine Versionsangabe und der Zeitpunkt der Entscheidung gespeichert. Die maximale Laufzeit beträgt 180 Tage. Namen, E-Mail-Adressen und Inhalte des Kontaktformulars werden nicht in diesem Cookie gespeichert.</p>
-<p>Die Einwilligungsoberfläche ist Bestandteil dieser Website; hierfür wird kein externer Banner-Dienst geladen. Sie können Ihre Auswahl jederzeit über „Datenschutz-Einstellungen“ öffnen und ändern. Beim Widerruf werden weitere lokale Aufrufe der abgewählten Dienste gesperrt. Die Rechtmäßigkeit einer bereits erfolgten Verarbeitung bleibt nach Art. 7 Abs. 3 DSGVO unberührt.</p>
-
-<h2 id="google-analytics-tag-manager">8. Google Tag Manager, Google Analytics und Consent Mode</h2>
-<p>Google Tag Manager und Google Analytics werden nur geladen, wenn die vorgesehenen Kennungen für eine freigegebene Website-Umgebung vollständig konfiguriert sind. Anbieter für Nutzerinnen und Nutzer im Europäischen Wirtschaftsraum ist grundsätzlich Google Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.</p>
-<p>Vor Ihrer Auswahl setzt die lokale Implementierung <code>analytics_storage</code>, <code>ad_storage</code>, <code>ad_user_data</code> und <code>ad_personalization</code> auf <code>denied</code>. Im erweiterten Consent Mode kann der Google Tag Manager bereits mit diesen abgelehnten Zuständen geladen werden. Dabei können cookielose technische Messsignale und die beim Verbindungsaufbau üblichen Daten an Google übermittelt werden. Analyse- oder Marketing-Cookies werden dadurch nicht freigegeben.</p>
-<p>Mit „Statistik“ wird <code>analytics_storage</code> auf <code>granted</code> gesetzt. Mit „Marketing“ werden die vorgesehenen Werbezustände auf <code>granted</code> gesetzt. Der lokale Data Layer enthält Seitentypen und ausdrücklich ausgezeichnete Interaktionen, aber keine Rohwerte aus Kontaktformularen.</p>
-<p>Soweit die Verarbeitung von Ihrer Auswahl abhängt, ist Art. 6 Abs. 1 lit. a DSGVO die Rechtsgrundlage. Welche Tags im Google-Tag-Manager-Container veröffentlicht sind, welche Messdaten Google daraus erzeugt und welche Aufbewahrungsdauer im Google-Konto eingestellt ist, richtet sich zusätzlich nach der produktiven Konto- und Containerkonfiguration. Weitere Informationen finden Sie in den <a href="https://policies.google.com/privacy?hl=de" rel="noopener noreferrer" target="_blank">Datenschutzhinweisen von Google</a>.</p>
-
-<h2 id="meta-pixel">9. Meta Pixel</h2>
-<p>Das Meta-Pixel wird nur geladen, wenn eine gültige Pixel-ID für die freigegebene Website-Umgebung konfiguriert ist und Sie „Marketing“ erlaubt haben. Vorgesehen sind ein Seitenaufruf sowie ausgewählte Kontakt-, Anfrage- und Preis-Seiten-Ereignisse. Der lokale Ereigniscode übergibt eine begrenzte Liste technischer Kontextfelder und keine Rohwerte aus Kontaktformularen.</p>
-<p>Anbieter für Nutzerinnen und Nutzer im Europäischen Wirtschaftsraum ist Meta Platforms Ireland Limited, Merrion Road, Dublin 4, D04 X2K5, Irland. Meta kann beim Laden seines Skripts weitere Verbindungsdaten verarbeiten und abhängig von Ihrer Auswahl Cookies setzen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. a DSGVO. Weitere Informationen finden Sie in der <a href="https://www.facebook.com/privacy/policy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von Meta</a>.</p>
-
-<h2 id="lokale-inhalte">10. Lokale Schriftarten, Bilder und Skripte</h2>
-<p>Die auf der Website verwendeten Schriftarten, eigenen Bilder und wesentlichen Seitenskripte werden zusammen mit der Website über bunny.net ausgeliefert. Beim Anzeigen dieser Inhalte wird deshalb keine zusätzliche Verbindung zu einem externen Schriftarten- oder Bildanbieter hergestellt.</p>
-
-<h2 id="picdrop">11. Kundengalerien über PicDrop</h2>
-<p>Für die Bereitstellung und Abstimmung von Kundengalerien verwenden wir PicDrop. Anbieter ist die PicDrop GmbH, Am Kupfergraben 4/4a, 10117 Berlin. Beim Aufruf einer separat bereitgestellten PicDrop-Galerie können insbesondere Bilder, Galerie- und Zugriffsdaten sowie von Ihnen vorgenommene Auswahlen verarbeitet werden.</p>
-<p>Die Verarbeitung erfolgt zur Vertragserfüllung nach Art. 6 Abs. 1 lit. b DSGVO und, soweit erforderlich, aufgrund unseres berechtigten Interesses an einer sicheren und übersichtlichen Bildauslieferung nach Art. 6 Abs. 1 lit. f DSGVO. Weitere Informationen finden Sie in der <a href="https://www.picdrop.com/web/de/privacy" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von PicDrop</a>.</p>
-
-<h2 id="externe-links">12. Externe Links und soziale Netzwerke</h2>
-<p>Auf der Website befinden sich Links zu externen Angeboten, insbesondere Instagram, Facebook und Pinterest. Beim bloßen Anzeigen unserer Seiten wird durch diese Links keine Verbindung zum jeweiligen Netzwerk hergestellt. Erst wenn Sie einen externen Link öffnen, verarbeitet der jeweilige Anbieter den Aufruf nach seinen eigenen Datenschutzbestimmungen. Dies gilt ebenso für Schaltflächen, mit denen Inhalte bei einem sozialen Netzwerk geteilt werden.</p>
-
-<h2 id="transportverschluesselung">13. Transportverschlüsselung</h2>
-<p>Die öffentlich bereitgestellte Website verwendet HTTPS. Dadurch werden Daten auf dem Transportweg zwischen Ihrem Browser und dem öffentlich erreichbaren Endpunkt verschlüsselt. Eine unverschlüsselte E-Mail ist davon nicht umfasst.</p>
-
-<h2 id="speicherdauer">14. Speicherdauer</h2>
-<p>Soweit in dieser Erklärung keine besondere Dauer genannt ist, speichern wir personenbezogene Daten nur so lange, wie sie für den jeweiligen Zweck benötigt werden. Danach werden sie gelöscht oder anonymisiert, sofern keine gesetzlichen Aufbewahrungspflichten, die Geltendmachung oder Abwehr von Ansprüchen oder andere zulässige Gründe eine weitere Speicherung erfordern.</p>
-
-<h2 id="rechte">15. Ihre Rechte</h2>
-<p>Sie haben im Rahmen der gesetzlichen Voraussetzungen insbesondere das Recht auf Auskunft nach Art. 15 DSGVO, Berichtigung nach Art. 16 DSGVO, Löschung nach Art. 17 DSGVO, Einschränkung der Verarbeitung nach Art. 18 DSGVO und Datenübertragbarkeit nach Art. 20 DSGVO. Eine erteilte Einwilligung können Sie jederzeit mit Wirkung für die Zukunft widerrufen.</p>
-<p>Sie können einer Verarbeitung, die auf Art. 6 Abs. 1 lit. f DSGVO beruht, aus Gründen Ihrer besonderen Situation nach Art. 21 DSGVO widersprechen. Wenden Sie sich dazu an <a href="mailto:info@artbild-fotografie.de">info@artbild-fotografie.de</a>.</p>
-
-<h2 id="beschwerderecht">16. Beschwerderecht</h2>
-<p>Sie haben das Recht, sich bei einer Datenschutzaufsichtsbehörde zu beschweren. Für Hamburg ist dies der Hamburgische Beauftragte für Datenschutz und Informationsfreiheit. Aktuelle Kontaktdaten finden Sie unter <a href="https://datenschutz-hamburg.de/" rel="noopener noreferrer" target="_blank">datenschutz-hamburg.de</a>.</p>
-
-<h2 id="aenderungen">17. Änderungen dieser Datenschutzerklärung</h2>
-<p>Wir aktualisieren diese Erklärung, wenn sich die eingesetzten Dienste, die technische Konfiguration oder die rechtlichen Anforderungen ändern.</p>
+${consentSection}
+${tagManagerSection}
+${googleAnalyticsSection}
+${metaTrackingSection}
+${claritySection}
+${thirdCountrySection}
+${picDropSection}
+${externalLinksSection}
+${storageSection}
+${rightsSection}
+${complaintSection}
 `;
 
 const privacyPaths = new Set([

@@ -215,31 +215,10 @@ async function sendSmtpMail(env, payload, request, requestId) {
     })),
   };
 
-  // Non-Cloudflare runtimes can inject their own SMTP transport while the
-  // existing Worker continues to use worker-mailer and cloudflare:sockets.
-  if (typeof env.CONTACT_MAILER === "function") {
-    await env.CONTACT_MAILER(message);
-    return;
+  if (typeof env.CONTACT_MAILER !== "function") {
+    throw new Error("smtp_transport_not_configured");
   }
-
-  const { WorkerMailer, LogLevel } = await import("worker-mailer");
-  await WorkerMailer.send(
-    {
-      host: "smtp.strato.de",
-      port: 465,
-      secure: true,
-      startTls: false,
-      authType: "login",
-      credentials: {
-        username: smtp.user,
-        password: smtp.pass,
-      },
-      logLevel: LogLevel.NONE,
-      socketTimeoutMs: 15000,
-      responseTimeoutMs: 15000,
-    },
-    message,
-  );
+  await env.CONTACT_MAILER(message);
 }
 
 async function readImageAttachment(file) {
@@ -332,22 +311,6 @@ async function sha256(value) {
     .join("");
 }
 
-async function verifyTurnstile(token, secret, request) {
-  const ip = request.headers.get("CF-Connecting-IP") || "";
-  const body = new FormData();
-  body.set("secret", secret);
-  body.set("response", token);
-  if (ip) body.set("remoteip", ip);
-
-  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
-    method: "POST",
-    body,
-  });
-  if (!response.ok) return false;
-  const result = await response.json();
-  return Boolean(result.success);
-}
-
 async function parsePayload(request) {
   const contentLength = Number(request.headers.get("content-length") || "0");
   if (contentLength > MAX_BODY_BYTES) {
@@ -380,7 +343,6 @@ async function parsePayload(request) {
       loadedAt: Number(form.get("form_loaded_at") || "0"),
       jsEnabled: form.get("js_enabled") === "1",
       sourcePath: cleanText(form.get("source_path"), 180),
-      turnstileToken: cleanText(form.get("cf-turnstile-response"), 4096),
       attachments: attachmentResult.attachments || [],
     },
   };
@@ -437,7 +399,39 @@ async function recentSubmissionCount(db, ipHash, email) {
   return Number(row?.count || 0);
 }
 
-async function storeInD1(db, payload, ipHash, userAgent) {
+async function pruneStoredContactData(db) {
+  if (!db) return;
+  await db
+    .prepare(`
+      UPDATE contact_requests
+      SET ip_hash = NULL,
+          user_agent = NULL,
+          security_year = NULL
+      WHERE created_at < datetime('now', '-15 minutes')
+        AND (ip_hash IS NOT NULL OR user_agent IS NOT NULL OR security_year IS NOT NULL)
+    `)
+    .run();
+  await db
+    .prepare(`
+      DELETE FROM contact_requests
+      WHERE created_at < datetime('now', '-30 days')
+    `)
+    .run();
+}
+
+async function updateStoredRequestStatus(db, requestId, status) {
+  if (!db || !requestId) return;
+  await db
+    .prepare(`
+      UPDATE contact_requests
+      SET status = ?
+      WHERE id = ?
+    `)
+    .bind(status, requestId)
+    .run();
+}
+
+async function storeInD1(db, payload, ipHash) {
   const id = crypto.randomUUID();
   await db
     .prepare(`
@@ -474,110 +468,15 @@ async function storeInD1(db, payload, ipHash, userAgent) {
       "",
       "",
       payload.message,
-      payload.securityYear,
+      null,
       String(payload.attachments.length),
       payload.attachments.map((attachment) => attachment.filename).join(", "),
       payload.sourcePath,
-      userAgent,
+      null,
       ipHash,
     )
     .run();
   return id;
-}
-
-async function forwardToWebhook(url, payload, requestId) {
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "User-Agent": "artbild-contact-form/1.0",
-    },
-    body: JSON.stringify({
-      requestId,
-      submittedAt: new Date().toISOString(),
-      ...payload,
-      website: undefined,
-      loadedAt: undefined,
-      jsEnabled: undefined,
-      turnstileToken: undefined,
-      attachments: payload.attachments.map((attachment) => ({
-        filename: attachment.filename,
-        contentType: attachment.contentType,
-        size: attachment.size,
-        contentBase64: attachment.base64,
-      })),
-    }),
-  });
-  return response.ok;
-}
-
-function configuredContactRelay(env, request) {
-  if (request.headers.get("x-artbild-contact-relay-hop") === "1") return null;
-
-  try {
-    const relayUrl = new URL(String(env.CONTACT_RELAY_URL || ""));
-    if (relayUrl.protocol !== "https:" || relayUrl.username || relayUrl.password) return null;
-
-    const requestUrl = new URL(request.url);
-    if (relayUrl.origin === requestUrl.origin && relayUrl.pathname === requestUrl.pathname) return null;
-    return relayUrl.toString();
-  } catch {
-    return null;
-  }
-}
-
-function relayAttachmentBlob(attachment) {
-  const binary = atob(attachment.base64);
-  const bytes = new Uint8Array(binary.length);
-  for (let index = 0; index < binary.length; index += 1) {
-    bytes[index] = binary.charCodeAt(index);
-  }
-  return new Blob([bytes], { type: attachment.contentType });
-}
-
-async function forwardToContactRelay(url, payload, requestId) {
-  const form = new FormData();
-  form.set("name", payload.name);
-  form.set("email", payload.email);
-  form.set("request_type", payload.requestType);
-  form.set("event_date", payload.eventDate);
-  form.set("location", payload.location);
-  form.set("message", payload.message);
-  form.set("security_year", payload.securityYear);
-  form.set("privacy", "yes");
-  form.set("website", "");
-  form.set("form_loaded_at", "0");
-  form.set("js_enabled", "0");
-  form.set("source_path", payload.sourcePath || "/kontakt/");
-
-  for (const attachment of payload.attachments) {
-    form.append(
-      "tfp_images",
-      relayAttachmentBlob(attachment),
-      attachment.filename,
-    );
-  }
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "artbild-bunny-contact-relay/1.0",
-      "X-Artbild-Contact-Relay-Hop": "1",
-      "X-Artbild-Relay-Request-Id": requestId,
-      "X-Requested-With": "fetch",
-    },
-    body: form,
-    signal: AbortSignal.timeout(15_000),
-  });
-  if (!response.ok) return false;
-
-  try {
-    const result = await response.json();
-    return result?.ok === true;
-  } catch {
-    return false;
-  }
 }
 
 export function onRequestOptions() {
@@ -632,24 +531,21 @@ export async function onRequestPost({ request, env }) {
     }, 422);
   }
 
-  if ((env.CONTACT_REQUIRE_TURNSTILE === "true" || payload.turnstileToken) && env.TURNSTILE_SECRET_KEY) {
-    const turnstileOk = await verifyTurnstile(payload.turnstileToken, env.TURNSTILE_SECRET_KEY, request);
-    if (!turnstileOk) {
-      return reply(request, {
-        ok: false,
-        title: "Bitte erneut versuchen",
-        message: "Die Spam-Prüfung konnte nicht bestätigt werden.",
-      }, 422);
-    }
-  }
-
   const db = env.DB || env.CONTACT_DB;
-  const userAgent = cleanText(request.headers.get("user-agent"), 500);
-  const ip = request.headers.get("CF-Connecting-IP") || request.headers.get("x-forwarded-for") || "unknown";
-  const ipHash = await sha256(`${env.CONTACT_HASH_SALT || "artbild"}:${ip}`);
+  const hashSalt = String(env.CONTACT_HASH_SALT || "").trim();
+  if (hashSalt.length < 32) {
+    return reply(request, {
+      ok: false,
+      title: "Kontaktformular noch nicht aktiv",
+      message: "Das Kontaktformular ist technisch noch nicht vollständig konfiguriert. Bitte schreibt direkt an info@artbild-fotografie.de.",
+    }, 503);
+  }
+  const ip = request.headers.get("x-real-ip") || request.headers.get("x-forwarded-for") || "unknown";
+  const ipHash = await sha256(`${hashSalt}:${ip}`);
   const smtp = configuredSmtp(env);
 
   if (db) {
+    await pruneStoredContactData(db);
     const recentCount = await recentSubmissionCount(db, ipHash, payload.email);
     if (recentCount >= 3) {
       return reply(request, {
@@ -660,12 +556,7 @@ export async function onRequestPost({ request, env }) {
     }
   }
 
-  const isRelayedRequest = request.headers.get("x-artbild-contact-relay-hop") === "1";
-  const hasWebhook = !isRelayedRequest
-    && typeof env.CONTACT_WEBHOOK_URL === "string"
-    && env.CONTACT_WEBHOOK_URL.startsWith("https://");
-  const contactRelayUrl = configuredContactRelay(env, request);
-  if (!smtp && !hasWebhook && !contactRelayUrl) {
+  if (!smtp || typeof env.CONTACT_MAILER !== "function") {
     return reply(request, {
       ok: false,
       title: "Kontaktformular noch nicht aktiv",
@@ -673,14 +564,15 @@ export async function onRequestPost({ request, env }) {
     }, 503);
   }
 
+  let requestId = "";
   try {
-    const requestId = db ? await storeInD1(db, payload, ipHash, userAgent) : crypto.randomUUID();
-    if (smtp) await sendSmtpMail(env, payload, request, requestId);
-    const relayOk = !smtp && contactRelayUrl
-      ? await forwardToContactRelay(contactRelayUrl, payload, requestId)
-      : true;
-    const webhookOk = hasWebhook ? await forwardToWebhook(env.CONTACT_WEBHOOK_URL, payload, requestId) : true;
-    if (!relayOk || !webhookOk) throw new Error("contact_delivery_failed");
+    requestId = db ? await storeInD1(db, payload, ipHash) : crypto.randomUUID();
+    await sendSmtpMail(env, payload, request, requestId);
+    try {
+      await updateStoredRequestStatus(db, requestId, "delivered");
+    } catch (error) {
+      console.error("Contact delivery status update failed", error);
+    }
 
     return reply(request, {
       ok: true,
@@ -689,6 +581,11 @@ export async function onRequestPost({ request, env }) {
       requestId,
     });
   } catch {
+    try {
+      await updateStoredRequestStatus(db, requestId, "delivery_failed");
+    } catch {
+      // The delivery error remains the primary failure reported to the visitor.
+    }
     return reply(request, {
       ok: false,
       title: "Kontaktformular nicht erreichbar",

@@ -1,17 +1,20 @@
-# Consent, Google Tag Manager und Meta Pixel
+# Consent, Google Analytics, Microsoft Clarity und Meta Pixel
 
 ## Architektur
 
 Die Website trennt Einwilligung, Ereignisse und Anbieter:
 
-1. `TrackingHead.astro` setzt vor dem Google Tag Manager den Advanced Consent
-   Mode und liest eine bestehende Einwilligung.
+1. `TrackingHead.astro` liest eine bestehende Einwilligung und lädt vor einer
+   Statistik-Einwilligung weder Google noch Microsoft.
 2. `ConsentBanner.astro` verwaltet die Kategorien `necessary`, `analytics` und
    `marketing`.
 3. `TrackingDataLayer.astro` erzeugt ausschließlich strukturierte Ereignisse
    ohne Formularinhalte oder angefragte Termine.
-4. Google Analytics wird über den Google Tag Manager konfiguriert.
-5. Das Meta Pixel wird direkt von der Website geladen, jedoch erst nach
+4. Google Analytics wird über den Google Tag Manager konfiguriert. Der Tag
+   Manager wird erst nach `analytics: true` geladen.
+5. Microsoft Clarity wird direkt von der Website geladen, ebenfalls erst nach
+   `analytics: true`. Es darf nicht zusätzlich im GTM angelegt werden.
+6. Das Meta Pixel wird direkt von der Website geladen, jedoch erst nach
    `marketing: true`. Es darf deshalb nicht zusätzlich im GTM angelegt werden.
 
 Die Anbieterkennungen sind öffentliche Build-Konfiguration. Sie sind keine
@@ -24,12 +27,12 @@ Die Vorlage steht in `.env.example`.
 | Wert | Verhalten |
 | --- | --- |
 | `disabled` | Kein Banner und keine Drittanbieter |
-| `staging` | Banner aktiv; Anbieter nur bei vollständigen IDs und erlaubtem Host |
+| `staging` | Banner und Anbieter nur bei vollständigen IDs und erlaubtem Host |
 | `test` | Ausschließlich für künstliche Test-IDs |
 | `production` | Alle echten IDs sind verpflichtend; Platzhalter brechen den Build ab |
 
-Der Standard ist `staging` ohne Anbieterkennungen. Damit kann der Banner
-gestaltet und getestet werden, ohne Daten an Google oder Meta zu senden.
+Der Standard ist `staging` ohne Anbieterkennungen. Damit werden weder Banner
+noch Drittanbieter geladen.
 
 `PUBLIC_TRACKING_ALLOWED_HOSTS` ist eine zweite Sicherung im Browser. Ein
 Production-Build lädt seine Anbieter nur auf einem explizit freigegebenen
@@ -38,7 +41,7 @@ kein Tracking-Schalter.
 
 ## Umschaltung auf die .de-Domain
 
-Vor dem Livegang werden in der Cloudflare-Buildumgebung gesetzt:
+Vor dem Livegang werden in der Build-Umgebung gesetzt:
 
 ```text
 PUBLIC_TRACKING_ENV=production
@@ -46,15 +49,22 @@ PUBLIC_TRACKING_ALLOWED_HOSTS=artbild-fotografie.de,www.artbild-fotografie.de
 PUBLIC_GTM_CONTAINER_ID=GTM-…
 PUBLIC_GA4_MEASUREMENT_ID=G-…
 PUBLIC_META_PIXEL_ID=…
-PUBLIC_CONSENT_VERSION=2026-07-29.1
+PUBLIC_CLARITY_PROJECT_ID=…
+PUBLIC_GA4_DATA_RETENTION_MONTHS=2
+PUBLIC_CONSENT_VERSION=2026-08-08.1
 ```
 
 Diese Werte müssen dem Astro-Build zur Verfügung stehen. Ein Eintrag unter
 Wrangler `[vars]` oder in `.dev.vars` reicht nicht aus, weil die Website
 statisch gebaut wird.
 
-Der Production-Build schlägt fehl, wenn eine Kennung fehlt, ein Format nicht
-stimmt oder ein erkennbarer Testwert verwendet wird. Die Vorabprüfung liest
+`PUBLIC_GA4_DATA_RETENTION_MONTHS` dokumentiert den vorgesehenen GA4-Wert und
+darf nur `2` oder `14` betragen. Im Production-Modus muss der Wert ausdrücklich
+gesetzt und vor dem Build mit der tatsächlichen Einstellung der GA4-Property
+abgeglichen werden. Die Build-Variable ändert die Property nicht selbst.
+
+Der Production-Build schlägt fehl, wenn eine der vier Kennungen fehlt, ein Format nicht
+stimmt, die Aufbewahrungsdauer fehlt oder ein erkennbarer Testwert verwendet wird. Die Vorabprüfung liest
 auch `.env` und `.env.production`; tatsächlich gesetzte Build-Variablen haben
 Vorrang. Die Aktivierung erfolgt dadurch ohne Änderung an Komponenten oder
 Seitentemplates.
@@ -68,6 +78,12 @@ PUBLIC_TRACKING_ENV=disabled
 Anschließend muss neu gebaut und deployt werden.
 
 ## Google Tag Manager
+
+Der Google Tag Manager wird erst nach einer Statistik-Einwilligung geladen.
+Vorher stehen dort ausschließlich lokale Konfigurations- und
+Einwilligungswerte. Verhaltens-, Sichtbarkeits- und Formularereignisse werden
+ohne Statistik-Einwilligung weder vorgemerkt noch später nachgesendet; es
+erfolgt keine Anfrage an Google.
 
 Im Container werden mindestens folgende Data-Layer-Variablen angelegt:
 
@@ -105,6 +121,7 @@ Empfohlene Tags:
    Consent-Prüfungen verwendet werden.
 4. GA4-Ereignistags für die freigegebenen Ereignisse aus der folgenden Tabelle.
 5. Kein Meta-Basistag und kein zweites Meta Pixel im GTM.
+6. Kein Clarity-Tag im GTM; Clarity wird direkt durch die Website gesteuert.
 
 Vor Veröffentlichung muss der Container im Preview-Modus und anschließend mit
 Tag Assistant geprüft werden.
@@ -169,9 +186,19 @@ Regeln:
 - ein neuer Conversion-Event benötigt immer einen bestätigten fachlichen
   Erfolg, nicht nur einen Klick.
 
+## Microsoft Clarity
+
+Clarity wird direkt mit `PUBLIC_CLARITY_PROJECT_ID` geladen. Es gehört zur
+Kategorie Statistik und startet erst nach `analytics: true`. Formulare tragen
+`data-clarity-mask`, damit ihre sichtbaren Inhalte zusätzlich zur
+standardmäßigen Clarity-Maskierung geschützt sind.
+
+Beim Widerruf erhält Clarity ein abgelehntes Consent-V2-Signal. Die lokal
+erreichbaren Cookies `_clck` und `_clsk` werden entfernt.
+
 ## Consent-Verhalten
 
-Standardwerte vor GTM:
+Die lokalen Google-Consent-Standardwerte lauten:
 
 ```text
 analytics_storage=denied
@@ -182,34 +209,28 @@ security_storage=granted
 ```
 
 Zusätzlich sind `ads_data_redaction=true` und `url_passthrough=false` gesetzt.
-Im Advanced Mode kann Google cookielose Signale erhalten. Meta wird vor einer
-Marketing-Einwilligung technisch nicht geladen.
+Diese Werte erzeugen allein keine Netzwerkanfrage. Google Tag Manager und
+Microsoft Clarity werden vor einer Statistik-Einwilligung technisch nicht
+geladen; Meta wird vor einer Marketing-Einwilligung nicht geladen.
 
 Der First-Party-Cookie `artbild_consent` speichert Auswahl, Version und
 Zeitpunkt für sechs Monate. Eine Änderung von `PUBLIC_CONSENT_VERSION`
 invalidiert alte Entscheidungen und zeigt den Banner erneut.
 
-Jeder interne Query-Parameter `termin` wird vor dem Start der Anbieter aus der
-URL entfernt. Nur ein gültiger Wert im Format `YYYY-MM-DD` wird kurzzeitig in
-`sessionStorage` gehalten und danach in das Kontaktformular übernommen. Kann
-die URL nicht sicher bereinigt werden, bleiben die Anbieter für diesen Aufruf
-deaktiviert. Der Termin erscheint weder im Data Layer noch in einer
-Pageview-URL.
-
 ## Abnahme vor Production
 
-1. Frisches Browserprofil: Standardwerte sind vor GTM auf `denied`.
-2. „Nur notwendige“: keine GA-, GCL-, FBP- oder FBC-Cookies.
-3. Nur Statistik: Analytics erlaubt, Meta weiterhin vollständig blockiert.
+1. Frisches Browserprofil: keine Anfrage an Google, Microsoft oder Meta.
+2. „Nur notwendige“: keine GA-, Clarity-, FBP- oder FBC-Cookies.
+3. Nur Statistik: GTM/GA4 und Clarity aktiv, Meta weiterhin vollständig blockiert.
 4. Marketing: Meta lädt genau einmal mit der vorgesehenen Pixel-ID.
 5. Widerruf: Consent-Update auf `denied`, bekannte Anbieter-Cookies gelöscht.
 6. Reload: Auswahl wird vor dem GTM-Aufruf wiederhergestellt.
 7. Datenschutz-Einstellungen bleiben über das Schild-Symbol erreichbar.
 8. `/admin-termine/` und die 404-Seite laden kein Tracking.
-9. Cloudflare-CSP blockiert keine vorgesehenen Anbieter und erlaubt keine
+9. Die ausgelieferte CSP blockiert keine vorgesehenen Anbieter und erlaubt keine
    zusätzlichen, nicht benötigten Anbieter.
-10. GA4 DebugView, Tag Assistant und Meta Events Manager zeigen ausschließlich
-    Testereignisse ohne personenbezogene Parameter.
+10. GA4 DebugView, Tag Assistant, Clarity und Meta Events Manager zeigen
+    ausschließlich Testereignisse ohne unmaskierte personenbezogene Parameter.
 
-Die Datenschutzerklärung und die endgültige Advanced-Mode-Konfiguration
+Die Datenschutzerklärung und die endgültige Consent-Konfiguration
 sollten vor dem Livegang juristisch geprüft werden.

@@ -324,6 +324,7 @@ const schemaGraph = {
           aria-labelledby="contact-form-title"
           aria-describedby="contact-form-intro contact-form-status"
           data-contact-form
+          data-clarity-mask
           data-track-form
           data-form-id="kontakt_anfrage_form"
           data-form-type="contact_request"
@@ -511,8 +512,8 @@ const schemaGraph = {
               data-agent-field="privacy-consent"
             >
             <span>
-              Ich bin damit einverstanden, dass meine Angaben zur Bearbeitung
-              der Anfrage verarbeitet werden. Weitere Informationen stehen in der
+              Ich habe die Datenschutzerklärung zur Kenntnis genommen. Meine
+              Angaben werden zur Bearbeitung der Anfrage verarbeitet. Weitere Informationen stehen in der
               <a
                 href="/datenschutz/"
                 data-track-event="cta_click"
@@ -584,25 +585,8 @@ const schemaGraph = {
         const tfpImages = contactForm.querySelector("[data-contact-tfp-images]");
         const status = contactForm.querySelector("[data-contact-status]");
         const submit = contactForm.querySelector("[data-contact-submit]");
-        const params = new URLSearchParams(window.location.search);
-        let storedTermin = "";
-        try {
-          storedTermin = window.sessionStorage.getItem("artbild_requested_date") || "";
-        } catch (_) {
-          storedTermin = "";
-        }
-        const termin = params.get("termin") || storedTermin;
-
         if (loadedAt instanceof HTMLInputElement) loadedAt.value = String(Date.now());
         if (jsEnabled instanceof HTMLInputElement) jsEnabled.value = "1";
-        if (dateField instanceof HTMLInputElement && termin && /^\d{4}-\d{2}-\d{2}$/.test(termin)) {
-          dateField.value = termin;
-          try {
-            window.sessionStorage.removeItem("artbild_requested_date");
-          } catch (_) {
-            // Session storage may be unavailable in hardened browser modes.
-          }
-        }
 
         const syncRequestType = () => {
           const isTfp = requestType instanceof HTMLSelectElement && requestType.value === "tfp";

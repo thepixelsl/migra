@@ -1,10 +1,12 @@
 ---
 import ConsentBanner from "./ConsentBanner.astro";
+import { trackingConfig } from "../config/tracking";
 ---
 
-<ConsentBanner />
-
-<script is:inline>
+{trackingConfig.consentEnabled && (
+  <>
+    <ConsentBanner />
+    <script is:inline>
   (() => {
     if (window.__artbildTrackingReady) return;
     window.__artbildTrackingReady = true;
@@ -13,13 +15,9 @@ import ConsentBanner from "./ConsentBanner.astro";
     const observedSections = new WeakSet();
     const observedForms = new WeakSet();
     const startedForms = new WeakSet();
+    let trackingReadyPublished = false;
 
     window[DATA_LAYER_NAME] = window[DATA_LAYER_NAME] || [];
-    window[DATA_LAYER_NAME].push({
-      event: "artbild_tracking_ready",
-      consent_mode: "advanced",
-      tracking_schema: "artbild_v2",
-    });
 
     const sanitize = (value) => {
       if (!value) return undefined;
@@ -128,6 +126,10 @@ import ConsentBanner from "./ConsentBanner.astro";
     };
 
     const pushEvent = (payload) => {
+      const analyticsGranted = window.ArtbildConsent?.analytics === true;
+      const marketingGranted = window.ArtbildConsent?.marketing === true;
+      if (!analyticsGranted && !marketingGranted) return;
+
       const eventPayload = compact({
         page_id: pageId(),
         page_type: pageType(),
@@ -135,14 +137,28 @@ import ConsentBanner from "./ConsentBanner.astro";
       });
       if (!eventPayload.event) return;
 
-      eventPayload.consent_analytics = window.ArtbildConsent?.analytics === true
+      eventPayload.consent_analytics = analyticsGranted
         ? "granted"
         : "denied";
-      eventPayload.consent_marketing = window.ArtbildConsent?.marketing === true
+      eventPayload.consent_marketing = marketingGranted
         ? "granted"
         : "denied";
-      window[DATA_LAYER_NAME].push(eventPayload);
-      window.artbildMetaPixel?.track?.(eventPayload);
+      if (analyticsGranted) {
+        window[DATA_LAYER_NAME].push(eventPayload);
+      }
+      if (marketingGranted) {
+        window.artbildMetaPixel?.track?.(eventPayload);
+      }
+    };
+
+    const publishTrackingReady = () => {
+      if (trackingReadyPublished || window.ArtbildConsent?.analytics !== true) return;
+      trackingReadyPublished = true;
+      window[DATA_LAYER_NAME].push({
+        event: "artbild_tracking_ready",
+        consent_mode: "basic",
+        tracking_schema: "artbild_v2",
+      });
     };
 
     window.artbildTracking = {
@@ -167,7 +183,10 @@ import ConsentBanner from "./ConsentBanner.astro";
         event.detail?.analytics === true ? "granted" : "denied";
       document.documentElement.dataset.marketingConsent =
         event.detail?.marketing === true ? "granted" : "denied";
+      if (event.detail?.analytics === true) publishTrackingReady();
     });
+
+    publishTrackingReady();
 
     const observeSections = () => {
       const sections = [...document.querySelectorAll("[data-track-section]")];
@@ -335,4 +354,6 @@ import ConsentBanner from "./ConsentBanner.astro";
       init();
     }
   })();
-</script>
+    </script>
+  </>
+)}

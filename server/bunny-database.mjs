@@ -35,6 +35,23 @@ const SCHEMA_STATEMENTS = [
     ON contact_requests (ip_hash)`,
 ];
 
+const CONTACT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+
+async function pruneContactRequests(client) {
+  await client.execute(`
+    UPDATE contact_requests
+    SET ip_hash = NULL,
+        user_agent = NULL,
+        security_year = NULL
+    WHERE created_at < datetime('now', '-15 minutes')
+      AND (ip_hash IS NOT NULL OR user_agent IS NOT NULL OR security_year IS NOT NULL)
+  `);
+  await client.execute(`
+    DELETE FROM contact_requests
+    WHERE created_at < datetime('now', '-30 days')
+  `);
+}
+
 function requiredText(value) {
   return typeof value === "string" && value.trim() ? value.trim() : "";
 }
@@ -67,12 +84,27 @@ export async function createBunnyDatabase(env = process.env) {
     await client.execute(statement);
   }
 
+  await pruneContactRequests(client);
+  const cleanupTimer = setInterval(() => {
+    pruneContactRequests(client).catch((error) => {
+      console.error("Contact data cleanup failed", error);
+    });
+  }, CONTACT_CLEANUP_INTERVAL_MS);
+  cleanupTimer.unref?.();
+
   return {
     client,
     persistent: configuration.persistent,
     async ready() {
       await client.execute("SELECT 1");
       return true;
+    },
+    async cleanupContactRequests() {
+      await pruneContactRequests(client);
+    },
+    close() {
+      clearInterval(cleanupTimer);
+      client.close?.();
     },
     d1: createD1Adapter(client),
     kv: createKvAdapter(client),

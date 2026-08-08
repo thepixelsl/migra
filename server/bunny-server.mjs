@@ -23,8 +23,8 @@ const CONTENT_SECURITY_POLICY = [
   "img-src 'self' data: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net",
-  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://www.facebook.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms",
+  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com",
   "upgrade-insecure-requests",
 ].join("; ");
 
@@ -107,11 +107,11 @@ async function toWebRequest(request, env) {
     }
   }
 
-  // Never trust a client-supplied Cloudflare Access identity on Bunny.
+  // Identity headers from an unsupported upstream must never authorize access.
   headers.delete("cf-access-authenticated-user-email");
   headers.delete("cf-connecting-ip");
   const realIp = firstHeaderValue(headers.get("x-real-ip"));
-  if (realIp) headers.set("cf-connecting-ip", realIp);
+  if (realIp) headers.set("x-real-ip", realIp);
 
   const publicProtocol = firstHeaderValue(headers.get("x-forwarded-proto"))
     || String(env.BUNNY_PUBLIC_SCHEME || "https");
@@ -280,7 +280,11 @@ export async function createBunnyRuntime(options = {}) {
     },
     async close() {
       await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
-      database.client?.close?.();
+      if (typeof database.close === "function") {
+        await database.close();
+      } else {
+        database.client?.close?.();
+      }
     },
   };
 }

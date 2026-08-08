@@ -21,8 +21,7 @@
   "dependencies": {
     "@libsql/client": "^0.15.15",
     "astro": "^7.1.6",
-    "nodemailer": "^9.0.4",
-    "worker-mailer": "^1.2.1"
+    "nodemailer": "^9.0.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",

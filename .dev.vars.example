@@ -2,9 +2,5 @@ STRATO_SMTP_USER=info@example.com
 STRATO_SMTP_PASS=your-strato-mailbox-password
 CONTACT_FROM=mail@example.com
 CONTACT_TO=info@example.com
+CONTACT_HASH_SALT=replace-with-a-long-random-string
 ADMIN_EMAIL=info@example.com
-
-# Optional:
-# CONTACT_HASH_SALT=replace-with-a-long-random-string
-# CONTACT_REQUIRE_TURNSTILE=true
-# TURNSTILE_SECRET_KEY=your-turnstile-secret
