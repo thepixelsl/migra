@@ -79,7 +79,8 @@ test("mobile Zurich article keeps the gallery centered and touch friendly", asyn
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("display", "flex");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-wrap", "wrap");
 
   const mobileState = await page.evaluate(() => {
     const viewportCenter = document.documentElement.clientWidth / 2;
@@ -97,6 +98,9 @@ test("mobile Zurich article keeps the gallery centered and touch friendly", asyn
         hero: centerDelta(".zurich-hero"),
         gallery: centerDelta(".gallery-image-grid"),
       },
+      galleryItems: [...document.querySelectorAll<HTMLElement>(".gallery-image-grid__item")]
+        .map((item) => item.getBoundingClientRect())
+        .map(({ left, width, height }) => ({ left, width, height })),
     };
   });
 
@@ -104,6 +108,9 @@ test("mobile Zurich article keeps the gallery centered and touch friendly", asyn
   expect(mobileState.centers.mobileBar).toBe(0);
   expect(mobileState.centers.hero).toBe(0);
   expect(mobileState.centers.gallery).toBe(0);
+  expect(mobileState.galleryItems.every(({ height }) => height > 0)).toBe(true);
+  expect(new Set(mobileState.galleryItems.map(({ left }) => Math.round(left))).size).toBe(1);
+  expect(new Set(mobileState.galleryItems.map(({ width }) => Math.round(width))).size).toBe(1);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({

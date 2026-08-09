@@ -79,14 +79,21 @@ test("mobile Getting Ready gallery is touch friendly and has no overflow", async
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("display", "flex");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-wrap", "wrap");
 
   const layout = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     heroWidth: document.querySelector(".getting-ready-hero")?.getBoundingClientRect().width,
+    galleryItems: [...document.querySelectorAll<HTMLElement>(".gallery-image-grid__item")]
+      .map((item) => item.getBoundingClientRect())
+      .map(({ left, width, height }) => ({ left, width, height })),
   }));
   expect(layout.overflow).toBe(0);
   expect(layout.heroWidth).toBeLessThanOrEqual(358);
+  expect(layout.galleryItems.every(({ height }) => height > 0)).toBe(true);
+  expect(new Set(layout.galleryItems.map(({ left }) => Math.round(left))).size).toBe(1);
+  expect(new Set(layout.galleryItems.map(({ width }) => Math.round(width))).size).toBe(1);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({

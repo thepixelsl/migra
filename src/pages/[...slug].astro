@@ -135,6 +135,21 @@ const getImageOrientation = (image: MigratedImage) => {
   if (Math.abs(image.width - image.height) < 8) return "square";
   return image.width > image.height ? "landscape" : "portrait";
 };
+const cssNumber = (value: number) => Number(value.toFixed(6)).toString();
+const getGalleryImageRatio = (image: MigratedImage) =>
+  image.width && image.height ? image.width / image.height : 4 / 3;
+const getGalleryImageStyle = (image: MigratedImage) => {
+  const ratio = getGalleryImageRatio(image);
+  const aspectWidth = image.width ?? 4;
+  const aspectHeight = image.height ?? 3;
+
+  return [
+    `--image-aspect: ${aspectWidth} / ${aspectHeight}`,
+    `--image-ratio: ${cssNumber(ratio)}`,
+    `--image-basis-desktop: clamp(${cssNumber(ratio * 220)}px, ${cssNumber(ratio * 21)}vw, ${cssNumber(ratio * 380)}px)`,
+    `--image-basis-tablet: clamp(${cssNumber(ratio * 170)}px, ${cssNumber(ratio * 22)}vw, ${cssNumber(ratio * 220)}px)`,
+  ].join("; ");
+};
 
 const schemaGraph = {
   "@context": "https://schema.org",
@@ -338,7 +353,11 @@ const schemaGraph = {
             <h2 id="migrated-gallery-title">{isGallery || page.type === "post" ? "Bildgalerie" : "Bilder zur Seite"}</h2>
             <div>
               {galleryImages.map((image, index) => (
-                <figure class={`is-${getImageOrientation(image)}`}>
+                <figure
+                  class={`is-${getImageOrientation(image)}`}
+                  style={getGalleryImageStyle(image)}
+                  data-gallery-index={index}
+                >
                   <img
                     src={image.src}
                     width={image.width}
@@ -619,9 +638,14 @@ const schemaGraph = {
 
   .migrated-article.is-gallery .migrated-gallery > div,
   .migrated-article.is-post .migrated-gallery > div {
-    display: block;
-    columns: 3 280px;
-    column-gap: clamp(36px, 4vw, 72px);
+    --gallery-column-gap: clamp(36px, 4vw, 72px);
+    --gallery-column-gap-offset: clamp(-72px, -4vw, -36px);
+    --gallery-row-gap: clamp(42px, 4vw, 76px);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    column-gap: var(--gallery-column-gap);
+    row-gap: var(--gallery-row-gap);
   }
 
   .migrated-gallery figure {
@@ -631,9 +655,20 @@ const schemaGraph = {
 
   .migrated-article.is-gallery .migrated-gallery figure,
   .migrated-article.is-post .migrated-gallery figure {
-    margin: 0 0 clamp(42px, 4vw, 76px);
-    break-inside: avoid;
+    min-width: 0;
+    margin: 0;
+    flex: var(--image-ratio, 1) 1 var(--image-basis-desktop, 300px);
+    aspect-ratio: var(--image-aspect, auto);
     background: transparent;
+  }
+
+  .migrated-article.is-gallery .migrated-gallery > div::after,
+  .migrated-article.is-post .migrated-gallery > div::after {
+    content: "";
+    height: 0;
+    flex: 10 1 0;
+    margin-inline-start: var(--gallery-column-gap-offset);
+    pointer-events: none;
   }
 
   .migrated-gallery img {
@@ -646,8 +681,8 @@ const schemaGraph = {
   .migrated-article.is-post .migrated-gallery img {
     display: block;
     width: 100%;
-    height: auto;
-    aspect-ratio: auto;
+    height: 100%;
+    aspect-ratio: var(--image-aspect, auto);
     object-fit: contain;
   }
 
@@ -733,11 +768,27 @@ const schemaGraph = {
     }
 
     .migrated-article.is-gallery .migrated-gallery > div {
-      columns: 1;
+      --gallery-row-gap: clamp(36px, 9vw, 54px);
     }
 
-    .migrated-article.is-gallery .migrated-gallery figure {
-      margin-bottom: clamp(36px, 9vw, 54px);
+    .migrated-article.is-gallery .migrated-gallery figure,
+    .migrated-article.is-post .migrated-gallery figure {
+      margin-bottom: 0;
+      flex-basis: var(--image-basis-tablet, 220px);
+    }
+  }
+
+  @media (max-width: 620px) {
+    .migrated-article.is-gallery .migrated-gallery figure,
+    .migrated-article.is-post .migrated-gallery figure {
+      width: 100%;
+      flex-basis: 100%;
+      flex-grow: 0;
+    }
+
+    .migrated-article.is-gallery .migrated-gallery > div::after,
+    .migrated-article.is-post .migrated-gallery > div::after {
+      display: none;
     }
   }
 </style>

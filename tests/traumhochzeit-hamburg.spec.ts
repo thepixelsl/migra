@@ -45,17 +45,24 @@ test("mobile Atlantic gallery is touch friendly and has no horizontal overflow",
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("column-count", "1");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("display", "flex");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-wrap", "wrap");
 
   const triggerHeights = await page
     .locator("[data-gallery-trigger='traumhochzeit-hamburg']")
     .evaluateAll((buttons) => buttons.slice(0, 4).map((button) => button.getBoundingClientRect().height));
   expect(Math.min(...triggerHeights)).toBeGreaterThan(44);
 
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBe(0);
+  const layout = await page.evaluate(() => ({
+    overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    items: [...document.querySelectorAll<HTMLElement>(".gallery-image-grid__item")]
+      .map((item) => item.getBoundingClientRect())
+      .map(({ left, width, height }) => ({ left, width, height })),
+  }));
+  expect(layout.overflow).toBe(0);
+  expect(layout.items.every(({ height }) => height > 0)).toBe(true);
+  expect(new Set(layout.items.map(({ left }) => Math.round(left))).size).toBe(1);
+  expect(new Set(layout.items.map(({ width }) => Math.round(width))).size).toBe(1);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({
