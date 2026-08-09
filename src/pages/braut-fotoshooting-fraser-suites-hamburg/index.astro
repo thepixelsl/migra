@@ -271,7 +271,17 @@ const schemaGraph = {
           <p>Fotostrecke</p>
           <h2>Fraser Suites Hamburg</h2>
         </div>
-        <GalleryImageGrid columns={galleryColumns} label="Braut-Fotoshooting Fraser Suites Hamburg" />
+        <GalleryImageGrid
+          columns={galleryColumns}
+          galleryId="fraser-suites-editorial-gallery"
+          label="Braut-Fotoshooting Fraser Suites Hamburg"
+          dialogLabel="Braut-Fotoshooting Fraser Suites Hamburg in Vollansicht"
+          sectionId="fraser_suites_gallery"
+          contentTopic="hochzeitsfotos_hamburg"
+          userIntent="bildsprache_pruefen"
+          journeyStage="consideration"
+          position="after_article"
+        />
       </section>
 
       <StoryLanguageCta kind="editorial" />

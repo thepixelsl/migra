@@ -31,14 +31,15 @@ export const socialCardOverrides = {
     focalPoint: "center",
   },
   "/trautermin-hamburg-online-reservieren/": {
-    title: "Trautermine Hamburg",
-    subtitle: "Online finden und reservieren",
-    image: "/migrated-assets/gallery__paarshooting-in-hamburg/ART_9148_web_1.jpg",
+    title: "Traukalender der Stadt Hamburg",
+    subtitle: "Freie Trautermine können für alle Standesämter hamburgweit online reserviert werden.",
     location: "Hamburg",
-    label: "Ratgeber",
-    year: "next",
-    updated: "2026-07-22",
+    label: "Journal",
+    pageType: "article",
     focalPoint: "center",
+  },
+  "/blog/": {
+    pageType: "website",
   },
   "/standesamt-hamburg/": {
     title: "Standesamtfinder Hamburg",

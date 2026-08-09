@@ -1,11 +1,14 @@
 ---
 import FaviconHead from "../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import migratedPages from "../../data/migratedPages.json";
 import { isMigratedPageIndexable } from "../../lib/migratedSeoPolicy";
 import "../../styles/global.css";
+import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-editorial-paar.jpg";
+import fraserCardImage from "../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
 
 type MigratedImage = {
   src: string;
@@ -51,6 +54,14 @@ const getPostCategory = (path: string) => {
   if (travelPostPaths.has(path)) return "Unterwegs & Editorial";
   return "Hochzeit & Planung";
 };
+const dedicatedPostCardImages: Record<string, MigratedImage> = {
+  "/braut-fotoshooting-fraser-suites-hamburg/": {
+    src: fraserCardImage.src,
+    alt: "Brautportrait in den Fraser Suites Hamburg",
+    width: fraserCardImage.width,
+    height: fraserCardImage.height,
+  },
+};
 const getPublishedTimestamp = (date?: string) => {
   if (!date) return 0;
   const timestamp = Date.parse(date);
@@ -80,18 +91,19 @@ const blogPosts = (migratedPages as MigratedPost[])
     category: getPostCategory(entry.path),
     formattedDate: formatPublishedDate(entry.datePublished),
     cardImage:
-      entry.heroImage?.width &&
+      dedicatedPostCardImages[entry.path] ??
+      (entry.heroImage?.width &&
       entry.heroImage?.height &&
       entry.heroImage.width >= 480 &&
       entry.heroImage.height >= 280
         ? entry.heroImage
-        : undefined,
+        : undefined),
   }));
 
 const collectionItems = [
   {
     url: `${canonicalSiteUrl}/trautermin-hamburg-online-reservieren/`,
-    name: "Traukalender Hamburg",
+    name: "Traukalender der Stadt Hamburg",
   },
   ...blogPosts.map((post) => ({
     url: `${canonicalSiteUrl}${post.path}`,
@@ -173,7 +185,7 @@ const collectionSchema = {
         <a
           class="pinned-post"
           href="/trautermin-hamburg-online-reservieren/"
-          aria-label="Zum Artikel Traukalender Hamburg"
+          aria-label="Zum Artikel Traukalender der Stadt Hamburg"
           data-track-event="cta_click"
           data-cta-id="blog_index_traukalender_hamburg"
           data-cta-type="internal_article_link"
@@ -182,10 +194,22 @@ const collectionSchema = {
           data-user-intent="termin_finden"
           data-journey-stage="orientierung"
         >
-          <span class="pinned-post__label">Aktuell</span>
+          <span class="pinned-post__media" aria-hidden="true">
+            <Image
+              src={trauterminCardImage}
+              alt=""
+              widths={[420, 640, 900]}
+              sizes="(max-width: 680px) calc(100vw - 64px), 250px"
+              loading="eager"
+              decoding="async"
+              format="webp"
+              quality={86}
+            />
+          </span>
           <span class="pinned-post__body">
-            <strong>Traukalender Hamburg</strong>
-            <span>Offizielle Hamburger Buchungswege und die nächsten Planungsschritte.</span>
+            <span class="pinned-post__label">Aktuell</span>
+            <strong>Traukalender der Stadt Hamburg</strong>
+            <span>Freie Trautermine können für alle Standesämter hamburgweit online reserviert werden.</span>
           </span>
           <span class="pinned-post__cta">Zum Artikel</span>
         </a>
@@ -288,16 +312,28 @@ const collectionSchema = {
 
   .pinned-post {
     display: grid;
-    grid-template-columns: max-content minmax(0, 1fr) max-content;
+    grid-template-columns: minmax(180px, 250px) minmax(0, 1fr) max-content;
     gap: clamp(16px, 3vw, 30px);
     align-items: center;
-    min-height: 118px;
     margin-top: clamp(32px, 5vw, 58px);
-    padding: clamp(18px, 3vw, 28px);
+    padding: clamp(14px, 2vw, 22px);
     border: 1px solid var(--line);
     background: #f7f3ee;
     color: inherit;
     text-decoration: none;
+  }
+
+  .pinned-post__media {
+    display: block;
+    overflow: hidden;
+    background: #eee9e2;
+  }
+
+  .pinned-post__media :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
   }
 
   .pinned-post__label,
@@ -382,6 +418,7 @@ const collectionSchema = {
 
   .journal-card__image {
     display: block;
+    flex: 0 0 auto;
     overflow: hidden;
     background: #eee9e2;
   }
@@ -400,7 +437,7 @@ const collectionSchema = {
 
   .journal-card__body {
     display: flex;
-    min-height: 100%;
+    min-height: 0;
     flex: 1;
     flex-direction: column;
     padding: clamp(20px, 2.7vw, 30px);
@@ -478,6 +515,10 @@ const collectionSchema = {
       grid-template-columns: 1fr;
       gap: 12px;
       min-height: 0;
+    }
+
+    .pinned-post__media :global(img) {
+      aspect-ratio: 4 / 3;
     }
 
     .pinned-post__cta {

@@ -113,6 +113,20 @@ const contentDateModified = ["/datenschutz/", "/datenschutzerklaerung/"].include
 const primaryImage = heroImage
   ? `${siteUrl}${heroImage.src}`
   : `${siteUrl}/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg`;
+const gallerySchemaId = `${pageUrl}#gallery`;
+const galleryImageObjects = galleryImages.map((image, index) => ({
+  "@type": "ImageObject",
+  position: index + 1,
+  contentUrl: `${siteUrl}${image.src}`,
+  width: image.width,
+  height: image.height,
+  caption: image.alt,
+}));
+const hasSupplementalGallery = hasGallery && !isGallery;
+const articleImages = [
+  primaryImage,
+  ...galleryImageObjects.map((image) => image.contentUrl),
+].filter((image, index, images) => images.indexOf(image) === index);
 const breadcrumbLabel = isGallery ? "Galerie" : page.type === "post" ? "Blog" : "Seite";
 const getImageOrientation = (image: MigratedImage) => {
   if (!image.width || !image.height) return "natural";
@@ -167,7 +181,8 @@ const schemaGraph = {
       keywords: page.keywords,
       datePublished: page.datePublished,
       dateModified: contentDateModified,
-      image: primaryImage,
+      image: articleImages,
+      ...(hasSupplementalGallery ? { hasPart: { "@id": gallerySchemaId } } : {}),
       mainEntityOfPage: {
         "@id": `${pageUrl}#webpage`,
       },
@@ -195,6 +210,15 @@ const schemaGraph = {
       },
       inLanguage: "de",
     },
+    ...(hasSupplementalGallery
+      ? [{
+          "@type": "ImageGallery",
+          "@id": gallerySchemaId,
+          name: `Bildgalerie zu ${page.title}`,
+          image: galleryImageObjects,
+          inLanguage: "de",
+        }]
+      : []),
   ],
 };
 ---
@@ -231,7 +255,7 @@ const schemaGraph = {
     </header>
 
     <main>
-      <article class:list={["migrated-article", { "is-gallery": isGallery }]}>
+      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post" }]}>
         <nav class="migrated-breadcrumb" aria-label="Breadcrumb">
           <a href="/">Startseite</a>
           <span aria-hidden="true">/</span>
@@ -282,7 +306,7 @@ const schemaGraph = {
             <div>
               <p class="migrated-kicker">Traukalender Stadt Hamburg</p>
               <p>
-                Noch ganz am Anfang der Planung? Im offiziellen Traukalender der Stadt Hamburg könnt Ihr freie Trautermine online prüfen und reservieren. Hier habe ich Euch erklärt, wie das funktioniert.
+                Freie Trautermine können für alle Standesämter hamburgweit online reserviert werden.
               </p>
             </div>
             <a
@@ -295,7 +319,7 @@ const schemaGraph = {
               data-user-intent="ratgeber_lesen"
               data-journey-stage="vor_reservierung"
             >
-              Zum Ratgeber Trautermin Hamburg
+              Freie Trautermine in Hamburg online prüfen und buchen
             </a>
           </aside>
         )}
@@ -307,7 +331,7 @@ const schemaGraph = {
         {hasGallery && (
           <section class="migrated-gallery" aria-labelledby="migrated-gallery-title">
             <p class="migrated-kicker">Bildstrecke</p>
-            <h2 id="migrated-gallery-title">{isGallery ? "Galerie" : "Bilder zur Seite"}</h2>
+            <h2 id="migrated-gallery-title">{isGallery || page.type === "post" ? "Bildgalerie" : "Bilder zur Seite"}</h2>
             <div>
               {galleryImages.map((image, index) => (
                 <figure class={`is-${getImageOrientation(image)}`}>
@@ -577,13 +601,15 @@ const schemaGraph = {
     gap: clamp(14px, 2vw, 28px);
   }
 
-  .migrated-article.is-gallery .migrated-gallery {
+  .migrated-article.is-gallery .migrated-gallery,
+  .migrated-article.is-post .migrated-gallery {
     width: min(1320px, 100%);
     margin-right: auto;
     margin-left: auto;
   }
 
-  .migrated-article.is-gallery .migrated-gallery > div {
+  .migrated-article.is-gallery .migrated-gallery > div,
+  .migrated-article.is-post .migrated-gallery > div {
     display: block;
     columns: 3 280px;
     column-gap: clamp(36px, 4vw, 72px);
@@ -594,7 +620,8 @@ const schemaGraph = {
     background: #f4f0eb;
   }
 
-  .migrated-article.is-gallery .migrated-gallery figure {
+  .migrated-article.is-gallery .migrated-gallery figure,
+  .migrated-article.is-post .migrated-gallery figure {
     margin: 0 0 clamp(42px, 4vw, 76px);
     break-inside: avoid;
     background: transparent;
@@ -606,7 +633,8 @@ const schemaGraph = {
     object-fit: cover;
   }
 
-  .migrated-article.is-gallery .migrated-gallery img {
+  .migrated-article.is-gallery .migrated-gallery img,
+  .migrated-article.is-post .migrated-gallery img {
     display: block;
     width: 100%;
     height: auto;
