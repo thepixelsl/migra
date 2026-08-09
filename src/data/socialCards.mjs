@@ -41,6 +41,10 @@ export const socialCardOverrides = {
   "/blog/": {
     pageType: "website",
   },
+  "/nd-filter-tabelle/": {
+    label: "Journal",
+    pageType: "article",
+  },
   "/standesamt-hamburg/": {
     title: "Standesamtfinder Hamburg",
     subtitle: "Adressen und Kontakte auf einen Blick",

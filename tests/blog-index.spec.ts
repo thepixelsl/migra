@@ -49,7 +49,7 @@ const blogMediaExpectations = [
   {
     path: "/nd-filter-tabelle/",
     description:
-      "Fallstricke vermeiden Im Sonnenuntergang wird es dunkler noch während Du belichtest. Plane dies mit ein. Im Sonnenaufgang wird es heller, während Du belichtest. Bedenke auch dies.",
+      "Diese Tabelle zeigt die zu wählenden Belichtungszeiten für Langzeitbelichtungen mit Filtern.",
     gallerySelector: ".migrated-gallery img",
     galleryCount: 0,
   },

@@ -2,6 +2,7 @@
 import FaviconHead from "../components/FaviconHead.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
 import DesktopNavigation from "../components/DesktopNavigation.astro";
+import NdFilterTable from "../components/NdFilterTable.astro";
 import migratedPages from "../data/migratedPages.json";
 import { modernizePrivacyContent } from "../lib/privacyContent";
 import { getMigratedSeoPolicy } from "../lib/migratedSeoPolicy";
@@ -60,6 +61,7 @@ const heroTitleLines =
     ? ["Paarshooting", "in Hamburg"]
     : undefined;
 const isStandesamtHamburgPage = page.path === "/standesamt-hamburg/";
+const isNdFilterTablePage = page.path === "/nd-filter-tabelle/";
 const isLargeEnough = (image?: MigratedImage) =>
   Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
 const getImageArea = (image: MigratedImage) => (image.width ?? 0) * (image.height ?? 0);
@@ -255,7 +257,7 @@ const schemaGraph = {
     </header>
 
     <main>
-      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post" }]}>
+      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post", "is-nd-filter-table": isNdFilterTablePage }]}>
         <nav class="migrated-breadcrumb" aria-label="Breadcrumb">
           <a href="/">Startseite</a>
           <span aria-hidden="true">/</span>
@@ -323,6 +325,8 @@ const schemaGraph = {
             </a>
           </aside>
         )}
+
+        {isNdFilterTablePage && <NdFilterTable />}
 
         <section class="migrated-content" aria-label="Inhalt">
           <div set:html={contentHtml}></div>
@@ -465,6 +469,11 @@ const schemaGraph = {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
+  }
+
+  .migrated-article.is-nd-filter-table .migrated-hero img {
+    aspect-ratio: auto;
+    object-fit: contain;
   }
 
   .migrated-content {
