@@ -110,17 +110,6 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         journeyStage: "auswahl",
       },
       {
-        label: "Hochzeitsfotograf Hamburg",
-        href: "/#hochzeitsfotograf-hamburg",
-        seoContext: "Hochzeitsfotograf Hamburg",
-        emphasis: "primary",
-        trackingId: "mobile_hochzeitsfotograf_hamburg",
-        ctaType: "navigation",
-        contentTopic: "hochzeitsfotograf_hamburg",
-        userIntent: "angebot_verstehen",
-        journeyStage: "orientierung",
-      },
-      {
         label: "Preise & Pakete",
         href: "/hochzeitsfotograf-preise/",
         seoContext: "Preise für Hochzeitsreportagen in Hamburg",
