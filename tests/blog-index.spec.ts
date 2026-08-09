@@ -63,6 +63,14 @@ test("blog index uses the configured site URL and exposes the indexable migrated
   });
 
   expect(response?.status()).toBe(200);
+  await expect(page).toHaveTitle("Blog | Artbild-Fotografie");
+  await expect(page.locator('html[lang="de"]')).toHaveCount(1);
+  await expect(page.locator("main")).toHaveCount(1);
+  await expect(page.locator(".journal-index h1")).toHaveCount(1);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    "Blog von Artbild-Fotografie mit Planungstipps, Hochzeitsreportagen und Fotografie-Archiv aus Hamburg.",
+  );
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     "href",
     "https://artbild-fotografie.de/blog/",
@@ -70,6 +78,22 @@ test("blog index uses the configured site URL and exposes the indexable migrated
   await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
     "content",
     "https://artbild-fotografie.de/blog/",
+  );
+  await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+    "content",
+    "website",
+  );
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    /\S+/,
+  );
+  await expect(page.locator('meta[property="og:image:alt"]')).toHaveAttribute(
+    "content",
+    /\S+/,
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary_large_image",
   );
   await expect(page.getByRole("heading", { name: "Alle Beiträge" })).toBeVisible();
   const pinnedPost = page.locator(".pinned-post");
@@ -84,24 +108,59 @@ test("blog index uses the configured site URL and exposes the indexable migrated
   await expect(pinnedPost.locator("img")).toHaveCount(1);
   await expect(pinnedPost.locator("img")).toHaveAttribute("width", /\d+/);
   await expect(pinnedPost.locator("img")).toHaveAttribute("height", /\d+/);
+  await expect(pinnedPost.locator("img")).toHaveAttribute("alt", /\S+/);
 
   const cards = page.locator(".journal-card");
   await expect(cards).toHaveCount(expectedPostPaths.length);
   await expect(cards.locator(".journal-card__image img")).toHaveCount(
     expectedPostPaths.length,
   );
+  const cardImageAltTexts = await cards
+    .locator(".journal-card__image img")
+    .evaluateAll((images) =>
+      images.map((image) => image.getAttribute("alt")?.trim() ?? ""),
+    );
+  expect(cardImageAltTexts.every((alt) => alt.length > 0)).toBe(true);
   const cardImageHeights = await cards
     .locator(".journal-card__image")
     .evaluateAll((images) =>
       images.map((image) => image.getBoundingClientRect().height),
     );
   expect(cardImageHeights.every((height) => height > 0)).toBe(true);
+  const cardImages = cards.locator(".journal-card__image img");
+  for (let index = 0; index < (await cardImages.count()); index += 1) {
+    const image = cardImages.nth(index);
+    await image.scrollIntoViewIfNeeded();
+    await expect
+      .poll(() => image.evaluate((element) => element.complete && element.naturalWidth > 0))
+      .toBe(true);
+  }
 
-  const cardPaths = await cards.locator("h3 a").evaluateAll((links) =>
-    links.map((link) => new URL((link as HTMLAnchorElement).href).pathname),
-  );
+  const cardPaths = await cards
+    .locator(".journal-card__link")
+    .evaluateAll((links) =>
+      links.map((link) => new URL((link as HTMLAnchorElement).href).pathname),
+    );
   expect(new Set(cardPaths).size).toBe(cardPaths.length);
   expect([...cardPaths].sort()).toEqual(expectedPostPaths);
+
+  const labelledArticles = await cards.evaluateAll((articles) =>
+    articles.map((article) => {
+      const labelledBy = article.getAttribute("aria-labelledby");
+      const heading = labelledBy ? article.querySelector(`#${labelledBy}`) : null;
+      const link = article.querySelector(".journal-card__link");
+      return {
+        labelledBy,
+        headingText: heading?.textContent?.trim() ?? "",
+        linkLabelledBy: link?.getAttribute("aria-labelledby"),
+      };
+    }),
+  );
+  expect(labelledArticles.every((article) => article.labelledBy)).toBe(true);
+  expect(labelledArticles.every((article) => article.headingText.length > 0)).toBe(true);
+  expect(
+    labelledArticles.every((article) => article.linkLabelledBy === article.labelledBy),
+  ).toBe(true);
 
   const itemList = await page
     .locator('script[type="application/ld+json"]')
@@ -158,13 +217,67 @@ test("visible blog articles expose title images, descriptions, and original gall
   }
 });
 
-test("blog index remains readable without horizontal overflow on mobile", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`${baseUrl}/blog/`, { waitUntil: "domcontentloaded" });
+test("blog index keeps its editorial rhythm across desktop, tablet, and mobile", async ({ page }) => {
+  const viewports = [
+    { width: 1440, height: 1000, stacked: false },
+    { width: 820, height: 1180, stacked: true },
+    { width: 390, height: 844, stacked: true },
+    { width: 320, height: 720, stacked: true },
+  ] as const;
 
-  await expect(page.locator(".journal-posts")).toHaveCSS("grid-template-columns", /\d+(\.\d+)?px/);
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBe(0);
+  for (const viewport of viewports) {
+    await page.setViewportSize(viewport);
+    await page.goto(`${baseUrl}/blog/`, { waitUntil: "domcontentloaded" });
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow, `${viewport.width}px viewport`).toBe(0);
+
+    const cards = page.locator(".journal-card");
+    const cardBoxes = await cards.evaluateAll((articles) =>
+      articles.map((article) => {
+        const image = article
+          .querySelector(".journal-card__image")
+          ?.getBoundingClientRect();
+        const body = article
+          .querySelector(".journal-card__body")
+          ?.getBoundingClientRect();
+        const bounds = article.getBoundingClientRect();
+        return {
+          articleLeft: bounds.left,
+          articleRight: bounds.right,
+          image: image && {
+            left: image.left,
+            right: image.right,
+            top: image.top,
+            bottom: image.bottom,
+          },
+          body: body && {
+            left: body.left,
+            right: body.right,
+            top: body.top,
+            bottom: body.bottom,
+          },
+        };
+      }),
+    );
+
+    expect(
+      cardBoxes.every(
+        (card) => card.articleLeft >= -0.5 && card.articleRight <= viewport.width + 0.5,
+      ),
+    ).toBe(true);
+
+    if (viewport.stacked) {
+      expect(
+        cardBoxes.every(
+          (card) => card.image && card.body && card.body.top >= card.image.bottom - 1,
+        ),
+      ).toBe(true);
+    } else {
+      expect(cardBoxes[0]?.image?.right).toBeLessThan(cardBoxes[0]?.body?.left ?? 0);
+      expect(cardBoxes[1]?.body?.right).toBeLessThan(cardBoxes[1]?.image?.left ?? 0);
+    }
+  }
 });

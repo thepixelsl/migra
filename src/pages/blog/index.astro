@@ -21,7 +21,10 @@ type MigratedPost = {
   path: string;
   type: string;
   title: string;
+  metaTitle?: string;
   description: string;
+  eyebrow?: string;
+  contentHtml?: string;
   datePublished?: string;
   heroImage?: MigratedImage;
 };
@@ -30,9 +33,22 @@ const canonicalSiteUrl =
   Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/blog/";
 const pageUrl = `${canonicalSiteUrl}${pagePath}`;
-const title = "Blog | Artbild-Fotografie";
+const archivePage = (migratedPages as MigratedPost[]).find(
+  (entry) => entry.path === pagePath && entry.type === "archive",
+);
+const title = archivePage?.metaTitle ?? "Blog | Artbild-Fotografie";
 const description =
-  "Blog von Artbild-Fotografie mit Hochzeitsplanung, Reiseberichten und technischen Fotografieartikeln aus dem bestehenden Archiv.";
+  archivePage?.description ??
+  "Blog von Artbild-Fotografie mit Planungstipps, Hochzeitsreportagen und Fotografie-Archiv aus Hamburg.";
+const journalEyebrow = archivePage?.eyebrow ?? "Journal";
+const journalIntro =
+  archivePage?.contentHtml
+    ?.match(/<p>(.*?)<\/p>/s)?.[1]
+    ?.replace(/<[^>]+>/g, "")
+    .trim() ??
+  "Planungstipps, Fotogeschichten und technische Notizen aus dem Archiv von Artbild-Fotografie.";
+const trauterminCardImageAlt = "Brautpaar in festlicher Kleidung im Gegenlicht am Wasser";
+const socialImageUrl = new URL(trauterminCardImage.src, `${canonicalSiteUrl}/`).toString();
 
 const breadcrumbs = [
   { label: "Startseite", href: "/" },
@@ -153,6 +169,13 @@ const collectionSchema = {
     <meta property="og:description" content={description}>
     <meta property="og:url" content={pageUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
+    <meta property="og:image" content={socialImageUrl}>
+    <meta property="og:image:alt" content={trauterminCardImageAlt}>
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content={title}>
+    <meta name="twitter:description" content={description}>
+    <meta name="twitter:image" content={socialImageUrl}>
+    <meta name="twitter:image:alt" content={trauterminCardImageAlt}>
     <script type="application/ld+json" set:html={JSON.stringify(collectionSchema)}></script>
   </head>
   <body class="journal-index-page">
@@ -174,13 +197,11 @@ const collectionSchema = {
         data-content-format="blog_index"
         data-position="main"
       >
-        <p class="eyebrow">Artbild-Fotografie</p>
-        <h1 id="journal-title">Blog</h1>
-        <p class="journal-intro">
-          Die Übersicht führt zu veröffentlichten Artikeln über Hochzeitsplanung,
-          Reisen, Bildbearbeitung und Fotografie. Datierte oder faktenabhängige
-          Beiträge werden vor einer erneuten Indexierung überprüft.
-        </p>
+        <header class="journal-masthead">
+          <p class="eyebrow">{journalEyebrow}</p>
+          <h1 id="journal-title">Blog</h1>
+          <p class="journal-intro">{journalIntro}</p>
+        </header>
 
         <a
           class="pinned-post"
@@ -194,12 +215,12 @@ const collectionSchema = {
           data-user-intent="termin_finden"
           data-journey-stage="orientierung"
         >
-          <span class="pinned-post__media" aria-hidden="true">
+          <span class="pinned-post__media">
             <Image
               src={trauterminCardImage}
-              alt=""
+              alt={trauterminCardImageAlt}
               widths={[420, 640, 900]}
-              sizes="(max-width: 680px) calc(100vw - 64px), 250px"
+              sizes="(max-width: 900px) calc(100vw - 40px), 520px"
               loading="eager"
               decoding="async"
               format="webp"
@@ -209,9 +230,11 @@ const collectionSchema = {
           <span class="pinned-post__body">
             <span class="pinned-post__label">Aktuell</span>
             <strong>Traukalender der Stadt Hamburg</strong>
-            <span>Freie Trautermine können für alle Standesämter hamburgweit online reserviert werden.</span>
+            <span class="pinned-post__description">
+              Freie Trautermine können für alle Standesämter hamburgweit online reserviert werden.
+            </span>
+            <span class="pinned-post__cta">Zum Artikel</span>
           </span>
-          <span class="pinned-post__cta">Zum Artikel</span>
         </a>
 
         <section class="journal-archive" aria-labelledby="journal-archive-title">
@@ -226,38 +249,35 @@ const collectionSchema = {
               const titleId = `blog-post-${index + 1}`;
 
               return (
-                <article class:list={["journal-card", { "has-image": post.cardImage }]}>
-                  {post.cardImage && (
-                    <a class="journal-card__image" href={post.path} tabindex="-1" aria-hidden="true">
-                      <img
-                        src={post.cardImage.src}
-                        width={post.cardImage.width}
-                        height={post.cardImage.height}
-                        alt=""
-                        loading="lazy"
-                        decoding="async"
-                      >
-                    </a>
-                  )}
-                  <div class="journal-card__body">
-                    <div class="journal-card__meta">
-                      <span>{post.category}</span>
-                      {post.formattedDate && post.datePublished && (
-                        <time datetime={post.datePublished}>{post.formattedDate}</time>
-                      )}
+                <article
+                  class:list={["journal-card", { "has-image": post.cardImage }]}
+                  aria-labelledby={titleId}
+                >
+                  <a class="journal-card__link" href={post.path} aria-labelledby={titleId}>
+                    {post.cardImage && (
+                      <span class="journal-card__image">
+                        <img
+                          src={post.cardImage.src}
+                          width={post.cardImage.width}
+                          height={post.cardImage.height}
+                          alt={post.cardImage.alt}
+                          loading="lazy"
+                          decoding="async"
+                        >
+                      </span>
+                    )}
+                    <div class="journal-card__body">
+                      <span class="journal-card__meta">
+                        <span>{post.category}</span>
+                        {post.formattedDate && post.datePublished && (
+                          <time datetime={post.datePublished}>{post.formattedDate}</time>
+                        )}
+                      </span>
+                      <h3 id={titleId}>{post.title}</h3>
+                      <span class="journal-card__description">{post.description}</span>
+                      <span class="journal-card__cta">Beitrag lesen</span>
                     </div>
-                    <h3 id={titleId}>
-                      <a href={post.path}>{post.title}</a>
-                    </h3>
-                    <p>{post.description}</p>
-                    <a
-                      class="journal-card__cta"
-                      href={post.path}
-                      aria-label={`Beitrag lesen: ${post.title}`}
-                    >
-                      Beitrag lesen
-                    </a>
-                  </div>
+                  </a>
                 </article>
               );
             })}
@@ -276,262 +296,361 @@ const collectionSchema = {
   }
 
   .journal-index {
-    width: min(1180px, calc(100% - 44px));
-    margin: 0 auto clamp(84px, 12vw, 160px);
-    padding: clamp(46px, 7vw, 92px) 0;
+    width: min(1140px, calc(100% - 48px));
+    margin: 0 auto clamp(96px, 12vw, 168px);
+    padding: clamp(50px, 7vw, 88px) 0 0;
+  }
+
+  .journal-masthead {
+    display: flex;
+    max-width: 700px;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    padding-bottom: clamp(84px, 10vw, 126px);
+    text-align: center;
+  }
+
+  .journal-masthead::after {
+    width: 54px;
+    height: 1px;
+    margin-top: clamp(30px, 4vw, 42px);
+    background: #c9c0b6;
+    content: "";
   }
 
   .eyebrow {
-    margin: 0 0 18px;
-    color: #7f7972;
+    margin: 0 0 16px;
+    color: #6f6962;
     font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .24em;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .32em;
     line-height: 1.7;
     text-transform: uppercase;
   }
 
   h1 {
-    max-width: 760px;
     margin: 0;
-    color: #202633;
-    font-size: clamp(42px, 6vw, 78px);
+    color: #252932;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: clamp(48px, 6vw, 68px);
     font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.04;
+    letter-spacing: .01em;
+    line-height: 1.12;
   }
 
   .journal-intro {
-    max-width: 680px;
-    margin: clamp(22px, 3vw, 34px) 0 0;
+    max-width: 610px;
+    margin: clamp(20px, 2.5vw, 28px) 0 0;
     color: var(--muted);
-    font-size: clamp(19px, 1.5vw, 24px);
-    line-height: 1.7;
+    font-size: clamp(16px, 1.4vw, 18px);
+    line-height: 1.8;
   }
 
   .pinned-post {
     display: grid;
-    grid-template-columns: minmax(180px, 250px) minmax(0, 1fr) max-content;
-    gap: clamp(16px, 3vw, 30px);
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
+    gap: clamp(50px, 8vw, 108px);
     align-items: center;
-    margin-top: clamp(32px, 5vw, 58px);
-    padding: clamp(14px, 2vw, 22px);
-    border: 1px solid var(--line);
-    background: #f7f3ee;
+    padding: 0;
     color: inherit;
     text-decoration: none;
   }
 
   .pinned-post__media {
     display: block;
+    width: min(100%, 520px);
     overflow: hidden;
-    background: #eee9e2;
+    justify-self: start;
+    background: #f3efe9;
   }
 
   .pinned-post__media :global(img) {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
+    height: auto;
+    transition: transform 500ms ease;
   }
 
   .pinned-post__label,
   .pinned-post__cta {
-    color: #8f6d55;
+    color: #70665e;
     font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .18em;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
     text-transform: uppercase;
   }
 
   .pinned-post__body {
-    display: grid;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
   }
 
   .pinned-post__body strong {
-    color: #202633;
+    max-width: 440px;
+    color: #252932;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(28px, 3vw, 38px);
+    font-size: clamp(28px, 3vw, 37px);
     font-weight: 400;
-    line-height: 1.05;
+    letter-spacing: .02em;
+    line-height: 1.18;
   }
 
-  .pinned-post__body span {
+  .pinned-post__description {
+    max-width: 420px;
     color: var(--muted);
-    font-size: clamp(16px, 1.15vw, 18px);
-    line-height: 1.55;
+    font-size: clamp(16px, 1.3vw, 18px);
+    line-height: 1.7;
+  }
+
+  .pinned-post__cta {
+    margin-top: 14px;
+    color: #70665e;
+    text-decoration: underline;
+    text-decoration-color: #a89c90;
+    text-underline-offset: 7px;
+  }
+
+  .pinned-post:hover .pinned-post__media :global(img) {
+    transform: scale(1.012);
   }
 
   .pinned-post:focus-visible {
     outline: 2px solid #202633;
-    outline-offset: 6px;
+    outline-offset: 10px;
   }
 
   .journal-archive {
-    margin-top: clamp(72px, 9vw, 118px);
+    margin-top: clamp(110px, 14vw, 180px);
   }
 
   .journal-archive__heading {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 10px 30px;
-    align-items: end;
-    margin-bottom: clamp(28px, 4vw, 48px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: clamp(70px, 9vw, 112px);
+    text-align: center;
   }
 
   .journal-archive__heading .eyebrow {
-    grid-column: 1 / -1;
-    margin-bottom: 0;
+    margin-bottom: 14px;
   }
 
   .journal-archive__heading h2 {
     margin: 0;
-    color: #202633;
-    font-size: clamp(34px, 4vw, 54px);
+    color: #252932;
+    font-size: clamp(36px, 4vw, 52px);
     font-weight: 400;
-    line-height: 1.08;
+    letter-spacing: .02em;
+    line-height: 1.12;
   }
 
   .journal-archive__heading > p:last-child {
-    margin: 0 0 6px;
-    color: var(--muted);
-    font-size: 15px;
+    margin: 18px 0 0;
+    color: #6f6962;
+    font-size: 14px;
   }
 
   .journal-posts {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(18px, 2.4vw, 30px);
+    gap: clamp(82px, 9vw, 120px);
   }
 
   .journal-card {
-    display: flex;
     min-width: 0;
-    min-height: 100%;
-    flex-direction: column;
-    border: 1px solid var(--line);
-    background: #fff;
+  }
+
+  .journal-card__link {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, .92fr);
+    gap: clamp(48px, 8vw, 104px);
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .journal-card:nth-child(even) .journal-card__image {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .journal-card:nth-child(even) .journal-card__body {
+    grid-column: 1;
+    grid-row: 1;
   }
 
   .journal-card__image {
     display: block;
-    flex: 0 0 auto;
     overflow: hidden;
-    background: #eee9e2;
+    background: #f3efe9;
   }
 
   .journal-card__image img {
     display: block;
     width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-    transition: transform 180ms ease;
+    height: auto;
+    transition: opacity 300ms ease, transform 500ms ease;
   }
 
-  .journal-card__image:hover img {
-    transform: scale(1.015);
+  .journal-card__link:hover .journal-card__image img {
+    opacity: .96;
+    transform: scale(1.01);
   }
 
   .journal-card__body {
     display: flex;
-    min-height: 0;
-    flex: 1;
     flex-direction: column;
-    padding: clamp(20px, 2.7vw, 30px);
+    align-items: center;
+    padding: clamp(16px, 3vw, 48px) 0;
+    text-align: center;
   }
 
   .journal-card__meta {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 8px 14px;
-    color: #8f6d55;
+    color: #70665e;
     font-family: "Raleway", Arial, sans-serif;
     font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .12em;
+    font-weight: 700;
+    letter-spacing: .2em;
     line-height: 1.6;
     text-transform: uppercase;
   }
 
   .journal-card h3 {
-    margin: 18px 0 0;
-    color: #202633;
-    font-size: clamp(27px, 2.4vw, 36px);
+    max-width: 480px;
+    margin: 22px 0 0;
+    color: #252932;
+    font-size: clamp(22px, 2vw, 28px);
     font-weight: 400;
-    line-height: 1.12;
+    letter-spacing: .02em;
+    line-height: 1.3;
   }
 
-  .journal-card h3 a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .journal-card__body > p {
+  .journal-card__description {
     display: -webkit-box;
+    max-width: 440px;
     overflow: hidden;
-    margin: 18px 0 26px;
+    margin: 22px 0 30px;
     color: var(--muted);
-    font-size: 16px;
+    font-size: 17px;
     line-height: 1.65;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 4;
   }
 
   .journal-card__cta {
-    align-self: flex-start;
-    margin-top: auto;
     color: #202633;
     font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .16em;
-    text-decoration-color: #8f6d55;
-    text-underline-offset: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-decoration: underline;
+    text-decoration-color: #a89c90;
+    text-underline-offset: 7px;
     text-transform: uppercase;
   }
 
-  .journal-card h3 a:focus-visible,
-  .journal-card__cta:focus-visible {
+  .journal-card__link:focus-visible {
     outline: 2px solid #202633;
-    outline-offset: 5px;
+    outline-offset: 10px;
   }
 
-  @media (max-width: 960px) {
-    .journal-posts {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  @media (prefers-reduced-motion: reduce) {
+    .pinned-post__media :global(img),
+    .journal-card__image img {
+      transition: none;
+    }
+
+    .pinned-post:hover .pinned-post__media :global(img),
+    .journal-card__link:hover .journal-card__image img {
+      transform: none;
     }
   }
 
-  @media (max-width: 680px) {
+  @media (max-width: 900px) {
     .journal-index {
-      width: min(100%, calc(100% - 32px));
+      width: min(100%, calc(100% - 40px));
       padding-top: 40px;
     }
 
-    .pinned-post {
+    .pinned-post,
+    .journal-card__link {
       grid-template-columns: 1fr;
-      gap: 12px;
+      gap: 30px;
       min-height: 0;
     }
 
-    .pinned-post__media :global(img) {
-      aspect-ratio: 4 / 3;
+    .pinned-post__media {
+      justify-self: center;
+    }
+
+    .journal-card:nth-child(even) .journal-card__image,
+    .journal-card:nth-child(even) .journal-card__body {
+      grid-column: 1;
+      grid-row: auto;
+    }
+
+    .journal-card__image {
+      width: 100%;
+      justify-self: center;
+    }
+
+    .journal-card__body {
+      padding: 8px clamp(8px, 5vw, 36px) 0;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .journal-index {
+      width: min(100%, calc(100% - 32px));
+    }
+
+    .journal-masthead {
+      padding-bottom: 72px;
+    }
+
+    .journal-masthead::after {
+      margin-top: 28px;
+    }
+
+    .pinned-post {
+      gap: 26px;
+    }
+
+    .pinned-post__body {
+      padding: 0 8px;
     }
 
     .pinned-post__cta {
-      justify-self: start;
+      margin-top: 6px;
     }
 
-    .journal-archive__heading,
+    .journal-archive {
+      margin-top: 104px;
+    }
+
+    .journal-archive__heading {
+      margin-bottom: 70px;
+    }
+
     .journal-posts {
-      grid-template-columns: 1fr;
+      gap: 64px;
     }
 
-    .journal-archive__heading > p:last-child {
-      margin-bottom: 0;
+    .journal-card__link {
+      gap: 26px;
+    }
+
+    .journal-card__description {
+      margin-bottom: 26px;
     }
   }
 </style>
