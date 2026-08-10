@@ -6,7 +6,8 @@ import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../components/GalleryImageGrid.astro";
 import "../../styles/global.css";
-import titleImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-editorial-paar.jpg";
+import titleImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-titel.jpg";
+import interstitialImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-blumenstrauss.webp";
 import brideImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-brautmoment.jpg";
 import groomImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-braeutigam.webp";
 import bouquetImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-brautstrauss.webp";
@@ -42,15 +43,21 @@ const title = `${headline} | Artbild-Fotografie`;
 const description = originalCopy.calendarDescription;
 // datePublished wird erst beim tatsächlichen Go-live ergänzt.
 const dateCreated = "2026-08-09";
-const dateModified = "2026-08-09";
+const dateModified = "2026-08-10";
+const sourcesCheckedOn = "2026-08-09";
 const officialCalendarUrl = "https://standesamtstermine.hamburg.de/";
 const onlineBookingNewsUrl =
   "https://www.hamburg.de/politik-und-verwaltung/behoerden/finanzbehoerde/aktuelles/heiraten-jetzt-mit-online-terminbuchung--1193966";
 const marriageInfoUrl = "https://www.hamburg.de/service/info/111015833/n0/";
 const registryOfficeUrl =
   "https://www.hamburg.de/politik-und-verwaltung/bezirke/bezirksthemen/standesamt/eheschliessung";
-const heroImageAlt = "Brautpaar in festlicher Kleidung im Gegenlicht am Wasser";
+const heroImageAlt = "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt";
+const interstitialImageAlt =
+  "Porträt einer Frau mit weißem Blumenstrauß vor dem Hamburger Rathaus";
 const heroImageUrl = new URL(titleImage.src, siteUrl).toString();
+const interstitialImageUrl = new URL(interstitialImage.src, siteUrl).toString();
+const imageCredit = "Artbild-Fotografie | York Augustin";
+const imageCopyright = "© York Augustin / Artbild-Fotografie";
 const galleryImages = [
   {
     image: groomImage,
@@ -130,6 +137,8 @@ const articleSchema = {
         width: titleImage.width,
         height: titleImage.height,
         caption: heroImageAlt,
+        creditText: imageCredit,
+        copyrightNotice: imageCopyright,
       },
       inLanguage: "de",
     },
@@ -139,7 +148,7 @@ const articleSchema = {
       mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
       headline,
       description,
-      image: [heroImageUrl, ...galleryImageUrls],
+      image: [heroImageUrl, interstitialImageUrl, ...galleryImageUrls],
       hasPart: { "@id": `${pageUrl}#gallery` },
       dateCreated,
       dateModified,
@@ -229,7 +238,7 @@ const articleSchema = {
               src={titleImage}
               alt={heroImageAlt}
               widths={[540, 760, 1080]}
-              sizes="(max-width: 900px) calc(100vw - 40px), 420px"
+              sizes="(max-width: 560px) calc(100vw - 32px), (max-width: 900px) calc(100vw - 40px), 420px"
               loading="eager"
               decoding="async"
               fetchpriority="high"
@@ -239,84 +248,105 @@ const articleSchema = {
           </figure>
         </header>
 
-        <section
-          class="intro-note"
-          aria-labelledby="kurz-erklaert"
-          data-track-section="traukalender_hamburg_kurz_erklaert"
-          data-content-topic="standesamttermin_hamburg"
-          data-user-intent="kurzantwort_lesen"
-          data-journey-stage="orientierung"
-          data-content-format="summary_box"
-          data-position="after_hero"
-        >
-          <h2 id="kurz-erklaert">Kurz erklärt:</h2>
-          <p>{originalCopy.calendarDescription}</p>
-          <a
-            class="text-link official-calendar-cta"
-            href={officialCalendarUrl}
-            target="_blank"
-            rel="noopener"
-            aria-label="Offiziellen Traukalender der Stadt Hamburg in einem neuen Tab öffnen"
-            data-track-event="external_resource_click"
-            data-resource-id="traukalender_hamburg"
-            data-resource-type="official_city_service"
-            data-cta-id="traukalender_hamburg_official"
-            data-cta-type="external_official_service"
-            data-section-id="traukalender_hamburg_kurz_erklaert"
-            data-content-topic="standesamttermin_hamburg"
-            data-user-intent="termin_finden"
-            data-journey-stage="vor_reservierung"
-          >
-            {originalCopy.calendarCta}
-          </a>
-          <a class="text-link intro-note__registry-link" href="/standesamt-hamburg/">
-            {originalCopy.registryLink}
-          </a>
-        </section>
-
         <div class="article-flow">
           <section
-            aria-labelledby="termin-reservieren"
-            data-track-section="traukalender_hamburg_reservierung"
-            data-content-topic="traukalender_stadt_hamburg"
-            data-user-intent="service_verstehen"
+            class="single-action single-action--calendar"
+            aria-labelledby="kurz-erklaert"
+            data-single-destination-cta
+            data-content-kind="text"
+            data-track-section="traukalender_hamburg_kurz_erklaert"
+            data-content-topic="standesamttermin_hamburg"
+            data-user-intent="kurzantwort_lesen"
             data-journey-stage="orientierung"
-            data-content-format="article_section"
-            data-position="content_1"
+            data-content-format="single_destination_cta"
+            data-position="cta_1"
           >
-            <p class="eyebrow">Aktueller Hinweis</p>
-            <h2 id="termin-reservieren">Reservierung und Anmeldung</h2>
-            <p>
-              Die Reservierung ersetzt nicht die Anmeldung der Eheschließung. Zuständig ist grundsätzlich das Standesamt am Haupt- oder Nebenwohnsitz einer der beiden Personen.
-            </p>
-            <p>
-              Seit Juli 2026 steht die Online-Terminbuchung in allen sieben Hamburger Bezirken zur Verfügung. Welche Termine aktuell angeboten werden, zeigt der Traukalender.
-            </p>
+            <h2 id="kurz-erklaert">Kurz erklärt:</h2>
+            <p>{originalCopy.calendarDescription}</p>
+            <a
+              class="text-link official-calendar-cta"
+              href={officialCalendarUrl}
+              target="_blank"
+              rel="noopener"
+              aria-label="Offiziellen Traukalender der Stadt Hamburg in einem neuen Tab öffnen"
+              data-track-event="external_resource_click"
+              data-resource-id="traukalender_hamburg"
+              data-resource-type="official_city_service"
+              data-cta-id="traukalender_hamburg_official"
+              data-cta-type="external_official_service"
+              data-section-id="traukalender_hamburg_kurz_erklaert"
+              data-content-topic="standesamttermin_hamburg"
+              data-user-intent="termin_finden"
+              data-journey-stage="vor_reservierung"
+              data-position="cta_1"
+            >
+              {originalCopy.calendarCta}
+            </a>
           </section>
 
+          <figure
+            class="editorial-break"
+            data-content-kind="image"
+            data-track-section="traukalender_hamburg_rathaus_portrait"
+            data-content-topic="standesamtliche_trauung_hamburg"
+            data-user-intent="bildsprache_ansehen"
+            data-journey-stage="inspiration"
+            data-content-format="editorial_image"
+            data-position="image_1"
+          >
+            <Image
+              src={interstitialImage}
+              alt={interstitialImageAlt}
+              widths={[720, 1080, 1600, 2200]}
+              sizes="(max-width: 560px) calc(100vw - 32px), (max-width: 940px) calc(100vw - 40px), 1080px"
+              loading="lazy"
+              decoding="async"
+              format="webp"
+              quality={88}
+            />
+          </figure>
+
           <section
+            class="single-action single-action--registry"
             aria-labelledby="standesamt-kontakt"
-            data-track-section="traukalender_hamburg_originaltext_kontakt"
+            data-single-destination-cta
+            data-content-kind="text"
+            data-track-section="traukalender_hamburg_standesaemter_cta"
             data-content-topic="standesamt_hamburg_kontakt"
             data-user-intent="standesamt_kontaktieren"
             data-journey-stage="planung"
-            data-content-format="article_section"
-            data-position="content_2"
+            data-content-format="single_destination_cta"
+            data-position="cta_2"
           >
             <p class="eyebrow">Trauung im Standesamt</p>
             <h2 id="standesamt-kontakt">Standesämter in Hamburg</h2>
             <p>{originalCopy.reachability}</p>
+            <a
+              class="text-link registry-cta"
+              href="/standesamt-hamburg/"
+              data-track-event="cta_click"
+              data-cta-id="traukalender_hamburg_standesaemter"
+              data-cta-type="internal_planning_guide"
+              data-section-id="traukalender_hamburg_standesaemter_cta"
+              data-content-topic="standesamt_hamburg_kontakt"
+              data-user-intent="standesamt_kontaktieren"
+              data-journey-stage="planung"
+              data-position="cta_2"
+            >
+              {originalCopy.registryLink}
+            </a>
           </section>
 
           <section
-            class="article-gallery"
+            class="journal-gallery"
             aria-labelledby="hochzeitsmomente-hamburg"
+            data-content-kind="image"
             data-track-section="traukalender_hamburg_bildstrecke"
             data-content-topic="standesamtliche_hochzeit_hamburg"
             data-user-intent="bildsprache_ansehen"
             data-journey-stage="inspiration"
             data-content-format="image_gallery"
-            data-position="content_3"
+            data-position="content_1"
           >
             <p class="eyebrow">Bildstrecke</p>
             <h2 id="hochzeitsmomente-hamburg">Hochzeitsmomente in Hamburg</h2>
@@ -329,19 +359,41 @@ const articleSchema = {
               contentTopic="standesamtliche_hochzeit_hamburg"
               userIntent="bildsprache_ansehen"
               journeyStage="inspiration"
-              position="content_3"
+              position="content_1"
             />
           </section>
 
           <section
-            class="image-cta"
+            class="article-section"
+            aria-labelledby="termin-reservieren"
+            data-content-kind="text"
+            data-track-section="traukalender_hamburg_reservierung"
+            data-content-topic="traukalender_stadt_hamburg"
+            data-user-intent="service_verstehen"
+            data-journey-stage="orientierung"
+            data-content-format="article_section"
+            data-position="content_2"
+          >
+            <p class="eyebrow">Aktueller Hinweis</p>
+            <h2 id="termin-reservieren">Reservierung und Anmeldung</h2>
+            <p>
+              Die Reservierung ersetzt nicht die Anmeldung der Eheschließung. Zuständig ist grundsätzlich das Standesamt am Haupt- oder Nebenwohnsitz einer der beiden Personen.
+            </p>
+            <p>
+              Seit Juli 2026 steht die Online-Terminbuchung in allen sieben Hamburger Bezirken zur Verfügung. Welche Termine aktuell angeboten werden, zeigt der Traukalender.
+            </p>
+          </section>
+
+          <section
+            class="image-story"
             aria-labelledby="hochzeitsgeschichten"
-            data-track-section="traukalender_hamburg_standesamt_cta"
+            data-content-kind="image-text"
+            data-track-section="traukalender_hamburg_hochzeitsgeschichten"
             data-content-topic="standesamtliche_trauung_hamburg"
-            data-user-intent="leistung_pruefen"
-            data-journey-stage="entscheidung"
-            data-content-format="image_cta"
-            data-position="content_4"
+            data-user-intent="bildsprache_kennenlernen"
+            data-journey-stage="inspiration"
+            data-content-format="image_story"
+            data-position="content_3"
           >
             <figure>
               <Image
@@ -361,18 +413,13 @@ const articleSchema = {
               <p>{originalCopy.storyIntro}</p>
               <p>{originalCopy.storyMeaning}</p>
               <p>{originalCopy.storyClosing}</p>
-              <nav class="link-row" aria-label="Weiterführende interne Links">
-                <a href="/standesamt-hamburg/">Standesämter in Hamburg</a>
-                <a href="/hochzeitsfotograf-preise/">Preise & Leistungen</a>
-                <a href="/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/">Standesamt Altona Reportage</a>
-                <a href="/kontakt/">Anfrage senden</a>
-              </nav>
             </div>
           </section>
 
           <section
             class="sources-section"
             aria-labelledby="quellen-aktualisierung"
+            data-content-kind="text"
             data-track-section="traukalender_hamburg_quellen"
             data-content-topic="offizielle_quellen_hamburg"
             data-user-intent="quelle_pruefen"
@@ -383,7 +430,7 @@ const articleSchema = {
             <p class="eyebrow">Quellen & Aktualisierung</p>
             <h2 id="quellen-aktualisierung">Offizielle Quellen</h2>
             <p>
-              Geprüft am <time datetime={dateModified}>09.08.2026</time>. Für Fristen, Unterlagen und Verfügbarkeit gelten die aktuellen Angaben der Stadt Hamburg und des zuständigen Standesamts.
+              Geprüft am <time datetime={sourcesCheckedOn}>09.08.2026</time>. Für Fristen, Unterlagen und Verfügbarkeit gelten die aktuellen Angaben der Stadt Hamburg und des zuständigen Standesamts.
             </p>
             <ul>
               <li><a href={officialCalendarUrl} target="_blank" rel="noopener">Offizieller Traukalender der Stadt Hamburg</a></li>
@@ -429,7 +476,7 @@ const articleSchema = {
 
   .eyebrow {
     margin: 0 0 18px;
-    color: #7f7972;
+    color: #6f6a64;
     font-family: "Raleway", Arial, sans-serif;
     font-size: 12px;
     font-weight: 800;
@@ -481,35 +528,27 @@ const articleSchema = {
     background: var(--soft);
   }
 
-  .intro-note,
-  .image-cta,
+  .single-action,
+  .image-story,
   .sources-section {
     border: 1px solid var(--line);
     background: #f7f3ee;
   }
 
-  .intro-note {
-    width: min(900px, 100%);
-    margin: 0 auto clamp(64px, 8vw, 112px);
+  .single-action {
     padding: clamp(24px, 4vw, 42px);
   }
 
-  .intro-note h2 {
+  .single-action h2 {
     font-size: clamp(26px, 3vw, 40px);
   }
 
-  .intro-note p {
+  .single-action p {
     margin: 16px 0 0;
   }
 
-  .intro-note__registry-link {
-    display: flex;
-    width: fit-content;
-    margin-inline: auto;
-    border: 0;
-    padding-inline: 4px;
-    text-decoration: underline;
-    text-underline-offset: .24em;
+  .single-action--registry {
+    background: #f3f4f1;
   }
 
   .article-flow {
@@ -517,10 +556,8 @@ const articleSchema = {
     margin: 0 auto;
   }
 
-  .article-flow > section + section {
-    margin-top: clamp(56px, 7vw, 96px);
-    padding-top: clamp(48px, 6vw, 82px);
-    border-top: 1px solid var(--line);
+  .article-flow > [data-content-kind] + [data-content-kind] {
+    margin-top: clamp(64px, 8vw, 112px);
   }
 
   .article-flow p {
@@ -528,12 +565,27 @@ const articleSchema = {
     margin: 24px 0 0;
   }
 
-  .article-gallery :global(.gallery-image-grid) {
+  .editorial-break {
+    width: min(1080px, calc(100vw - 44px));
+    margin-right: 0;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .editorial-break img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    background: var(--soft);
+  }
+
+  .journal-gallery :global(.gallery-image-grid) {
     margin-top: clamp(34px, 5vw, 56px);
   }
 
-  .text-link,
-  .link-row a {
+  .text-link {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -553,7 +605,6 @@ const articleSchema = {
   }
 
   .text-link:focus-visible,
-  .link-row a:focus-visible,
   .sources-section a:focus-visible {
     outline: 2px solid #202633;
     outline-offset: 5px;
@@ -575,6 +626,19 @@ const articleSchema = {
       box-shadow 220ms ease,
       transform 220ms ease;
     animation: official-calendar-cta-attention 1100ms cubic-bezier(.22, 1, .36, 1) 650ms 1 both;
+  }
+
+  .registry-cta {
+    width: min(100%, 560px);
+    min-height: 54px;
+    margin-top: 24px;
+    background: #fff;
+  }
+
+  .registry-cta:hover,
+  .registry-cta:focus-visible {
+    background: #202633;
+    color: #fff;
   }
 
   .official-calendar-cta::after {
@@ -622,7 +686,7 @@ const articleSchema = {
     }
   }
 
-  .image-cta {
+  .image-story {
     display: grid;
     grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
     gap: clamp(28px, 5vw, 58px);
@@ -630,22 +694,15 @@ const articleSchema = {
     padding: clamp(20px, 3vw, 34px);
   }
 
-  .image-cta figure {
+  .image-story figure {
     margin: 0;
   }
 
-  .image-cta img {
+  .image-story img {
     width: 100%;
     aspect-ratio: 3 / 4;
     object-fit: cover;
     background: var(--soft);
-  }
-
-  .link-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: clamp(20px, 3vw, 30px);
   }
 
   .sources-section {
@@ -682,7 +739,7 @@ const articleSchema = {
     }
 
     .journal-hero,
-    .image-cta {
+    .image-story {
       grid-template-columns: 1fr;
     }
 
@@ -701,14 +758,14 @@ const articleSchema = {
       width: min(100%, calc(100% - 32px));
     }
 
-    .intro-note,
-    .image-cta,
+    .single-action,
+    .image-story,
     .sources-section {
       padding: 22px;
     }
 
-    .link-row {
-      display: grid;
+    .editorial-break {
+      width: calc(100vw - 32px);
     }
 
     .official-calendar-cta {
@@ -716,8 +773,14 @@ const articleSchema = {
       padding-inline: 18px;
     }
 
-    .article-gallery :global(.gallery-image-grid) {
+    .journal-gallery :global(.gallery-image-grid) {
       margin-top: 38px;
+    }
+
+    :global(.floating-action.is-article-cta-visible) {
+      opacity: 0 !important;
+      pointer-events: none;
+      transform: translateY(6px);
     }
   }
 
@@ -732,3 +795,36 @@ const articleSchema = {
     }
   }
 </style>
+
+<script>
+  const articleCtas = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-single-destination-cta]"),
+  );
+  const floatingAction = document.querySelector<HTMLElement>("[data-floating-action]");
+
+  if (floatingAction && articleCtas.length > 0 && "IntersectionObserver" in window) {
+    const mobileViewport = window.matchMedia("(max-width: 560px)");
+    const visibleCtas = new Set<Element>();
+
+    const updateFloatingAction = () => {
+      const shouldHide = mobileViewport.matches && visibleCtas.size > 0;
+      floatingAction.classList.toggle("is-article-cta-visible", shouldHide);
+      floatingAction.toggleAttribute("inert", shouldHide);
+
+      if (shouldHide && floatingAction.contains(document.activeElement)) {
+        (document.activeElement as HTMLElement | null)?.blur();
+      }
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) visibleCtas.add(entry.target);
+        else visibleCtas.delete(entry.target);
+      }
+      updateFloatingAction();
+    });
+
+    articleCtas.forEach((cta) => observer.observe(cta));
+    mobileViewport.addEventListener("change", updateFloatingAction);
+  }
+</script>

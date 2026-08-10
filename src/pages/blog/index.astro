@@ -7,7 +7,7 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import migratedPages from "../../data/migratedPages.json";
 import { isMigratedPageIndexable } from "../../lib/migratedSeoPolicy";
 import "../../styles/global.css";
-import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-editorial-paar.jpg";
+import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-titel.jpg";
 import fraserCardImage from "../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
 
 type MigratedImage = {
@@ -47,7 +47,8 @@ const journalIntro =
     ?.replace(/<[^>]+>/g, "")
     .trim() ??
   "Planungstipps, Fotogeschichten und technische Notizen aus dem Archiv von Artbild-Fotografie.";
-const trauterminCardImageAlt = "Brautpaar in festlicher Kleidung im Gegenlicht am Wasser";
+const trauterminCardImageAlt =
+  "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt";
 const socialImageUrl = new URL(trauterminCardImage.src, `${canonicalSiteUrl}/`).toString();
 
 const breadcrumbs = [

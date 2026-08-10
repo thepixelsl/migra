@@ -4,6 +4,7 @@ const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const pagePath = "/trautermin-hamburg-online-reservieren/";
 const canonicalUrl = `https://artbild-fotografie.de${pagePath}`;
 const createdOn = "2026-08-09";
+const modifiedOn = "2026-08-10";
 
 test("Traukalender article keeps York's original wording and coherent metadata", async ({
   page,
@@ -42,6 +43,64 @@ test("Traukalender article keeps York's original wording and coherent metadata",
     "href",
     "https://standesamtstermine.hamburg.de/",
   );
+
+  const singleDestinationCtas = page.locator("[data-single-destination-cta]");
+  await expect(singleDestinationCtas).toHaveCount(2);
+  expect(
+    await singleDestinationCtas.evaluateAll((sections) =>
+      sections.map((section) => section.querySelectorAll("a").length),
+    ),
+  ).toEqual([1, 1]);
+
+  const officialCta = singleDestinationCtas.nth(0).locator("a");
+  await expect(officialCta).toHaveAttribute(
+    "href",
+    "https://standesamtstermine.hamburg.de/",
+  );
+  await expect(officialCta).toHaveAttribute("target", "_blank");
+  await expect(officialCta).toHaveAttribute("rel", /noopener/);
+  await expect(officialCta).toHaveAttribute(
+    "data-track-event",
+    "external_resource_click",
+  );
+  await expect(officialCta).toHaveAttribute(
+    "data-cta-id",
+    "traukalender_hamburg_official",
+  );
+
+  const registryCta = singleDestinationCtas.nth(1).locator("a");
+  await expect(registryCta).toHaveAttribute("href", "/standesamt-hamburg/");
+  await expect(registryCta).not.toHaveAttribute("target", "_blank");
+  await expect(registryCta).toHaveAttribute("data-track-event", "cta_click");
+  await expect(registryCta).toHaveAttribute(
+    "data-cta-id",
+    "traukalender_hamburg_standesaemter",
+  );
+  await expect(registryCta).toHaveAttribute(
+    "data-section-id",
+    "traukalender_hamburg_standesaemter_cta",
+  );
+
+  const contentKinds = await page
+    .locator(".article-flow > [data-content-kind]")
+    .evaluateAll((elements) =>
+      elements.map((element) => element.getAttribute("data-content-kind")),
+    );
+  expect(contentKinds).toEqual([
+    "text",
+    "image",
+    "text",
+    "image",
+    "text",
+    "image-text",
+    "text",
+  ]);
+  for (let index = 1; index < contentKinds.length; index += 1) {
+    expect([contentKinds[index - 1], contentKinds[index]]).not.toEqual([
+      "text",
+      "text",
+    ]);
+  }
 
   const mainText = await page.locator("main").innerText();
   for (const originalPassage of [
@@ -88,14 +147,30 @@ test("Traukalender article keeps York's original wording and coherent metadata",
   expect(blogPosting).toMatchObject({
     headline: "Traukalender der Stadt Hamburg",
     dateCreated: createdOn,
-    dateModified: createdOn,
+    dateModified: modifiedOn,
     mainEntityOfPage: { "@id": `${canonicalUrl}#webpage` },
   });
   expect(blogPosting).not.toHaveProperty("datePublished");
   expect(webPage).toMatchObject({
     "@id": `${canonicalUrl}#webpage`,
     url: canonicalUrl,
+    primaryImageOfPage: {
+      width: 1600,
+      height: 2000,
+      caption: "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt",
+      creditText: "Artbild-Fotografie | York Augustin",
+      copyrightNotice: "© York Augustin / Artbild-Fotografie",
+    },
   });
+  expect(webPage.primaryImageOfPage.contentUrl).toContain(
+    "trautermin-hamburg-rathaus-titel",
+  );
+  expect(blogPosting.image).toEqual(
+    expect.arrayContaining([
+      expect.stringContaining("trautermin-hamburg-rathaus-titel"),
+      expect.stringContaining("trautermin-hamburg-rathaus-blumenstrauss"),
+    ]),
+  );
   const imageGallery = schemaNodes.find((node) => node["@type"] === "ImageGallery");
   expect(imageGallery.image).toHaveLength(4);
   expect(JSON.stringify(schemas)).not.toContain("artbild-fotografie.ch");
@@ -105,6 +180,26 @@ test("Traukalender article keeps York's original wording and coherent metadata",
   );
   await expect(galleryButtons).toHaveCount(4);
   await expect(page.getByRole("heading", { name: "Hochzeitsmomente in Hamburg" })).toBeVisible();
+
+  const heroImage = page.locator(".journal-hero__image img");
+  await expect(heroImage).toHaveAttribute(
+    "alt",
+    "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt",
+  );
+  await expect(heroImage).toHaveAttribute("loading", "eager");
+  await expect(heroImage).toHaveAttribute("fetchpriority", "high");
+  await expect(heroImage).toHaveAttribute("src", /rathaus-titel.*\.webp$/);
+
+  const interstitialImage = page.locator(".editorial-break img");
+  await expect(interstitialImage).toHaveAttribute(
+    "alt",
+    "Porträt einer Frau mit weißem Blumenstrauß vor dem Hamburger Rathaus",
+  );
+  await expect(interstitialImage).toHaveAttribute("loading", "lazy");
+  await expect(interstitialImage).toHaveAttribute(
+    "src",
+    /rathaus-blumenstrauss.*\.webp$/,
+  );
 
   const imageAttributes = await page
     .locator("main img:not([data-gallery-image])")
@@ -134,4 +229,9 @@ test("Traukalender article remains readable without horizontal overflow on mobil
   );
   expect(overflow).toBe(0);
   await expect(page.locator(".official-calendar-cta")).toBeVisible();
+
+  const registryCta = page.locator(".single-action--registry");
+  await registryCta.scrollIntoViewIfNeeded();
+  await expect(page.locator("[data-floating-action]")).toHaveAttribute("inert", "");
+  await expect(page.locator("[data-floating-action]")).toHaveCSS("opacity", "0");
 });
