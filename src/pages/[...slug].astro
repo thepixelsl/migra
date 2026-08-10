@@ -2,10 +2,12 @@
 import FaviconHead from "../components/FaviconHead.astro";
 import MobileNavigation from "../components/MobileNavigation.astro";
 import DesktopNavigation from "../components/DesktopNavigation.astro";
+import GalleryMasonryEnhancer from "../components/GalleryMasonryEnhancer.astro";
 import NdFilterTable from "../components/NdFilterTable.astro";
 import migratedPages from "../data/migratedPages.json";
 import { modernizePrivacyContent } from "../lib/privacyContent";
 import { getMigratedSeoPolicy } from "../lib/migratedSeoPolicy";
+import "../styles/gallery-masonry.css";
 import "../styles/global.css";
 
 type MigratedImage = {
@@ -135,20 +137,11 @@ const getImageOrientation = (image: MigratedImage) => {
   if (Math.abs(image.width - image.height) < 8) return "square";
   return image.width > image.height ? "landscape" : "portrait";
 };
-const cssNumber = (value: number) => Number(value.toFixed(6)).toString();
-const getGalleryImageRatio = (image: MigratedImage) =>
-  image.width && image.height ? image.width / image.height : 4 / 3;
 const getGalleryImageStyle = (image: MigratedImage) => {
-  const ratio = getGalleryImageRatio(image);
   const aspectWidth = image.width ?? 4;
   const aspectHeight = image.height ?? 3;
 
-  return [
-    `--image-aspect: ${aspectWidth} / ${aspectHeight}`,
-    `--image-ratio: ${cssNumber(ratio)}`,
-    `--image-basis-desktop: clamp(${cssNumber(ratio * 220)}px, ${cssNumber(ratio * 21)}vw, ${cssNumber(ratio * 380)}px)`,
-    `--image-basis-tablet: clamp(${cssNumber(ratio * 170)}px, ${cssNumber(ratio * 22)}vw, ${cssNumber(ratio * 220)}px)`,
-  ].join("; ");
+  return `--image-aspect: ${aspectWidth} / ${aspectHeight}`;
 };
 
 const schemaGraph = {
@@ -351,12 +344,15 @@ const schemaGraph = {
           <section class="migrated-gallery" aria-labelledby="migrated-gallery-title">
             <p class="migrated-kicker">Bildstrecke</p>
             <h2 id="migrated-gallery-title">{isGallery || page.type === "post" ? "Bildgalerie" : "Bilder zur Seite"}</h2>
-            <div>
+            <div class="migrated-gallery__grid masonry-gallery" data-masonry-gallery>
               {galleryImages.map((image, index) => (
                 <figure
-                  class={`is-${getImageOrientation(image)}`}
+                  class={`masonry-gallery__item is-${getImageOrientation(image)}`}
                   style={getGalleryImageStyle(image)}
                   data-gallery-index={index}
+                  data-masonry-item
+                  data-masonry-width={image.width ?? 4}
+                  data-masonry-height={image.height ?? 3}
                 >
                   <img
                     src={image.src}
@@ -377,6 +373,7 @@ const schemaGraph = {
           <a href="/portfolio/">Portfolio ansehen</a>
           <a href="/sicherer-kontakt/">Kontakt aufnehmen</a>
         </footer>
+        {hasGallery && <GalleryMasonryEnhancer />}
       </article>
     </main>
   </body>
@@ -624,9 +621,9 @@ const schemaGraph = {
   }
 
   .migrated-gallery > div {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(14px, 2vw, 28px);
+    width: 89.0625vw;
+    margin-left: 50%;
+    transform: translateX(-50%);
   }
 
   .migrated-article.is-gallery .migrated-gallery,
@@ -636,49 +633,12 @@ const schemaGraph = {
     margin-left: auto;
   }
 
-  .migrated-article.is-gallery .migrated-gallery > div,
-  .migrated-article.is-post .migrated-gallery > div {
-    --gallery-column-gap: clamp(36px, 4vw, 72px);
-    --gallery-column-gap-offset: clamp(-72px, -4vw, -36px);
-    --gallery-row-gap: clamp(42px, 4vw, 76px);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    column-gap: var(--gallery-column-gap);
-    row-gap: var(--gallery-row-gap);
-  }
-
   .migrated-gallery figure {
     margin: 0;
-    background: #f4f0eb;
-  }
-
-  .migrated-article.is-gallery .migrated-gallery figure,
-  .migrated-article.is-post .migrated-gallery figure {
-    min-width: 0;
-    margin: 0;
-    flex: var(--image-ratio, 1) 1 var(--image-basis-desktop, 300px);
-    aspect-ratio: var(--image-aspect, auto);
     background: transparent;
   }
 
-  .migrated-article.is-gallery .migrated-gallery > div::after,
-  .migrated-article.is-post .migrated-gallery > div::after {
-    content: "";
-    height: 0;
-    flex: 10 1 0;
-    margin-inline-start: var(--gallery-column-gap-offset);
-    pointer-events: none;
-  }
-
   .migrated-gallery img {
-    width: 100%;
-    aspect-ratio: 4 / 3;
-    object-fit: cover;
-  }
-
-  .migrated-article.is-gallery .migrated-gallery img,
-  .migrated-article.is-post .migrated-gallery img {
     display: block;
     width: 100%;
     height: 100%;
@@ -754,11 +714,6 @@ const schemaGraph = {
       line-height: 1.75;
     }
 
-    .migrated-gallery > div {
-      grid-template-columns: 1fr;
-      gap: 18px;
-    }
-
     .migrated-article.is-gallery {
       width: min(100%, calc(100% - 48px));
     }
@@ -767,28 +722,11 @@ const schemaGraph = {
       margin-top: clamp(72px, 18vw, 104px);
     }
 
-    .migrated-article.is-gallery .migrated-gallery > div {
-      --gallery-row-gap: clamp(36px, 9vw, 54px);
-    }
-
-    .migrated-article.is-gallery .migrated-gallery figure,
-    .migrated-article.is-post .migrated-gallery figure {
-      margin-bottom: 0;
-      flex-basis: var(--image-basis-tablet, 220px);
-    }
   }
 
-  @media (max-width: 620px) {
-    .migrated-article.is-gallery .migrated-gallery figure,
-    .migrated-article.is-post .migrated-gallery figure {
-      width: 100%;
-      flex-basis: 100%;
-      flex-grow: 0;
-    }
-
-    .migrated-article.is-gallery .migrated-gallery > div::after,
-    .migrated-article.is-post .migrated-gallery > div::after {
-      display: none;
+  @media (max-width: 767px) {
+    .migrated-gallery > div {
+      width: calc(100vw - 64px);
     }
   }
 </style>

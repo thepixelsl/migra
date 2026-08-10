@@ -1,0 +1,52 @@
+.masonry-gallery {
+  --masonry-gap: 2.734375vw;
+  position: relative;
+  column-gap: var(--masonry-gap);
+  row-gap: var(--masonry-gap);
+}
+
+.masonry-gallery > .masonry-gallery__item {
+  min-width: 0;
+  margin: 0;
+  aspect-ratio: var(--image-aspect, 4 / 3);
+  background: transparent;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .has-gallery-masonry .masonry-gallery:not([data-masonry-ready]):not([data-masonry-fallback]) {
+    visibility: hidden;
+  }
+
+  .masonry-gallery:not([data-masonry-ready]) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .masonry-gallery[data-masonry-ready] {
+    display: block;
+  }
+
+  .masonry-gallery[data-masonry-ready] > .masonry-gallery__item {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .masonry-gallery {
+    --masonry-gap: 30px;
+    display: flex;
+    flex-direction: column;
+    height: auto !important;
+  }
+
+  .masonry-gallery > .masonry-gallery__item {
+    position: static;
+    width: 100% !important;
+    height: auto !important;
+    transform: none !important;
+  }
+}

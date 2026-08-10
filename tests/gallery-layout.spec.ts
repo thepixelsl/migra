@@ -2,19 +2,19 @@ import { expect, test, type Page } from "@playwright/test";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
-const screenshotCases = [
+const galleryCases = [
   {
-    path: "/trautermin-hamburg-online-reservieren/",
+    path: "/gallery/traumhochzeit-in-hamburg/",
     gallery: ".gallery-image-grid",
     items: ".gallery-image-grid__item",
     images: ".gallery-image-grid__item img",
-    count: 4,
+    count: 28,
   },
   {
     path: "/location-scouting-in-paris/",
-    gallery: ".migrated-gallery > div",
-    items: ".migrated-gallery figure",
-    images: ".migrated-gallery figure img",
+    gallery: ".migrated-gallery__grid",
+    items: ".migrated-gallery__grid figure",
+    images: ".migrated-gallery__grid figure img",
     count: 9,
   },
 ] as const;
@@ -24,92 +24,103 @@ const longGalleryCases = [
     path: "/gallery/getting-ready-hamburg/",
     gallery: ".gallery-image-grid",
     items: ".gallery-image-grid__item",
+    images: ".gallery-image-grid__item img",
     count: 84,
   },
   {
     path: "/gallery/jga-hamburg/",
-    gallery: ".migrated-gallery > div",
-    items: ".migrated-gallery figure",
+    gallery: ".migrated-gallery__grid",
+    items: ".migrated-gallery__grid figure",
+    images: ".migrated-gallery__grid figure img",
     count: 157,
   },
 ] as const;
 
-type Box = { left: number; top: number; width: number; height: number };
+type GalleryCase = (typeof galleryCases)[number] | (typeof longGalleryCases)[number];
 
-const readBoxes = async (page: Page, selector: string) =>
-  page.locator(selector).evaluateAll((elements) =>
-    elements.map((element) => {
-      const box = element.getBoundingClientRect();
-      return {
-        left: box.left,
-        top: box.top + window.scrollY,
-        width: box.width,
-        height: box.height,
-      };
-    }),
-  ) as Promise<Box[]>;
+const readLayout = async (page: Page, example: GalleryCase) =>
+  page.evaluate(({ gallerySelector, itemSelector }) => {
+    const gallery = document.querySelector<HTMLElement>(gallerySelector)!;
+    const galleryRect = gallery.getBoundingClientRect();
 
-const groupRows = (boxes: Box[]) => {
-  const rows: Box[][] = [];
-  for (const box of boxes) {
-    const row = rows.find((candidate) => Math.abs(candidate[0].top - box.top) <= 2);
-    if (row) row.push(box);
-    else rows.push([box]);
-  }
-  return rows;
+    return {
+      columns: gallery.dataset.masonryColumns,
+      gap: Number.parseFloat(getComputedStyle(gallery).columnGap),
+      gallery: {
+        left: galleryRect.left,
+        top: galleryRect.top + window.scrollY,
+        width: galleryRect.width,
+        height: galleryRect.height,
+      },
+      items: [...document.querySelectorAll<HTMLElement>(itemSelector)].map((item) => {
+        const rect = item.getBoundingClientRect();
+        return {
+          index: Number(item.dataset.galleryIndex),
+          column: Number(item.dataset.masonryColumn),
+          sourceWidth: Number(item.dataset.masonryWidth),
+          sourceHeight: Number(item.dataset.masonryHeight),
+          left: rect.left,
+          top: rect.top + window.scrollY,
+          width: rect.width,
+          height: rect.height,
+          transform: getComputedStyle(item).transform,
+        };
+      }),
+    };
+  }, { gallerySelector: example.gallery, itemSelector: example.items });
+
+const expectShortestColumnMasonry = async (page: Page, example: GalleryCase) => {
+  await expect(page.locator(example.items), example.path).toHaveCount(example.count);
+  await expect.poll(
+    () => page.locator(example.gallery).getAttribute("data-masonry-ready"),
+    { message: example.path },
+  ).toBe("true");
+
+  const layout = await readLayout(page, example);
+  expect(layout.columns, example.path).toBe("3");
+  expect(layout.items.map(({ index }) => index), example.path).toEqual(
+    Array.from({ length: example.count }, (_, index) => index),
+  );
+
+  const columnWidth = (layout.gallery.width - layout.gap * 2) / 3;
+  const columnHeights = [0, 0, 0];
+
+  layout.items.forEach((item) => {
+    const shortestHeight = Math.min(...columnHeights);
+    const column = columnHeights.findIndex((height) => height <= shortestHeight + 0.01);
+    const expectedHeight = columnWidth * (item.sourceHeight / item.sourceWidth);
+    const expectedLeft = layout.gallery.left + column * (columnWidth + layout.gap);
+    const expectedTop = layout.gallery.top + columnHeights[column];
+
+    expect(item.column, `${example.path} item ${item.index}`).toBe(column + 1);
+    expect(item.width, `${example.path} item ${item.index} width`).toBeCloseTo(columnWidth, 0);
+    expect(item.height, `${example.path} item ${item.index} height`).toBeCloseTo(expectedHeight, 0);
+    expect(item.left, `${example.path} item ${item.index} left`).toBeCloseTo(expectedLeft, 0);
+    expect(item.top, `${example.path} item ${item.index} top`).toBeCloseTo(expectedTop, 0);
+
+    columnHeights[column] += expectedHeight + layout.gap;
+  });
+
+  expect(layout.gallery.height, `${example.path} gallery height`).toBeCloseTo(
+    Math.max(...columnHeights) - layout.gap,
+    0,
+  );
 };
 
-const median = (values: number[]) => {
-  const sorted = [...values].sort((left, right) => left - right);
-  const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0
-    ? (sorted[middle - 1] + sorted[middle]) / 2
-    : sorted[middle];
-};
+test("reference and migrated galleries reproduce the Flothemes three-column masonry", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
 
-test("screenshot galleries form stable justified rows while images load lazily", async ({ page }) => {
-  await page.setViewportSize({ width: 985, height: 640 });
-
-  for (const example of screenshotCases) {
+  for (const example of galleryCases) {
     await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
-
-    const gallery = page.locator(example.gallery);
-    const items = page.locator(example.items);
-    await expect(gallery, example.path).toHaveCSS("display", "flex");
-    await expect(gallery, example.path).toHaveCSS("flex-wrap", "wrap");
-    await expect(items, example.path).toHaveCount(example.count);
-
-    const before = await readBoxes(page, example.items);
-    expect(before.every(({ width, height }) => width > 0 && height > 0), example.path).toBe(true);
-
-    const rows = groupRows(before);
-    expect(rows.length, example.path).toBeGreaterThan(1);
-    for (const row of rows) {
-      const heights = row.map(({ height }) => height);
-      expect(Math.max(...heights) - Math.min(...heights), example.path).toBeLessThanOrEqual(2);
-    }
+    await expectShortestColumnMasonry(page, example);
 
     const loading = await page.locator(example.images).evaluateAll((images) =>
-      images.map((image) => (image as HTMLImageElement).loading),
+      images.map((image: HTMLImageElement) => image.loading),
     );
     expect(loading, example.path).toContain("lazy");
 
-    for (let index = 0; index < example.count; index += 2) {
-      await items.nth(index).scrollIntoViewIfNeeded();
-    }
-    await items.last().scrollIntoViewIfNeeded();
-    await page.waitForTimeout(250);
-
-    const after = await readBoxes(page, example.items);
-    const maxDelta = Math.max(
-      ...after.flatMap((box, index) =>
-        (["left", "top", "width", "height"] as const).map((key) =>
-          Math.abs(box[key] - before[index][key]),
-        ),
-      ),
-    );
-    expect(maxDelta, example.path).toBeLessThanOrEqual(2);
-
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
@@ -117,59 +128,75 @@ test("screenshot galleries form stable justified rows while images load lazily",
   }
 });
 
-test("screenshot galleries use one full-width image per row on mobile", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-
-  for (const example of screenshotCases) {
-    await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
-    const boxes = await readBoxes(page, example.items);
-
-    expect(boxes.every(({ width, height }) => width > 0 && height > 0), example.path).toBe(true);
-    expect(new Set(boxes.map(({ left }) => Math.round(left))).size, example.path).toBe(1);
-    expect(new Set(boxes.map(({ width }) => Math.round(width))).size, example.path).toBe(1);
-
-    const overflow = await page.evaluate(
-      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-    );
-    expect(overflow, example.path).toBeLessThanOrEqual(1);
-  }
-});
-
-test("long galleries fill complete rows without enlarging an incomplete final row", async ({
+test("gallery geometry remains fixed while long lazy-loaded galleries are scrolled", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
 
   for (const example of longGalleryCases) {
     await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
-    await expect(page.locator(example.items), example.path).toHaveCount(example.count);
+    await expectShortestColumnMasonry(page, example);
+    const before = await readLayout(page, example);
 
-    const galleryBox = await page.locator(example.gallery).evaluate((gallery) => {
-      const box = gallery.getBoundingClientRect();
-      return { left: box.left, right: box.right, bottom: box.bottom + window.scrollY };
-    });
-    const rows = groupRows(await readBoxes(page, example.items));
-    expect(rows.length, example.path).toBeGreaterThan(1);
-
-    for (const row of rows.slice(0, -1)) {
-      const rowLeft = Math.min(...row.map(({ left }) => left));
-      const rowRight = Math.max(...row.map(({ left, width }) => left + width));
-      const heights = row.map(({ height }) => height);
-      expect(Math.abs(rowLeft - galleryBox.left), example.path).toBeLessThanOrEqual(2);
-      expect(Math.abs(rowRight - galleryBox.right), example.path).toBeLessThanOrEqual(2);
-      expect(Math.max(...heights) - Math.min(...heights), example.path).toBeLessThanOrEqual(2);
+    const items = page.locator(example.items);
+    for (let index = 0; index < example.count; index += 8) {
+      await items.nth(index).scrollIntoViewIfNeeded();
     }
+    await items.last().scrollIntoViewIfNeeded();
+    await page.waitForTimeout(250);
 
-    const previousRowHeight = median(rows.slice(0, -1).map((row) => row[0].height));
-    const finalRowHeight = Math.max(...rows.at(-1)!.map(({ height }) => height));
-    expect(finalRowHeight / previousRowHeight, example.path).toBeLessThanOrEqual(1.5);
-    const finalImageBottom = Math.max(
-      ...rows.at(-1)!.map(({ top, height }) => top + height),
+    const after = await readLayout(page, example);
+    const maxDelta = Math.max(
+      Math.abs(after.gallery.height - before.gallery.height),
+      ...after.items.flatMap((item, index) => [
+        Math.abs(item.left - before.items[index].left),
+        Math.abs(item.top - before.items[index].top),
+        Math.abs(item.width - before.items[index].width),
+        Math.abs(item.height - before.items[index].height),
+      ]),
     );
-    expect(
-      Math.abs(galleryBox.bottom - finalImageBottom),
-      `${example.path} has no empty filler row`,
-    ).toBeLessThanOrEqual(2);
+    expect(maxDelta, example.path).toBeLessThanOrEqual(1);
+  }
+});
+
+test("the original 768 pixel breakpoint switches from three columns to one", async ({ page }) => {
+  const example = galleryCases[0];
+
+  await page.setViewportSize({ width: 768, height: 900 });
+  await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
+  await expectShortestColumnMasonry(page, example);
+
+  await page.setViewportSize({ width: 767, height: 900 });
+  await expect.poll(() => page.locator(example.gallery).getAttribute("data-masonry-columns")).toBe("1");
+  const mobile = await readLayout(page, example);
+  expect(mobile.gallery.left).toBeCloseTo(32, 0);
+  expect(mobile.gallery.width).toBeCloseTo(703, 0);
+  expect(mobile.gap).toBeCloseTo(30, 0);
+  expect(mobile.items.every(({ left }) => Math.abs(left - mobile.gallery.left) <= 1)).toBe(true);
+  expect(mobile.items.every(({ width }) => Math.abs(width - mobile.gallery.width) <= 1)).toBe(true);
+  expect(mobile.items.every(({ transform }) => transform === "none")).toBe(true);
+});
+
+test("mobile galleries retain natural ratios, source order and 32 pixel side margins", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const example of galleryCases) {
+    await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
+    await expect(page.locator(example.items), example.path).toHaveCount(example.count);
+    await expect.poll(() => page.locator(example.gallery).getAttribute("data-masonry-columns")).toBe("1");
+
+    const layout = await readLayout(page, example);
+    expect(layout.gallery.left, example.path).toBeCloseTo(32, 0);
+    expect(layout.gallery.width, example.path).toBeCloseTo(326, 0);
+    expect(layout.gap, example.path).toBeCloseTo(30, 0);
+    expect(layout.items.map(({ index }) => index), example.path).toEqual(
+      Array.from({ length: example.count }, (_, index) => index),
+    );
+    expect(layout.items.every(({ left }) => Math.abs(left - layout.gallery.left) <= 1)).toBe(true);
+    expect(layout.items.every(({ width }) => Math.abs(width - layout.gallery.width) <= 1)).toBe(true);
+    expect(layout.items.every(({ transform }) => transform === "none")).toBe(true);
 
     const overflow = await page.evaluate(
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -178,93 +205,70 @@ test("long galleries fill complete rows without enlarging an incomplete final ro
   }
 });
 
-test("gallery density remains stable around the former 700 pixel breakpoint", async ({ page }) => {
-  for (const example of [screenshotCases[0], screenshotCases[1], {
-    path: "/gallery/getting-ready-hamburg/",
-    gallery: ".gallery-image-grid",
-  }] as const) {
-    const heights: number[] = [];
+test("Astro gallery images declare the equal-column responsive slot", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`${baseUrl}/gallery/getting-ready-hamburg/`, {
+    waitUntil: "domcontentloaded",
+  });
 
-    for (const width of [701, 700]) {
-      await page.setViewportSize({ width, height: 900 });
-      await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
-      heights.push(await page.locator(example.gallery).evaluate(
-        (gallery) => gallery.getBoundingClientRect().height,
-      ));
-    }
-
-    const change = Math.max(...heights) / Math.min(...heights);
-    expect(change, example.path).toBeLessThanOrEqual(1.25);
-  }
+  const sizes = await page.locator(".gallery-image-grid img").first().getAttribute("sizes");
+  expect(sizes).toBe("(max-width: 767px) calc(100vw - 64px), 27.865vw");
 });
 
-test("narrow tablet galleries request a source large enough for wide images", async ({
-  browser,
-}) => {
-  for (const deviceScaleFactor of [1, 2]) {
-    const context = await browser.newContext({
-      deviceScaleFactor,
-      viewport: { width: 621, height: 900 },
-    });
-    const page = await context.newPage();
-    await page.goto(`${baseUrl}/gallery/getting-ready-hamburg/`, {
-      waitUntil: "domcontentloaded",
-    });
+test("Jahrhunderthalle keeps its curated 75-image WebP gallery and lightbox", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`${baseUrl}/gallery/hochzeit-jahrhunderhalle-bochum/`, {
+    waitUntil: "domcontentloaded",
+  });
 
-    const items = page.locator(".gallery-image-grid__item");
-    const widestIndex = await items.evaluateAll((elements) =>
-      elements
-        .map((element, index) => ({ index, width: element.getBoundingClientRect().width }))
-        .sort((left, right) => right.width - left.width)[0].index,
-    );
-    const image = items.nth(widestIndex).locator("img");
-    await image.scrollIntoViewIfNeeded();
-    await expect.poll(() => image.evaluate(
-      (element: HTMLImageElement) => element.complete && element.naturalWidth > 0,
-    )).toBe(true);
+  const excludedFiles = [
+    "ART_1602", "ART_2214", "ART_0055", "ART_4608", "ART_5669",
+    "ART_6761", "ART_6765", "ART_6771", "ART_6789", "ART_6838",
+    "ART_0604", "ART_0659", "ART_0673", "ART_0805", "ART_0917",
+    "ART_4201", "ART_4206", "ART_4210", "ART_4208", "ART_4940",
+  ];
+  const triggers = page.locator("[data-gallery-trigger='hochzeit-jahrhunderhalle-bochum']");
+  await expect(triggers).toHaveCount(75);
 
-    const source = await image.evaluate(async (element: HTMLImageElement) => {
-      const rawImage = new Image();
-      rawImage.src = element.currentSrc;
-      await rawImage.decode();
-      return {
-        originalWidth: Number(element.getAttribute("width")),
-        renderedWidth: element.getBoundingClientRect().width,
-        resourceWidth: rawImage.naturalWidth,
-        sizes: element.sizes,
-      };
-    });
-    const requiredWidth = Math.min(
-      source.originalWidth,
-      source.renderedWidth * deviceScaleFactor,
-    );
-    expect(source.sizes).toContain("(max-width: 650px)");
-    expect(source.resourceWidth, `${deviceScaleFactor}x source coverage`).toBeGreaterThanOrEqual(
-      Math.floor(requiredWidth),
-    );
+  const fullSources = await triggers.evaluateAll((buttons) =>
+    buttons.map((button) => (button as HTMLElement).dataset.fullSrc ?? ""),
+  );
+  expect(fullSources.every((source) => source.endsWith(".webp"))).toBe(true);
+  expect(excludedFiles.some((file) => fullSources.some((source) => source.includes(file)))).toBe(false);
 
-    await context.close();
-  }
-});
-
-test("tablet galleries keep multiple images in a row", async ({ page }) => {
-  for (const width of [1024, 800]) {
-    await page.setViewportSize({ width, height: 900 });
-
-    for (const example of [longGalleryCases[1], {
-      path: "/gallery/getting-ready-hamburg/",
-      gallery: ".gallery-image-grid",
-      items: ".gallery-image-grid__item",
-      count: 84,
-    }] as const) {
-      await page.goto(`${baseUrl}${example.path}`, { waitUntil: "domcontentloaded" });
-      const rows = groupRows(await readBoxes(page, example.items));
-      expect(rows.some((row) => row.length >= 2), `${example.path} at ${width}px`).toBe(true);
-
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      expect(overflow, `${example.path} at ${width}px`).toBeLessThanOrEqual(1);
+  const schemaImages = await page.evaluate(() => {
+    const nodes = [...document.querySelectorAll<HTMLScriptElement>('script[type="application/ld+json"]')]
+      .flatMap((script) => {
+        try {
+          const node = JSON.parse(script.textContent ?? "null");
+          return Array.isArray(node) ? node : [node];
+        } catch {
+          return [];
+        }
+      });
+    const queue = [...nodes];
+    while (queue.length > 0) {
+      const node = queue.shift();
+      if (!node || typeof node !== "object") continue;
+      if (node["@type"] === "ImageGallery") {
+        return (node.image ?? []).map((image: { contentUrl?: string }) => image.contentUrl ?? "");
+      }
+      Object.values(node).forEach((value) => {
+        if (Array.isArray(value)) queue.push(...value);
+        else if (value && typeof value === "object") queue.push(value);
+      });
     }
-  }
+    return [];
+  });
+  expect(schemaImages).toHaveLength(75);
+  expect(schemaImages.every((source) => source.endsWith(".webp"))).toBe(true);
+  expect(excludedFiles.some((file) => schemaImages.some((source) => source.includes(file)))).toBe(false);
+
+  await triggers.first().click();
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator("[data-gallery-image]")).toHaveAttribute("src", /\.webp$/);
+  await page.keyboard.press("Escape");
+  await expect(dialog).toBeHidden();
+  await expect(triggers.first()).toBeFocused();
 });

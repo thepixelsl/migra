@@ -80,7 +80,8 @@ test("mobile Zurich article keeps the gallery centered and touch friendly", asyn
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
   await expect(page.locator(".gallery-image-grid")).toHaveCSS("display", "flex");
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-wrap", "wrap");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-direction", "column");
+  await expect(page.locator(".gallery-image-grid")).toHaveAttribute("data-masonry-columns", "1");
 
   const mobileState = await page.evaluate(() => {
     const viewportCenter = document.documentElement.clientWidth / 2;

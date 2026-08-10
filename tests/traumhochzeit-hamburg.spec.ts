@@ -46,7 +46,8 @@ test("mobile Atlantic gallery is touch friendly and has no horizontal overflow",
 
   await expect(page.getByRole("button", { name: "Menü öffnen" })).toBeVisible();
   await expect(page.locator(".gallery-image-grid")).toHaveCSS("display", "flex");
-  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-wrap", "wrap");
+  await expect(page.locator(".gallery-image-grid")).toHaveCSS("flex-direction", "column");
+  await expect(page.locator(".gallery-image-grid")).toHaveAttribute("data-masonry-columns", "1");
 
   const triggerHeights = await page
     .locator("[data-gallery-trigger='traumhochzeit-hamburg']")

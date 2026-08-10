@@ -1,0 +1,17 @@
+<script is:inline>
+  document.documentElement.classList.add("has-gallery-masonry");
+  window.setTimeout(() => {
+    document
+      .querySelectorAll("[data-masonry-gallery]:not([data-masonry-ready])")
+      .forEach((gallery) => gallery.setAttribute("data-masonry-fallback", "true"));
+  }, 1500);
+</script>
+
+<script>
+  import { enhanceMasonryGalleries } from "../scripts/galleryMasonry";
+
+  const enhance = () => enhanceMasonryGalleries(document);
+
+  enhance();
+  document.addEventListener("astro:page-load", enhance);
+</script>
