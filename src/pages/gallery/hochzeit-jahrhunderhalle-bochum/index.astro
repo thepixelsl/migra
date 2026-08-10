@@ -1,6 +1,6 @@
 ---
 import FaviconHead from "../../../components/FaviconHead.astro";
-import { Image } from "astro:assets";
+import { getImage, Image } from "astro:assets";
 import "../../../styles/global.css";
 import MobileNavigation from "../../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../../components/DesktopNavigation.astro";
@@ -9,7 +9,29 @@ import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
 
 const imageModules = import.meta.glob(
-  "../../../assets/hochzeit-jahrhunderhalle-bochum/*.{jpg,jpeg}",
+  [
+    "../../../assets/hochzeit-jahrhunderhalle-bochum/*.{jpg,jpeg}",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_1602.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_2214.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0055.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4608.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_5669.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_6761.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_6765.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_6771.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_6789.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_6838.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0604.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0659.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0673.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0805.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_0917.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4201.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4206.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4210.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4208.jpg",
+    "!../../../assets/hochzeit-jahrhunderhalle-bochum/ART_4940.jpg",
+  ],
   { eager: true, import: "default" },
 ) as Record<string, ImageMetadata>;
 
@@ -102,8 +124,6 @@ const altByFile: Record<string, string> = {
     "Festlich gedeckte Hochzeitstische im Dampfgebläsehaus der Jahrhunderthalle Bochum",
   "ART_1601.jpg":
     "Brautpaarshooting an der Jahrhunderthalle Bochum mit historischem Wasserturm",
-  "ART_1602.jpg":
-    "Brautpaar vor Backsteinarchitektur und Rohrleitungen an der Jahrhunderthalle Bochum",
   "ART_2343-Bearbeitet.jpg":
     "Leuchtende LOVE Buchstaben als Hochzeitsdekoration im Dampfgebläsehaus",
   "ART_2632-Bearbeitet.jpg":
@@ -125,17 +145,27 @@ const altByFile: Record<string, string> = {
 const fallbackAlt = (index: number) =>
   `Hochzeit an der Jahrhunderthalle Bochum und im Dampfgebläsehaus, Bild ${index + 1}`;
 
-const galleryImages = imageFiles.map((file, index) => {
-  const image = modulesByFile[file];
+const galleryImages = await Promise.all(
+  imageFiles.map(async (file, index) => {
+    const image = modulesByFile[file];
+    const fullImage = await getImage({
+      src: image,
+      width: image.width,
+      format: "webp",
+    });
 
-  return {
-    id: file.replace(/\.(jpe?g)$/i, ""),
-    image,
-    alt: altByFile[file] ?? fallbackAlt(index),
-    aspect: image.width > image.height ? "landscape" as const : "portrait" as const,
-    eager: index < 2,
-  };
-});
+    return {
+      id: file.replace(/\.(jpe?g)$/i, ""),
+      image,
+      fullSrc: fullImage.src,
+      format: "webp" as const,
+      alt: altByFile[file] ?? fallbackAlt(index),
+      aspect:
+        image.width > image.height ? "landscape" as const : "portrait" as const,
+      eager: index < 2,
+    };
+  }),
+);
 
 const galleryColumns = [galleryImages];
 
@@ -232,7 +262,7 @@ const schemaGraph = {
         "@type": "ImageObject",
         position: index + 1,
         caption: item.alt,
-        contentUrl: new URL(item.image.src, siteUrl).href,
+        contentUrl: new URL(item.fullSrc, siteUrl).href,
         width: item.image.width,
         height: item.image.height,
       })),

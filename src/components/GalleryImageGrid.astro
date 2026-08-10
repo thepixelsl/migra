@@ -5,6 +5,8 @@ import GalleryLightbox from "./GalleryLightbox.astro";
 interface GalleryImage {
   image: ImageMetadata;
   alt: string;
+  fullSrc?: string;
+  format?: "webp";
   aspect?: "landscape" | "portrait" | "wide" | "natural";
   muted?: boolean;
   eager?: boolean;
@@ -84,7 +86,7 @@ const getGalleryImageSizes = (item: GalleryImage) => {
         class="gallery-image-grid__button"
         type="button"
         data-gallery-trigger={galleryId}
-        data-full-src={item.image.src}
+        data-full-src={item.fullSrc ?? item.image.src}
         data-alt={item.alt}
         aria-label={`Bild in Vollansicht öffnen: ${item.alt}`}
         data-track-event="gallery_interaction"
@@ -101,6 +103,7 @@ const getGalleryImageSizes = (item: GalleryImage) => {
           alt={item.alt}
           widths={[360, 620, 920, 1200]}
           sizes={getGalleryImageSizes(item)}
+          format={item.format}
           loading={item.eager ? "eager" : "lazy"}
           fetchpriority={item.eager ? "high" : "auto"}
           decoding="async"
