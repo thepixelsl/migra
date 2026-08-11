@@ -409,7 +409,7 @@ const articleSchema = {
             </figure>
             <div>
               <p class="eyebrow">Hochzeitsfotografie</p>
-              <h2 id="hochzeitsgeschichten">Hochzeitsgeschichten</h2>
+              <h2 id="hochzeitsgeschichten">Hochzeits<wbr />geschichten</h2>
               <p>{originalCopy.storyIntro}</p>
               <p>{originalCopy.storyMeaning}</p>
               <p>{originalCopy.storyClosing}</p>
@@ -692,6 +692,10 @@ const articleSchema = {
     gap: clamp(28px, 5vw, 58px);
     align-items: center;
     padding: clamp(20px, 3vw, 34px);
+  }
+
+  .image-story h2 {
+    font-size: clamp(34px, 4vw, 45px);
   }
 
   .image-story figure {

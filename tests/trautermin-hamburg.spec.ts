@@ -235,3 +235,32 @@ test("Traukalender article remains readable without horizontal overflow on mobil
   await expect(page.locator("[data-floating-action]")).toHaveAttribute("inert", "");
   await expect(page.locator("[data-floating-action]")).toHaveCSS("opacity", "0");
 });
+
+test("Hochzeitsgeschichten heading stays inside its bordered block", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 1600, height: 900 });
+  await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
+
+  const story = page.locator(".image-story");
+  const heading = story.getByRole("heading", {
+    level: 2,
+    name: "Hochzeitsgeschichten",
+  });
+
+  await expect(story).toBeVisible();
+  expect(await story.evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(
+    await story.evaluate((element) => element.clientWidth),
+  );
+  expect(await heading.evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(
+    await heading.evaluate((element) => element.clientWidth),
+  );
+
+  await page.setViewportSize({ width: 320, height: 844 });
+  expect(await story.evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(
+    await story.evaluate((element) => element.clientWidth),
+  );
+  expect(await heading.evaluate((element) => element.scrollWidth)).toBeLessThanOrEqual(
+    await heading.evaluate((element) => element.clientWidth),
+  );
+});
