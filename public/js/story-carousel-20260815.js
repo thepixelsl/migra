@@ -1,3 +1,4 @@
+// The versioned filename ensures Bunny serves this carousel revision immediately.
 (() => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
