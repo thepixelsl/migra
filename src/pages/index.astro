@@ -35,6 +35,9 @@ import heroCastleGardenImage from "../assets/home/hero/art_4265-bearbeitet-2_web
 import heroVeil4632Image from "../assets/home/hero/art_4632.jpg";
 import heroVeil3143Image from "../assets/home/hero/art_3143-bearbeitet-scaled-2.jpg";
 import heroGettingReadyImage from "../assets/home/hero/getting_ready_hochzeitsfotograf_hamburg2372-scaled-2.jpg";
+import facebookLogo from "../assets/home/social/facebook-logo-primary.png";
+import instagramLogo from "../assets/home/social/instagram-glyph-gradient.png";
+import pinterestLogo from "../assets/home/social/pinterest-badge-primary.png";
 
 type StoryCard = {
   title: string;
@@ -650,8 +653,8 @@ const homepageSchema = {
     <section class="planning-section home-lower-section" aria-labelledby="planning-title" data-track-section="home_planning_prices" data-content-topic="hochzeitsplanung" data-user-intent="planung_und_preise_pruefen" data-journey-stage="vergleich" data-content-format="info_cards" data-position="home_planning">
       <div class="planning-section__intro" data-home-reveal>
         <p class="eyebrow">Planung & Preise</p>
-        <h2 id="planning-title">Tipps &amp; Tricks für tolle Hochzeitsfotos</h2>
-        <p>Die wichtigsten Einstiege für Paare, die gerade Getting Ready, Ablauf, Budget oder fotografische Begleitung planen.</p>
+        <h2 id="planning-title">Tipps &amp; Tricks für Eure Hochzeit</h2>
+        <p>Wer seinen Standesamt Termin online reserviert, kann seinen Wunschtermin vor allen anderen erhalten. Mehr Tipps &amp; Tricks entdecken und Euer Budget für die Hochzeitsreportage planen</p>
       </div>
       <div class="planning-grid" data-home-reveal data-home-reveal-delay="90">
         {planningCards.map((article, index) => (
@@ -763,8 +766,8 @@ const homepageSchema = {
     <section class="story-section home-lower-section" aria-labelledby="stories-title" data-track-section="home_story_cards" data-content-topic="hochzeitsreportagen" data-user-intent="reportagen_ansehen" data-journey-stage="auswahl" data-content-format="story_carousel" data-position="home_stories">
       <div class="section-heading" data-home-reveal>
         <p class="eyebrow">Hochzeitsgeschichten</p>
-        <h2 id="stories-title">Reportagen und Editorials als vollständige Serien</h2>
-        <p>Die Galerien zeigen den Ablauf, die beteiligten Menschen und die Orte einer Bildstrecke – über einzelne Lieblingsbilder hinaus.</p>
+        <h2 id="stories-title">Hochzeiten und Editorial Shootings</h2>
+        <p>Schau Dir jetzt Bildergalerien von Hochzeiten und Editorial Shootings mit ganz normalen Menschen aus Hamburg und drumherum an.</p>
       </div>
       <div class="story-carousel" data-story-carousel data-home-reveal data-home-reveal-delay="100">
         <p class="visually-hidden" id="story-carousel-instructions">
@@ -1024,7 +1027,7 @@ const homepageSchema = {
     <section class="vendor-section home-lower-section" aria-labelledby="vendor-title" data-track-section="home_vendor_recommendations" data-content-topic="hochzeitsdienstleister_hamburg" data-user-intent="dienstleister_finden" data-journey-stage="planung" data-content-format="vendor_carousel" data-position="home_vendor">
       <div class="section-heading" data-home-reveal>
         <p class="eyebrow">Empfehlungen für Eure Hochzeit</p>
-        <h2 id="vendor-title">Dienstleister in Hamburg und Umgebung</h2>
+        <h2 id="vendor-title">Hochzeitsdienstleister in Hamburg und Umgebung</h2>
         <p>Menschen und Anbieter, die an den gezeigten Shootings beteiligt waren oder bereits auf der früheren Artbild-Seite empfohlen wurden.</p>
       </div>
       <div class="vendor-carousel" data-vendor-carousel data-home-reveal data-home-reveal-delay="90">
@@ -1075,7 +1078,7 @@ const homepageSchema = {
           tabindex="0"
           role="region"
           aria-roledescription="Karussell"
-          aria-label="Dienstleister in Hamburg und Umgebung"
+          aria-label="Hochzeitsdienstleister in Hamburg und Umgebung"
           aria-describedby="vendor-carousel-instructions"
           data-vendor-carousel-viewport
         >
@@ -1115,13 +1118,73 @@ const homepageSchema = {
     </section>
 
     <section class="social-section home-lower-section" aria-labelledby="social-title" data-track-section="home_social_links" data-content-topic="social_media" data-user-intent="aktuelle_arbeiten_verfolgen" data-journey-stage="bindung" data-content-format="social_links" data-position="home_social">
-      <p class="eyebrow" data-home-reveal>Folge mir auf Social Media</p>
-      <h2 id="social-title" data-home-reveal data-home-reveal-delay="70">Aktuelle Arbeiten und Einblicke</h2>
-      <div class="social-links" aria-label="Social Media Profile von Artbild-Fotografie" data-home-reveal data-home-reveal-delay="130">
-        <a href="https://www.facebook.com/artbildfotografie/" rel="me" data-track-event="external_resource_click" data-resource-id="facebook_artbild" data-resource-type="social_profile" data-cta-id="home_social_facebook" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Facebook</a>
-        <a href="https://instagram.com/artbild" rel="me" data-track-event="external_resource_click" data-resource-id="instagram_artbild" data-resource-type="social_profile" data-cta-id="home_social_instagram" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Instagram</a>
-        <a href="https://www.pinterest.de/artbild/" rel="me" data-track-event="external_resource_click" data-resource-id="pinterest_artbild" data-resource-type="social_profile" data-cta-id="home_social_pinterest" data-cta-type="social_profile" data-section-id="home_social_links" data-content-topic="social_media" data-user-intent="social_profile_oeffnen" data-journey-stage="bindung">Pinterest</a>
-      </div>
+      <h2 id="social-title" data-home-reveal>Folge mir auf Social Media</h2>
+      <!-- Offizielle Markenassets aus den Download-Paketen von Meta und Pinterest, lokal ausgeliefert. -->
+      <nav class="social-links" aria-label="Social Media Profile von Artbild-Fotografie" data-home-reveal data-home-reveal-delay="130">
+        <a
+          class="social-link social-link--facebook"
+          href="https://www.facebook.com/artbildfotografie/"
+          rel="me external"
+          aria-label="Facebook-Profil von Artbild-Fotografie öffnen (externe Website)"
+          data-track-event="external_resource_click"
+          data-resource-id="facebook_artbild"
+          data-resource-type="social_profile"
+          data-cta-id="home_social_facebook"
+          data-cta-type="social_profile"
+          data-section-id="home_social_links"
+          data-content-topic="social_media"
+          data-user-intent="social_profile_oeffnen"
+          data-journey-stage="bindung"
+        >
+          <span class="social-link__logo" aria-hidden="true">
+            <Image src={facebookLogo} alt="" width={29} height={29} format="png" loading="lazy" decoding="async" />
+          </span>
+          <span class="social-link__label">Facebook</span>
+          <span class="social-link__external" aria-hidden="true">↗</span>
+        </a>
+        <a
+          class="social-link social-link--instagram"
+          href="https://instagram.com/artbild"
+          rel="me external"
+          aria-label="Instagram-Profil von Artbild-Fotografie öffnen (externe Website)"
+          data-track-event="external_resource_click"
+          data-resource-id="instagram_artbild"
+          data-resource-type="social_profile"
+          data-cta-id="home_social_instagram"
+          data-cta-type="social_profile"
+          data-section-id="home_social_links"
+          data-content-topic="social_media"
+          data-user-intent="social_profile_oeffnen"
+          data-journey-stage="bindung"
+        >
+          <span class="social-link__logo" aria-hidden="true">
+            <Image src={instagramLogo} alt="" width={30} height={30} format="png" loading="lazy" decoding="async" />
+          </span>
+          <span class="social-link__label">Instagram</span>
+          <span class="social-link__external" aria-hidden="true">↗</span>
+        </a>
+        <a
+          class="social-link social-link--pinterest"
+          href="https://www.pinterest.de/artbild/"
+          rel="me external"
+          aria-label="Pinterest-Profil von Artbild-Fotografie öffnen (externe Website)"
+          data-track-event="external_resource_click"
+          data-resource-id="pinterest_artbild"
+          data-resource-type="social_profile"
+          data-cta-id="home_social_pinterest"
+          data-cta-type="social_profile"
+          data-section-id="home_social_links"
+          data-content-topic="social_media"
+          data-user-intent="social_profile_oeffnen"
+          data-journey-stage="bindung"
+        >
+          <span class="social-link__logo" aria-hidden="true">
+            <Image src={pinterestLogo} alt="" width={29} height={29} format="png" loading="lazy" decoding="async" />
+          </span>
+          <span class="social-link__label">Pinterest</span>
+          <span class="social-link__external" aria-hidden="true">↗</span>
+        </a>
+      </nav>
     </section>
 
     <EditorialReviewQuote
