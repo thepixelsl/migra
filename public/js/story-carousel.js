@@ -11,7 +11,6 @@
     const next = carousel.querySelector("[data-story-next]");
     const current = carousel.querySelector("[data-story-current]");
     const status = carousel.querySelector("[data-story-status]");
-    const dots = Array.from(carousel.querySelectorAll("[data-story-dot]"));
 
     if (!viewport || !track || cards.length === 0) return;
 
@@ -79,8 +78,8 @@
       const firstNumber = activeIndex + 1;
       const lastNumber = lastVisibleIndex + 1;
       const visibleRange = firstNumber === lastNumber
-        ? String(firstNumber).padStart(2, "0")
-        : `${String(firstNumber).padStart(2, "0")}–${String(lastNumber).padStart(2, "0")}`;
+        ? String(firstNumber)
+        : `${firstNumber}–${lastNumber}`;
 
       cards.forEach((card, index) => {
         setCardAccessibility(card, index >= activeIndex && index <= lastVisibleIndex);
@@ -90,22 +89,6 @@
       if (shouldAnnounce) announce();
       if (previous) previous.disabled = activeIndex === 0;
       if (next) next.disabled = activeIndex === maximumIndex;
-      dots.forEach((dot, index) => {
-        dot.hidden = index > maximumIndex;
-        const dotLastNumber = Math.min(cards.length, index + visibleCount);
-        const dotTitle = cards[index]?.querySelector("h3")?.textContent?.trim();
-        dot.setAttribute(
-          "aria-label",
-          visibleCount === 1
-            ? `Galerie ${index + 1} von ${cards.length} anzeigen${dotTitle ? `: ${dotTitle}` : ""}`
-            : `Galerien ${index + 1} bis ${dotLastNumber} von ${cards.length} anzeigen`,
-        );
-        if (index === activeIndex) {
-          dot.setAttribute("aria-current", "true");
-        } else {
-          dot.removeAttribute("aria-current");
-        }
-      });
     };
 
     const closestIndex = () => {
@@ -140,10 +123,6 @@
 
     next?.addEventListener("click", () => {
       goTo(activeIndex + 1);
-    });
-
-    dots.forEach((dot, index) => {
-      dot.addEventListener("click", () => goTo(index));
     });
 
     viewport.addEventListener("keydown", (event) => {

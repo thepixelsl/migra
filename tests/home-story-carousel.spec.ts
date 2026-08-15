@@ -18,9 +18,7 @@ test("story carousel is visibly navigable and advances one card at a time on des
   const previous = carousel.locator("[data-story-previous]");
   const next = carousel.locator("[data-story-next]");
   const status = carousel.locator("[data-story-status]");
-  const pagination = carousel.locator("[data-story-pagination]");
   const controlLabel = carousel.locator(".story-carousel__control-label");
-  const visibleDots = carousel.locator("[data-story-dot]:visible");
 
   await carousel.scrollIntoViewIfNeeded();
   await expect(cards).toHaveCount(6);
@@ -39,15 +37,19 @@ test("story carousel is visibly navigable and advances one card at a time on des
   await expect(next).toBeVisible();
   await expect(controlLabel).toHaveText("Galerien durchblättern");
   await expect(controlLabel).toBeHidden();
-  await expect(pagination).toBeVisible();
-  await expect(visibleDots).toHaveCount(3);
-  await expect(carousel.locator('[data-story-dot="0"]')).toHaveAttribute("aria-current", "true");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("01–04");
+  await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
+  await expect(carousel.locator(".story-carousel__navigation > button")).toHaveCount(2);
+  await expect(carousel.locator(".story-carousel__navigation > .story-carousel__position")).toHaveCount(1);
+  await expect(carousel.locator("[data-story-current]")).toHaveText("1–4");
   await expect(status).toHaveText("Galerien 1 bis 4 von 6");
 
   const controlStyleParity = await page.evaluate(() => {
     const storyButton = document.querySelector<HTMLElement>("[data-story-previous]");
     const portfolioButton = document.querySelector<HTMLElement>("[data-portfolio-showcase-previous]");
+    const storyNavigation = document.querySelector<HTMLElement>(".story-carousel__navigation");
+    const vendorControls = document.querySelector<HTMLElement>(".vendor-carousel__controls");
+    const storyPosition = document.querySelector<HTMLElement>(".story-carousel__position");
+    const vendorPosition = document.querySelector<HTMLElement>(".vendor-carousel__position");
     const storyIcon = storyButton?.querySelector<SVGElement>("svg");
     const portfolioIcon = portfolioButton?.querySelector<SVGElement>("svg");
     const buttonProperties = [
@@ -61,6 +63,15 @@ test("story carousel is visibly navigable and advances one card at a time on des
       "opacity",
     ] as const;
     const iconProperties = ["width", "height", "strokeWidth"] as const;
+    const positionProperties = [
+      "minWidth",
+      "color",
+      "fontFamily",
+      "fontSize",
+      "fontWeight",
+      "letterSpacing",
+      "textAlign",
+    ] as const;
 
     const pickStyles = <T extends Element, K extends readonly (keyof CSSStyleDeclaration)[]>(
       element: T | null | undefined,
@@ -76,11 +87,17 @@ test("story carousel is visibly navigable and advances one card at a time on des
       portfolioButton: pickStyles(portfolioButton, buttonProperties),
       storyIcon: pickStyles(storyIcon, iconProperties),
       portfolioIcon: pickStyles(portfolioIcon, iconProperties),
+      storyGap: getComputedStyle(storyNavigation!).gap,
+      vendorGap: getComputedStyle(vendorControls!).gap,
+      storyPosition: pickStyles(storyPosition, positionProperties),
+      vendorPosition: pickStyles(vendorPosition, positionProperties),
     };
   });
 
   expect(controlStyleParity.storyButton).toEqual(controlStyleParity.portfolioButton);
   expect(controlStyleParity.storyIcon).toEqual(controlStyleParity.portfolioIcon);
+  expect(controlStyleParity.storyGap).toBe(controlStyleParity.vendorGap);
+  expect(controlStyleParity.storyPosition).toEqual(controlStyleParity.vendorPosition);
 
   const initialLayout = await carousel.evaluate((element) => {
     const storyViewport = element.querySelector<HTMLElement>("[data-story-viewport]");
@@ -108,18 +125,22 @@ test("story carousel is visibly navigable and advances one card at a time on des
 
   await next.click();
   await expect(status).toHaveText("Galerien 2 bis 5 von 6");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("02–05");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("2–5");
   await expect(previous).toBeEnabled();
   await expect(next).toBeEnabled();
-  await expect(carousel.locator('[data-story-dot="1"]')).toHaveAttribute("aria-current", "true");
   await expect
     .poll(() => viewport.evaluate((element) => Math.round(element.scrollLeft)))
     .toBeGreaterThan(250);
 
   await next.click();
   await expect(status).toHaveText("Galerien 3 bis 6 von 6");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("03–06");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("3–6");
   await expect(next).toBeDisabled();
+
+  const zurichImage = carousel.locator('a[href="/brautpaar-in-zuerich/"] img');
+  await expect(zurichImage).toBeVisible();
+  await expect(zurichImage).toHaveAttribute("src", /ART_8515-Bearbeitet-scaled/);
+  await expect(zurichImage).toHaveCSS("object-fit", "contain");
 
   await previous.click();
   await expect(status).toHaveText("Galerien 2 bis 5 von 6");
@@ -130,7 +151,7 @@ test("story carousel is visibly navigable and advances one card at a time on des
   expect(overflow).toBe(0);
 });
 
-test("story carousel keeps its full controls and two-card layout on tablet", async ({ page }) => {
+test("story carousel keeps its arrow-counter controls and two-card layout on tablet", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 820, height: 1080 });
   await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
@@ -140,15 +161,12 @@ test("story carousel keeps its full controls and two-card layout on tablet", asy
   const previous = carousel.locator("[data-story-previous]");
   const next = carousel.locator("[data-story-next]");
   const status = carousel.locator("[data-story-status]");
-  const pagination = carousel.locator("[data-story-pagination]");
-  const visibleDots = carousel.locator("[data-story-dot]:visible");
 
   await carousel.scrollIntoViewIfNeeded();
   await expect(previous).toBeVisible();
   await expect(next).toBeVisible();
-  await expect(pagination).toBeVisible();
-  await expect(visibleDots).toHaveCount(5);
-  await expect(carousel.locator("[data-story-current]")).toHaveText("01–02");
+  await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
+  await expect(carousel.locator("[data-story-current]")).toHaveText("1–2");
   await expect(status).toHaveText("Galerien 1 bis 2 von 6");
 
   const tabletLayout = await carousel.evaluate((element) => {
@@ -180,12 +198,15 @@ test("story carousel keeps its full controls and two-card layout on tablet", asy
 
   await next.click();
   await expect(status).toHaveText("Galerien 2 bis 3 von 6");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("02–03");
-  await expect(carousel.locator('[data-story-dot="1"]')).toHaveAttribute("aria-current", "true");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("2–3");
 
-  await carousel.locator('[data-story-dot="4"]').click();
+  await next.click();
+  await expect(status).toHaveText("Galerien 3 bis 4 von 6");
+  await next.click();
+  await expect(status).toHaveText("Galerien 4 bis 5 von 6");
+  await next.click();
   await expect(status).toHaveText("Galerien 5 bis 6 von 6");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("05–06");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("5–6");
   await expect(next).toBeDisabled();
 
   const overflow = await page.evaluate(
@@ -204,23 +225,16 @@ test("story carousel places only arrows and counter between image and text on mo
   const previous = carousel.locator("[data-story-previous]");
   const next = carousel.locator("[data-story-next]");
   const status = carousel.locator("[data-story-status]");
-  const pagination = carousel.locator("[data-story-pagination]");
-  const dots = carousel.locator("[data-story-dot]");
-  const visibleDots = carousel.locator("[data-story-dot]:visible");
   const current = carousel.locator("[data-story-current]");
 
   await carousel.scrollIntoViewIfNeeded();
   await expect(status).toHaveText("Galerie 1 von 6");
-  await expect(current).toHaveText("01");
+  await expect(current).toHaveText("1");
   await expect(previous).toBeVisible();
   await expect(previous).toBeDisabled();
   await expect(next).toBeVisible();
   await expect(next).toBeEnabled();
-  await expect(pagination).toBeHidden();
-  await expect(dots).toHaveCount(6);
-  await expect(visibleDots).toHaveCount(0);
-  await expect(carousel.locator('[data-story-dot][aria-current="true"]')).toHaveCount(1);
-  await expect(carousel.locator('[data-story-dot="0"]')).toHaveAttribute("aria-current", "true");
+  await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
   await expect(carousel.locator("a button")).toHaveCount(0);
 
   const mobileLayout = await carousel.evaluate((element) => {
@@ -271,8 +285,7 @@ test("story carousel places only arrows and counter between image and text on mo
 
   await next.click();
   await expect(status).toHaveText("Galerie 2 von 6");
-  await expect(current).toHaveText("02");
-  await expect(carousel.locator('[data-story-dot="1"]')).toHaveAttribute("aria-current", "true");
+  await expect(current).toHaveText("2");
   await expect
     .poll(() => viewport.evaluate((element) => Math.round(element.scrollLeft)))
     .toBeGreaterThan(300);
@@ -280,12 +293,21 @@ test("story carousel places only arrows and counter between image and text on mo
   await viewport.focus();
   await viewport.press("ArrowRight");
   await expect(status).toHaveText("Galerie 3 von 6");
-  await expect(current).toHaveText("03");
+  await expect(current).toHaveText("3");
 
   await viewport.press("ArrowRight");
   await expect(status).toHaveText("Galerie 4 von 6");
-  await expect(current).toHaveText("04");
-  await expect(carousel.locator('[data-story-dot="3"]')).toHaveAttribute("aria-current", "true");
+  await expect(current).toHaveText("4");
+
+  await viewport.press("ArrowRight");
+  await expect(status).toHaveText("Galerie 5 von 6");
+  await viewport.press("ArrowRight");
+  await expect(status).toHaveText("Galerie 6 von 6");
+  await expect(current).toHaveText("6");
+
+  const zurichImage = carousel.locator('a[href="/brautpaar-in-zuerich/"] img');
+  await expect(zurichImage).toBeVisible();
+  await expect(zurichImage).toHaveCSS("object-fit", "contain");
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

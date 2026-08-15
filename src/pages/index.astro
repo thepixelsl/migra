@@ -16,7 +16,7 @@ import trauterminHamburgImage from "../assets/trautermin-hamburg-online-reservie
 import valerieTimHomepageImage from "../assets/valerie-und-tim/ART_4449.jpg";
 import steffiDominikHomepageImage from "../assets/steffi-dominik/ART2899.jpg";
 import hochzeitsfotosHamburgHomepageImage from "../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
-import brautpaarZuerichHomepageImage from "../assets/brautpaar-zuerich/ART_7306-Bearbeitet-819x1024.jpg";
+import brautpaarZuerichHomepageImage from "../assets/brautpaar-zuerich/ART_8515-Bearbeitet-scaled.jpg";
 import gettingReadyPlanningImage from "../assets/home/getting-ready-braut-schleier-hochformat.jpg";
 import portfolioParisImage from "../assets/traumhochzeit-paris-2019/ART_6078-Bearbeitet_web.jpg";
 import portfolioAtlanticImage from "../assets/traumhochzeit-hamburg/ART_9474-Bearbeitet_web_1-768x1151.jpg";
@@ -38,6 +38,8 @@ import heroGettingReadyImage from "../assets/home/hero/getting_ready_hochzeitsfo
 import facebookLogo from "../assets/home/social/facebook-logo-primary.png";
 import instagramLogo from "../assets/home/social/instagram-glyph-gradient.png";
 import pinterestLogo from "../assets/home/social/pinterest-badge-primary.png";
+import contactEmailIcon from "../assets/home/contact/email-icon.png";
+import contactPlannerIcon from "../assets/home/contact/weekly-planner-icon.png";
 
 type StoryCard = {
   title: string;
@@ -50,6 +52,7 @@ type StoryCard = {
   width: number;
   height: number;
   alt: string;
+  imageFit?: "cover" | "contain";
 };
 
 type PortfolioShowcaseItem = {
@@ -136,6 +139,7 @@ const storyCards: StoryCard[] = [
     width: brautpaarZuerichHomepageImage.width,
     height: brautpaarZuerichHomepageImage.height,
     alt: "Brautpaar unterwegs durch Zürich mit eleganter Hochzeitsinspiration",
+    imageFit: "contain",
   },
 ];
 
@@ -771,7 +775,7 @@ const homepageSchema = {
       </div>
       <div class="story-carousel" data-story-carousel data-home-reveal data-home-reveal-delay="100">
         <p class="visually-hidden" id="story-carousel-instructions">
-          Nutze die Pfeiltasten, wische horizontal oder wähle eine Galerie über die Navigation.
+          Nutze die Pfeiltasten, wische horizontal oder verwende die Schaltflächen, um weitere Galerien anzusehen.
         </p>
         <span class="visually-hidden" role="status" aria-atomic="true" data-story-status>
           Galerien 1 bis 4 von {storyCards.length}
@@ -793,28 +797,10 @@ const homepageSchema = {
                 <path d="M19 12H5m6-6-6 6 6 6"></path>
               </svg>
             </button>
-            <div
-              class="story-carousel__dots"
-              role="group"
-              aria-label="Hochzeitsgeschichte auswählen"
-              data-story-pagination
-            >
-              {storyCards.map((story, index) => (
-                <button
-                  class="story-carousel__dot"
-                  type="button"
-                  aria-label={`Galerie ${index + 1} von ${storyCards.length} anzeigen: ${story.title}`}
-                  aria-controls="home-story-carousel"
-                  aria-current={index === 0 ? "true" : undefined}
-                  data-story-dot={index}
-                  data-track-event="content_slider_interaction"
-                  data-slider-id="home_story_cards"
-                  data-slider-action="jump"
-                  data-slider-index={index + 1}
-                >
-                  <span aria-hidden="true"></span>
-                </button>
-              ))}
+            <div class="story-carousel__position" aria-hidden="true">
+              <span data-story-current>1–4</span>
+              <span> / </span>
+              <span>{storyCards.length}</span>
             </div>
             <button
               class="story-carousel__button"
@@ -830,11 +816,6 @@ const homepageSchema = {
                 <path d="M5 12h14m-6-6 6 6-6 6"></path>
               </svg>
             </button>
-            <div class="story-carousel__position" aria-hidden="true">
-              <span data-story-current>01–04</span>
-              <span> / </span>
-              <span>{String(storyCards.length).padStart(2, "0")}</span>
-            </div>
           </div>
         </div>
         <div
@@ -859,7 +840,10 @@ const homepageSchema = {
                   {index + 1} von {storyCards.length}:
                 </span>
                 <a href={story.href} aria-label={story.linkLabel} data-track-event="cta_click" data-cta-id={`home_story_${trackingSlug(story.title)}`} data-cta-type="gallery_card" data-section-id="home_story_cards" data-content-topic="hochzeitsreportagen" data-user-intent="reportage_ansehen" data-journey-stage="auswahl" data-position={`story_card_${index + 1}`}>
-                  <div class="story-card__media">
+                  <div class:list={[
+                    "story-card__media",
+                    story.imageFit === "contain" && "story-card__media--contain",
+                  ]}>
                     {story.imageAsset ? (
                       <Image
                         src={story.imageAsset}
@@ -1205,8 +1189,38 @@ const homepageSchema = {
         <p>Für kurzfristige Anfragen nutzt Ihr am besten den Kontakt-Button unten rechts. Dort könnt Ihr WhatsApp, Kontaktformular oder E-Mail wählen. Über „Termin noch frei?“ prüft Ihr vorab, ob Euer Hochzeitstag nach aktuellem Kalenderstand verfügbar ist.</p>
       </div>
       <div class="contact-note__actions" data-home-reveal data-home-reveal-delay="100">
-        <a href="/kontakt/" aria-label="Schnellkontakt über den Kontakt-Button öffnen" data-floating-action-external-open data-track-event="cta_click" data-cta-id="home_contact_fab" data-cta-type="floating_action_trigger" data-section-id="home_contact_options" data-content-topic="kontaktmoeglichkeiten" data-user-intent="schnellkontakt_oeffnen" data-journey-stage="anfrage">Kontakt-Button öffnen</a>
-        <a href="/kontakt/" aria-label="Terminprüfung im Kontakt-Button öffnen" data-floating-action-external-availability data-track-event="cta_click" data-cta-id="home_contact_availability" data-cta-type="availability_check" data-section-id="home_contact_options" data-content-topic="terminverfuegbarkeit" data-user-intent="termin_pruefen" data-journey-stage="anfrage">Termin prüfen</a>
+        <a class="contact-note__action contact-note__action--contact" href="/kontakt/" aria-label="Schnellkontakt über den Kontakt-Button öffnen" data-floating-action-external-open data-track-event="cta_click" data-cta-id="home_contact_fab" data-cta-type="floating_action_trigger" data-section-id="home_contact_options" data-content-topic="kontaktmoeglichkeiten" data-user-intent="schnellkontakt_oeffnen" data-journey-stage="anfrage">
+          <span class="contact-note__action-icon" aria-hidden="true">
+            <Image
+              src={contactEmailIcon}
+              alt=""
+              width={150}
+              height={150}
+              loading="lazy"
+              decoding="async"
+              format="webp"
+              quality={95}
+            />
+          </span>
+          <span class="contact-note__action-label">Kontakt-Button öffnen</span>
+          <span class="contact-note__action-arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="contact-note__action contact-note__action--availability" href="/kontakt/" aria-label="Terminprüfung im Kontakt-Button öffnen" data-floating-action-external-availability data-track-event="cta_click" data-cta-id="home_contact_availability" data-cta-type="availability_check" data-section-id="home_contact_options" data-content-topic="terminverfuegbarkeit" data-user-intent="termin_pruefen" data-journey-stage="anfrage">
+          <span class="contact-note__action-icon" aria-hidden="true">
+            <Image
+              src={contactPlannerIcon}
+              alt=""
+              width={256}
+              height={256}
+              loading="lazy"
+              decoding="async"
+              format="webp"
+              quality={92}
+            />
+          </span>
+          <span class="contact-note__action-label">Termin prüfen</span>
+          <span class="contact-note__action-arrow" aria-hidden="true">→</span>
+        </a>
       </div>
     </section>
   </main>
