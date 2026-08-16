@@ -2414,20 +2414,21 @@ footer nav[aria-label="Footer"]::before,
 
 .planning-section {
   display: grid;
-  grid-template-columns: minmax(300px, .72fr) minmax(660px, 1.28fr);
-  gap: clamp(44px, 5.5vw, 82px);
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(50px, 6vw, 86px);
+  align-items: start;
 }
 
 .planning-section__intro {
   min-width: 0;
-  max-width: 520px;
+  max-width: 760px;
+  margin-inline: auto;
   text-align: center;
 }
 
 .planning-section__intro h2 {
   max-width: 100%;
-  font-size: clamp(40px, 3.25vw, 54px);
+  font-size: clamp(42px, 4.8vw, 68px);
   hyphens: auto;
   overflow-wrap: break-word;
 }
@@ -2443,16 +2444,18 @@ footer nav[aria-label="Footer"]::before,
 }
 
 .planning-section__intro > p:last-child {
-  max-width: 490px;
+  max-width: 680px;
   margin: 0 auto;
   font-size: clamp(17px, 1.45vw, 21px);
   line-height: 1.75;
 }
 
 .planning-grid {
+  width: min(100%, 1180px);
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 1.15vw, 18px);
   align-items: stretch;
+  margin-inline: auto;
 }
 
 .planning-card a {
@@ -2508,15 +2511,15 @@ footer nav[aria-label="Footer"]::before,
 }
 
 .planning-card--prices h3 {
-  font-size: clamp(32px, 2.8vw, 44px);
+  font-size: clamp(38px, 3.2vw, 50px);
 }
 
 .planning-card--getting-ready h3 {
-  font-size: clamp(26px, 2.25vw, 34px);
+  font-size: clamp(30px, 2.8vw, 42px);
 }
 
 .planning-card--hamburg h3 {
-  font-size: clamp(29px, 2.55vw, 40px);
+  font-size: clamp(36px, 3vw, 48px);
 }
 
 .planning-card__kicker {
@@ -2545,7 +2548,12 @@ footer nav[aria-label="Footer"]::before,
 }
 
 .planning-card:nth-child(2) a > div {
-  background: #96979a;
+  background: #73767b;
+  color: #fff;
+}
+
+.planning-card:nth-child(2) .planning-card__kicker,
+.planning-card:nth-child(2) .planning-card__summary {
   color: #fff;
 }
 
@@ -3841,36 +3849,44 @@ footer nav[aria-label="Footer"]::before,
 
   .planning-grid {
     width: min(100%, 780px);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    grid-template-columns: 1fr;
+    gap: clamp(18px, 3vw, 24px);
     margin-inline: auto;
   }
 
   .planning-card a {
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(2, minmax(0, 1fr));
-    aspect-ratio: 1 / 2;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 1fr;
+    aspect-ratio: 2 / 1;
+  }
+
+  .planning-card img {
+    height: 100%;
+    aspect-ratio: 1;
   }
 
   .planning-card a > div {
-    padding: clamp(22px, 4vw, 34px);
+    padding: clamp(24px, 4vw, 38px);
   }
 
   .planning-card h3 {
-    font-size: clamp(23px, 3.7vw, 29px);
+    font-size: clamp(42px, 5.2vw, 52px);
   }
 
   .planning-card--prices h3 {
-    font-size: clamp(24px, 3.3vw, 28px);
+    font-size: clamp(36px, 4.6vw, 46px);
   }
 
-.planning-card--getting-ready h3,
-.planning-card--hamburg h3 {
-  font-size: clamp(21px, 2.7vw, 24px);
-}
+  .planning-card--getting-ready h3 {
+    font-size: clamp(32px, 4.2vw, 42px);
+  }
+
+  .planning-card--hamburg h3 {
+    font-size: clamp(36px, 4.6vw, 46px);
+  }
 
   .planning-card__summary {
-    font-size: clamp(13px, 2vw, 16px);
+    font-size: clamp(14px, 1.9vw, 17px);
   }
 
   .home-editorial__copy {
@@ -4352,7 +4368,7 @@ footer nav[aria-label="Footer"]::before,
 
   .planning-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: clamp(26px, 7vw, 34px);
   }
 
   .story-card img,
@@ -4373,14 +4389,14 @@ footer nav[aria-label="Footer"]::before,
   }
 
   .planning-card a {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-rows: 1fr;
-    aspect-ratio: 2 / 1;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(200px, auto);
+    aspect-ratio: auto;
     overflow: hidden;
   }
 
   .planning-card img {
-    height: 100%;
+    height: auto;
   }
 
   .planning-card a {
@@ -4388,38 +4404,42 @@ footer nav[aria-label="Footer"]::before,
   }
 
   .planning-card a > div {
-    padding: clamp(14px, 4.5vw, 22px);
+    min-height: clamp(200px, 60vw, 230px);
+    padding: clamp(24px, 7vw, 34px);
     overflow: hidden;
   }
 
   .planning-card h3 {
-    font-size: clamp(38px, 11vw, 50px);
+    font-size: clamp(44px, 13vw, 54px);
   }
 
   .planning-card--prices h3 {
-    font-size: clamp(30px, 8.5vw, 38px);
+    font-size: clamp(38px, 11vw, 46px);
   }
 
-.planning-card--getting-ready h3,
-.planning-card--hamburg h3 {
-  font-size: clamp(25px, 7vw, 32px);
-}
+  .planning-card--getting-ready h3 {
+    font-size: clamp(34px, 9.8vw, 42px);
+  }
+
+  .planning-card--hamburg h3 {
+    font-size: clamp(38px, 11vw, 46px);
+  }
 
   .planning-card .planning-card__kicker {
-    margin-bottom: clamp(18px, 2.6vw, 24px);
+    margin-bottom: clamp(20px, 5vw, 28px);
     max-width: 100%;
-    font-size: clamp(6px, 1.7vw, 7px);
-    letter-spacing: .16em;
+    font-size: clamp(8px, 2.35vw, 10px);
+    letter-spacing: .18em;
     white-space: nowrap;
   }
 
   .planning-card__summary {
-    font-size: clamp(10px, 3.1vw, 13px);
-    line-height: 1.35;
+    font-size: clamp(14px, 4.2vw, 16px);
+    line-height: 1.45;
   }
 
   .planning-card__rule {
-    margin-block: clamp(9px, 3vw, 14px);
+    margin-block: clamp(12px, 4vw, 18px);
   }
 
   .story-carousel {
