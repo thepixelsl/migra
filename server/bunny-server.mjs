@@ -5,6 +5,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { AGENT_AVAILABILITY_MAX_BODY_BYTES } from "../functions/_agent-availability-contract.js";
 import worker from "../src/worker.js";
 import { createAssetBinding } from "./bunny-assets.mjs";
 import { createBunnyDatabase } from "./bunny-database.mjs";
@@ -81,9 +82,9 @@ function adminDenied(configured) {
   );
 }
 
-async function readRequestBody(request) {
+async function readRequestBody(request, maxBytes = MAX_REQUEST_BODY_BYTES) {
   const contentLength = Number.parseInt(request.headers["content-length"] || "0", 10);
-  if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BODY_BYTES) {
+  if (Number.isFinite(contentLength) && contentLength > maxBytes) {
     throw new RangeError("request_body_too_large");
   }
 
@@ -91,7 +92,7 @@ async function readRequestBody(request) {
   let size = 0;
   for await (const chunk of request) {
     size += chunk.length;
-    if (size > MAX_REQUEST_BODY_BYTES) throw new RangeError("request_body_too_large");
+    if (size > maxBytes) throw new RangeError("request_body_too_large");
     chunks.push(chunk);
   }
   return chunks.length ? Buffer.concat(chunks) : undefined;
@@ -121,9 +122,12 @@ async function toWebRequest(request, env) {
   headers.set("x-forwarded-proto", publicProtocol);
 
   const url = new URL(request.url || "/", `${publicProtocol}://${publicHost}`);
+  const maxBodyBytes = url.pathname === "/api/agent-availability"
+    ? AGENT_AVAILABILITY_MAX_BODY_BYTES
+    : MAX_REQUEST_BODY_BYTES;
   const body = request.method === "GET" || request.method === "HEAD"
     ? undefined
-    : await readRequestBody(request);
+    : await readRequestBody(request, maxBodyBytes);
 
   return new Request(url, {
     method: request.method,
@@ -185,6 +189,7 @@ export async function createBunnyRuntime(options = {}) {
     ...env,
     ASSETS: createAssetBinding(assetDirectory),
     AVAILABILITY_KV: database.kv,
+    AGENT_RATE_LIMIT_DB: database.d1,
     DB: database.d1,
     CONTACT_DB: database.d1,
     ...(contactMailer ? { CONTACT_MAILER: contactMailer } : {}),
@@ -255,16 +260,28 @@ export async function createBunnyRuntime(options = {}) {
     } catch (error) {
       const status = error instanceof RangeError ? 413 : 500;
       if (status === 500) console.error("Unhandled Bunny request error", error);
-      await writeNodeResponse(nodeResponse, withBunnyHeaders(new Response(
-        status === 413 ? "Die Anfrage ist zu groß." : "Internal Server Error",
-        {
-          status,
-          headers: {
-            "Cache-Control": "no-store",
-            "Content-Type": "text/plain; charset=utf-8",
+      const pathname = new URL(nodeRequest.url || "/", "http://bunny.internal").pathname;
+      const agentPayloadTooLarge = status === 413
+        && pathname === "/api/agent-availability";
+      const response = agentPayloadTooLarge
+        ? Response.json(
+          { error: "payload_too_large", message: "Die Anfrage ist zu groß." },
+          { status, headers: { "Cache-Control": "no-store" } },
+        )
+        : new Response(
+          status === 413 ? "Die Anfrage ist zu groß." : "Internal Server Error",
+          {
+            status,
+            headers: {
+              "Cache-Control": "no-store",
+              "Content-Type": "text/plain; charset=utf-8",
+            },
           },
-        },
-      ), env, nodeRequest.url || ""));
+        );
+      await writeNodeResponse(
+        nodeResponse,
+        withBunnyHeaders(response, env, pathname),
+      );
     }
   });
 

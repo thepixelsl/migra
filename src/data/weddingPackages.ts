@@ -1,0 +1,76 @@
+const reportageFeatures = (duration: string) => [
+  duration,
+  "Persönliches Vorgespräch und Beratung",
+  "Kennenlernshooting",
+  "Getting Ready auf Wunsch",
+  "Trauung, Brautpaarshooting und Gruppenfotos",
+  "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
+  "Passwortgeschützte Onlinegalerie für 6 Monate",
+  "Mindestens 300 bearbeitete Bilder",
+  "Retusche einzelner Bilder nach Absprache",
+  "Fahrtkosten innerhalb Hamburgs inklusive",
+];
+
+/**
+ * Gemeinsame Preis- und Leistungsquelle für die Preis- und Agentenseite.
+ * Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Teil der Aussage.
+ */
+export const weddingPackages = [
+  {
+    id: "pure-moments",
+    name: "Pure Moments",
+    priceValue: 299,
+    priceLabel: "ab 299 €",
+    priceNote: "Einstiegspaket ab 299 Euro",
+    serviceType: "Fotografische Begleitung",
+    duration: "1 Stunde",
+    intro: "1 Stunde fotografische Begleitung.",
+    showIntro: false,
+    features: [
+      "1 Stunde fotografische Begleitung",
+      "Persönliches Vorgespräch und Beratung",
+      "Trauung, Brautpaarshooting, Gruppenfotos",
+      "passwortgeschützte Onlinegallerie für 3 Monate",
+      "mindestens 30 Bilder",
+      "inklusive RAW-Bearbeitung für alle Bilder",
+      "Retusche für ausgewählte Bilder",
+      "keine Extra- oder versteckten Kosten (Festpreis)",
+      "keine Fahrtkosten innerhalb Hamburgs",
+      "nicht mit anderen Paketen kombinierbar",
+    ],
+  },
+  {
+    id: "standesamt-paket",
+    name: "Standesamt Paket",
+    priceValue: 649,
+    priceLabel: "649 € Festpreis",
+    priceNote: "Festpreis fuer standesamtliche Trauungen",
+    serviceType: "Standesamtliche Trauung mit Hochzeitsreportage",
+    duration: "2 Stunden",
+    intro: "Für standesamtliche Trauungen mit mehr Zeit für Getting Ready, Paarbilder und Familie.",
+    showIntro: true,
+    features: [
+      "2 Stunden Hochzeitsreportage",
+      "Persönliches Vorgespräch und Beratung",
+      "Kennenlernshooting",
+      "Getting Ready",
+      "Trauung, Brautpaarshooting und Gruppenfotos",
+      "Passwortgeschützte Onlinegalerie für 3 Monate",
+      "Mindestens 100 bearbeitete Bilder",
+      "Retusche einzelner Bilder nach Absprache",
+      "Keine Extra- oder versteckten Kosten",
+    ],
+  },
+  {
+    id: "rundum-sorglos-paket",
+    name: "Rundum-Sorglos-Paket",
+    priceValue: 249,
+    priceLabel: "249 € pro Stunde",
+    priceNote: "Stundenpreis fuer laengere Hochzeitsreportagen",
+    serviceType: "Hochzeitsreportage",
+    duration: "3 bis 10 Stunden",
+    intro: "Für längere Hochzeitsreportagen vom Getting Ready bis zur Feier.",
+    showIntro: true,
+    features: reportageFeatures("Mindestens 3 bis höchstens 10 Stunden"),
+  },
+] as const;

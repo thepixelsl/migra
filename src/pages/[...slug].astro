@@ -112,7 +112,7 @@ const normalizedContentHtml = page.contentHtml.replace(
 );
 const contentHtml = modernizePrivacyContent(page.path, normalizedContentHtml);
 const contentDateModified = ["/datenschutz/", "/datenschutzerklaerung/"].includes(page.path)
-  ? "2026-08-08T00:00:00+02:00"
+  ? "2026-08-17T00:00:00+02:00"
   : page.dateModified;
 const primaryImage = heroImage
   ? `${siteUrl}${heroImage.src}`

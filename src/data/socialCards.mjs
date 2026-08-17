@@ -38,6 +38,14 @@ export const socialCardOverrides = {
     pageType: "article",
     focalPoint: "center",
   },
+  "/fuer-agenten/": {
+    title: "Für Buchungsagenten",
+    subtitle: "Preise, Konditionen und begrenzte Terminabfrage für konkrete Fotoaufträge.",
+    location: "Hamburg",
+    label: "Buchungsinformationen",
+    updated: "2026-08-17",
+    focalPoint: "center",
+  },
   "/blog/": {
     pageType: "website",
   },

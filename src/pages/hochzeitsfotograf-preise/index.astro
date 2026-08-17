@@ -7,6 +7,7 @@ import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
 import { googleReviews } from "../../data/reviews";
+import { weddingPackages } from "../../data/weddingPackages";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
@@ -20,85 +21,28 @@ const description =
   "Preise und Pakete für Hochzeitsfotografie in Hamburg mit dem jeweils aufgeführten Leistungsumfang und Hinweisen zum individuellen Angebot.";
 const primaryImage = new URL(heroImage.src, siteUrl).href;
 
-const reportageFeatures = (duration: string) => [
-  duration,
-  "Persönliches Vorgespräch und Beratung",
-  "Kennenlernshooting",
-  "Getting Ready auf Wunsch",
-  "Trauung, Brautpaarshooting und Gruppenfotos",
-  "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
-  "Passwortgeschützte Onlinegalerie für 6 Monate",
-  "Mindestens 300 bearbeitete Bilder",
-  "Retusche einzelner Bilder nach Absprache",
-  "Fahrtkosten innerhalb Hamburgs inklusive",
-];
-
-const packages = [
-  {
-    id: "pure-moments",
-    name: "Pure Moments",
-    priceValue: 299,
-    priceLabel: "ab 299 €",
-    priceNote: "Einstiegspaket ab 299 Euro",
-    serviceType: "Fotografische Begleitung",
-    duration: "1 Stunde",
-    intro: "1 Stunde fotografische Begleitung.",
-    showIntro: false,
+const packageMedia = {
+  "pure-moments": {
     image: pureMomentsImage,
     alt: "Brautpaar in Lauenbrück als Beispiel für das Pure Moments Paket",
     imageOrientation: "portrait",
-    features: [
-      "1 Stunde fotografische Begleitung",
-      "Persönliches Vorgespräch und Beratung",
-      "Trauung, Brautpaarshooting, Gruppenfotos",
-      "passwortgeschützte Onlinegallerie für 3 Monate",
-      "mindestens 30 Bilder",
-      "inklusive RAW-Bearbeitung für alle Bilder",
-      "Retusche für ausgewählte Bilder",
-      "keine Extra- oder versteckten Kosten (Festpreis)",
-      "keine Fahrtkosten innerhalb Hamburgs",
-      "nicht mit anderen Paketen kombinierbar",
-    ],
   },
-  {
-    id: "standesamt-paket",
-    name: "Standesamt Paket",
-    priceValue: 649,
-    priceLabel: "649 € Festpreis",
-    priceNote: "Festpreis fuer standesamtliche Trauungen",
-    serviceType: "Standesamtliche Trauung mit Hochzeitsreportage",
-    duration: "2 Stunden",
-    intro: "Für standesamtliche Trauungen mit mehr Zeit für Getting Ready, Paarbilder und Familie.",
+  "standesamt-paket": {
     image: standesamtImage,
     alt: "Brautportrait als Beispiel für das Standesamt Paket in Hamburg",
     imageOrientation: "portrait",
-    features: [
-      "2 Stunden Hochzeitsreportage",
-      "Persönliches Vorgespräch und Beratung",
-      "Kennenlernshooting",
-      "Getting Ready",
-      "Trauung, Brautpaarshooting und Gruppenfotos",
-      "Passwortgeschützte Onlinegalerie für 3 Monate",
-      "Mindestens 100 bearbeitete Bilder",
-      "Retusche einzelner Bilder nach Absprache",
-      "Keine Extra- oder versteckten Kosten",
-    ],
   },
-  {
-    id: "rundum-sorglos-paket",
-    name: "Rundum-Sorglos-Paket",
-    priceValue: 249,
-    priceLabel: "249 € pro Stunde",
-    priceNote: "Stundenpreis fuer laengere Hochzeitsreportagen",
-    serviceType: "Hochzeitsreportage",
-    duration: "3 bis 10 Stunden",
-    intro: "Für längere Hochzeitsreportagen vom Getting Ready bis zur Feier.",
+  "rundum-sorglos-paket": {
     image: reportageImage,
     alt: "Brautpaarshooting als Beispiel für eine längere Hochzeitsreportage",
     imageOrientation: "portrait",
-    features: reportageFeatures("Mindestens 3 bis höchstens 10 Stunden"),
   },
-];
+} as const;
+
+const packages = weddingPackages.map((item) => ({
+  ...item,
+  ...packageMedia[item.id],
+}));
 
 const packageOffers = packages.map((item, index) => ({
   "@type": "Offer",

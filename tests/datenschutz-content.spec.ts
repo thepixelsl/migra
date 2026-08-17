@@ -60,7 +60,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 8. August 2026");
+  expect(mainText).toContain("Stand: 17. August 2026");
   expect(mainText).toContain("Webhosting bei bunny.net");
   expect(mainText).toContain("BunnyWay d.o.o.");
   expect(mainText).toContain("Dunajska cesta 165");
@@ -84,6 +84,13 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Kontakt über WhatsApp");
   expect(mainText).toContain("WhatsApp Ireland Limited");
   expect(mainText).toContain("vorgegebene Nachrichtentext an WhatsApp übermittelt");
+  expect(mainText).toContain("Begrenzte Terminabfrage für Buchungsagenten");
+  expect(mainText).toContain("ein bis drei konkrete Wunschdaten");
+  expect(mainText).toContain("höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden");
+  expect(mainText).toContain("pseudonyme Kurzzeitkennung");
+  expect(mainText).toContain("weder die vollständige IP-Adresse noch den User-Agent");
+  expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
+  expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
   expect(mainText).toContain("Weder vor Ihrer Entscheidung noch nach einer Ablehnung");
   expect(mainText).toContain("Einwilligung in die Kategorie „Statistik“");

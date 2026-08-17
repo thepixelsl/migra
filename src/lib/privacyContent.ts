@@ -1,6 +1,6 @@
 import { trackingConfig } from "../config/tracking";
 
-let nextSectionNumber = 7;
+let nextSectionNumber = 8;
 
 const numberedSection = (id: string, title: string, body: string) => {
   const sectionNumber = nextSectionNumber;
@@ -96,7 +96,7 @@ const complaintSection = numberedSection(
 );
 
 const privacyContent = `
-<p><strong>Stand: 8. August 2026</strong></p>
+<p><strong>Stand: 17. August 2026</strong></p>
 <p>Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten beim Besuch dieser Website und bei der Kontaktaufnahme verarbeitet werden.</p>
 
 <h2 id="verantwortlicher">1. Verantwortlicher</h2>
@@ -136,6 +136,11 @@ const privacyContent = `
 
 <h2 id="terminverfuegbarkeit">6. Terminverfügbarkeit</h2>
 <p>Wenn Sie die öffentliche Terminabfrage nutzen, wird das von Ihnen ausgewählte Datum an den Server dieser Website übermittelt und dort mit bereits gesperrten Daten abgeglichen. Für diese Abfrage sind weder Ihr Name noch Ihre Kontaktdaten erforderlich.</p>
+
+<h2 id="terminabfrage-buchungsagenten">7. Begrenzte Terminabfrage für Buchungsagenten</h2>
+<p>Auf der Seite „Für Buchungsagenten“ können pro Anfrage ein bis drei konkrete Wunschdaten an den Server dieser Website übermittelt und mit bereits gesperrten Daten abgeglichen werden. Die zurückgegebene Auskunft ist unverbindlich und bewirkt weder eine Reservierung noch eine automatisierte Buchungsentscheidung.</p>
+<p>Um die Schnittstelle auf höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden zu begrenzen, wird aus der beim Zugriff technisch übermittelten IP-Adresse unmittelbar mit einem geheimen Zusatz eine pseudonyme Kurzzeitkennung gebildet. Die Anwendung speichert für diese Begrenzung weder die vollständige IP-Adresse noch den User-Agent oder die abgefragten Wunschdaten. Gespeichert werden nur eine aus der Kurzzeitkennung abgeleitete technische Zuordnung und die Zeitpunkte erfolgreicher Abfragen.</p>
+<p>Diese Daten dienen ausschließlich dazu, automatisierte Massenabfragen und eine Umgehung der Abfragegrenze zu verhindern sowie die Verfügbarkeit der Schnittstelle zu sichern. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes Interesse liegt im Schutz des Kalenders und der technischen Infrastruktur vor missbräuchlicher Nutzung. Einträge, deren 24-Stunden-Fenster abgelaufen ist, werden im nächsten regelmäßigen Bereinigungslauf gelöscht.</p>
 
 ${consentSection}
 ${tagManagerSection}

@@ -33,9 +33,19 @@ const SCHEMA_STATEMENTS = [
     ON contact_requests (email)`,
   `CREATE INDEX IF NOT EXISTS idx_contact_requests_ip_hash
     ON contact_requests (ip_hash)`,
+  `CREATE TABLE IF NOT EXISTS agent_availability_requests (
+    id TEXT PRIMARY KEY,
+    ip_hash TEXT NOT NULL,
+    requested_at INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_agent_availability_requests_ip_time
+    ON agent_availability_requests (ip_hash, requested_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_agent_availability_requests_time
+    ON agent_availability_requests (requested_at)`,
 ];
 
 const CONTACT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+const AGENT_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 async function pruneContactRequests(client) {
   await client.execute(`
@@ -50,6 +60,19 @@ async function pruneContactRequests(client) {
     DELETE FROM contact_requests
     WHERE created_at < datetime('now', '-30 days')
   `);
+}
+
+async function pruneAgentAvailabilityRequests(client, now = Date.now()) {
+  await client.execute({
+    sql: `DELETE FROM agent_availability_requests
+      WHERE requested_at <= ?`,
+    args: [now - AGENT_RATE_LIMIT_WINDOW_MS],
+  });
+}
+
+async function pruneStoredData(client) {
+  await pruneContactRequests(client);
+  await pruneAgentAvailabilityRequests(client);
 }
 
 function requiredText(value) {
@@ -84,10 +107,10 @@ export async function createBunnyDatabase(env = process.env) {
     await client.execute(statement);
   }
 
-  await pruneContactRequests(client);
+  await pruneStoredData(client);
   const cleanupTimer = setInterval(() => {
-    pruneContactRequests(client).catch((error) => {
-      console.error("Contact data cleanup failed", error);
+    pruneStoredData(client).catch((error) => {
+      console.error("Stored data cleanup failed", error);
     });
   }, CONTACT_CLEANUP_INTERVAL_MS);
   cleanupTimer.unref?.();
@@ -101,6 +124,9 @@ export async function createBunnyDatabase(env = process.env) {
     },
     async cleanupContactRequests() {
       await pruneContactRequests(client);
+    },
+    async cleanupAgentAvailabilityRequests(now) {
+      await pruneAgentAvailabilityRequests(client, now);
     },
     close() {
       clearInterval(cleanupTimer);

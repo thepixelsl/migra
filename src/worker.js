@@ -1,7 +1,10 @@
 import * as availability from "../functions/api/availability.js";
+import * as agentAvailability from "../functions/api/agent-availability.js";
 import * as adminAvailability from "../functions/api/admin/availability.js";
 import * as contact from "../functions/api/contact.js";
 import { assertAdminAccess } from "../functions/_availability.js";
+
+export { AgentRateLimiter } from "./AgentRateLimiter.js";
 
 const HSTS_HEADER_VALUE = "max-age=31536000; includeSubDomains; preload";
 const CONTENT_SECURITY_POLICY = [
@@ -154,6 +157,10 @@ export default {
 
     if (url.pathname === "/api/availability") {
       return withSecurityHeaders(await handlePagesFunction(availability, request, env, ctx));
+    }
+
+    if (url.pathname === "/api/agent-availability") {
+      return withSecurityHeaders(await handlePagesFunction(agentAvailability, request, env, ctx));
     }
 
     if (url.pathname === "/api/admin/availability") {
