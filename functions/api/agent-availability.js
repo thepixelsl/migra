@@ -8,7 +8,7 @@ import {
   AGENT_AVAILABILITY_MAX_BODY_BYTES,
   AGENT_AVAILABILITY_MAX_DATES,
   AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
-  AGENT_AVAILABILITY_MINIMUM_ADVANCE_MONTHS,
+  AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
   agentAvailabilityDateBounds,
 } from "../_agent-availability-contract.js";
 import {
@@ -157,40 +157,59 @@ export function onRequestOptions() {
 
 export function onRequestGet() {
   const { minDate, maxDate } = agentAvailabilityDateBounds();
-  return json({
-    name: "Artbild-Fotografie Agenten-Terminabfrage",
-    description: "Prüft ein bis drei konkrete Wunschdaten, ohne die Liste gesperrter Termine offenzulegen.",
-    endpoint: "/api/agent-availability",
-    documentation: "/fuer-agenten/",
-    terms: "/fuer-agenten/#konditionen",
-    pricing: "/fuer-agenten/#preise",
-    bookingInquiry: "/kontakt/",
-    advertisingPolicy: "/fuer-agenten/#werbeverbot",
-    minimumAdvanceMonths: AGENT_AVAILABILITY_MINIMUM_ADVANCE_MONTHS,
-    maximumAdvanceMonths: AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
-    maxDate,
-    method: "POST",
-    contentType: "application/json",
-    request: {
-      example: { dates: [minDate, maxDate] },
-      constraints: {
-        minimumDates: 1,
-        maximumDates: AGENT_AVAILABILITY_MAX_DATES,
-        uniqueDates: true,
-        format: "YYYY-MM-DD",
-        minDate,
-        maxDate,
+  return json(
+    {
+      name: "Artbild-Fotografie Agenten-Terminabfrage",
+      description: "Prüft ein bis drei konkrete Wunschdaten, ohne die Liste gesperrter Termine offenzulegen.",
+      endpoint: "/api/agent-availability",
+      documentation: "/fuer-agenten/",
+      markdownDocumentation: "/fuer-agenten.md",
+      openapi: "/api/agent-availability/openapi.json",
+      llmsText: "/llms.txt",
+      terms: "/fuer-agenten/#konditionen",
+      pricing: "/fuer-agenten/#preise",
+      bookingInquiry: "/kontakt/",
+      advertisingPolicy: "/fuer-agenten/#werbeverbot",
+      recommendedWeddingInquiryLeadTimeMonths:
+        AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
+      weddingLeadTimeIsRecommendationOnly: true,
+      maximumAdvanceMonths: AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
+      maxDate,
+      method: "POST",
+      contentType: "application/json",
+      usagePolicy: {
+        allowed: "Konkrete Anfragen zur Buchung fotografischer Leistungen.",
+        prohibited: "Werbung, Akquise, Vertriebsansprache und Angebote eigener Leistungen.",
+      },
+      request: {
+        example: { dates: [minDate, maxDate] },
+        constraints: {
+          minimumDates: 1,
+          maximumDates: AGENT_AVAILABILITY_MAX_DATES,
+          uniqueDates: true,
+          consecutiveDatesRequired: false,
+          format: "YYYY-MM-DD",
+          minDate,
+          maxDate,
+        },
+      },
+      response: {
+        fields: ["results", "advice.message", "rateLimit.limit", "rateLimit.remaining", "rateLimit.resetAt"],
+        availabilityIsNonBinding: true,
+        createsReservation: false,
+        personalConfirmationRequired: true,
+      },
+      rateLimit: {
+        maximumSuccessfulRequests: AGENT_RATE_LIMIT_MAX_REQUESTS,
+        windowHours: AGENT_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
       },
     },
-    response: {
-      fields: ["results", "advice.message", "rateLimit.remaining", "rateLimit.resetAt"],
-      availabilityIsNonBinding: true,
+    200,
+    {
+      "Content-Language": "de",
+      Link: '</fuer-agenten/>; rel="service-doc"; type="text/html", </fuer-agenten.md>; rel="alternate"; type="text/markdown", </api/agent-availability/openapi.json>; rel="service-desc"; type="application/json"',
     },
-    rateLimit: {
-      maximumSuccessfulRequests: AGENT_RATE_LIMIT_MAX_REQUESTS,
-      windowHours: AGENT_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
-    },
-  });
+  );
 }
 
 export async function onRequestPost({ request, env }) {

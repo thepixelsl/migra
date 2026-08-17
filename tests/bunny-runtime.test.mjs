@@ -6,7 +6,9 @@ import { after, before, test } from "node:test";
 
 import {
   AGENT_AVAILABILITY_MAX_BODY_BYTES,
+  AGENT_AVAILABILITY_MAX_DATES,
   AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
+  AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
   agentAvailabilityDateBounds,
 } from "../functions/_agent-availability-contract.js";
 import {
@@ -16,6 +18,7 @@ import {
 import { onRequestPost as handleContactPost } from "../functions/api/contact.js";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { AgentRateLimiter } from "../src/AgentRateLimiter.js";
+import { agentAvailabilityRules } from "../src/data/agentBooking.mjs";
 
 let baseUrl;
 let publicUrl;
@@ -47,11 +50,18 @@ before(async () => {
   const assetDirectory = path.join(temporaryDirectory, "dist");
   await mkdir(path.join(assetDirectory, "about"), { recursive: true });
   await mkdir(path.join(assetDirectory, "admin-termine"), { recursive: true });
+  await mkdir(path.join(assetDirectory, "api", "agent-availability"), { recursive: true });
   await mkdir(path.join(assetDirectory, "_astro"), { recursive: true });
   await Promise.all([
     writeFile(path.join(assetDirectory, "index.html"), "<!doctype html><h1>Start</h1>"),
     writeFile(path.join(assetDirectory, "about", "index.html"), "<!doctype html><h1>Über uns</h1>"),
     writeFile(path.join(assetDirectory, "admin-termine", "index.html"), "<!doctype html><h1>Admin</h1>"),
+    writeFile(path.join(assetDirectory, "fuer-agenten.md"), "# Buchungsinformationen für KI-Agenten"),
+    writeFile(path.join(assetDirectory, "llms.txt"), "# Artbild-Fotografie"),
+    writeFile(
+      path.join(assetDirectory, "api", "agent-availability", "openapi.json"),
+      JSON.stringify({ openapi: "3.1.0" }),
+    ),
     writeFile(path.join(assetDirectory, "404.html"), "<!doctype html><h1>Nicht gefunden</h1>"),
     writeFile(path.join(assetDirectory, "_astro", "app.js"), "console.log('ok')"),
   ]);
@@ -117,6 +127,26 @@ test("uses immutable caching for built Astro assets", async () => {
   assert.equal(response.headers.get("cache-control"), "public, max-age=31556952, immutable");
 });
 
+test("serves the agent Markdown, llms.txt and OpenAPI files with readable types", async () => {
+  const markdown = await fetch(`${baseUrl}/fuer-agenten.md`);
+  assert.equal(markdown.status, 200);
+  assert.equal(markdown.headers.get("content-type"), "text/markdown; charset=utf-8");
+  assert.match(markdown.headers.get("link") || "", /<\/fuer-agenten\/>; rel="canonical"/);
+  assert.match(markdown.headers.get("link") || "", /rel="service-desc"/);
+  assert.match(await markdown.text(), /Buchungsinformationen für KI-Agenten/);
+
+  const llms = await fetch(`${baseUrl}/llms.txt`);
+  assert.equal(llms.status, 200);
+  assert.equal(llms.headers.get("content-type"), "text/plain; charset=utf-8");
+  assert.match(await llms.text(), /Artbild-Fotografie/);
+
+  const openapi = await fetch(`${baseUrl}/api/agent-availability/openapi.json`);
+  assert.equal(openapi.status, 200);
+  assert.equal(openapi.headers.get("content-type"), "application/json; charset=utf-8");
+  assert.match(openapi.headers.get("link") || "", /<\/fuer-agenten\/>; rel="service-doc"/);
+  assert.deepEqual(await openapi.json(), { openapi: "3.1.0" });
+});
+
 test("protects the admin page and availability API with dev credentials", async () => {
   const deniedPage = await fetch(`${baseUrl}/admin-termine/`);
   assert.equal(deniedPage.status, 401);
@@ -170,11 +200,16 @@ test("documents the agent availability API for machine clients", async () => {
   const documentation = await response.json();
   assert.equal(documentation.endpoint, "/api/agent-availability");
   assert.equal(documentation.documentation, "/fuer-agenten/");
+  assert.equal(documentation.markdownDocumentation, "/fuer-agenten.md");
+  assert.equal(documentation.openapi, "/api/agent-availability/openapi.json");
+  assert.equal(documentation.llmsText, "/llms.txt");
   assert.equal(documentation.terms, "/fuer-agenten/#konditionen");
   assert.equal(documentation.pricing, "/fuer-agenten/#preise");
   assert.equal(documentation.bookingInquiry, "/kontakt/");
   assert.equal(documentation.advertisingPolicy, "/fuer-agenten/#werbeverbot");
-  assert.equal(documentation.minimumAdvanceMonths, 6);
+  assert.equal("minimumAdvanceMonths" in documentation, false);
+  assert.equal(documentation.recommendedWeddingInquiryLeadTimeMonths, 6);
+  assert.equal(documentation.weddingLeadTimeIsRecommendationOnly, true);
   assert.equal(
     documentation.maximumAdvanceMonths,
     AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
@@ -184,6 +219,7 @@ test("documents the agent availability API for machine clients", async () => {
   assert.equal(documentation.request.constraints.minimumDates, 1);
   assert.equal(documentation.request.constraints.maximumDates, 3);
   assert.equal(documentation.request.constraints.uniqueDates, true);
+  assert.equal(documentation.request.constraints.consecutiveDatesRequired, false);
   assert.equal(documentation.request.constraints.minDate, AGENT_DATE_BOUNDS.minDate);
   assert.equal(documentation.request.constraints.maxDate, AGENT_DATE_BOUNDS.maxDate);
   assert.ok(
@@ -193,6 +229,28 @@ test("documents the agent availability API for machine clients", async () => {
   );
   assert.equal(documentation.rateLimit.maximumSuccessfulRequests, 2);
   assert.equal(documentation.rateLimit.windowHours, 24);
+  assert.equal(documentation.response.availabilityIsNonBinding, true);
+  assert.equal(documentation.response.createsReservation, false);
+  assert.equal(documentation.response.personalConfirmationRequired, true);
+  assert.ok(documentation.response.fields.includes("rateLimit.limit"));
+  assert.match(documentation.usagePolicy.allowed, /Buchung/);
+  assert.match(documentation.usagePolicy.prohibited, /Werbung/);
+  assert.match(response.headers.get("link") || "", /service-desc/);
+
+  assert.equal(
+    agentAvailabilityRules.maximumDates,
+    AGENT_AVAILABILITY_MAX_DATES,
+  );
+  assert.equal(
+    agentAvailabilityRules.maximumAdvanceMonths,
+    AGENT_AVAILABILITY_MAXIMUM_ADVANCE_MONTHS,
+  );
+  assert.equal(
+    agentAvailabilityRules.recommendedWeddingInquiryLeadTimeMonths,
+    AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
+  );
+  assert.equal(agentAvailabilityRules.maximumSuccessfulRequests, 2);
+  assert.equal(agentAvailabilityRules.windowHours, 24);
 
   const options = await fetch(`${baseUrl}/api/agent-availability`, { method: "OPTIONS" });
   assert.equal(options.status, 204);

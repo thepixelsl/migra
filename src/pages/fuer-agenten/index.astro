@@ -1,30 +1,46 @@
 ---
 import FaviconHead from "../../components/FaviconHead.astro";
-import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { weddingPackages } from "../../data/weddingPackages";
-import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
+import {
+  agentAdvertisingPolicy,
+  agentAvailabilityExample,
+  agentAvailabilityRules,
+  agentBookingPage,
+  agentBookingTerms,
+  agentInquiryRequirements,
+  agentPrivacySummary,
+  agentQuickFacts,
+  agentUsagePolicy,
+  agentWorkflow,
+} from "../../data/agentBooking.mjs";
+import socialImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import "../../styles/global.css";
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
-const pagePath = "/fuer-agenten/";
+const pagePath = agentBookingPage.path;
 const pageUrl = `${siteUrl}${pagePath}`;
-const apiPath = "/api/agent-availability";
+const markdownPath = agentBookingPage.markdownPath;
+const apiPath = agentBookingPage.apiPath;
 const apiUrl = `${siteUrl}${apiPath}`;
-const maximumAdvanceMonths = 24;
-const title = "Für Buchungsagenten | Artbild-Fotografie";
-const headline = "Buchungsinformationen für Agenten";
-const description =
-  "Kurzgefasste Preise, Buchungskonditionen und eine begrenzte Terminabfrage für Buchungsagenten und agentische Browser.";
-const heroImageUrl = new URL(heroImage.src, siteUrl).href;
-const dateModified = "2026-08-17";
+const openApiPath = "/api/agent-availability/openapi.json";
+const title = agentBookingPage.title;
+const headline = agentBookingPage.headline;
+const description = agentBookingPage.description;
+const socialImageUrl = new URL(socialImage.src, siteUrl).href;
 
 const breadcrumbs = [
   { label: "Startseite", href: "/" },
-  { label: "Für Buchungsagenten", href: pagePath },
+  { label: "Für KI-Agenten und Buchungsassistenten", href: pagePath },
 ];
+
+const requestExample = JSON.stringify({
+  dates: agentAvailabilityExample.dates,
+}, null, 2);
+
+const responseExample = JSON.stringify(agentAvailabilityExample.response, null, 2);
 
 const offers = weddingPackages.map((item, index) => ({
   "@type": "Offer",
@@ -59,7 +75,8 @@ const schemaGraph = {
       headline,
       description,
       inLanguage: "de",
-      dateModified,
+      isAccessibleForFree: true,
+      dateModified: agentBookingPage.dateModified,
       mainEntity: [
         { "@id": `${pageUrl}#booking-service` },
         { "@id": `${apiUrl}#api` },
@@ -87,9 +104,9 @@ const schemaGraph = {
     {
       "@type": "WebAPI",
       "@id": `${apiUrl}#api`,
-      name: "Begrenzte Terminabfrage für Buchungsagenten",
+      name: "Begrenzte Terminabfrage für KI-Agenten und Buchungsassistenten",
       description:
-        `Prüft pro Anfrage bis zu drei konkrete Wunschdaten innerhalb der nächsten ${maximumAdvanceMonths} Monate. Pro Kurzzeitkennung sind höchstens zwei Abfragen innerhalb von 24 Stunden möglich.`,
+        `Prüft pro Anfrage ein bis drei unterschiedliche Wunschdaten innerhalb der nächsten ${agentAvailabilityRules.maximumAdvanceMonths} Monate. Pro Kurzzeitkennung sind höchstens ${agentAvailabilityRules.maximumSuccessfulRequests} erfolgreiche Abfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden möglich. Die Abfrage reserviert keinen Termin.`,
       documentation: pageUrl,
       termsOfService: `${pageUrl}#konditionen`,
       provider: { "@id": `${siteUrl}/#organization` },
@@ -102,7 +119,7 @@ const schemaGraph = {
           encodingType: "application/json",
           contentType: "application/json",
         },
-        query: "Ein bis drei konkrete Wunschdaten im Format YYYY-MM-DD",
+        query: "Ein bis drei unterschiedliche Wunschdaten im Format YYYY-MM-DD; die Daten müssen nicht aufeinanderfolgen",
       },
     },
     {
@@ -135,24 +152,27 @@ const schemaGraph = {
     <meta name="description" content={description}>
     <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
     <link rel="canonical" href={pageUrl}>
-    <link rel="alternate" type="application/json" href={apiPath} title="Terminabfrage für Buchungsagenten">
+    <link rel="alternate" type="text/markdown" href={markdownPath} title="Markdown-Fassung für Agenten">
+    <link rel="alternate" type="application/json" href={apiPath} title="JSON-Dokumentation der Terminabfrage">
+    <link rel="service-doc" type="application/json" href={apiPath} title="Schnittstellendokumentation">
+    <link rel="service-desc" type="application/json" href={openApiPath} title="OpenAPI-Beschreibung">
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
     <meta property="og:title" content={title}>
     <meta property="og:description" content={description}>
     <meta property="og:url" content={pageUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
-    <meta property="og:image" content={heroImageUrl}>
-    <meta property="og:image:width" content={String(heroImage.width)}>
-    <meta property="og:image:height" content={String(heroImage.height)}>
+    <meta property="og:image" content={socialImageUrl}>
+    <meta property="og:image:width" content={String(socialImage.width)}>
+    <meta property="og:image:height" content={String(socialImage.height)}>
     <meta property="og:image:alt" content="Hochzeitsreportage von Artbild-Fotografie">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
     <meta name="twitter:description" content={description}>
-    <meta name="twitter:image" content={heroImageUrl}>
+    <meta name="twitter:image" content={socialImageUrl}>
     <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
   </head>
-  <body class="gallery-template agent-page">
+  <body class="gallery-template agent-reference-page">
     <header class="gallery-header">
       <MobileNavigation showFloatingAction={false} />
       <DesktopNavigation />
@@ -160,206 +180,198 @@ const schemaGraph = {
 
     <main>
       <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
-      <article class="agent-content">
-        <header class="agent-hero">
-          <div class="agent-hero__copy">
-            <p class="agent-kicker">Für Buchungsagenten und agentische Browser</p>
-            <h1>{headline}</h1>
-            <p>
-              Diese Seite bündelt Preise, Buchungskonditionen und eine begrenzte
-              Terminabfrage für konkrete Anfragen zu fotografischen Leistungen.
-              Für Hochzeiten bitte ich um eine Anfrage mindestens sechs Monate im Voraus.
-            </p>
-            <div class="agent-hero__actions">
-              <a href="#terminabfrage">Bis zu drei Termine prüfen</a>
-              <a href="#preise">Preise und Konditionen lesen</a>
-            </div>
-          </div>
-          <figure class="agent-hero__image">
-            <Image
-              src={heroImage}
-              widths={[520, 760, 1040, 1384]}
-              sizes="(max-width: 820px) 100vw, 45vw"
-              format="webp"
-              quality={88}
-              loading="eager"
-              fetchpriority="high"
-              alt="Braut bei einer Hochzeitsreportage von Artbild-Fotografie"
-            />
-          </figure>
+      <article class="agent-document">
+        <header class="agent-document__header">
+          <p class="agent-label">Referenz für automatisierte und menschliche Buchungsassistenten</p>
+          <h1>{headline}</h1>
+          <p class="agent-lead">
+            Diese Seite enthält die vollständigen Preise, Regeln und Schnittstellen
+            für konkrete Anfragen zu fotografischen Leistungen. Die Terminprüfung
+            ist unverbindlich und reserviert keinen Termin. Für Hochzeiten wird eine
+            Anfrage mindestens sechs Monate im Voraus empfohlen.
+          </p>
+          <p class="agent-use">
+            <strong>Erlaubt:</strong> {agentUsagePolicy.allowed}<br>
+            <strong>Nicht erlaubt:</strong> {agentUsagePolicy.prohibited}
+          </p>
+          <nav class="agent-formats" aria-label="Verfügbare Dokumentformate">
+            <span>Dokumentformate:</span>
+            <a href={pagePath} aria-current="page">HTML</a>
+            <a href={markdownPath} type="text/markdown">Markdown</a>
+            <a href={apiPath} type="application/json">JSON</a>
+            <a href={openApiPath} type="application/json">OpenAPI 3.1</a>
+          </nav>
         </header>
 
-        <section class="agent-facts" aria-label="Kurzfassung für Buchungsagenten">
-          <div>
-            <strong>3</strong>
-            <span>konkrete Wunschdaten je Sammelabfrage</span>
-          </div>
-          <div>
-            <strong>2</strong>
-            <span>Terminabfragen innerhalb von 24 Stunden</span>
-          </div>
-          <div>
-            <strong>6+</strong>
-            <span>Monate Vorlauf für Hochzeiten empfohlen</span>
-          </div>
-        </section>
+        <nav class="agent-toc" aria-label="Inhalt dieser Seite">
+          <strong>Inhalt</strong>
+          <ol>
+            <li><a href="#kurzfassung">Kurzfassung</a></li>
+            <li><a href="#vorgehen">Vorgehen</a></li>
+            <li><a href="#schnittstelle">Terminprüfung per API</a></li>
+            <li><a href="#terminabfrage">Terminprüfung im Browser</a></li>
+            <li><a href="#preise">Preise und Leistungen</a></li>
+            <li><a href="#konditionen">Buchungskonditionen</a></li>
+            <li><a href="#buchungsanfrage">Buchungsanfrage</a></li>
+            <li><a href="#datenschutz">Datenschutz</a></li>
+            <li><a href="#werbeverbot">Werbeverbot</a></li>
+          </ol>
+        </nav>
 
-        <section class="agent-check" id="terminabfrage" aria-labelledby="terminabfrage-title">
-          <div class="agent-section-heading">
-            <p class="agent-kicker">Unverbindlicher Kalenderstand</p>
-            <h2 id="terminabfrage-title">Bis zu drei Wunschtermine gesammelt prüfen</h2>
-            <p>
-              Pro Abfrage sind ein bis drei unterschiedliche Daten möglich. Die
-              Rückmeldung zeigt nur den aktuellen Kalenderstand; sie reserviert
-              keinen Termin und ersetzt keine persönliche Buchungsbestätigung.
-              Geprüft werden heutige Termine bis höchstens 24 Monate im Voraus.
-            </p>
-          </div>
-
-          <form class="agent-check__form" data-agent-availability-form>
-            <fieldset>
-              <legend>Wunschdaten</legend>
-              <div class="agent-check__dates">
-                <label>
-                  <span>1. Wunschdatum <small>erforderlich</small></span>
-                  <input type="date" name="date" required>
-                </label>
-                <label>
-                  <span>2. Wunschdatum <small>optional</small></span>
-                  <input type="date" name="date">
-                </label>
-                <label>
-                  <span>3. Wunschdatum <small>optional</small></span>
-                  <input type="date" name="date">
-                </label>
+        <section class="agent-section" id="kurzfassung" aria-labelledby="kurzfassung-title">
+          <p class="agent-label">Die wichtigsten Angaben zuerst</p>
+          <h2 id="kurzfassung-title">Kurzfassung</h2>
+          <dl class="agent-facts">
+            {agentQuickFacts.map(([term, detail]) => (
+              <div>
+                <dt>{term}</dt>
+                <dd>{detail}</dd>
               </div>
-            </fieldset>
-            <p class="agent-check__privacy">
-              Zum Schutz vor automatisierten Massenabfragen wird die technisch
-              übermittelte IP-Adresse unmittelbar in eine pseudonyme Kurzzeitkennung
-              umgewandelt. Kennung und Abfragezeitpunkte werden nach Ablauf des
-              24-Stunden-Fensters im nächsten Bereinigungslauf gelöscht.{" "}
-              <a href="/datenschutz/#terminabfrage-buchungsagenten">Datenschutzhinweise</a>
-            </p>
-            <button type="submit">Termine prüfen</button>
-            <div class="agent-check__result" data-agent-availability-result aria-live="polite" hidden></div>
-          </form>
-        </section>
-
-        <section class="agent-api" aria-labelledby="api-title">
-          <div>
-            <p class="agent-kicker">Maschinenlesbare Schnittstelle</p>
-            <h2 id="api-title">Direkte Abfrage für Agenten</h2>
-            <p>
-              Die Schnittstellenbeschreibung ist als JSON abrufbar. Eine gültige
-              POST-Anfrage enthält ein Feld <code>dates</code> mit ein bis drei
-              ISO-Daten innerhalb der nächsten 24 Monate. Dieselbe Grenze von zwei
-              Abfragen je 24 Stunden gilt auch hier.
-            </p>
-          </div>
-          <dl>
-            <div>
-              <dt>Dokumentation</dt>
-              <dd><a href={apiPath}><code>GET {apiPath}</code></a></dd>
-            </div>
-            <div>
-              <dt>Terminprüfung</dt>
-              <dd><code>POST {apiPath}</code></dd>
-            </div>
-            <div>
-              <dt>Content-Type</dt>
-              <dd><code>application/json</code></dd>
-            </div>
-            <div>
-              <dt>Zeitraum</dt>
-              <dd>Heute bis höchstens 24 Monate im Voraus</dd>
-            </div>
-            <div>
-              <dt>Anfragekörper</dt>
-              <dd><code>{`{"dates":["YYYY-MM-DD","YYYY-MM-DD"]}`}</code></dd>
-            </div>
+            ))}
           </dl>
         </section>
 
-        <section class="agent-prices" id="preise" aria-labelledby="preise-title">
-          <div class="agent-section-heading">
-            <p class="agent-kicker">Preise und Leistungsumfang</p>
-            <h2 id="preise-title">Hochzeitsfotografie ab 299&nbsp;€</h2>
-            <p>
-              Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Bestandteil
-              der jeweiligen Angabe. Der vollständige Leistungsumfang lässt sich
-              direkt bei jedem Paket öffnen.
-            </p>
+        <section class="agent-section" id="vorgehen" aria-labelledby="vorgehen-title">
+          <p class="agent-label">Entscheidungsfolge</p>
+          <h2 id="vorgehen-title">Vorgehen für einen Buchungsagenten</h2>
+          <ol class="agent-steps">
+            {agentWorkflow.map((step) => <li>{step}</li>)}
+          </ol>
+        </section>
+
+        <section class="agent-section" id="schnittstelle" aria-labelledby="schnittstelle-title">
+          <p class="agent-label">Maschinenlesbare Terminprüfung</p>
+          <h2 id="schnittstelle-title">Terminprüfung per API</h2>
+          <p>
+            Die Schnittstelle akzeptiert ausschließlich JSON. Die Daten müssen
+            unterschiedlich sein, aber nicht aufeinanderfolgen. Eine erfolgreiche
+            Antwort zeigt nur den aktuellen Kalenderstand.
+          </p>
+
+          <dl class="agent-contract">
+            <div><dt>Dokumentation</dt><dd><a href={apiPath}><code>GET {apiPath}</code></a></dd></div>
+            <div><dt>OpenAPI</dt><dd><a href={openApiPath}><code>{openApiPath}</code></a></dd></div>
+            <div><dt>Terminprüfung</dt><dd><code>POST {apiPath}</code></dd></div>
+            <div><dt>Content-Type</dt><dd><code>application/json</code></dd></div>
+            <div><dt>Erlaubte Felder</dt><dd>Nur <code>dates</code></dd></div>
+            <div><dt>Anzahl</dt><dd>Ein bis drei unterschiedliche Wunschdaten</dd></div>
+            <div><dt>Datumsformat</dt><dd><code>YYYY-MM-DD</code></dd></div>
+            <div><dt>Aufeinanderfolgende Daten erforderlich?</dt><dd>Nein</dd></div>
+            <div><dt>Prüfzeitraum</dt><dd>Heute bis höchstens 24 Monate im Voraus</dd></div>
+            <div><dt>Abfragelimit</dt><dd>Höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden</dd></div>
+            <div><dt>Verbindliches Ergebnis?</dt><dd>Nein</dd></div>
+            <div><dt>Reservierung?</dt><dd>Nein</dd></div>
+          </dl>
+
+          <div class="agent-code-examples">
+            <div>
+              <h3>Beispielanfrage</h3>
+              <pre aria-label="JSON-Beispielanfrage"><code>{requestExample}</code></pre>
+            </div>
+            <div>
+              <h3>Beispielantwort</h3>
+              <pre aria-label="JSON-Beispielantwort"><code>{responseExample}</code></pre>
+            </div>
           </div>
-          <div class="agent-price-grid">
+        </section>
+
+        <section class="agent-section" id="terminabfrage" aria-labelledby="terminabfrage-title">
+          <p class="agent-label">Bedienbare Alternative zur API</p>
+          <h2 id="terminabfrage-title">Terminprüfung im Browser</h2>
+          <p id="terminabfrage-description">
+            Wähle ein bis drei unterschiedliche Daten. Leere optionale Felder werden
+            nicht übertragen. Die Rückmeldung ist unverbindlich und keine Reservierung.
+          </p>
+
+          <form class="agent-check" data-agent-availability-form aria-describedby="terminabfrage-description">
+            <fieldset>
+              <legend>Wunschdaten</legend>
+              <div class="agent-check__dates">
+                <div>
+                  <label for="agent-date-1">1. Wunschdatum <span>erforderlich</span></label>
+                  <input id="agent-date-1" type="date" name="date" required autocomplete="off">
+                </div>
+                <div>
+                  <label for="agent-date-2">2. Wunschdatum <span>optional</span></label>
+                  <input id="agent-date-2" type="date" name="date" autocomplete="off">
+                </div>
+                <div>
+                  <label for="agent-date-3">3. Wunschdatum <span>optional</span></label>
+                  <input id="agent-date-3" type="date" name="date" autocomplete="off">
+                </div>
+              </div>
+            </fieldset>
+            <button type="submit">Wunschdaten unverbindlich prüfen</button>
+            <div class="agent-check__result" data-agent-availability-result aria-live="polite" hidden></div>
+            <noscript>
+              JavaScript ist für dieses Formular erforderlich. Nutze alternativ die
+              <a href={apiPath}>JSON-Dokumentation der Termin-Schnittstelle</a>.
+            </noscript>
+          </form>
+        </section>
+
+        <section class="agent-section" id="preise" aria-labelledby="preise-title">
+          <p class="agent-label">Alle Preiszusätze und Leistungen offen sichtbar</p>
+          <h2 id="preise-title">Preise und Leistungsumfang</h2>
+          <p>
+            Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Bestandteil
+            der jeweiligen Angabe. Maßgeblich sind das individuelle Angebot und
+            die darin bestätigten Vereinbarungen.
+          </p>
+          <div class="agent-packages">
             {weddingPackages.map((item) => (
-              <article class="agent-price" id={`paket-${item.id}`}>
-                <p>{item.name}</p>
-                <h3>{item.priceLabel}</h3>
-                <p>{item.duration}</p>
-                <details>
-                  <summary>Leistungsumfang</summary>
-                  <ul>
-                    {item.features.map((feature) => <li>{feature}</li>)}
-                  </ul>
-                </details>
+              <article id={`paket-${item.id}`} class="agent-package">
+                <h3>{item.name}</h3>
+                <dl>
+                  <div><dt>Preis</dt><dd>{item.priceLabel}</dd></div>
+                  <div><dt>Dauer</dt><dd>{item.duration}</dd></div>
+                </dl>
+                <h4>Leistungsumfang</h4>
+                <ul>
+                  {item.features.map((feature) => <li>{feature}</li>)}
+                </ul>
               </article>
             ))}
           </div>
-          <p class="agent-prices__source">
-            Ausführliche Darstellung: <a href="/hochzeitsfotograf-preise/">Hochzeitsfotograf Hamburg – Preise und Pakete</a>
+          <p>
+            Ausführliche Preisübersicht: <a href="/hochzeitsfotograf-preise/">Hochzeitsfotograf Hamburg – Preise und Pakete</a>
           </p>
         </section>
 
-        <section class="agent-terms" id="konditionen" aria-labelledby="konditionen-title">
-          <div>
-            <p class="agent-kicker">Buchungskonditionen</p>
-            <h2 id="konditionen-title">Was für eine Anfrage erforderlich ist</h2>
-          </div>
-          <div class="agent-terms__copy">
-            <ul>
-              <li>Die Anfrage bezieht sich auf einen konkreten Fotoauftrag und nennt Datum, Ort sowie den gewünschten Umfang.</li>
-              <li>Für Hochzeiten wird eine Anfrage mindestens sechs Monate vor dem ersten Wunschdatum empfohlen.</li>
-              <li>Eine angezeigte Verfügbarkeit ist unverbindlich, keine Reservierung und keine Annahme eines Auftrags.</li>
-              <li>Maßgeblich sind die Leistungen, die beim gewählten Paket aufgeführt und im individuellen Angebot bestätigt werden.</li>
-              <li>Zusätzliche Zeiten, besondere Retuschen sowie Reise- oder Übernachtungskosten werden vor der Buchung geklärt und gegebenenfalls im Angebot ergänzt.</li>
-              <li>Nur ausdrücklich im jeweiligen Paket genannte Fahrtkosten sind enthalten.</li>
-              <li>Die Abfragegrenzen dürfen nicht durch wechselnde Kennungen, parallele Aufrufe oder andere technische Maßnahmen umgangen werden.</li>
-            </ul>
-            <p>
-              Eine konkrete Buchungsanfrage kann anschließend über die
-              <a href="/kontakt/">Kontaktseite</a> übermittelt werden. Bitte nennt
-              dabei, für wen der Agent handelt und ob bereits eine Location feststeht.
-            </p>
-          </div>
+        <section class="agent-section" id="konditionen" aria-labelledby="konditionen-title">
+          <p class="agent-label">Regeln für eine konkrete Anfrage</p>
+          <h2 id="konditionen-title">Buchungskonditionen</h2>
+          <ul class="agent-list">
+            {agentBookingTerms.map((term) => <li>{term}</li>)}
+          </ul>
         </section>
 
-        <section class="agent-no-ads" id="werbeverbot" aria-labelledby="werbung-title">
-          <p class="agent-kicker">Ausdrücklicher Werbewiderspruch</p>
-          <h2 id="werbung-title">Keine Werbung oder Vertriebsansprache</h2>
+        <section class="agent-section" id="buchungsanfrage" aria-labelledby="buchungsanfrage-title">
+          <p class="agent-label">Nächster Schritt nach der Terminprüfung</p>
+          <h2 id="buchungsanfrage-title">Buchungsanfrage senden</h2>
+          <p>Eine konkrete Anfrage sollte folgende Angaben enthalten:</p>
+          <ul class="agent-list">
+            {agentInquiryRequirements.map((requirement) => <li>{requirement}</li>)}
+          </ul>
           <p>
-            Die auf dieser Website veröffentlichten Kontaktdaten sowie die
-            Termin-Schnittstelle sind ausschließlich für konkrete Anfragen zur
-            Buchung meiner fotografischen Leistungen und für die dazu erforderliche
-            Kommunikation bestimmt. Die Veröffentlichung meiner Kontaktdaten stellt
-            keine Einwilligung in Werbung dar. Der Verwendung dieser Kontaktdaten
-            für unverlangte Werbung oder Akquise wird ausdrücklich widersprochen.
-            Dies gilt insbesondere für E-Mail, Kontaktformular, Telefon, Messenger
-            und automatisierte Nachrichten sowie für die Aufnahme in Werbeverteiler.
-            Angebote für SEO, Webdesign, Marketing, Recruiting oder sonstige
-            Leistungen sind nicht erwünscht. Konkrete Buchungsanfragen für
-            fotografische Leistungen bleiben ausdrücklich zulässig.
+            <a class="agent-primary-link" href={agentBookingPage.contactPath}>Kontaktseite für die Buchungsanfrage öffnen</a>
           </p>
+        </section>
+
+        <section class="agent-section" id="datenschutz" aria-labelledby="datenschutz-title">
+          <p class="agent-label">Kurzzeitiger Missbrauchsschutz</p>
+          <h2 id="datenschutz-title">Datenschutz bei der Terminprüfung</h2>
+          <p>{agentPrivacySummary}</p>
           <p>
-            Verstöße werden im Einzelfall rechtlich geprüft. Liegen die gesetzlichen
-            Voraussetzungen vor, mache ich Unterlassungsansprüche außergerichtlich –
-            insbesondere durch Abmahnung und die Aufforderung zur Abgabe einer
-            angemessenen strafbewehrten Unterlassungserklärung – und erforderlichenfalls
-            gerichtlich geltend. Ansprüche auf Erstattung erforderlicher
-            Rechtsverfolgungskosten oder Schadensersatz werden nur im gesetzlich
-            zulässigen Umfang geltend gemacht.
+            <a href={agentBookingPage.privacyPath}>Vollständige Datenschutzhinweise zur Terminabfrage</a>
           </p>
-          <p class="agent-no-ads__law">
+        </section>
+
+        <section class="agent-section agent-warning" id="werbeverbot" aria-labelledby="werbung-title">
+          <p class="agent-label">Ausdrücklicher Werbewiderspruch</p>
+          <h2 id="werbung-title">{agentAdvertisingPolicy.heading}</h2>
+          {agentAdvertisingPolicy.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          <p class="agent-legal-links">
             Rechtsgrundlagen und Verfahren richten sich nach dem Einzelfall; siehe
             insbesondere <a href="https://www.gesetze-im-internet.de/uwg_2004/__7.html" rel="noopener noreferrer" target="_blank">§ 7 UWG</a>{" "}
             und <a href="https://www.gesetze-im-internet.de/uwg_2004/__13.html" rel="noopener noreferrer" target="_blank">§ 13 UWG</a>.
@@ -375,6 +387,8 @@ const schemaGraph = {
       <nav aria-label="Footer">
         <a href="/kontakt/">Kontakt</a>
         <a href="/hochzeitsfotograf-preise/">Preise</a>
+        <a href={markdownPath}>Markdown</a>
+        <a href={openApiPath}>OpenAPI</a>
         <a href="/impressum/">Impressum</a>
         <a href="/datenschutz/">Datenschutzerklärung</a>
       </nav>
@@ -398,6 +412,7 @@ const schemaGraph = {
         const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
         return `${values.year}-${values.month}-${values.day}`;
       })();
+
       const maximumDate = (() => {
         const [year, month, day] = berlinToday.split("-").map(Number);
         const targetMonth = month - 1 + 24;
@@ -410,6 +425,7 @@ const schemaGraph = {
           String(Math.min(day, lastDay)).padStart(2, "0"),
         ].join("-");
       })();
+
       dateInputs.forEach((input) => {
         input.min = berlinToday;
         input.max = maximumDate;
@@ -504,187 +520,182 @@ const schemaGraph = {
 </html>
 
 <style>
-  .agent-content {
-    width: min(1180px, calc(100% - clamp(32px, 8vw, 112px)));
+  .agent-document {
+    width: min(860px, calc(100% - clamp(32px, 8vw, 112px)));
     margin: 0 auto;
-    padding: clamp(52px, 7vw, 104px) 0 clamp(92px, 10vw, 150px);
-    color: var(--ink);
-    overflow-x: clip;
-  }
-
-  .agent-kicker {
-    margin: 0 0 14px;
-    color: var(--accent);
+    padding: clamp(48px, 7vw, 84px) 0 clamp(90px, 10vw, 140px);
+    color: #202633;
     font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .23em;
-    line-height: 1.5;
-    text-transform: uppercase;
+    font-size: 17px;
+    line-height: 1.72;
   }
 
-  .agent-content h1,
-  .agent-content h2,
-  .agent-content h3 {
+  .agent-document :is(h1, h2, h3, h4) {
     margin: 0;
-    color: var(--ink);
+    color: #202633;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
     font-weight: 400;
-    line-height: 1.02;
-    hyphens: auto;
+    line-height: 1.12;
     overflow-wrap: break-word;
   }
 
-  .agent-content h1 {
-    max-width: 720px;
-    font-size: clamp(48px, 6.5vw, 104px);
+  .agent-document h1 {
+    max-width: 800px;
+    font-size: clamp(38px, 5.5vw, 64px);
+    hyphens: auto;
   }
 
-  .agent-content h2 {
-    font-size: clamp(36px, 4.8vw, 68px);
+  .agent-document h2 {
+    font-size: clamp(31px, 4vw, 44px);
   }
 
-  .agent-content h3 {
-    font-size: clamp(30px, 3vw, 44px);
+  .agent-document h3 {
+    font-size: clamp(24px, 3vw, 31px);
   }
 
-  .agent-hero {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(320px, .82fr);
-    gap: clamp(40px, 6vw, 88px);
-    align-items: center;
+  .agent-document h4 {
+    margin-top: 26px;
+    font-size: 21px;
   }
 
-  .agent-hero__copy > p:not(.agent-kicker),
-  .agent-section-heading > p:not(.agent-kicker),
-  .agent-api p,
-  .agent-terms__copy,
-  .agent-no-ads > p:not(.agent-kicker) {
-    color: var(--muted);
-    font-size: clamp(18px, 1.6vw, 22px);
-    line-height: 1.7;
+  .agent-document p,
+  .agent-document ul,
+  .agent-document ol,
+  .agent-document dl {
+    margin-top: 18px;
+    margin-bottom: 0;
   }
 
-  .agent-hero__copy > p:not(.agent-kicker) {
-    max-width: 700px;
-    margin: 28px 0 0;
+  .agent-document a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
   }
 
-  .agent-hero__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 30px;
+  .agent-document :is(a, button, input):focus-visible {
+    outline: 2px solid #202633;
+    outline-offset: 4px;
   }
 
-  .agent-hero__actions a,
-  .agent-check button {
-    display: inline-flex;
-    min-height: 50px;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 19px;
-    border: 1px solid #202633;
-    background: #202633;
-    color: #fff;
-    font-family: "Raleway", Arial, sans-serif;
+  .agent-label {
+    margin: 0 0 12px !important;
+    color: #94684a;
     font-size: 11px;
     font-weight: 800;
-    letter-spacing: .17em;
-    line-height: 1.35;
-    text-align: center;
-    text-decoration: none;
+    letter-spacing: .18em;
+    line-height: 1.45;
     text-transform: uppercase;
   }
 
-  .agent-hero__actions a + a {
-    background: transparent;
-    color: #202633;
+  .agent-lead {
+    max-width: 760px;
+    color: #545a65;
+    font-size: clamp(19px, 2.3vw, 23px);
   }
 
-  .agent-hero__image {
-    margin: 0;
-    background: var(--soft);
+  .agent-use {
+    padding: 18px 20px;
+    border-left: 4px solid #94684a;
+    background: #f7f3ee;
   }
 
-  .agent-hero__image :global(img) {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-  }
-
-  .agent-facts {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin: clamp(64px, 8vw, 118px) 0 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .agent-facts div {
-    display: grid;
-    gap: 10px;
-    min-width: 0;
-    padding: clamp(24px, 3vw, 40px);
-  }
-
-  .agent-facts div + div {
-    border-left: 1px solid var(--line);
-  }
-
-  .agent-facts strong {
-    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(42px, 5vw, 70px);
-    font-weight: 400;
-  }
-
-  .agent-facts span,
-  .agent-price > p,
-  .agent-price summary,
-  .agent-price li,
-  .agent-api dt,
-  .agent-api dd,
-  .agent-check label,
-  .agent-check__privacy,
-  .agent-check__result,
-  .agent-prices__source,
-  .agent-no-ads__law {
-    font-family: "Raleway", Arial, sans-serif;
-  }
-
-  .agent-facts span {
-    color: var(--muted);
+  .agent-formats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-top: 24px;
     font-size: 13px;
-    font-weight: 700;
-    line-height: 1.55;
   }
 
-  .agent-check,
-  .agent-api,
-  .agent-prices,
-  .agent-terms,
-  .agent-no-ads {
-    margin-top: clamp(82px, 10vw, 150px);
+  .agent-formats span {
+    font-weight: 800;
   }
 
-  .agent-section-heading {
-    max-width: 850px;
+  .agent-toc {
+    margin-top: 42px;
+    padding: 24px;
+    border: 1px solid rgba(32, 38, 51, .2);
+    background: #fff;
   }
 
-  .agent-section-heading > p:not(.agent-kicker) {
-    margin: 24px 0 0;
+  .agent-toc ol {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px 34px;
+    padding-left: 24px;
+  }
+
+  .agent-section {
+    scroll-margin-top: 24px;
+    margin-top: clamp(62px, 8vw, 94px);
+    padding-top: clamp(30px, 4vw, 44px);
+    border-top: 1px solid rgba(32, 38, 51, .24);
+  }
+
+  .agent-facts,
+  .agent-contract {
+    margin-top: 28px;
+    border-top: 1px solid rgba(32, 38, 51, .2);
+  }
+
+  .agent-facts div,
+  .agent-contract div,
+  .agent-package dl div {
+    display: grid;
+    grid-template-columns: minmax(170px, .42fr) minmax(0, 1fr);
+    gap: 18px 30px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(32, 38, 51, .16);
+  }
+
+  .agent-facts dt,
+  .agent-contract dt,
+  .agent-package dt {
+    font-weight: 800;
+  }
+
+  .agent-facts dd,
+  .agent-contract dd,
+  .agent-package dd {
+    min-width: 0;
+    margin: 0;
+    color: #545a65;
+    overflow-wrap: anywhere;
+  }
+
+  .agent-steps,
+  .agent-list {
+    display: grid;
+    gap: 11px;
+    padding-left: 24px;
+  }
+
+  .agent-code-examples {
+    display: grid;
+    gap: 30px;
+    margin-top: 34px;
+  }
+
+  .agent-code-examples > div {
+    min-width: 0;
+  }
+
+  .agent-code-examples pre {
+    max-width: 100%;
+    margin: 14px 0 0;
+    padding: 18px;
+    overflow-x: auto;
+    border: 1px solid rgba(255, 255, 255, .16);
+    background: #202633;
+    color: #fff;
+    font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    white-space: pre;
   }
 
   .agent-check {
-    display: grid;
-    grid-template-columns: minmax(0, .7fr) minmax(0, 1fr);
-    gap: clamp(38px, 6vw, 84px);
-    align-items: start;
-  }
-
-  .agent-check__form {
-    padding: clamp(26px, 4vw, 48px);
-    border: 1px solid var(--line);
+    margin-top: 28px;
+    padding: clamp(22px, 4vw, 34px);
+    border: 1px solid rgba(32, 38, 51, .22);
     background: #f7f3ee;
   }
 
@@ -695,29 +706,30 @@ const schemaGraph = {
   }
 
   .agent-check legend {
-    margin-bottom: 22px;
+    margin-bottom: 20px;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(28px, 3vw, 40px);
+    font-size: 25px;
   }
 
   .agent-check__dates {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
+    gap: 16px;
+  }
+
+  .agent-check__dates div {
+    min-width: 0;
   }
 
   .agent-check label {
-    display: grid;
-    gap: 8px;
-    min-width: 0;
-    color: #202633;
+    display: block;
+    margin-bottom: 7px;
     font-size: 12px;
-    font-weight: 700;
-    line-height: 1.45;
+    font-weight: 800;
   }
 
-  .agent-check label small {
-    color: var(--muted);
+  .agent-check label span {
+    color: #676d77;
     font-weight: 500;
   }
 
@@ -725,33 +737,31 @@ const schemaGraph = {
     width: 100%;
     min-width: 0;
     min-height: 48px;
-    padding: 10px 9px;
-    border: 1px solid rgba(32, 38, 51, .25);
+    padding: 9px;
+    border: 1px solid rgba(32, 38, 51, .28);
     border-radius: 0;
     background: #fff;
     color: #202633;
     font: inherit;
   }
 
-  .agent-check__privacy {
-    margin: 20px 0 0;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.65;
-  }
-
-  .agent-check__privacy a,
-  .agent-api a,
-  .agent-prices a,
-  .agent-terms a,
-  .agent-no-ads a {
-    color: inherit;
-    text-underline-offset: 4px;
-  }
-
-  .agent-check button {
+  .agent-check button,
+  .agent-primary-link {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: center;
     margin-top: 24px;
+    padding: 13px 18px;
+    border: 1px solid #202633;
+    background: #202633;
+    color: #fff;
     cursor: pointer;
+    font: 800 11px/1.4 "Raleway", Arial, sans-serif;
+    letter-spacing: .13em;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
   }
 
   .agent-check button:disabled {
@@ -761,12 +771,10 @@ const schemaGraph = {
 
   .agent-check__result {
     margin-top: 24px;
-    padding: 20px;
+    padding: 18px;
     border-left: 4px solid #4f7556;
     background: #fff;
-    color: #202633;
     font-size: 14px;
-    line-height: 1.55;
   }
 
   .agent-check__result[data-state="error"] {
@@ -774,13 +782,12 @@ const schemaGraph = {
   }
 
   .agent-check__result h3 {
-    font-size: 25px;
+    font-size: 23px;
   }
 
   .agent-check__result ul {
     display: grid;
-    gap: 10px;
-    margin: 18px 0;
+    gap: 8px;
     padding: 0;
     list-style: none;
   }
@@ -789,238 +796,77 @@ const schemaGraph = {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 8px 16px;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 8px;
+    gap: 8px 18px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid rgba(32, 38, 51, .16);
   }
 
   .agent-check__remaining {
-    color: var(--muted);
+    color: #676d77;
     font-size: 12px;
   }
 
-  .agent-api {
+  .agent-packages {
     display: grid;
-    grid-template-columns: minmax(0, .8fr) minmax(0, 1fr);
-    gap: clamp(36px, 6vw, 84px);
-    align-items: start;
-    padding: clamp(32px, 5vw, 60px);
-    background: #202633;
-    color: #fff;
+    gap: 26px;
+    margin-top: 30px;
   }
 
-  .agent-api h2,
-  .agent-api p,
-  .agent-api a {
-    color: #fff;
+  .agent-package {
+    scroll-margin-top: 24px;
+    padding: clamp(22px, 4vw, 34px);
+    border: 1px solid rgba(32, 38, 51, .2);
   }
 
-  .agent-api dl {
+  .agent-package dl {
+    margin-top: 18px;
+  }
+
+  .agent-package ul {
     display: grid;
-    gap: 0;
-    margin: 0;
-  }
-
-  .agent-api dl div {
-    display: grid;
-    gap: 6px;
-    min-width: 0;
-    padding: 18px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .18);
-  }
-
-  .agent-api dt {
-    color: rgba(255, 255, 255, .65);
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-  }
-
-  .agent-api dd {
-    min-width: 0;
-    margin: 0;
-    font-size: 13px;
-    line-height: 1.6;
-    overflow-wrap: anywhere;
-  }
-
-  .agent-api code {
-    font-size: .94em;
-  }
-
-  .agent-price-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(22px, 3vw, 38px);
-    margin-top: clamp(38px, 5vw, 64px);
-  }
-
-  .agent-price {
-    min-width: 0;
-    padding: clamp(24px, 3vw, 38px);
-    border: 1px solid var(--line);
-    background: #fff;
-  }
-
-  .agent-price > p:first-child {
-    margin: 0 0 10px;
-    color: var(--accent);
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-  }
-
-  .agent-price > p:nth-of-type(2) {
-    margin: 12px 0 24px;
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .agent-price details {
-    border-top: 1px solid var(--line);
-    padding-top: 18px;
-  }
-
-  .agent-price summary {
-    cursor: pointer;
-    color: #202633;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-  }
-
-  .agent-price ul {
-    display: grid;
-    gap: 9px;
-    margin: 18px 0 0;
-    padding-left: 18px;
-  }
-
-  .agent-price li {
-    color: var(--muted);
-    font-size: 12px;
-    line-height: 1.55;
-  }
-
-  .agent-prices__source {
-    margin: 26px 0 0;
-    color: var(--muted);
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .agent-terms {
-    display: grid;
-    grid-template-columns: minmax(0, .72fr) minmax(0, 1fr);
-    gap: clamp(36px, 6vw, 84px);
-    align-items: start;
-  }
-
-  .agent-terms__copy ul {
-    display: grid;
-    gap: 14px;
-    margin: 0;
+    gap: 8px;
     padding-left: 22px;
   }
 
-  .agent-terms__copy p {
-    margin: 28px 0 0;
-  }
-
-  .agent-no-ads {
-    padding: clamp(30px, 5vw, 62px);
+  .agent-warning {
+    padding: clamp(24px, 4vw, 38px);
     border: 1px solid #a1443d;
     background: #fff8f6;
   }
 
-  .agent-no-ads h2 {
-    max-width: 850px;
-  }
-
-  .agent-no-ads > p:not(.agent-kicker) {
-    max-width: 950px;
-    margin: 24px 0 0;
-  }
-
-  .agent-no-ads > p.agent-no-ads__law {
+  .agent-legal-links {
     font-size: 13px;
-    line-height: 1.65;
   }
 
-  .agent-content :is(a, button, input, summary):focus-visible {
-    outline: 2px solid #202633;
-    outline-offset: 4px;
-  }
-
-  @media (max-width: 900px) {
-    .agent-hero,
-    .agent-check,
-    .agent-api,
-    .agent-terms {
-      grid-template-columns: 1fr;
+  @media (max-width: 700px) {
+    .agent-document {
+      width: min(100% - 32px, 860px);
+      padding-top: 34px;
+      font-size: 16px;
     }
 
-    .agent-hero__image {
-      width: min(100%, 620px);
-    }
-
-    .agent-price-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .agent-content {
-      width: min(100% - 32px, 1180px);
-      padding-top: 36px;
-    }
-
-    .agent-content h1 {
-      font-size: clamp(43px, 15vw, 64px);
-    }
-
-    .agent-facts {
-      grid-template-columns: 1fr;
-    }
-
-    .agent-facts div + div {
-      border-top: 1px solid var(--line);
-      border-left: 0;
-    }
-
+    .agent-toc ol,
     .agent-check__dates {
       grid-template-columns: 1fr;
     }
 
-    .agent-hero__actions a,
-    .agent-check button {
+    .agent-facts div,
+    .agent-contract div,
+    .agent-package dl div {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+
+    .agent-check button,
+    .agent-primary-link {
       width: 100%;
     }
 
-    .agent-api,
-    .agent-no-ads {
+    .agent-warning {
       margin-right: -16px;
       margin-left: -16px;
       padding-right: 16px;
       padding-left: 16px;
-    }
-
-    .agent-api p {
-      font-size: 17px;
-      line-height: 1.6;
-    }
-
-    .agent-api dd {
-      font-size: 11px;
-      overflow-wrap: anywhere;
-    }
-
-    .agent-no-ads h2 {
-      font-size: 31px;
-      hyphens: none;
     }
   }
 </style>

@@ -39,8 +39,8 @@ export const socialCardOverrides = {
     focalPoint: "center",
   },
   "/fuer-agenten/": {
-    title: "Für Buchungsagenten",
-    subtitle: "Preise, Konditionen und begrenzte Terminabfrage für konkrete Fotoaufträge.",
+    title: "Für Buchungsagenten & KI-Assistenten",
+    subtitle: "Preise, Konditionen und Terminprüfung für konkrete Fotoaufträge.",
     location: "Hamburg",
     label: "Buchungsinformationen",
     updated: "2026-08-17",

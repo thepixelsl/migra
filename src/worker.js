@@ -21,6 +21,11 @@ const CONTENT_SECURITY_POLICY = [
   "upgrade-insecure-requests",
 ].join("; ");
 const DOWNLOAD_PATH_PREFIXES = ["/downloads/"];
+const AGENT_MARKDOWN_LINK_HEADER = [
+  '</fuer-agenten/>; rel="canonical"; type="text/html"',
+  '</api/agent-availability>; rel="service-doc"; type="application/json"',
+  '</api/agent-availability/openapi.json>; rel="service-desc"; type="application/json"',
+].join(", ");
 
 function isExplicitDownloadPath(pathname) {
   return DOWNLOAD_PATH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -198,6 +203,17 @@ export default {
     }
 
     const responseHeaders = new Headers(assetResponse.headers);
+
+    if (url.pathname === "/fuer-agenten.md") {
+      responseHeaders.set("Content-Type", "text/markdown; charset=utf-8");
+      responseHeaders.set("Link", AGENT_MARKDOWN_LINK_HEADER);
+    } else if (url.pathname === "/api/agent-availability/openapi.json") {
+      responseHeaders.set("Content-Type", "application/json; charset=utf-8");
+      responseHeaders.set(
+        "Link",
+        '</fuer-agenten/>; rel="service-doc"; type="text/html", </api/agent-availability>; rel="service-doc"; type="application/json"',
+      );
+    }
 
     if (url.pathname.startsWith("/_astro/")) {
       responseHeaders.set("Cache-Control", "public, max-age=31556952, immutable");
