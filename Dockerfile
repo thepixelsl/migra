@@ -44,7 +44,9 @@ RUN npm ci --omit=dev && npm cache clean --force
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/functions ./functions
 COPY --from=build /app/src/worker.js ./src/worker.js
+COPY --from=build /app/src/AgentRateLimiter.js ./src/AgentRateLimiter.js
 COPY --from=build /app/server ./server
+RUN node --input-type=module -e "await import('./src/worker.js')"
 
 USER node
 EXPOSE 8080
