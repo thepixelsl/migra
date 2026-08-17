@@ -34,6 +34,7 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Paarshooting Mallorca | Artbild-Fotografie";
 const pageHeading = "Paarshooting Mallorca";
 const description = "Paarshooting auf Mallorca mit natürlichen Paarportraits, mediterranem Licht sowie Stadt- und Meerblick. Fotografiert von Artbild-Fotografie.";
+const dateModified = "2026-08-17T04:46:00+02:00";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
 const galleryImages = [
@@ -86,7 +87,7 @@ const schemaGraph = {
         name: "York Augustin",
       },
       datePublished: "2019-11-24T17:45:58+01:00",
-      dateModified: "2020-05-27T13:04:50+02:00",
+      dateModified,
       image: {
         "@id": `${pageUrl}#primaryimage`,
       },
@@ -197,7 +198,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: "2019-11-24T17:45:58+01:00",
-      dateModified: "2020-05-27T13:04:50+02:00",
+      dateModified,
       primaryImageOfPage: {
         "@id": `${pageUrl}#primaryimage`,
       },
@@ -232,7 +233,7 @@ const schemaGraph = {
   <meta property="article:publisher" content="https://www.facebook.com/artbildfotografie/">
   <meta property="article:author" content="https://www.facebook.com/artbildfotografie/">
   <meta property="article:published_time" content="2019-11-24T17:45:58+01:00">
-  <meta property="article:modified_time" content="2020-05-27T13:04:50+02:00">
+  <meta property="article:modified_time" content={dateModified}>
   <meta property="og:image" content={primaryImageUrl}>
   <meta property="og:image:secure_url" content={primaryImageUrl}>
   <meta property="og:image:width" content={primaryImage.image.width}>
@@ -260,8 +261,15 @@ const schemaGraph = {
         <p class="mallorca-script">Hola a Mallorca</p>
         <h1>{pageHeading}</h1>
         <p class="mallorca-intro">
-          Eine Paarreportage im mediterranen Licht Mallorcas: natürliche Momente,
-          ruhige Portraits und ein weiter Blick über Dächer, Stadt und Meer.
+          In der Nähe von Porto Christo durfte ich die Beiden Lieben in wunderschönen
+          Paarportraits festhalten. Ein Paarshooting auf Mallorca ist für mich ja immer
+          mit einer Reise verbunden.
+        </p>
+        <p class="mallorca-intro">
+          Die Zwei haben sich für ein Shooting in Ihrer Wohnung auf Mallorca entschieden
+          und haben trotz schlechter Wetterprognose tolle Bilder bekommen. Die Bilder
+          haben ihnen so gut gefallen, dass sie einverstanden waren, dass ich sie Euch
+          zeigen darf.
         </p>
       </header>
 
@@ -314,6 +322,10 @@ const schemaGraph = {
       <section class="mallorca-instagram" aria-labelledby="mallorca-instagram-title">
         <h2 id="mallorca-instagram-title">Weitere Geschichten und aktuelle Shootings</h2>
         <a href="https://www.instagram.com/artbild/" aria-label="Artbild-Fotografie auf Instagram folgen">@ARTBILD</a>
+        <p class="mallorca-closing">
+          Möchtet Ihr auch ein Shooting auf Mallorca buchen? Je früher Ihr anfragt,
+          desto besser stehen die Chancen auf einen verfügbaren Termin.
+        </p>
       </section>
     </article>
       <StoryLanguageCta kind="editorial" />
@@ -455,6 +467,15 @@ const schemaGraph = {
     font-weight: 700;
     letter-spacing: .28em;
     text-decoration: none;
+  }
+
+  .mallorca-closing {
+    width: min(650px, 100%);
+    margin: 38px auto 0;
+    color: #66605b;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.45vw, 22px);
+    line-height: 1.72;
   }
 
   @media (max-width: 980px) {
