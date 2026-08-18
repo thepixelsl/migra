@@ -79,24 +79,87 @@ const packageOffers = packages.map((item, index) => ({
 
 const faqItems = [
   {
-    question: "Welche Leistungen sind verbindlich enthalten?",
+    question: "Was berechnest Du für die Anfahrt in Hamburg?",
     answer:
-      "Maßgeblich sind die Leistungen, die beim gewählten Paket aufgeführt und im individuellen Angebot bestätigt werden. Abweichende Wünsche sollten vor der Buchung schriftlich festgehalten werden.",
+      "Innerhalb Hamburgs ist die Anfahrt kostenlos.",
   },
   {
-    question: "Sind Fahrtkosten immer enthalten?",
+    question: "Welche Fahrtkosten berechnest Du für die Anfahrt?",
     answer:
-      "Nur wenn dies beim jeweiligen Paket ausdrücklich genannt wird. Für Termine außerhalb des dort beschriebenen Bereichs werden mögliche Reise- und Übernachtungskosten im individuellen Angebot festgehalten.",
+      "Ich berechne die tatsächlich angefallenen Kosten. Ein Pauschale rechne ich nicht ab.",
   },
   {
-    question: "Wie werden Bildbearbeitung und Retusche vereinbart?",
+    question: "Berechnest Du die Fahrzeit als Arbeitszeit?",
     answer:
-      "Der enthaltene Umfang steht in der jeweiligen Paketliste. Zusätzliche Retuschen oder besondere Bearbeitungswünsche werden nur nach vorheriger Absprache Teil des Auftrags.",
+      "Nein, die Fahrzeit berechne ich nicht als Arbeitszeit. Hierfür entstehen keine zusätzlichen Kosten.",
   },
   {
-    question: "Was gilt bei einem anderen Ablauf oder zusätzlichen Stunden?",
+    question:
+      "Bearbeitest Du wirklich sämtliche Bilder ohne Extrakosten, auch wenn zum Beispiel AI Credits genutzt werden müssten?",
     answer:
-      "Dann wird vor der Buchung ein passendes Angebot erstellt. Die Paketübersicht ersetzt keine individuelle Vereinbarung für einen abweichenden Ablauf.",
+      "Ja alle Bilder erhalten eine dezente Bearbeitung, sowie die Korrektur kleinerer Schönheitsfehler, wie zum Beispiel ein Fussel auf dem Anzug oder plötzlich aufgetretene Hautunreinheiten. Auch AI Credits sind bereits eingepreist.",
+  },
+  {
+    question:
+      "Wir möchten Verona, Italien heiraten und die Kosten pro Flug betragen 179,89€. Das Shooting dauert 4 Stunden und der Rückflug ist am selben Tag möglich. Benötigst Du dann noch eine Übernachtung?",
+    answer:
+      "Nein, für ein 4 Stunden Paket mit An- und Abreise am selben Tag wird keine Übernachtung benötigt. Die Reisekosten sind immer die tatsächlich entstandenen Kosten.",
+  },
+  {
+    question:
+      "Manchmal kommt das Leben oder auch ein Wirbelsturm dazwischen, der das Dach abgedeckt hat. Können wir Dein Honorar auch in Raten zahlen?",
+    answer:
+      "Ja auch Ratenzahlung mit Paypal Plus ist möglich.",
+  },
+  {
+    question: "Was passiert wenn Du erkrankst und unsere Hochzeit nicht fotografieren kannst?",
+    answer:
+      "Ich bin gut vernetzt und werde einen zuverlässigen Ersatzfotografen für Eure Hochzeit finden.",
+  },
+  {
+    question:
+      "Wir möchten auch ein professionelles Video von unserer Hochzeit haben, kennst Du gute Videografen?",
+    answer:
+      "Ja, ich habe sehr zuverlässige und qualitativ gute Videografen in meinem Netzwerk.",
+  },
+  {
+    question:
+      "Was passiert wenn unsere Hochzeit nicht stattfinden kann, obwohl wir Dich schon per Vertrag gebucht haben. Müssen wir dann den vollen Preis zahlen?",
+    answer:
+      "Nein, findet die Hochzeit nicht statt, müsst Ihr nicht den vollen Preis zahlen. Nur bereits entstandene Kosten,  z. B. Flugbuchungen, nicht stornierbare Übernachtungen, Anzahlungen müssen getragen werden)",
+  },
+  {
+    question:
+      "Wir möchten schöne Bilder, in der Dämmerung mit Lichterketten von unserer Hochzeitsfeier.",
+    answer:
+      "Ich kann Sonnenrichtung, Zeiten für Sonnenauf- und Untergang für jedes Datum und jeden beliebigen Ort entsprechend vorhersagen. Wenn Ihr oder die Hochzeitsplanung mich in die Lichtplanung mit einbezieht,  könnt Ihr richtig tolle Bilder im Sonnenuntergang mit toller Stimmung erhalten.",
+  },
+  {
+    question: "Was kostet eine Hochzeit?",
+    answer:
+      "Entscheidend ist die Anzahl der Gäste. Kostenfaktoren sind das Catering (Buffet mit Selbstbedienung oder Service am Sitzplatz), die Location (evtl. noch die Reisekosten bis zur Location), die Dekoration und Papeterie sowie die Kosten für Dienstleister Kleider und Anzug und für eine Hochzeitsreise. Schnell übersteigen die Kosten 10.000€. Vorabzahlungen können den Betrag erträglicher splitten, so dass die Kostenlast nicht auf einmal anfällt.",
+  },
+  {
+    question: "Was kostet ein Hochzeitsfotograf?",
+    answer:
+      "Es ist bei uns üblich, dass das Brautpaar lediglich die fotografische Arbeit vor Ort bezahlt. Die Bildbearbeitung, das Bereitstellen der Bilder und die ganze nachträgliche Arbeit, die anfällt um die Hochzeitsbilder entsprechend bereitzustellen sind dort bereits eingepreist. Die Kosten steigen jedoch momentan schnell, in der Regel durch EU-Verordnungen im Datenschutz sowie mit der geplanten Rentenversicherungspflicht aller Einkünfte.",
+  },
+  {
+    question: "Welche Zahlungsarten akzeptierst Du?",
+    answer:
+      "Barzahlung, Überweisung, PayPal Plus werden akzeptiert.",
+  },
+  {
+    question:
+      "Was passiert wenn wir Dich den ganzen Tag bis 22:00Uhr gebucht haben und die Torte verzögert sich um über 1 Stunde durch Verzögerungen, auf die wir keinen Einfluss hatten?",
+    answer:
+      "Niemals würde ich einfach abhauen und Euch im Regen stehen lassen, egal aus welchem Grund. Es ist eine Frage von Vertrauen und hanseatischer Redlichkeit einen so wichtigen Moment festzuhalten und nicht einfach die Hochzeit zu verlassen weil die Zeit abgelaufen war.",
+  },
+  {
+    question:
+      "Was passiert wenn wir ein 2 Stunden Paket gebucht haben aber nun 4 Stunden vor Ort möchten?",
+    answer:
+      "Fragt mich einfach vor Ort. Wenn es keine Folgebuchung gibt, können wir ganz unkompliziert die Zeit erweitern.",
   },
 ];
 
@@ -138,7 +201,7 @@ const schemaGraph = {
         "@id": `${pageUrl}#service`,
       },
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-08-17T00:00:00+02:00",
+      dateModified: "2026-08-18T00:00:00+02:00",
       inLanguage: "de",
       primaryImageOfPage: {
         "@type": "ImageObject",
