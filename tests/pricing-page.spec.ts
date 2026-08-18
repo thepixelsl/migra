@@ -14,6 +14,23 @@ test("pricing page renders with local links and no horizontal overflow", async (
   await expect(page.locator(".pricing-hero h1")).toHaveText("Hochzeitsfotograf Hamburg Preise");
   await expect(page.locator("#pakete")).toBeVisible();
   await expect(page.locator("#faq")).toBeVisible();
+  await page.evaluate(() => document.fonts.ready);
+  const desktopFaqTypography = await page.locator(".pricing-faq__summary").first().evaluate((summary) => {
+    const styles = getComputedStyle(summary);
+    return {
+      color: styles.color,
+      fontSize: Number.parseFloat(styles.fontSize),
+      fontWeight: styles.fontWeight,
+      letterSpacing: Number.parseFloat(styles.letterSpacing),
+      lineHeight: Number.parseFloat(styles.lineHeight),
+    };
+  });
+  expect(desktopFaqTypography.color).toBe("rgb(64, 69, 77)");
+  expect(desktopFaqTypography.fontSize).toBeCloseTo(21.375, 3);
+  expect(desktopFaqTypography.fontWeight).toBe("400");
+  expect(desktopFaqTypography.letterSpacing / desktopFaqTypography.fontSize).toBeCloseTo(0.03, 3);
+  expect(desktopFaqTypography.lineHeight / desktopFaqTypography.fontSize).toBeCloseTo(1.375, 3);
+  await expect(page.locator(".pricing-faq__content > .pricing-kicker")).toHaveCSS("font-size", "12px");
   const pricingPackages = page.locator(".pricing-package");
   await expect(pricingPackages).toHaveCount(3);
   expect(await pricingPackages.evaluateAll((items) => items.map((item) => item.id))).toEqual([
@@ -130,6 +147,25 @@ test("pricing page is usable on mobile", async ({ page }) => {
   await expect(page.locator(".pricing-hero h1")).toBeVisible();
   await expect(page.locator(".pricing-hero__actions a").first()).toBeVisible();
   await expect(page.locator(".pricing-package")).toHaveCount(3);
+  await page.evaluate(() => document.fonts.ready);
+  const mobileFaqTypography = await page.locator(".pricing-faq__summary").first().evaluate((summary) => {
+    const styles = getComputedStyle(summary);
+    return {
+      fontSize: Number.parseFloat(styles.fontSize),
+      fontWeight: styles.fontWeight,
+      letterSpacing: Number.parseFloat(styles.letterSpacing),
+      lineHeight: Number.parseFloat(styles.lineHeight),
+    };
+  });
+  expect(mobileFaqTypography.fontSize).toBe(19);
+  expect(mobileFaqTypography.fontWeight).toBe("400");
+  expect(mobileFaqTypography.letterSpacing / mobileFaqTypography.fontSize).toBeCloseTo(0.03, 3);
+  expect(mobileFaqTypography.lineHeight / mobileFaqTypography.fontSize).toBeCloseTo(1.375, 3);
+
+  const faqQuestionsFit = await page.locator(".pricing-faq__summary > span:nth-child(2)").evaluateAll(
+    (questions) => questions.every((question) => question.scrollWidth <= question.clientWidth + 1),
+  );
+  expect(faqQuestionsFit).toBe(true);
 
   const packageBoxes = await page.locator(".pricing-package").evaluateAll((items) =>
     items.map((item) => {
