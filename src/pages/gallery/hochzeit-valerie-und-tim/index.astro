@@ -10,7 +10,12 @@ import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
 
 const imageModules = import.meta.glob(
-  "../../../assets/valerie-und-tim/*.{jpg,jpeg}",
+  [
+    "../../../assets/valerie-und-tim/*.{jpg,jpeg}",
+    "!../../../assets/valerie-und-tim/ART_4591.jpg",
+    "!../../../assets/valerie-und-tim/ART_4614.jpg",
+    "!../../../assets/valerie-und-tim/ART_4618.jpg",
+  ],
   { eager: true, import: "default" },
 ) as Record<string, ImageMetadata>;
 
@@ -22,6 +27,7 @@ const title = "Hochzeit Valerie und Tim | Hochzeitsreportage Artbild-Fotografie"
 const description =
   "Hochzeitsreportage von Valerie und Tim mit Brautpaarshooting im Frühlingspark, Schleierportraits, Ringdetail und Bildern von der Abendfeier.";
 const publishedAt = "2026-07-12T15:00:00+02:00";
+const modifiedAt = "2026-08-18T11:24:53+02:00";
 
 const modulesByFile = Object.fromEntries(
   Object.entries(imageModules).map(([path, image]) => [path.split("/").pop() ?? path, image]),
@@ -128,7 +134,7 @@ const schemaGraph = {
         "Hochzeitsfotos mit Schleier",
       ],
       datePublished: publishedAt,
-      dateModified: publishedAt,
+      dateModified: modifiedAt,
       author: { "@type": "Person", name: "York Augustin" },
       publisher: { "@id": `${siteUrl}/#organization` },
       image: primaryImage,
@@ -171,7 +177,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: publishedAt,
-      dateModified: publishedAt,
+      dateModified: modifiedAt,
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
