@@ -631,8 +631,8 @@ const schemaGraph = {
     margin: clamp(90px, 9vw, 142px) auto 0;
     padding: clamp(58px, 7vw, 92px);
     display: grid;
-    grid-template-columns: minmax(0, .92fr) minmax(0, 1.08fr);
-    gap: clamp(44px, 7vw, 104px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(40px, 5vw, 80px);
     background: #f3f1ed;
   }
 
@@ -647,6 +647,11 @@ const schemaGraph = {
     font-size: clamp(36px, 4.2vw, 58px);
     font-weight: 400;
     line-height: 1.14;
+  }
+
+  .jahrhunderthalle-intro h2 {
+    font-size: clamp(36px, 3.2vw, 48px);
+    overflow-wrap: anywhere;
   }
 
   .jahrhunderthalle-intro__copy {
