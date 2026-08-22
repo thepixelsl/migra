@@ -168,7 +168,7 @@ const schemaGraph = {
         "Portraits Hamburg",
       ],
       datePublished: "2019-07-08T09:26:18+02:00",
-      dateModified: "2026-08-02T16:38:35+02:00",
+      dateModified: "2026-08-22T00:00:00+02:00",
       author: {
         "@type": "Person",
         name: "York Augustin",
@@ -337,33 +337,19 @@ const schemaGraph = {
 
         <section class="editorial-story" aria-labelledby="editorial-story-title">
           <div class="editorial-story__heading">
-            <p class="editorial-kicker">Portraitserie</p>
-            <h2 id="editorial-story-title">Wenn ein Portrait nicht posiert wirken muss</h2>
+            <p class="editorial-kicker">PORTRAITS AUS HAMBURG</p>
+            <h2 id="editorial-story-title">Das Styling macht den Unterschied</h2>
           </div>
           <div class="editorial-story__copy">
-            <div>
-              <h3>Hamburger Menschen</h3>
-              <p>
-                Die Serie zeigt ganz unterschiedliche Charaktere aus Hamburg:
-                mal urban, mal weich, mal direkt, aber immer mit einem ruhigen
-                Blick auf die Person vor der Kamera.
-              </p>
-            </div>
-            <div>
-              <h3>Editorial statt Bewerbung</h3>
-              <p>
-                Es geht nicht um standardisierte Businessportraits. Die Bilder
-                dürfen persönlicher, modischer und erzählerischer sein, ohne
-                künstlich zu wirken.
-              </p>
-            </div>
-            <div>
-              <h3>Erstes Shooting möglich</h3>
-              <p>
-                Viele Menschen standen hier zum ersten Mal vor der Kamera. Genau
-                deshalb ist ein klarer, ruhiger Ablauf wichtiger als laute Posen.
-              </p>
-            </div>
+            <p>
+              Nicht jeder ist das geborene Posing-Talent. Manchmal hat man einfach Lust auf schöne Bilder, Sonnenuntergänge an der Elbe oder auf der HADAG Fähre, ein Glas Wein im Sonnenuntergang an der Großen Elbstraße, ein Dirndl im Hofgarten oder ein echtes Schloss als schönes Ausflugsziel.
+            </p>
+            <p>
+              Fotografie ist nicht nur Berufung sondern für mich auch Passion. So kann es also vorkommen, dass wenn ich große Lust auf schöne Bilder verspüre und ich in Dir einen tollen Protagonisten oder eine wunderschöne Protagonistin sehe, ich Dich anspreche und Dich frage, ob Du nicht Lust auf ein Fotoshooting hast.
+            </p>
+            <p>
+              Hier ein paar Bilder aus denen die so entstanden sind.
+            </p>
           </div>
         </section>
 
@@ -536,19 +522,8 @@ const schemaGraph = {
   }
 
   .editorial-story__copy {
+    width: min(850px, 100%);
     margin-top: clamp(50px, 6vw, 78px);
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(30px, 4vw, 60px);
-  }
-
-  .editorial-story h3 {
-    margin: 0 0 18px;
-    color: #292c35;
-    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(23px, 2.2vw, 31px);
-    font-weight: 400;
-    line-height: 1.2;
   }
 
   .editorial-story__copy p,
@@ -558,6 +533,10 @@ const schemaGraph = {
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
     font-size: clamp(17px, 1.35vw, 20px);
     line-height: 1.7;
+  }
+
+  .editorial-story__copy p + p {
+    margin-top: 1.35em;
   }
 
   .editorial-meta {
@@ -701,10 +680,6 @@ const schemaGraph = {
 
     .editorial-hero__portrait figcaption {
       text-align: center;
-    }
-
-    .editorial-story__copy {
-      grid-template-columns: 1fr;
     }
 
     .editorial-related {

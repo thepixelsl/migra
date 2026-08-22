@@ -10,6 +10,22 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
   await page.goto(`${baseUrl}${pagePath}`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("heading", { name: "Editorial Portraits Hamburg" })).toBeVisible();
+  await expect(page.getByText("PORTRAITS AUS HAMBURG", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Das Styling macht den Unterschied" })).toBeVisible();
+  await expect(page.getByText(
+    "Nicht jeder ist das geborene Posing-Talent. Manchmal hat man einfach Lust auf schöne Bilder, Sonnenuntergänge an der Elbe oder auf der HADAG Fähre, ein Glas Wein im Sonnenuntergang an der Großen Elbstraße, ein Dirndl im Hofgarten oder ein echtes Schloss als schönes Ausflugsziel.",
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText(
+    "Fotografie ist nicht nur Berufung sondern für mich auch Passion. So kann es also vorkommen, dass wenn ich große Lust auf schöne Bilder verspüre und ich in Dir einen tollen Protagonisten oder eine wunderschöne Protagonistin sehe, ich Dich anspreche und Dich frage, ob Du nicht Lust auf ein Fotoshooting hast.",
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText(
+    "Hier ein paar Bilder aus denen die so entstanden sind.",
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText("Portraitserie", { exact: true })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "Wenn ein Portrait nicht posiert wirken muss" })).toHaveCount(0);
   await expect(page.locator("[data-gallery-trigger='editorial']")).toHaveCount(91);
 
   const state = await page.evaluate(() => {
