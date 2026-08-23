@@ -4527,6 +4527,14 @@ footer nav[aria-label="Footer"]::before,
     padding-inline: 14px;
   }
 
+  .vendor-section .section-heading h2 {
+    width: calc(100% + 28px);
+    margin-inline: -14px;
+    font-size: clamp(25px, 7.9vw, 34px);
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+
   .vendor-grid article {
     padding: 22px;
   }
