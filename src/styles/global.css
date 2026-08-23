@@ -4532,8 +4532,49 @@ footer nav[aria-label="Footer"]::before,
   }
 
   .site-footer nav {
-    justify-content: flex-start;
-    gap: 12px 16px;
+    width: 100%;
+    justify-content: center;
+    gap: 14px 18px;
+    text-align: center;
+  }
+
+  .site-footer {
+    width: min(var(--max), calc(100% - (var(--home-mobile-gutter) * 2)));
+    justify-items: center;
+    gap: 28px;
+    padding: 48px 0 calc(156px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
+
+  .site-footer > div {
+    width: 100%;
+  }
+
+  .site-footer h2 {
+    font-size: clamp(30px, 9vw, 38px);
+    overflow-wrap: anywhere;
+  }
+
+  .site-footer nav a {
+    flex: 0 1 auto;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.55;
+    text-align: center;
+  }
+
+  .site-footer p {
+    max-width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .site-footer p:last-child {
+    font-size: 13px;
   }
 
   .image-panel img {
