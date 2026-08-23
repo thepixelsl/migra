@@ -65,7 +65,9 @@ test("pricing page renders with local links and no horizontal overflow", async (
   await expect(pureMomentsPackage).not.toContainText("kleine standesamtliche Hochzeit");
   await expect(page.getByText("Standesamt Paket", { exact: true })).toBeVisible();
   await expect(page.getByText("Rundum-Sorglos-Paket", { exact: true })).toBeVisible();
-  await expect(page.getByRole("article", { name: "Pure Moments ab 299 €" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Hochzeitsreportage in Hamburg 299 €" })).toBeVisible();
+  await expect(page.getByRole("article", { name: "Pure Moments 299 €" })).toBeVisible();
+  await expect(page.locator("#pakete")).not.toContainText(/\bab\b/i);
   await expect(page.getByRole("article", { name: "Standesamt Paket 649 € Festpreis" })).toBeVisible();
   await expect(page.getByRole("article", { name: "Rundum-Sorglos-Paket 249 € pro Stunde" })).toBeVisible();
   await expect(page.locator("#paket-vier-stunden-paket")).toHaveCount(0);

@@ -13,15 +13,15 @@ const reportageFeatures = (duration: string) => [
 
 /**
  * Gemeinsame Preis- und Leistungsquelle für die Preis- und Agentenseite.
- * Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Teil der Aussage.
+ * Preiszusätze wie „Festpreis“ und „pro Stunde“ sind Teil der Aussage.
  */
 export const weddingPackages = [
   {
     id: "pure-moments",
     name: "Pure Moments",
     priceValue: 299,
-    priceLabel: "ab 299 €",
-    priceNote: "Einstiegspaket ab 299 Euro",
+    priceLabel: "299 €",
+    priceNote: "Einstiegspaket 299 Euro",
     serviceType: "Fotografische Begleitung",
     duration: "1 Stunde",
     intro: "1 Stunde fotografische Begleitung.",
