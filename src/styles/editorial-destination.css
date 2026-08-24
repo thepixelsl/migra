@@ -95,6 +95,12 @@
   gap: clamp(30px, 4vw, 60px);
 }
 
+.destination-story__copy--single {
+  width: min(850px, 100%);
+  margin-top: clamp(32px, 4vw, 52px);
+  grid-template-columns: 1fr;
+}
+
 .destination-story h3 {
   margin: 0 0 18px;
   color: #292c35;
