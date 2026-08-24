@@ -33,7 +33,7 @@ const title = "Verlobungsshooting am Elbstrand";
 const pageHeading = "Lovebirds am Elbstrand";
 const articleTitle = "Lovebirds am Elbstrand - 5 Gründe für ein Verlobungsshooting in Hamburg";
 const description = "Lovebirds am Hamburger Elbstrand. 5 Gründe, warum Du unbedingt vor der Hochzeit mit dem Hochzeitsfotografen ein Verlobungsshooting machen solltest.";
-const originalImageUrl = "/wp-content/uploads/2019/07/ART_8413.jpg";
+const primaryImageUrl = new URL(art8413.src, siteUrl).href;
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
 const galleryImages = [
@@ -151,7 +151,7 @@ const schemaGraph = {
     {
       "@type": "ImageObject",
       "@id": `${pageUrl}#primaryimage`,
-      "url": originalImageUrl,
+      "url": primaryImageUrl,
       "width": "1384",
       "height": "924",
       "caption": "Paarshooting in Hamburg",
@@ -197,8 +197,8 @@ const schemaGraph = {
   <meta property="article:published_time" content="2019-07-05T17:18:22+02:00">
   <meta property="article:modified_time" content="2024-12-04T16:44:03+01:00">
   <meta property="og:updated_time" content="2024-12-04T16:44:03+01:00">
-  <meta property="og:image" content={originalImageUrl}>
-  <meta property="og:image:secure_url" content={originalImageUrl}>
+  <meta property="og:image" content={primaryImageUrl}>
+  <meta property="og:image:secure_url" content={primaryImageUrl}>
   <meta property="og:image:width" content="1384">
   <meta property="og:image:height" content="924">
   <meta property="og:image:alt" content="Paarshooting in Hamburg">
@@ -208,7 +208,7 @@ const schemaGraph = {
   <meta name="twitter:description" content={description}>
   <meta name="twitter:site" content="@artbild">
   <meta name="twitter:creator" content="@artbild">
-  <meta name="twitter:image" content={originalImageUrl}>
+  <meta name="twitter:image" content={primaryImageUrl}>
   <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
 </head>
 <body class="gallery-template lovebirds-page">

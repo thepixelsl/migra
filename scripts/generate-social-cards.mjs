@@ -261,12 +261,12 @@ async function renderCard({
       fit: "cover",
       position: focalPositions[focalPoint] || "centre",
     })
-    .jpeg({ quality: 90, chromaSubsampling: "4:4:4" })
+    .png()
     .toBuffer();
 
   await sharp(Buffer.from(svg))
     .composite([{ input: photo, left: photoLeft, top: 0 }])
-    .jpeg({ quality: 90, chromaSubsampling: "4:4:4" })
+    .webp({ quality: 90, effort: 4, smartSubsample: true })
     .toFile(outputPath);
 }
 
@@ -325,7 +325,7 @@ function writeSocialMeta($, data) {
     ["property", "og:image:secure_url", data.socialImageUrl],
     ["property", "og:image:width", "1200"],
     ["property", "og:image:height", "630"],
-    ["property", "og:image:type", "image/jpeg"],
+    ["property", "og:image:type", "image/webp"],
     ["property", "og:image:alt", data.imageAlt],
     ["name", "twitter:card", "summary_large_image"],
     ["name", "twitter:title", data.title],
@@ -504,9 +504,9 @@ function truncate(value, maxLength, ellipsis = false) {
 }
 
 function cardPathForRoute(route) {
-  if (route === "/") return "/social-cards/home.jpg";
+  if (route === "/") return "/social-cards/home.webp";
   const cleanRoute = route.replace(/^\/+|\/+$/g, "");
-  return `/social-cards/${cleanRoute}.jpg`;
+  return `/social-cards/${cleanRoute}.webp`;
 }
 
 function routeFromHtmlFile(htmlFile) {

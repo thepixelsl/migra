@@ -82,8 +82,8 @@ for (const card of manifest.cards) {
     if (image.width !== 1200 || image.height !== 630) {
       errors.push(`${route}: Social Card hat ${image.width} x ${image.height} statt 1200 x 630 px.`);
     }
-    if (image.format !== "jpeg") {
-      errors.push(`${route}: Social Card ist ${image.format ?? "unbekannt"} statt JPEG.`);
+    if (image.format !== "webp") {
+      errors.push(`${route}: Social Card ist ${image.format ?? "unbekannt"} statt WebP.`);
     }
   } catch {
     errors.push(`${route}: Social-Card-Datei fehlt oder ist nicht lesbar.`);
@@ -113,8 +113,8 @@ for (const card of manifest.cards) {
   if (openGraph["og:image:width"] !== "1200" || openGraph["og:image:height"] !== "630") {
     errors.push(`${route}: Open-Graph-Bildmaße sind nicht korrekt ausgezeichnet.`);
   }
-  if (openGraph["og:image:type"] !== "image/jpeg") {
-    errors.push(`${route}: Open-Graph-Bildtyp ist nicht image/jpeg.`);
+  if (openGraph["og:image:type"] !== "image/webp") {
+    errors.push(`${route}: Open-Graph-Bildtyp ist nicht image/webp.`);
   }
   if (twitter["twitter:card"] !== "summary_large_image") {
     errors.push(`${route}: Twitter Card ist nicht summary_large_image.`);

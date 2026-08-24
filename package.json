@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "prebuild": "node scripts/validate-tracking-config.mjs",
-    "build": "astro build && npm run social:cards && npm run social:cards:validate",
+    "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate",
     "social:cards": "node scripts/generate-social-cards.mjs",
     "social:cards:validate": "node scripts/validate-social-cards.mjs",
+    "images:webp": "node scripts/convert-delivered-jpegs-to-webp.mjs",
     "deploy": "npm run build && wrangler deploy",
     "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",
