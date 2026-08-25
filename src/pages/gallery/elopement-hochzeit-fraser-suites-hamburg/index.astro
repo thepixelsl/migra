@@ -22,7 +22,7 @@ const description =
   "Inszenierte Brautpaarserie in den Fraser Suites Hamburg mit Getting-Ready-Motiven, Portraits im Treppenhaus und Blicken über Hamburg.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 const datePublished = "2026-07-04T08:30:00+02:00";
-const dateModified = "2026-07-17T12:00:00+02:00";
+const dateModified = "2026-08-25T14:00:00+02:00";
 
 const modulesByFile = Object.fromEntries(
   Object.entries(imageModules).map(([path, image]) => [
@@ -352,17 +352,23 @@ const schemaGraph = {
 
         <section class="elopement-intro" aria-labelledby="elopement-intro-title">
           <div>
-            <p class="elopement-kicker">Zur Einordnung der Serie</p>
-            <h2 id="elopement-intro-title">Editorial statt Hochzeitsreportage</h2>
+            <p class="elopement-kicker">Hochzeitsinspiration aus Hamburg</p>
+            <h2 id="elopement-intro-title">Schillerndes Brautpaarshooting in Hamburg</h2>
           </div>
           <div class="elopement-intro__copy">
             <p>
-              Die Bildstrecke entstand als Editorial. Sie dokumentiert keinen
-              vollständigen Hochzeitstag und keine Trauung.
+              Dieses liebevoll inszenierte Brautpaarshooting in den Fraser
+              Suites Hamburg verbindet elegantes Hotelambiente, weiches
+              Fensterlicht und historische Architektur zu einem modernen
+              Editorial.
             </p>
             <p>
-              Zu sehen sind vorbereitete Getting-Ready-Szenen, Brautportraits im
-              Hotelzimmer sowie Paarbilder im Treppenhaus der Fraser Suites.
+              Zu sehen sind stimmungsvolle Szenen rund um das Getting Ready zur
+              Hochzeit, ausdrucksstarke Brautportraits und elegante Paarbilder
+              im Treppenhaus. Sie zeigen, wie facettenreich ein
+              Brautpaar-Fotoshooting sein kann – als kreative
+              Hochzeitsinspiration, nicht als vollständige Hochzeitsreportage
+              oder Trauung.
             </p>
           </div>
         </section>
@@ -549,6 +555,11 @@ const schemaGraph = {
     font-size: clamp(36px, 4.2vw, 58px);
     font-weight: 400;
     line-height: 1.14;
+  }
+
+  .elopement-intro h2 {
+    max-width: 100%;
+    font-size: clamp(34px, 3.2vw, 46px);
   }
 
   .elopement-intro__copy {
@@ -810,6 +821,10 @@ const schemaGraph = {
     .elopement-location h2,
     .elopement-guide h2 {
       font-size: clamp(34px, 10vw, 46px);
+    }
+
+    .elopement-intro h2 {
+      font-size: clamp(24px, 8.4vw, 42px);
     }
 
     .elopement-meta {

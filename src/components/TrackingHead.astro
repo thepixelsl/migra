@@ -16,11 +16,7 @@ const publicConfig = trackingExcluded
       environment: "disabled",
       gtmContainerId: "",
       googleAnalyticsId: "",
-      metaPixelId: "",
-      clarityProjectId: "",
       googleTrackingConfigured: false,
-      metaTrackingConfigured: false,
-      clarityTrackingConfigured: false,
     }
   : trackingConfig;
 
@@ -144,9 +140,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const googleConsentState = (state, includeWait) => {
       const consent = {
         analytics_storage: state.analytics ? "granted" : "denied",
-        ad_storage: "denied",
-        ad_user_data: "denied",
-        ad_personalization: "denied",
+        ad_storage: state.marketing ? "granted" : "denied",
+        ad_user_data: state.marketing ? "granted" : "denied",
+        ad_personalization: state.marketing ? "granted" : "denied",
         functionality_storage: "denied",
         personalization_storage: "denied",
         security_storage: "granted",
@@ -167,10 +163,10 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       event: "artbild_tracking_config",
       tracking_environment: config.environment,
       google_analytics_id: config.googleAnalyticsId || undefined,
-      meta_pixel_id: config.metaPixelId || undefined,
-      clarity_project_id: config.clarityProjectId || undefined,
+      meta_delivery: "google_tag_manager",
+      clarity_delivery: "google_tag_manager",
       ga4_data_retention_months: config.ga4DataRetentionMonths,
-      consent_mode: "basic",
+      consent_mode: "advanced",
       consent_version: config.consentVersion,
     });
 
@@ -181,7 +177,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         analytics: state.analytics === true,
         marketing: state.marketing === true,
         version: config.consentVersion,
-        mode: "basic",
+        mode: "advanced",
       };
 
       window.ArtbildConsent = publicState;
@@ -198,7 +194,6 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const loadGoogleTagManager = () => {
       if (
         !providersEnabled
-        || window.ArtbildConsent?.analytics !== true
         || config.googleTrackingConfigured !== true
         || !/^GTM-[A-Z0-9]{4,}$/i.test(config.gtmContainerId || "")
         || !/^G-[A-Z0-9]{6,}$/i.test(config.googleAnalyticsId || "")
@@ -228,77 +223,6 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const updateClarityConsent = (granted) => {
       if (typeof window.clarity !== "function") return;
       window.clarity("consentv2", clarityConsentState(granted));
-    };
-
-    const loadClarity = () => {
-      if (
-        !providersEnabled
-        || window.ArtbildConsent?.analytics !== true
-        || config.clarityTrackingConfigured !== true
-        || !/^[a-z0-9]{5,32}$/i.test(config.clarityProjectId || "")
-      ) {
-        return;
-      }
-
-      if (window.__artbildClarityLoaded) {
-        updateClarityConsent(true);
-        return;
-      }
-
-      window.__artbildClarityLoaded = true;
-      window.clarity = window.clarity || function clarity() {
-        (window.clarity.q = window.clarity.q || []).push(arguments);
-      };
-      updateClarityConsent(true);
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.clarity.ms/tag/${encodeURIComponent(config.clarityProjectId)}`;
-      script.dataset.artbildProvider = "microsoft-clarity";
-      document.head.appendChild(script);
-    };
-
-    const loadMetaPixel = () => {
-      if (
-        !providersEnabled
-        || window.ArtbildConsent?.marketing !== true
-        || !/^\d{5,20}$/.test(config.metaPixelId || "")
-      ) {
-        return;
-      }
-
-      if (window.__artbildMetaPixelLoaded) {
-        if (typeof window.fbq === "function") {
-          window.fbq("consent", "grant");
-        }
-        return;
-      }
-
-      window.__artbildMetaPixelLoaded = true;
-
-      if (!window.fbq) {
-        const fbq = function () {
-          fbq.callMethod
-            ? fbq.callMethod.apply(fbq, arguments)
-            : fbq.queue.push(arguments);
-        };
-        fbq.push = fbq;
-        fbq.loaded = true;
-        fbq.version = "2.0";
-        fbq.queue = [];
-        window.fbq = fbq;
-        window._fbq = fbq;
-      }
-
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = "https://connect.facebook.net/en_US/fbevents.js";
-      script.dataset.artbildProvider = "meta";
-      document.head.appendChild(script);
-
-      window.fbq("consent", "grant");
-      window.fbq("init", config.metaPixelId);
-      window.fbq("track", "PageView");
     };
 
     const safeMetaParameters = (payload) => {
@@ -367,8 +291,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       window.gtag("consent", "update", googleConsentState(state, false));
 
       if (state.analytics) {
-        loadGoogleTagManager();
-        loadClarity();
+        updateClarityConsent(true);
       } else {
         updateClarityConsent(false);
         clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
@@ -376,7 +299,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       }
 
       if (state.marketing) {
-        loadMetaPixel();
+        if (typeof window.fbq === "function") {
+          window.fbq("consent", "grant");
+        }
       } else {
         if (typeof window.fbq === "function") {
           window.fbq("consent", "revoke");
@@ -388,31 +313,36 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         analytics: state.analytics,
         marketing: state.marketing,
         necessary: true,
-        mode: "basic",
+        mode: "advanced",
         version: config.consentVersion,
       };
-      window.dataLayer.push({
-        event: "artbild_consent_update",
-        consent_analytics: state.analytics ? "granted" : "denied",
-        consent_marketing: state.marketing ? "granted" : "denied",
-        consent_mode: "basic",
-      });
-      window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
-      const publishedState = publishState(state, true);
+      window.setTimeout(() => {
+        window.dataLayer.push({
+          event: "artbild_consent_update",
+          consent_analytics: state.analytics ? "granted" : "denied",
+          consent_marketing: state.marketing ? "granted" : "denied",
+          consent_mode: "advanced",
+        });
+        window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
+        window.setTimeout(() => {
+          updateClarityConsent(state.analytics);
+          if (state.marketing && typeof window.fbq === "function") {
+            window.fbq("consent", "grant");
+          }
+        }, 100);
+      }, 0);
+      const publishedState = { ...window.ArtbildConsent };
 
       if (
         (
           analyticsWasGranted
           && !state.analytics
-          && (
-            window.__artbildGoogleTagManagerLoaded
-            || window.__artbildClarityLoaded
-          )
+          && typeof window.clarity === "function"
         )
         || (
           marketingWasGranted
           && !state.marketing
-          && window.__artbildMetaPixelLoaded
+          && typeof window.fbq === "function"
         )
       ) {
         window.setTimeout(() => window.location.reload(), 0);
@@ -443,15 +373,15 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       consent_analytics: initialState.analytics ? "granted" : "denied",
       consent_marketing: initialState.marketing ? "granted" : "denied",
       consent_decision_present: Boolean(storedDecision),
+      consent_mode: "advanced",
     });
 
-    if (storedDecision?.analytics) {
-      loadGoogleTagManager();
-      loadClarity();
-    }
-
-    if (storedDecision?.marketing) {
-      loadMetaPixel();
-    }
+    loadGoogleTagManager();
+    window.setTimeout(() => {
+      updateClarityConsent(initialState.analytics);
+      if (initialState.marketing && typeof window.fbq === "function") {
+        window.fbq("consent", "grant");
+      }
+    }, 500);
   })();
 </script>

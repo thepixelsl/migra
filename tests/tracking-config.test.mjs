@@ -7,8 +7,6 @@ const trackingKeys = [
   "PUBLIC_TRACKING_ALLOWED_HOSTS",
   "PUBLIC_GTM_CONTAINER_ID",
   "PUBLIC_GA4_MEASUREMENT_ID",
-  "PUBLIC_META_PIXEL_ID",
-  "PUBLIC_CLARITY_PROJECT_ID",
   "PUBLIC_GA4_DATA_RETENTION_MONTHS",
 ];
 
@@ -30,14 +28,12 @@ test("accepts a staging build without configured tracking providers", () => {
   assert.match(result.stdout, /Anbieter deaktiviert/);
 });
 
-test("accepts all four synthetic provider IDs in the test environment", () => {
+test("accepts synthetic GTM and GA4 IDs in the test environment", () => {
   const result = validateTracking({
     PUBLIC_TRACKING_ENV: "test",
     PUBLIC_TRACKING_ALLOWED_HOSTS: "127.0.0.1,localhost",
     PUBLIC_GTM_CONTAINER_ID: "GTM-TEST1",
     PUBLIC_GA4_MEASUREMENT_ID: "G-TEST123",
-    PUBLIC_META_PIXEL_ID: "123456",
-    PUBLIC_CLARITY_PROJECT_ID: "claritytest1",
   });
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Anbieter konfiguriert/);
@@ -47,11 +43,9 @@ test("rejects a partial provider configuration", () => {
   const result = validateTracking({
     PUBLIC_TRACKING_ENV: "test",
     PUBLIC_GTM_CONTAINER_ID: "GTM-TEST1",
-    PUBLIC_GA4_MEASUREMENT_ID: "G-TEST123",
-    PUBLIC_META_PIXEL_ID: "123456",
   });
   assert.equal(result.status, 1);
-  assert.match(result.stderr, /Clarity-Projekt-ID/);
+  assert.match(result.stderr, /GA4-Measurement-ID/);
 });
 
 test("rejects an unsupported GA4 data-retention value", () => {
@@ -63,15 +57,14 @@ test("rejects an unsupported GA4 data-retention value", () => {
   assert.match(result.stderr, /muss 2 oder 14 sein/);
 });
 
-test("requires an explicit GA4 data-retention value in production", () => {
+test("uses the verified 14-month retention default in production", () => {
   const result = validateTracking({
     PUBLIC_TRACKING_ENV: "production",
     PUBLIC_TRACKING_ALLOWED_HOSTS: "artbild-fotografie.de",
     PUBLIC_GTM_CONTAINER_ID: "GTM-AB12CD",
     PUBLIC_GA4_MEASUREMENT_ID: "G-AB12CD34",
-    PUBLIC_META_PIXEL_ID: "123456789",
-    PUBLIC_CLARITY_PROJECT_ID: "abc123def",
+    PUBLIC_GA4_DATA_RETENTION_MONTHS: "",
   });
-  assert.equal(result.status, 1);
-  assert.match(result.stderr, /muss im Production-Modus ausdrücklich gesetzt sein/);
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /Anbieter konfiguriert/);
 });

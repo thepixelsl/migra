@@ -34,8 +34,29 @@ test("labels the secondary Fraser series as an editorial", async ({ page }) => {
   });
 
   await expect(
-    page.getByRole("heading", { name: "Editorial statt Hochzeitsreportage" }),
+    page.getByRole("heading", { name: "Schillerndes Brautpaarshooting in Hamburg" }),
   ).toBeVisible();
-  await expect(page.getByText("Sie dokumentiert keinen vollständigen Hochzeitstag und keine Trauung."))
+  await expect(page.getByText(/nicht als vollständige Hochzeitsreportage oder Trauung/))
     .toBeVisible();
+});
+
+test("keeps the Fraser editorial intro inside its card", async ({ page }) => {
+  for (const width of [1920, 901, 768, 390, 320]) {
+    await page.setViewportSize({ width, height: width > 900 ? 1080 : 844 });
+    await page.goto(`${baseUrl}/gallery/elopement-hochzeit-fraser-suites-hamburg/`, {
+      waitUntil: "domcontentloaded",
+    });
+
+    const intro = page.locator(".elopement-intro");
+    const heading = intro.getByRole("heading", {
+      name: "Schillerndes Brautpaarshooting in Hamburg",
+    });
+    await expect(intro).toBeVisible();
+    expect(
+      await intro.evaluate((element) => element.scrollWidth <= element.clientWidth),
+    ).toBe(true);
+    expect(
+      await heading.evaluate((element) => element.scrollWidth <= element.clientWidth),
+    ).toBe(true);
+  }
 });

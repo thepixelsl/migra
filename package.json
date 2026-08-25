@@ -10,6 +10,7 @@
     "social:cards": "node scripts/generate-social-cards.mjs",
     "social:cards:validate": "node scripts/validate-social-cards.mjs",
     "images:webp": "node scripts/convert-delivered-jpegs-to-webp.mjs",
+    "tracking:audit": "node scripts/audit-tracking-coverage.mjs",
     "deploy": "npm run build && wrangler deploy",
     "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",

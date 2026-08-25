@@ -283,7 +283,20 @@ const schemaGraph = {
             nicht übertragen. Die Rückmeldung ist unverbindlich und keine Reservierung.
           </p>
 
-          <form class="agent-check" data-agent-availability-form aria-describedby="terminabfrage-description">
+          <form
+            class="agent-check"
+            data-agent-availability-form
+            data-clarity-mask
+            data-track-form
+            data-form-id="agent_availability_check"
+            data-form-type="availability_check"
+            data-track-section="agent_availability_form"
+            data-content-topic="terminverfuegbarkeit"
+            data-user-intent="termine_pruefen"
+            data-journey-stage="decision"
+            data-position="main"
+            aria-describedby="terminabfrage-description"
+          >
             <fieldset>
               <legend>Wunschdaten</legend>
               <div class="agent-check__dates">

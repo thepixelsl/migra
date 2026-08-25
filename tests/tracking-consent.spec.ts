@@ -26,71 +26,59 @@ const captureProviderRequests = async (page: Page) => {
   return requests;
 };
 
-test("loads Google and Clarity only after statistics consent", async ({ page }) => {
+const readGtagCommands = (page: Page) => page.evaluate(() =>
+  (window.dataLayer || [])
+    .filter((entry) => entry && typeof entry === "object" && "callee" in entry)
+    .map((entry) => Array.from(entry)),
+);
+
+test("loads GTM with denied defaults before a consent decision", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-consent-dialog]")).toBeVisible();
-  expect(requests).toEqual([]);
-
-  await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Google Analytics und Microsoft Clarity erlauben").check({ force: true });
-  await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com/gtm.js")))
     .toBe(true);
-  await expect.poll(() => requests.some((url) => url.includes("clarity.ms/tag/")))
-    .toBe(true);
+  expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
   expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
-
   await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(1);
-  await expect(page.locator('script[data-artbild-provider="microsoft-clarity"]')).toHaveCount(1);
-  await expect(page.locator('script[data-artbild-provider="meta"]')).toHaveCount(0);
 
-  const providerRequestCount = requests.length;
-  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
-  await page.getByLabel("Google Analytics und Microsoft Clarity erlauben").uncheck({ force: true });
-  await Promise.all([
-    page.waitForEvent("framenavigated"),
-    page.getByRole("button", { name: "Auswahl speichern" }).click(),
-  ]);
-  await page.waitForLoadState("domcontentloaded");
-
-  await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
-  await expect(page.locator('script[data-artbild-provider="microsoft-clarity"]')).toHaveCount(0);
-  expect(requests).toHaveLength(providerRequestCount);
+  const commands = await readGtagCommands(page);
+  const defaultConsent = commands.find(
+    (entry) => entry[0] === "consent" && entry[1] === "default",
+  );
+  expect(defaultConsent?.[2]).toMatchObject({
+    analytics_storage: "denied",
+    ad_storage: "denied",
+    ad_user_data: "denied",
+    ad_personalization: "denied",
+  });
 });
 
-test("keeps Google and Clarity blocked when only marketing is accepted", async ({ page }) => {
+test("updates Google consent independently for statistics and marketing", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
-  expect(requests).toEqual([]);
-
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
   await page.getByLabel("Marketing-Dienste erlauben").check({ force: true });
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
-  await expect.poll(() => requests.some((url) => url.includes("connect.facebook.net")))
-    .toBe(true);
-  expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(false);
+  expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(true);
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
+  expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
 
-  await expect(page.locator('script[data-artbild-provider="meta"]')).toHaveCount(1);
-  await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
-  await expect(page.locator('script[data-artbild-provider="microsoft-clarity"]')).toHaveCount(0);
-
-  const providerRequestCount = requests.length;
-  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
-  await page.getByLabel("Marketing-Dienste erlauben").uncheck({ force: true });
-  await Promise.all([
-    page.waitForEvent("framenavigated"),
-    page.getByRole("button", { name: "Auswahl speichern" }).click(),
-  ]);
-  await page.waitForLoadState("domcontentloaded");
-
-  await expect(page.locator('script[data-artbild-provider="meta"]')).toHaveCount(0);
-  expect(requests).toHaveLength(providerRequestCount);
+  await expect.poll(async () => {
+    const commands = await readGtagCommands(page);
+    return commands.some((entry) =>
+      entry[0] === "consent"
+      && entry[1] === "update"
+      && entry[2]?.analytics_storage === "denied"
+      && entry[2]?.ad_storage === "granted"
+      && entry[2]?.ad_user_data === "granted"
+      && entry[2]?.ad_personalization === "granted"
+    );
+  }).toBe(true);
 });
 
 test("does not queue behavioral events before statistics consent", async ({ page }) => {
@@ -110,7 +98,9 @@ test("does not queue behavioral events before statistics consent", async ({ page
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   await expect.poll(async () => page.evaluate(() =>
-    (window.dataLayer || []).some((entry) => entry?.event === "artbild_tracking_ready"),
+    (window.dataLayer || []).some((entry) =>
+      entry?.[0] === "event" && entry?.[1] === "artbild_tracking_ready"
+    ),
   )).toBe(true);
 
   const afterConsent = await page.evaluate(() =>
@@ -123,7 +113,9 @@ test("does not queue behavioral events before statistics consent", async ({ page
     window.artbildTracking?.track?.({ event: "post_consent_test" });
   });
   await expect.poll(async () => page.evaluate(() =>
-    (window.dataLayer || []).some((entry) => entry?.event === "post_consent_test"),
+    (window.dataLayer || []).some((entry) =>
+      entry?.[0] === "event" && entry?.[1] === "post_consent_test"
+    ),
   )).toBe(true);
 });
 
@@ -138,5 +130,36 @@ test("masks every public form from Clarity", async ({ page }) => {
     const forms = page.locator("form");
     await expect(forms).not.toHaveCount(0);
     expect(await forms.count()).toBe(await page.locator("form[data-clarity-mask]").count());
+  }
+});
+
+test("keeps the consent dialog usable without horizontal overflow", async ({ page }) => {
+  await captureProviderRequests(page);
+
+  for (const viewport of [
+    { width: 320, height: 844 },
+    { width: 390, height: 844 },
+    { width: 1280, height: 900 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+
+    const dialog = page.locator("[data-consent-dialog]");
+    await expect(dialog).toBeVisible();
+    const geometry = await dialog.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return {
+        left: rect.left,
+        right: rect.right,
+        documentOverflow: document.documentElement.scrollWidth - window.innerWidth,
+      };
+    });
+    expect(geometry.left).toBeGreaterThanOrEqual(-1);
+    expect(geometry.right).toBeLessThanOrEqual(viewport.width + 1);
+    expect(geometry.documentOverflow).toBeLessThanOrEqual(0);
+
+    await expect(page.getByRole("button", { name: "Alle akzeptieren" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Nur notwendige", exact: true }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Individuell auswählen" })).toBeVisible();
   }
 });

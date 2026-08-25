@@ -65,13 +65,11 @@ jobs:
           provenance: false
           build-args: |
             PUBLIC_SITE_URL=https://mc-k5f22r07h0.bunny.run
-            PUBLIC_TRACKING_ENV=${{ vars.PUBLIC_TRACKING_ENV || 'staging' }}
-            PUBLIC_TRACKING_ALLOWED_HOSTS=${{ vars.PUBLIC_TRACKING_ALLOWED_HOSTS || '127.0.0.1,localhost' }}
-            PUBLIC_GTM_CONTAINER_ID=${{ vars.PUBLIC_GTM_CONTAINER_ID }}
-            PUBLIC_GA4_MEASUREMENT_ID=${{ vars.PUBLIC_GA4_MEASUREMENT_ID }}
-            PUBLIC_META_PIXEL_ID=${{ vars.PUBLIC_META_PIXEL_ID }}
-            PUBLIC_CLARITY_PROJECT_ID=${{ vars.PUBLIC_CLARITY_PROJECT_ID }}
-            PUBLIC_GA4_DATA_RETENTION_MONTHS=${{ vars.PUBLIC_GA4_DATA_RETENTION_MONTHS }}
-            PUBLIC_CONSENT_VERSION=${{ vars.PUBLIC_CONSENT_VERSION || '2026-08-08.1' }}
+            PUBLIC_TRACKING_ENV=${{ vars.PUBLIC_TRACKING_ENV || 'production' }}
+            PUBLIC_TRACKING_ALLOWED_HOSTS=${{ vars.PUBLIC_TRACKING_ALLOWED_HOSTS || 'artbild-fotografie.de,www.artbild-fotografie.de' }}
+            PUBLIC_GTM_CONTAINER_ID=${{ vars.PUBLIC_GTM_CONTAINER_ID || 'GTM-5TM37JC' }}
+            PUBLIC_GA4_MEASUREMENT_ID=${{ vars.PUBLIC_GA4_MEASUREMENT_ID || 'G-TSWGFD1YKF' }}
+            PUBLIC_GA4_DATA_RETENTION_MONTHS=${{ vars.PUBLIC_GA4_DATA_RETENTION_MONTHS || '14' }}
+            PUBLIC_CONSENT_VERSION=${{ vars.PUBLIC_CONSENT_VERSION || '2026-08-25.1' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

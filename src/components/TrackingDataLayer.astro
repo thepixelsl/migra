@@ -56,6 +56,127 @@ import { trackingConfig } from "../config/tracking";
         : sanitize(window.location.pathname);
     };
 
+    const businessLinkDefinition = (link) => {
+      const rawHref = link?.getAttribute?.("href") || "";
+      if (!rawHref || rawHref.startsWith("#")) return null;
+
+      if (rawHref.toLowerCase().startsWith("mailto:")) {
+        return {
+          event: "contact_click",
+          key: "email",
+          ctaType: "email",
+          contentTopic: "kontakt",
+          userIntent: "email_kontakt_starten",
+          journeyStage: "conversion",
+        };
+      }
+      if (rawHref.toLowerCase().startsWith("tel:")) {
+        return {
+          event: "contact_click",
+          key: "phone",
+          ctaType: "phone",
+          contentTopic: "kontakt",
+          userIntent: "telefon_kontakt_starten",
+          journeyStage: "conversion",
+        };
+      }
+
+      let url;
+      try {
+        url = new URL(rawHref, window.location.href);
+      } catch (_) {
+        return null;
+      }
+
+      const normalizedPath = url.pathname.replace(/\/+$/, "") || "/";
+      const isInternal = url.origin === window.location.origin;
+      if (isInternal && normalizedPath === "/hochzeitsfotograf-preise") {
+        return {
+          event: "view_pricing",
+          key: "pricing",
+          ctaType: "pricing_link",
+          contentTopic: "preise_und_pakete",
+          userIntent: "preise_ansehen",
+          journeyStage: "decision",
+        };
+      }
+      if (isInternal && normalizedPath === "/kontakt") {
+        return {
+          event: "contact_click",
+          key: "contact",
+          ctaType: "contact_page_link",
+          contentTopic: "kontakt",
+          userIntent: "anfrage_starten",
+          journeyStage: "conversion",
+        };
+      }
+      if (isInternal && normalizedPath === "/sicherer-kontakt") {
+        return {
+          event: "contact_click",
+          key: "secure_contact",
+          ctaType: "secure_contact_link",
+          contentTopic: "kontakt",
+          userIntent: "sichere_anfrage_starten",
+          journeyStage: "conversion",
+        };
+      }
+      if (
+        url.hostname === "wa.me"
+        || url.hostname === "api.whatsapp.com"
+        || url.hostname === "web.whatsapp.com"
+      ) {
+        return {
+          event: "contact_click",
+          key: "whatsapp",
+          ctaType: "whatsapp",
+          contentTopic: "kontakt",
+          userIntent: "whatsapp_kontakt_starten",
+          journeyStage: "conversion",
+        };
+      }
+      return null;
+    };
+
+    const trackingSectionFor = (link) => {
+      const source = link.closest(
+        "[data-track-section], [data-form-id], footer, nav, header, section[id], main, article",
+      );
+      if (!source) return "page";
+      return sanitize(
+        source.dataset?.trackSection
+        || source.dataset?.formId
+        || source.id
+        || (source.tagName === "NAV" ? "navigation" : source.tagName),
+      ) || "page";
+    };
+
+    const prepareBusinessLinks = () => {
+      const occurrences = new Map();
+      document.querySelectorAll("a[href]").forEach((link) => {
+        if (!(link instanceof HTMLAnchorElement)) return;
+        if (link.closest("[data-consent-dialog], [data-consent-settings]")) return;
+
+        const definition = businessLinkDefinition(link);
+        if (!definition) return;
+
+        const sectionId = sanitize(link.dataset.sectionId) || trackingSectionFor(link);
+        const occurrenceKey = `${definition.key}:${sectionId}`;
+        const occurrence = (occurrences.get(occurrenceKey) || 0) + 1;
+        occurrences.set(occurrenceKey, occurrence);
+
+        link.dataset.trackEvent = definition.event;
+        if (!link.dataset.ctaId) {
+          link.dataset.ctaId = `business_${definition.key}_${sectionId}_${occurrence}`;
+        }
+        if (!link.dataset.ctaType) link.dataset.ctaType = definition.ctaType;
+        if (!link.dataset.sectionId) link.dataset.sectionId = sectionId;
+        if (!link.dataset.contentTopic) link.dataset.contentTopic = definition.contentTopic;
+        if (!link.dataset.userIntent) link.dataset.userIntent = definition.userIntent;
+        if (!link.dataset.journeyStage) link.dataset.journeyStage = definition.journeyStage;
+        if (!link.dataset.position) link.dataset.position = `${sectionId}_${occurrence}`;
+      });
+    };
+
     const journeyStage = (value) => {
       const normalized = sanitize(value);
       const stageMap = {
@@ -144,7 +265,8 @@ import { trackingConfig } from "../config/tracking";
         ? "granted"
         : "denied";
       if (analyticsGranted) {
-        window[DATA_LAYER_NAME].push(eventPayload);
+        const { event, ...parameters } = eventPayload;
+        window.gtag?.("event", event, parameters);
       }
       if (marketingGranted) {
         window.artbildMetaPixel?.track?.(eventPayload);
@@ -154,9 +276,8 @@ import { trackingConfig } from "../config/tracking";
     const publishTrackingReady = () => {
       if (trackingReadyPublished || window.ArtbildConsent?.analytics !== true) return;
       trackingReadyPublished = true;
-      window[DATA_LAYER_NAME].push({
-        event: "artbild_tracking_ready",
-        consent_mode: "basic",
+      window.gtag?.("event", "artbild_tracking_ready", {
+        consent_mode: "advanced",
         tracking_schema: "artbild_v2",
       });
     };
@@ -320,6 +441,7 @@ import { trackingConfig } from "../config/tracking";
     });
 
     const init = () => {
+      prepareBusinessLinks();
       observeSections();
 
       const emitFormView = (form) => {

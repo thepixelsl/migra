@@ -1,4 +1,5 @@
 import { loadEnv } from "vite";
+import { productionTrackingDefaults } from "../src/config/trackingDefaults.mjs";
 
 const fileEnvironment = loadEnv("production", process.cwd(), "");
 const buildEnvironment = {
@@ -7,7 +8,7 @@ const buildEnvironment = {
 };
 
 const environment = String(
-  buildEnvironment.PUBLIC_TRACKING_ENV ?? "staging",
+  buildEnvironment.PUBLIC_TRACKING_ENV || productionTrackingDefaults.environment,
 ).toLowerCase();
 
 const allowedEnvironments = new Set([
@@ -18,13 +19,18 @@ const allowedEnvironments = new Set([
 ]);
 
 const values = {
-  gtm: String(buildEnvironment.PUBLIC_GTM_CONTAINER_ID ?? "").trim(),
-  ga4: String(buildEnvironment.PUBLIC_GA4_MEASUREMENT_ID ?? "").trim(),
-  meta: String(buildEnvironment.PUBLIC_META_PIXEL_ID ?? "").trim(),
-  clarity: String(buildEnvironment.PUBLIC_CLARITY_PROJECT_ID ?? "").trim(),
+  gtm: String(
+    buildEnvironment.PUBLIC_GTM_CONTAINER_ID
+      || (environment === "production" ? productionTrackingDefaults.gtmContainerId : ""),
+  ).trim(),
+  ga4: String(
+    buildEnvironment.PUBLIC_GA4_MEASUREMENT_ID
+      || (environment === "production" ? productionTrackingDefaults.googleAnalyticsId : ""),
+  ).trim(),
 };
 const configuredGa4DataRetentionMonths = String(
-  buildEnvironment.PUBLIC_GA4_DATA_RETENTION_MONTHS ?? "",
+  buildEnvironment.PUBLIC_GA4_DATA_RETENTION_MONTHS
+    || (environment === "production" ? productionTrackingDefaults.ga4DataRetentionMonths : ""),
 ).trim();
 const ga4DataRetentionMonths = configuredGa4DataRetentionMonths || "2";
 
@@ -43,35 +49,25 @@ if (!["2", "14"].includes(ga4DataRetentionMonths)) {
   fail("PUBLIC_GA4_DATA_RETENTION_MONTHS muss 2 oder 14 sein.");
 }
 
-if (environment === "production" && !configuredGa4DataRetentionMonths) {
-  fail("PUBLIC_GA4_DATA_RETENTION_MONTHS muss im Production-Modus ausdrücklich gesetzt sein.");
-}
-
 const configuredProviderCount = Object.values(values).filter(Boolean).length;
-if (configuredProviderCount > 0 && configuredProviderCount < 4) {
+if (configuredProviderCount === 1) {
   fail(
-    "GTM-Container, GA4-Measurement-ID, Meta-Pixel-ID und Clarity-Projekt-ID müssen gemeinsam gesetzt oder gemeinsam leer gelassen werden.",
+    "GTM-Container und GA4-Measurement-ID müssen gemeinsam gesetzt oder gemeinsam leer gelassen werden.",
   );
 }
 
-if (configuredProviderCount === 4) {
+if (configuredProviderCount === 2) {
   if (!/^GTM-[A-Z0-9]{4,}$/i.test(values.gtm)) {
     fail("PUBLIC_GTM_CONTAINER_ID hat nicht das erwartete Format GTM-…");
   }
   if (!/^G-[A-Z0-9]{6,}$/i.test(values.ga4)) {
     fail("PUBLIC_GA4_MEASUREMENT_ID hat nicht das erwartete Format G-…");
   }
-  if (!/^\d{5,20}$/.test(values.meta)) {
-    fail("PUBLIC_META_PIXEL_ID muss eine fünf- bis zwanzigstellige Zahl sein.");
-  }
-  if (!/^[a-z0-9]{5,32}$/i.test(values.clarity)) {
-    fail("PUBLIC_CLARITY_PROJECT_ID muss aus fünf bis 32 Buchstaben oder Zahlen bestehen.");
-  }
 }
 
 if (environment === "production") {
-  if (configuredProviderCount !== 4) {
-    fail("Im Production-Modus müssen alle vier Tracking-Kennungen gesetzt sein.");
+  if (configuredProviderCount !== 2) {
+    fail("Im Production-Modus müssen GTM-Container und GA4-Measurement-ID gesetzt sein.");
   }
 
   const placeholders = /TEST|DEMO|EXAMPLE|PLACEHOLDER|XXXX/i;
@@ -81,7 +77,7 @@ if (environment === "production") {
 
   const configuredHosts = String(
     buildEnvironment.PUBLIC_TRACKING_ALLOWED_HOSTS
-      ?? "artbild-fotografie.de,www.artbild-fotografie.de",
+      || productionTrackingDefaults.allowedHosts.join(","),
   )
     .split(",")
     .map((host) => host.trim().toLowerCase())
@@ -99,6 +95,6 @@ if (environment === "production") {
 
 console.log(
   `Tracking-Konfiguration: ${environment}, Anbieter ${
-    configuredProviderCount === 4 ? "konfiguriert" : "deaktiviert"
+    configuredProviderCount === 2 ? "konfiguriert" : "deaktiviert"
   }.`,
 );

@@ -129,10 +129,11 @@ gepflegt. Die vollstaendige Dokumentation steht unter
 
 ## Consent und Tracking
 
-Der Cookie-Banner, Google Consent Mode, Google Tag Manager, GA4 und das Meta
-Pixel werden über eine zentrale, hostgebundene Build-Konfiguration gesteuert.
-Ohne vollständige Kennungen werden keine Anbieter geladen. Production-Builds
-prüfen Kennungen und Domainfreigabe vor dem Build.
+Der Cookie-Banner, Google Consent Mode, Google Tag Manager, GA4 sowie die dort
+eingerichteten Meta- und Clarity-Tags werden über eine zentrale, hostgebundene
+Build-Konfiguration gesteuert. Production-Builds prüfen die Kennungen und die
+Domainfreigabe vor dem Build. Meta und Clarity erhalten zusätzlich eigene
+Consent-Sperren im GTM-Container.
 
 Einrichtung, Data-Layer-Vertrag und Live-Umschaltung:
 [`docs/tracking-consent.md`](docs/tracking-consent.md).
