@@ -42,58 +42,227 @@
     <section class="consent-dialog__details" data-consent-details hidden>
       <h3>Individuelle Auswahl</h3>
 
-      <div class="consent-service">
-        <div>
-          <strong>Technisch notwendig</strong>
-          <span>Immer aktiv</span>
-        </div>
-        <label class="consent-switch">
-          <span class="visually-hidden">Technisch notwendige Dienste</span>
-          <input type="checkbox" checked disabled>
-          <span aria-hidden="true"></span>
-        </label>
-        <p>
-          bunny.net für das Webhosting sowie der First-Party-Cookie
-          <code>artbild_consent</code> zur Speicherung Ihrer Auswahl für sechs
-          Monate.
-        </p>
+      <div class="consent-dialog__tabs" role="tablist" aria-label="Datenschutz-Details">
+        <button
+          id="consent-tab-groups"
+          type="button"
+          role="tab"
+          aria-selected="true"
+          aria-controls="consent-panel-groups"
+          tabindex="0"
+          data-consent-tab="groups"
+        >Service-Gruppen</button>
+        <button
+          id="consent-tab-services"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="consent-panel-services"
+          tabindex="-1"
+          data-consent-tab="services"
+        >Services</button>
+        <button
+          id="consent-tab-providers"
+          type="button"
+          role="tab"
+          aria-selected="false"
+          aria-controls="consent-panel-providers"
+          tabindex="-1"
+          data-consent-tab="providers"
+        >Provider</button>
       </div>
 
-      <div class="consent-service">
-        <div>
-          <strong>Statistik</strong>
-          <span>Google Analytics 4 und Microsoft Clarity</span>
+      <div
+        id="consent-panel-groups"
+        class="consent-dialog__panel"
+        role="tabpanel"
+        aria-labelledby="consent-tab-groups"
+        data-consent-panel="groups"
+      >
+        <div class="consent-service">
+          <div>
+            <strong>Essenziell</strong>
+            <span>Immer aktiv</span>
+          </div>
+          <label class="consent-switch">
+            <span class="visually-hidden">Essenzielle Services</span>
+            <input type="checkbox" checked disabled>
+            <span aria-hidden="true"></span>
+          </label>
+          <p>
+            Website-Bereitstellung durch bunny.net sowie der First-Party-Cookie
+            <code>artbild_consent</code> zur Speicherung Ihrer Auswahl für sechs
+            Monate. Diese Funktionen sind für den Betrieb und die Beachtung Ihrer
+            Entscheidung erforderlich.
+          </p>
         </div>
-        <label class="consent-switch">
-          <span class="visually-hidden">Google Analytics und Microsoft Clarity erlauben</span>
-          <input type="checkbox" data-consent-analytics>
-          <span aria-hidden="true"></span>
-        </label>
-        <p>
-          Nach Ihrer Einwilligung misst Google Analytics Seitenaufrufe und
-          ausgewählte Interaktionen. Microsoft Clarity erstellt dann
-          Nutzungsanalysen, Heatmaps und Sitzungswiedergaben. Mögliche Cookies:
-          <code>_ga</code>,
-          <code>_ga_*</code>, <code>_clck</code> und <code>_clsk</code>.
-        </p>
+
+        <div class="consent-service">
+          <div>
+            <strong>Statistik</strong>
+            <span>Google Analytics 4 und Microsoft Clarity, gesteuert über Google Tag Manager</span>
+          </div>
+          <label class="consent-switch">
+            <span class="visually-hidden">Statistik-Services erlauben</span>
+            <input type="checkbox" data-consent-analytics>
+            <span aria-hidden="true"></span>
+          </label>
+          <p>
+            Nach Ihrer Einwilligung misst Google Analytics Seitenaufrufe und
+            ausgewählte Interaktionen. Microsoft Clarity erstellt dann
+            Nutzungsanalysen, Heatmaps und Sitzungswiedergaben. Clarity wird
+            technisch über den Google Tag Manager ausgelöst, ist aber ein
+            eigenständiger Service des Providers Microsoft.
+          </p>
+        </div>
+
+        <div class="consent-service">
+          <div>
+            <strong>Marketing</strong>
+            <span>Meta Pixel</span>
+          </div>
+          <label class="consent-switch">
+            <span class="visually-hidden">Marketing-Services erlauben</span>
+            <input type="checkbox" data-consent-marketing>
+            <span aria-hidden="true"></span>
+          </label>
+          <p>
+            Das über den Google Tag Manager gesteuerte Meta Pixel misst Anfragen
+            und Kontaktaktionen und kann zur Bildung von Zielgruppen verwendet
+            werden.
+          </p>
+        </div>
       </div>
 
-      <div class="consent-service">
-        <div>
-          <strong>Marketing</strong>
-          <span>Meta Pixel</span>
-        </div>
-        <label class="consent-switch">
-          <span class="visually-hidden">Marketing-Dienste erlauben</span>
-          <input type="checkbox" data-consent-marketing>
-          <span aria-hidden="true"></span>
-        </label>
-        <p>
-          Das über den Google Tag Manager gesteuerte Meta Pixel misst Anfragen
-          und Kontaktaktionen und kann zur Bildung von Zielgruppen verwendet
-          werden. Mögliche Cookies:
-          <code>_fbp</code> und <code>_fbc</code>.
+      <div
+        id="consent-panel-services"
+        class="consent-dialog__panel"
+        role="tabpanel"
+        aria-labelledby="consent-tab-services"
+        data-consent-panel="services"
+        hidden
+      >
+        <p class="consent-dialog__panel-intro">
+          Optionale Services werden über die zugehörige Service-Gruppe
+          gesteuert. Der Google Tag Manager wird bereits vor Ihrer Auswahl mit
+          abgelehnten Einwilligungssignalen geladen; essenzielle Services sind
+          immer aktiv.
         </p>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Website-Bereitstellung</strong><small>Essenziell · bunny.net</small></span>
+            <span>Immer aktiv</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Auslieferung, Stabilität und Sicherheit der Website.</p>
+            <p><strong>Verarbeitete Daten:</strong> IP-Adresse, Anfrage-, Verbindungs- und Geräteangaben.</p>
+            <p><strong>Cookies:</strong> Keine Tracking-Cookies durch diesen Service.</p>
+          </div>
+        </details>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Datenschutz-Einstellungen</strong><small>Essenziell · Eigentümer dieser Website</small></span>
+            <span>Immer aktiv</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Speicherung und Beachtung Ihrer Einwilligungsentscheidung.</p>
+            <p><strong>Cookie:</strong> <code>artbild_consent</code> · First Party · 180 Tage.</p>
+          </div>
+        </details>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Google Tag Manager</strong><small>Statistik · Google</small></span>
+            <span>Erweiterter Modus</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Steuerung von Google Analytics 4, Microsoft Clarity und Meta Pixel.</p>
+            <p><strong>Vor Ihrer Auswahl:</strong> Der Tag Manager wird im erweiterten Einwilligungsmodus mit standardmäßig abgelehnten Signalen geladen. Dabei können reduzierte, cookielose Messsignale an Google übermittelt werden.</p>
+            <p><strong>Host:</strong> <code>www.googletagmanager.com</code>.</p>
+          </div>
+        </details>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Google Analytics 4</strong><small>Statistik · Google</small></span>
+            <span>Über Statistik</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Reichweitenmessung und Auswertung ausgewählter Interaktionen.</p>
+            <p><strong>Cookies nach Einwilligung:</strong> <code>_ga</code> und <code>_ga_*</code> · First Party · bis zu 2 Jahre.</p>
+            <p><strong>Hosts:</strong> <code>www.google-analytics.com</code> und <code>www.googletagmanager.com</code>.</p>
+          </div>
+        </details>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Microsoft Clarity</strong><small>Statistik · Microsoft · über Google Tag Manager</small></span>
+            <span>Über Statistik</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Heatmaps, technische Sitzungswiedergaben und Analyse der Bedienbarkeit.</p>
+            <p><strong>Cookies nach Einwilligung:</strong> unter anderem <code>_clck</code> · 1 Jahr, <code>_clsk</code> · 1 Tag sowie Cookies auf Domains von Microsoft.</p>
+            <p><strong>Hosts:</strong> <code>www.clarity.ms</code>, <code>*.clarity.ms</code> und <code>c.bing.com</code>.</p>
+          </div>
+        </details>
+
+        <details class="consent-record">
+          <summary>
+            <span><strong>Meta Pixel</strong><small>Marketing · Meta · über Google Tag Manager</small></span>
+            <span>Über Marketing</span>
+          </summary>
+          <div>
+            <p><strong>Zweck:</strong> Messung von Kontaktaktionen, Zielgruppenbildung und Remarketing.</p>
+            <p><strong>Cookies nach Einwilligung:</strong> <code>_fbp</code> und <code>_fbc</code> · bis zu 90 Tage.</p>
+            <p><strong>Host:</strong> <code>connect.facebook.net</code>.</p>
+          </div>
+        </details>
+      </div>
+
+      <div
+        id="consent-panel-providers"
+        class="consent-dialog__panel"
+        role="tabpanel"
+        aria-labelledby="consent-tab-providers"
+        data-consent-panel="providers"
+        hidden
+      >
+        <article class="consent-provider">
+          <h4>BunnyWay d.o.o.</h4>
+          <p>Dunajska cesta 165, 1000 Ljubljana, Slowenien</p>
+          <p><strong>Service:</strong> Website-Bereitstellung</p>
+          <a href="https://bunny.net/privacy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von bunny.net</a>
+        </article>
+
+        <article class="consent-provider">
+          <h4>Eigentümer dieser Website</h4>
+          <p>Artbild-Fotografie, York Augustin, Rahlstedter Bahnhofstraße 27, 22143 Hamburg</p>
+          <p><strong>Service:</strong> Datenschutz-Einstellungen</p>
+          <a href="/datenschutz/">Datenschutzerklärung</a>
+        </article>
+
+        <article class="consent-provider">
+          <h4>Google Ireland Limited</h4>
+          <p>Gordon House, Barrow Street, Dublin 4, Irland</p>
+          <p><strong>Services:</strong> Google Tag Manager und Google Analytics 4</p>
+          <a href="https://policies.google.com/privacy?hl=de" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von Google</a>
+        </article>
+
+        <article class="consent-provider">
+          <h4>Microsoft Ireland Operations Limited</h4>
+          <p>One Microsoft Place, South County Business Park, Leopardstown, Dublin 18, Irland</p>
+          <p><strong>Service:</strong> Microsoft Clarity, technisch über Google Tag Manager ausgelöst</p>
+          <a href="https://www.microsoft.com/de-de/privacy/privacystatement" rel="noopener noreferrer" target="_blank">Datenschutzerklärung von Microsoft</a>
+        </article>
+
+        <article class="consent-provider">
+          <h4>Meta Platforms Ireland Limited</h4>
+          <p>Merrion Road, Dublin 4, D04 X2K5, Irland</p>
+          <p><strong>Service:</strong> Meta Pixel, technisch über Google Tag Manager ausgelöst</p>
+          <a href="https://www.facebook.com/privacy/policy/" rel="noopener noreferrer" target="_blank">Datenschutzrichtlinie von Meta</a>
+        </article>
       </div>
 
       <div class="consent-dialog__save-actions">
@@ -140,6 +309,8 @@
     const closeButton = dialog.querySelector("[data-consent-close]");
     const customizeButton = dialog.querySelector("[data-consent-customize]");
     const saveButton = dialog.querySelector("[data-consent-save]");
+    const tabs = [...dialog.querySelectorAll("[data-consent-tab]")];
+    const panels = [...dialog.querySelectorAll("[data-consent-panel]")];
     let openedForExistingDecision = false;
 
     const api = () => window.artbildConsentApi;
@@ -158,10 +329,41 @@
       if (!(details instanceof HTMLElement) || !(quickActions instanceof HTMLElement)) return;
       details.hidden = !visible;
       quickActions.hidden = visible;
-      if (visible && analyticsInput instanceof HTMLInputElement) {
-        analyticsInput.focus();
+      if (visible && tabs[0] instanceof HTMLButtonElement) {
+        tabs[0].focus();
       }
     };
+
+    const activateTab = (nextTab, moveFocus = true) => {
+      if (!(nextTab instanceof HTMLButtonElement)) return;
+      const tabId = nextTab.dataset.consentTab;
+      tabs.forEach((tab) => {
+        if (!(tab instanceof HTMLButtonElement)) return;
+        const active = tab === nextTab;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        if (!(panel instanceof HTMLElement)) return;
+        panel.hidden = panel.dataset.consentPanel !== tabId;
+      });
+      if (moveFocus) nextTab.focus();
+    };
+
+    tabs.forEach((tab, index) => {
+      if (!(tab instanceof HTMLButtonElement)) return;
+      tab.addEventListener("click", () => activateTab(tab, false));
+      tab.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+        event.preventDefault();
+        let nextIndex = index;
+        if (event.key === "ArrowRight") nextIndex = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "Home") nextIndex = 0;
+        if (event.key === "End") nextIndex = tabs.length - 1;
+        activateTab(tabs[nextIndex]);
+      });
+    });
 
     const openDialog = (existingDecision) => {
       if (window.ArtbildConsent?.enabled === false) return;
@@ -251,6 +453,10 @@
 </script>
 
 <style>
+  .consent-dialog [hidden] {
+    display: none;
+  }
+
   .consent-dialog {
     width: min(760px, calc(100% - 32px));
     max-height: min(92vh, 860px);
@@ -371,6 +577,37 @@
     border-top: 1px solid rgba(41, 38, 34, .15);
   }
 
+  .consent-dialog__tabs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .consent-dialog__tabs button {
+    min-height: 42px;
+    padding: 8px;
+    border-color: rgba(41, 38, 34, .28);
+  }
+
+  .consent-dialog__tabs button[aria-selected="true"] {
+    border-color: #292622;
+    background: #292622;
+    color: #fff;
+  }
+
+  .consent-dialog__panel {
+    min-width: 0;
+  }
+
+  .consent-dialog__panel-intro {
+    margin: 0 0 12px;
+    color: #615a52;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
   .consent-service {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -414,6 +651,92 @@
 
   .consent-service code {
     font-size: 11px;
+  }
+
+  .consent-record,
+  .consent-provider {
+    border-top: 1px solid rgba(41, 38, 34, .12);
+    font-family: "Raleway", Arial, sans-serif;
+  }
+
+  .consent-record summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 18px;
+    align-items: center;
+    padding: 16px 0;
+    cursor: pointer;
+  }
+
+  .consent-record summary::marker {
+    content: "";
+  }
+
+  .consent-record summary > span:first-child {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .consent-record summary strong,
+  .consent-provider h4 {
+    font-size: 14px;
+  }
+
+  .consent-record summary small,
+  .consent-record summary > span:last-child {
+    color: #7a7168;
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .consent-record summary > span:last-child {
+    white-space: nowrap;
+  }
+
+  .consent-record summary:focus-visible {
+    outline: 3px solid #c09a70;
+    outline-offset: 3px;
+  }
+
+  .consent-record > div {
+    padding: 0 0 16px;
+  }
+
+  .consent-record p,
+  .consent-provider p {
+    margin: 6px 0 0;
+    color: #615a52;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .consent-record code {
+    overflow-wrap: anywhere;
+  }
+
+  .consent-provider {
+    padding: 16px 0;
+  }
+
+  .consent-provider:first-child {
+    border-top: 0;
+  }
+
+  .consent-provider h4 {
+    margin: 0;
+    color: #211f1c;
+  }
+
+  .consent-provider a {
+    display: inline-block;
+    margin-top: 8px;
+    color: #5f574f;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 
   .consent-switch {
@@ -543,6 +866,23 @@
     .consent-dialog__quick-actions,
     .consent-dialog__save-actions {
       grid-template-columns: 1fr;
+    }
+
+    .consent-dialog__tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .consent-dialog__tabs button {
+      min-height: 40px;
+    }
+
+    .consent-record summary {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 5px;
+    }
+
+    .consent-record summary > span:last-child {
+      white-space: normal;
     }
 
     .consent-dialog__quick-actions button,

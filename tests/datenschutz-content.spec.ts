@@ -30,8 +30,6 @@ const removedInfrastructureTerms = [
   "sessionStorage",
   "URL-Parameter",
   "öffentlich erreichbaren Endpunkt",
-  "analytics_storage",
-  "ad_storage",
   "Data Layer",
   "Containerkonfiguration",
   "Pixel-ID",
@@ -60,7 +58,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 17. August 2026");
+  expect(mainText).toContain("Stand: 26. August 2026");
   expect(mainText).toContain("Webhosting bei bunny.net");
   expect(mainText).toContain("BunnyWay d.o.o.");
   expect(mainText).toContain("Dunajska cesta 165");
@@ -92,9 +90,10 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
-  expect(mainText).toContain("Weder vor Ihrer Entscheidung noch nach einer Ablehnung");
-  expect(mainText).toContain("Einwilligung in die Kategorie „Statistik“");
+  expect(mainText).toContain("Microsoft Clarity und das Meta Pixel werden erst nach Ihrer Einwilligung");
+  expect(mainText).toContain("Einwilligung in „Statistik“");
   expect(mainText).toContain("Einwilligung in „Marketing“");
+  expect(mainText).toContain("Service-Gruppen, Services und Provider");
   expect(mainText).toContain("Google Ireland Limited");
   expect(mainText).toContain("HTTP-Protokolldaten innerhalb von 14 Tagen");
   expect(mainText).toMatch(
@@ -176,22 +175,20 @@ test("both privacy URLs render no obsolete CMS or plugin declaration", async ({
   );
 });
 
-test("does not show a consent dialog when no tracking provider is configured", async ({
+test("provides consent settings for the configured production providers", async ({
   page,
 }) => {
   await page.goto(`${baseUrl}/datenschutz/`, { waitUntil: "domcontentloaded" });
 
-  await expect(page.locator("[data-consent-dialog]")).toHaveCount(0);
-  await expect(page.locator("[data-consent-settings]")).toHaveCount(0);
-  expect(await page.content()).not.toContain("artbild_tracking_ready");
-  expect(await page.content()).not.toContain("artbild_requested_date");
+  await expect(page.locator("[data-consent-dialog]")).toHaveCount(1);
+  await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+  await expect(page.locator("[data-consent-settings]")).toBeVisible();
 
   const trackingConfig = await page.locator("#artbild-tracking-config").textContent();
   expect(JSON.parse(trackingConfig ?? "{}")).toMatchObject({
-    consentEnabled: false,
-    gtmContainerId: "",
-    googleAnalyticsId: "",
-    metaPixelId: "",
+    consentEnabled: true,
+    gtmContainerId: "GTM-5TM37JC",
+    googleAnalyticsId: "G-TSWGFD1YKF",
   });
 });
 

@@ -61,7 +61,7 @@ test("updates Google consent independently for statistics and marketing", async 
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Marketing-Dienste erlauben").check({ force: true });
+  await page.getByLabel("Marketing-Services erlauben").check({ force: true });
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(true);
@@ -94,7 +94,7 @@ test("does not queue behavioral events before statistics consent", async ({ page
   expect(beforeConsent).not.toContain("artbild_tracking_ready");
 
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Google Analytics und Microsoft Clarity erlauben").check({ force: true });
+  await page.getByLabel("Statistik-Services erlauben").check({ force: true });
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   await expect.poll(async () => page.evaluate(() =>
@@ -162,4 +162,31 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     await expect(page.getByRole("button", { name: "Nur notwendige", exact: true }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Individuell auswählen" })).toBeVisible();
   }
+});
+
+test("shows service groups, services and providers without Cloudflare", async ({ page }) => {
+  await captureProviderRequests(page);
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Individuell auswählen" }).click();
+
+  await expect(page.getByRole("tab", { name: "Service-Gruppen" })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
+  await expect(page.getByRole("tabpanel", { name: "Service-Gruppen" })).toContainText(
+    "Microsoft Clarity",
+  );
+
+  await page.getByRole("tab", { name: "Services" }).click();
+  const servicesPanel = page.getByRole("tabpanel", { name: "Services" });
+  await expect(servicesPanel).toContainText("Google Tag Manager");
+  await expect(servicesPanel).toContainText("Microsoft Clarity");
+  await expect(servicesPanel).toContainText("über Google Tag Manager");
+
+  await page.getByRole("tab", { name: "Provider" }).click();
+  const providersPanel = page.getByRole("tabpanel", { name: "Provider" });
+  await expect(providersPanel).toContainText("BunnyWay d.o.o.");
+  await expect(providersPanel).toContainText("Google Ireland Limited");
+  await expect(providersPanel).toContainText("Microsoft Ireland Operations Limited");
+  await expect(providersPanel).not.toContainText("Cloudflare");
 });

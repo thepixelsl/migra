@@ -4,5 +4,5 @@ export const productionTrackingDefaults = Object.freeze({
   gtmContainerId: "GTM-5TM37JC",
   googleAnalyticsId: "G-TSWGFD1YKF",
   ga4DataRetentionMonths: "14",
-  consentVersion: "2026-08-25.1",
+  consentVersion: "2026-08-26.1",
 });

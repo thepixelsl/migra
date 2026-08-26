@@ -11,7 +11,7 @@ const numberedSection = (id: string, title: string, body: string) => {
 const consentSection = numberedSection(
   "cookies-und-einwilligungen",
   "Cookies und Einwilligungen",
-  `<p>Für technisch nicht erforderliche Statistik- und Marketingdienste holen wir vor dem Laden des jeweiligen Dienstes Ihre Einwilligung ein. Statistik und Marketing können getrennt gewählt werden. Eine Ablehnung hat keinen Einfluss auf die grundlegende Nutzung dieser Website.</p>
+  `<p>Für technisch nicht erforderliche Statistik- und Marketingdienste holen wir vor dem Laden des jeweiligen Dienstes Ihre Einwilligung ein. Statistik und Marketing können getrennt gewählt werden. Im Banner können Sie die eingesetzten Service-Gruppen, Services und Provider mit ihren jeweiligen Angaben einsehen. Eine Ablehnung hat keinen Einfluss auf die grundlegende Nutzung dieser Website.</p>
 <p>Eine von Ihnen getroffene Auswahl wird im Cookie <code>artbild_consent</code> gespeichert, das ausschließlich von dieser Website gesetzt wird. Das Cookie enthält die gewählten Kategorien, eine Versionsangabe und den Zeitpunkt Ihrer Entscheidung. Es enthält weder Kontaktdaten noch Inhalte aus Formularen und hat eine maximale Laufzeit von 180 Tagen.</p>
 <p>Die Speicherung dieser Auswahl ist erforderlich, um Ihre Entscheidung zu beachten und nachweisen zu können. Sie beruht auf Art. 6 Abs. 1 lit. c DSGVO in Verbindung mit Art. 7 Abs. 1 DSGVO sowie § 25 Abs. 2 Nr. 2 TDDDG. Über „Datenschutz-Einstellungen“ können Sie Ihre Auswahl jederzeit ändern. Ein Widerruf wirkt für die Zukunft.</p>
 <p>Microsoft Clarity und das Meta Pixel werden erst nach Ihrer Einwilligung in die jeweils genannte Kategorie geladen. Für Google Tag Manager und Google Analytics 4 verwenden wir den erweiterten Einwilligungsmodus. Dabei werden die Google-Tags bereits mit standardmäßig abgelehnten Einwilligungssignalen geladen; Einzelheiten finden Sie in den folgenden Abschnitten.</p>`,
@@ -96,7 +96,7 @@ const complaintSection = numberedSection(
 );
 
 const privacyContent = `
-<p><strong>Stand: 25. August 2026</strong></p>
+<p><strong>Stand: 26. August 2026</strong></p>
 <p>Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten beim Besuch dieser Website und bei der Kontaktaufnahme verarbeitet werden.</p>
 
 <h2 id="verantwortlicher">1. Verantwortlicher</h2>
