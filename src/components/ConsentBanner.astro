@@ -30,6 +30,15 @@
         deaktivieren, werden deshalb auch alle darüber gesteuerten Services
         deaktiviert.
       </p>
+      <p>
+        Mit Ihrer Einwilligung können Nutzungs- und Gerätedaten an Google,
+        Microsoft und Meta übermittelt und auch in den USA verarbeitet werden.
+        Sie können Ihre Auswahl jederzeit über
+        <strong>Datenschutz-Einstellungen</strong> ändern oder für die Zukunft
+        widerrufen. Details zu Cookies, Laufzeiten und Empfängern finden Sie
+        unter „Individuell auswählen“ und in der
+        <a href="/datenschutz/">Datenschutzerklärung</a>.
+      </p>
     </div>
 
     <div class="consent-dialog__quick-actions" data-consent-quick-actions>
@@ -217,8 +226,19 @@
           </summary>
           <div>
             <p><strong>Zweck:</strong> Heatmaps, technische Sitzungswiedergaben und Analyse der Bedienbarkeit.</p>
-            <p><strong>Cookies nach Einwilligung:</strong> unter anderem <code>_clck</code> · 1 Jahr, <code>_clsk</code> · 1 Tag sowie Cookies auf Domains von Microsoft.</p>
+            <p><strong>Cookies nach Einwilligung:</strong> Microsoft führt für Clarity folgende mögliche Cookies auf. Welche Third-Party-Cookies technisch gespeichert werden können, hängt auch von den Browser- und Cookie-Einstellungen ab.</p>
+            <ul class="consent-cookie-list">
+              <li><code>_clck</code> · First Party · bis zu 1 Jahr · speichert eine pseudonyme Clarity-Nutzer-ID und Einstellungen für diese Website.</li>
+              <li><code>_clsk</code> · First Party · bis zu 1 Tag · verbindet mehrere Seitenaufrufe zu einer Clarity-Sitzung.</li>
+              <li><code>CLID</code> · Third Party · kennzeichnet, wann Clarity einen Browser erstmals auf einer Website mit Clarity gesehen hat.</li>
+              <li><code>ANONCHK</code> · Third Party · kennzeichnet, ob die Microsoft-Nutzer-ID MUID an das Werbe-Cookie ANID übertragen wird; Clarity setzt den Wert laut Microsoft stets auf 0 und verwendet ANID nicht.</li>
+              <li><code>MR</code> · Third Party · steuert, ob die Microsoft-Nutzer-ID MUID aktualisiert werden soll.</li>
+              <li><code>MUID</code> · Third Party · erkennt einen Browser pseudonym auf Microsoft-Domains wieder.</li>
+              <li><code>SM</code> · Third Party · synchronisiert die MUID über Microsoft-Domains.</li>
+            </ul>
+            <p><strong>Laufzeit der Third-Party-Cookies:</strong> Microsoft nennt in der aktuellen Clarity-Cookie-Liste keine festen Laufzeiten; sie werden durch Microsoft sowie die Browser- und Cookie-Einstellungen bestimmt.</p>
             <p><strong>Hosts:</strong> <code>www.clarity.ms</code>, <code>*.clarity.ms</code> und <code>c.bing.com</code>.</p>
+            <p><strong>Quelle:</strong> <a href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies" rel="noopener noreferrer" target="_blank">Cookie-Liste von Microsoft Clarity</a>.</p>
           </div>
         </details>
 
@@ -830,6 +850,18 @@
     color: #615a52;
     font-size: 12px;
     line-height: 1.65;
+  }
+
+  .consent-cookie-list {
+    margin: 8px 0 0;
+    padding-left: 18px;
+    color: #615a52;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .consent-cookie-list li + li {
+    margin-top: 6px;
   }
 
   .consent-record code {

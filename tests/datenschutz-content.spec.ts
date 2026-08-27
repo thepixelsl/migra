@@ -120,6 +120,10 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Informations- und Betroffenenrechte ist Meta verantwortlich");
   expect(mainText).toContain("höchstens zwei Jahren");
   expect(mainText).toContain("Microsoft Ireland Operations Limited");
+  for (const cookieName of ["_clck", "_clsk", "CLID", "ANONCHK", "MR", "MUID", "SM"]) {
+    expect(mainText).toContain(cookieName);
+  }
+  expect(mainText).toContain("Microsoft nennt in der aktuellen Clarity-Cookie-Liste für diese Third-Party-Cookies keine festen Laufzeiten");
   expect(mainText).toContain("Wiedergabedaten werden 30 Tage gespeichert");
   expect(mainText).toContain("Kontakt-, Anfrage- und Terminformulare");
   expect(mainText).toContain("Microsoft Advertising (ehemals Bing Ads)");

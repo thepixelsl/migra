@@ -88,6 +88,16 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => {
+    const testWindow = window as typeof window & {
+      __clarityConsentCalls?: unknown[][];
+      clarity?: (...args: unknown[]) => void;
+    };
+    testWindow.__clarityConsentCalls = [];
+    testWindow.clarity = (...args: unknown[]) => {
+      testWindow.__clarityConsentCalls?.push(args);
+    };
+  });
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
   await page.getByRole("tab", { name: "Services" }).click();
   await page.getByLabel("Microsoft Clarity erlauben").check();
@@ -137,6 +147,18 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
     consent_google_analytics: "denied",
     consent_microsoft_clarity: "granted",
     consent_meta_pixel: "denied",
+  });
+  await expect.poll(() => page.evaluate(() => {
+    const testWindow = window as typeof window & { __clarityConsentCalls?: unknown[][] };
+    return testWindow.__clarityConsentCalls?.some((entry) =>
+      entry[0] === "consentv2"
+      && (entry[1] as { ad_Storage?: string })?.ad_Storage === "denied"
+      && (entry[1] as { analytics_Storage?: string })?.analytics_Storage === "granted"
+    ) ?? false;
+  })).toBe(true);
+  await page.evaluate(() => {
+    const testWindow = window as typeof window & { clarity?: (...args: unknown[]) => void };
+    delete testWindow.clarity;
   });
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
 
@@ -314,6 +336,9 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
 test("shows service groups, services and providers without Cloudflare", async ({ page }) => {
   await captureProviderRequests(page);
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  const intro = page.locator(".consent-dialog__intro");
+  await expect(intro).toContainText("auch in den USA verarbeitet werden");
+  await expect(intro).toContainText("für die Zukunft widerrufen");
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
 
   await expect(page.getByRole("tab", { name: "Service-Gruppen" })).toHaveAttribute(
@@ -333,6 +358,14 @@ test("shows service groups, services and providers without Cloudflare", async ({
   await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
+  const clarityRecord = servicesPanel.locator("details").filter({
+    has: page.getByLabel("Microsoft Clarity erlauben"),
+  });
+  await clarityRecord.locator("summary").click();
+  for (const cookieName of ["_clck", "_clsk", "CLID", "ANONCHK", "MR", "MUID", "SM"]) {
+    await expect(clarityRecord).toContainText(cookieName);
+  }
+  await expect(clarityRecord).toContainText("Microsoft nennt in der aktuellen Clarity-Cookie-Liste keine festen Laufzeiten");
   await expect(servicesPanel).not.toContainText("Turnstile");
   await expect(servicesPanel).not.toContainText("Pinterest");
   await expect(servicesPanel).not.toContainText("Google Fonts");
