@@ -143,7 +143,7 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
   await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
   await page.getByRole("tab", { name: "Services" }).click();
   await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
-  await expect(page.getByLabel("Google Analytics 4 erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Google Analytics erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
 
@@ -169,12 +169,12 @@ test("turning off GTM disables every dependent service and reloads without GTM",
   await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
   await page.getByRole("tab", { name: "Services" }).click();
   await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
-  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeChecked();
+  await expect(page.getByLabel("Google Analytics erlauben")).toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeChecked();
 
   await page.getByLabel("Google Tag Manager erlauben").uncheck();
-  await expect(page.getByLabel("Google Analytics 4 erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Google Analytics erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Statistik-Services erlauben")).not.toBeChecked();
@@ -221,7 +221,7 @@ test("does not queue behavioral events before statistics consent", async ({ page
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
   await page.getByLabel("Statistik-Services erlauben").check();
   await page.getByRole("tab", { name: "Services" }).click();
-  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeChecked();
+  await expect(page.getByLabel("Google Analytics erlauben")).toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
@@ -304,7 +304,7 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     expect(serviceGeometry.panelOverflow).toBeLessThanOrEqual(0);
     expect(serviceGeometry.documentOverflow).toBeLessThanOrEqual(0);
     expect(serviceGeometry.widestRightEdge).toBeLessThanOrEqual(viewport.width + 1);
-    await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
+    await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
     await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
     await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
     await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
@@ -330,7 +330,7 @@ test("shows service groups, services and providers without Cloudflare", async ({
   await expect(servicesPanel).toContainText("Microsoft Clarity");
   await expect(servicesPanel).toContainText("über Google Tag Manager");
   await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
-  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
+  await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   await expect(servicesPanel).not.toContainText("Turnstile");

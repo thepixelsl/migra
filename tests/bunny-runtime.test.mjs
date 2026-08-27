@@ -73,6 +73,9 @@ before(async () => {
       ADMIN_EMAIL: "info@example.com",
       ADMIN_PASSWORD: "dev-secret",
       ADMIN_USERNAME: "york",
+      AGENT_API_CLIENTS_JSON: JSON.stringify({
+        "OpenAI Terminassistent": "verified-agent-test-token-1234567890",
+      }),
       AGENT_RATE_LIMIT_SALT: "agent-test-only-random-salt-with-32-characters",
       BUNNY_DATABASE_URL: `file:${path.join(temporaryDirectory, "runtime.db")}`,
       CONTACT_FROM: "mail@example.com",
@@ -160,6 +163,14 @@ test("protects the admin page and availability API with dev credentials", async 
   const blockedDates = await fetch(`${baseUrl}/api/admin/availability`, { headers });
   assert.equal(blockedDates.status, 200);
   assert.deepEqual(await blockedDates.json(), { blockedDates: [] });
+
+  const deniedAgentRequests = await fetch(`${baseUrl}/api/admin/agent-requests`);
+  assert.equal(deniedAgentRequests.status, 401);
+  assert.match(deniedAgentRequests.headers.get("www-authenticate") || "", /Basic/);
+
+  const agentRequests = await fetch(`${baseUrl}/api/admin/agent-requests`, { headers });
+  assert.equal(agentRequests.status, 200);
+  assert.deepEqual(await agentRequests.json(), { retentionDays: 30, requests: [] });
 });
 
 test("blocks a date through admin and exposes it through the public API", async () => {
@@ -229,6 +240,9 @@ test("documents the agent availability API for machine clients", async () => {
   );
   assert.equal(documentation.rateLimit.maximumSuccessfulRequests, 2);
   assert.equal(documentation.rateLimit.windowHours, 24);
+  assert.equal(documentation.clientIdentification.unauthenticatedRequestsAllowed, true);
+  assert.equal(documentation.clientIdentification.userAgentClassificationIsVerified, false);
+  assert.match(documentation.clientIdentification.authentication, /Bearer-Schlüssel/);
   assert.equal(documentation.response.availabilityIsNonBinding, true);
   assert.equal(documentation.response.createsReservation, false);
   assert.equal(documentation.response.personalConfirmationRequired, true);
@@ -274,6 +288,7 @@ test("checks up to three agent dates without exposing the blocked-date list", as
 
   const headers = {
     "Content-Type": "application/json",
+    "User-Agent": "ChatGPT-User/1.0",
     "X-Real-IP": "198.51.100.10",
   };
   const first = await fetch(`${baseUrl}/api/agent-availability`, {
@@ -336,6 +351,78 @@ test("checks up to three agent dates without exposing the blocked-date list", as
   assert.deepEqual(
     columns.rows.map((row) => String(row.name)),
     ["id", "ip_hash", "requested_at"],
+  );
+});
+
+test("shows exact agent requests in the protected audit without raw identifiers", async () => {
+  const verifiedDate = AGENT_TEST_DATES.first;
+  const verified = await fetch(`${baseUrl}/api/agent-availability`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer verified-agent-test-token-1234567890",
+      "Content-Type": "application/json",
+      "User-Agent": "PrivateAgent/9.7 secret-build",
+      "X-Real-IP": "198.51.100.44",
+    },
+    body: JSON.stringify({ dates: [verifiedDate] }),
+  });
+  assert.equal(verified.status, 200);
+
+  const response = await fetch(`${baseUrl}/api/admin/agent-requests`, {
+    headers: { Authorization: basicAuth() },
+  });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  const text = await response.text();
+  assert.doesNotMatch(text, /198\.51\.100\.44/);
+  assert.doesNotMatch(text, /PrivateAgent\/9\.7/);
+  assert.doesNotMatch(text, /verified-agent-test-token/);
+
+  const payload = JSON.parse(text);
+  assert.equal(payload.retentionDays, 30);
+  const verifiedEntry = payload.requests.find(
+    (entry) => entry.clientLabel === "OpenAI Terminassistent",
+  );
+  assert.ok(verifiedEntry);
+  assert.equal(verifiedEntry.identitySource, "api_key");
+  assert.equal(verifiedEntry.clientVerified, true);
+  assert.deepEqual(verifiedEntry.dates, [verifiedDate]);
+  assert.deepEqual(verifiedEntry.results, [{ date: verifiedDate, available: true }]);
+  assert.equal(verifiedEntry.responseStatus, 200);
+  assert.ok(Number.isFinite(Date.parse(verifiedEntry.requestedAt)));
+
+  const reportedEntry = payload.requests.find(
+    (entry) => entry.clientLabel === "OpenAI" && entry.dates.length === 3,
+  );
+  assert.ok(reportedEntry);
+  assert.equal(reportedEntry.identitySource, "user_agent");
+  assert.equal(reportedEntry.clientVerified, false);
+  assert.deepEqual(reportedEntry.dates, [
+    AGENT_TEST_DATES.blocked,
+    AGENT_TEST_DATES.availableOne,
+    AGENT_TEST_DATES.availableTwo,
+  ]);
+
+  const rateLimitedEntry = payload.requests.find(
+    (entry) => entry.clientLabel === "OpenAI" && entry.responseStatus === 429,
+  );
+  assert.ok(rateLimitedEntry);
+  assert.deepEqual(rateLimitedEntry.dates, [AGENT_TEST_DATES.availableTwo]);
+  assert.deepEqual(rateLimitedEntry.results, []);
+
+  const columns = await runtime.database.client.execute("PRAGMA table_info(agent_availability_audit)");
+  assert.deepEqual(
+    columns.rows.map((row) => String(row.name)),
+    [
+      "id",
+      "requested_at",
+      "client_label",
+      "identity_source",
+      "client_verified",
+      "dates_json",
+      "results_json",
+      "response_status",
+    ],
   );
 });
 
@@ -500,6 +587,43 @@ test("fails closed without a trusted client IP and removes expired rate-limit ro
     args: ["expired-agent-request", "current-agent-request"],
   });
   assert.deepEqual(rows.rows.map((row) => String(row.id)), ["current-agent-request"]);
+});
+
+test("removes agent audit entries after 30 days", async () => {
+  const now = Date.now();
+  await runtime.database.client.execute({
+    sql: `INSERT INTO agent_availability_audit (
+      id, requested_at, client_label, identity_source, client_verified,
+      dates_json, results_json, response_status
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?), (?, ?, ?, ?, ?, ?, ?, ?)`,
+    args: [
+      "expired-agent-audit",
+      now - (30 * 24 * 60 * 60 * 1000) - 1,
+      "Expired",
+      "unknown",
+      0,
+      "[]",
+      "[]",
+      503,
+      "current-agent-audit",
+      now,
+      "Current",
+      "unknown",
+      0,
+      "[]",
+      "[]",
+      503,
+    ],
+  });
+
+  await runtime.database.cleanupAgentAvailabilityAudit(now);
+  const rows = await runtime.database.client.execute({
+    sql: `SELECT id FROM agent_availability_audit
+      WHERE id IN (?, ?)
+      ORDER BY id`,
+    args: ["expired-agent-audit", "current-agent-audit"],
+  });
+  assert.deepEqual(rows.rows.map((row) => String(row.id)), ["current-agent-audit"]);
 });
 
 test("uses one EU Durable Object per HMAC identity when Bunny D1 is absent", async () => {

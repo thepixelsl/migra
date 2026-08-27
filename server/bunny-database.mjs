@@ -42,10 +42,23 @@ const SCHEMA_STATEMENTS = [
     ON agent_availability_requests (ip_hash, requested_at)`,
   `CREATE INDEX IF NOT EXISTS idx_agent_availability_requests_time
     ON agent_availability_requests (requested_at)`,
+  `CREATE TABLE IF NOT EXISTS agent_availability_audit (
+    id TEXT PRIMARY KEY,
+    requested_at INTEGER NOT NULL,
+    client_label TEXT NOT NULL,
+    identity_source TEXT NOT NULL,
+    client_verified INTEGER NOT NULL DEFAULT 0,
+    dates_json TEXT NOT NULL,
+    results_json TEXT NOT NULL,
+    response_status INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_agent_availability_audit_time
+    ON agent_availability_audit (requested_at)`,
 ];
 
 const CONTACT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const AGENT_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
+const AGENT_AUDIT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
 async function pruneContactRequests(client) {
   await client.execute(`
@@ -70,9 +83,18 @@ async function pruneAgentAvailabilityRequests(client, now = Date.now()) {
   });
 }
 
+async function pruneAgentAvailabilityAudit(client, now = Date.now()) {
+  await client.execute({
+    sql: `DELETE FROM agent_availability_audit
+      WHERE requested_at <= ?`,
+    args: [now - AGENT_AUDIT_RETENTION_MS],
+  });
+}
+
 async function pruneStoredData(client) {
   await pruneContactRequests(client);
   await pruneAgentAvailabilityRequests(client);
+  await pruneAgentAvailabilityAudit(client);
 }
 
 function requiredText(value) {
@@ -128,6 +150,9 @@ export async function createBunnyDatabase(env = process.env) {
     async cleanupAgentAvailabilityRequests(now) {
       await pruneAgentAvailabilityRequests(client, now);
     },
+    async cleanupAgentAvailabilityAudit(now) {
+      await pruneAgentAvailabilityAudit(client, now);
+    },
     close() {
       clearInterval(cleanupTimer);
       client.close?.();
@@ -153,6 +178,10 @@ export function createD1Adapter(client) {
         },
         async run() {
           return client.execute({ sql, args });
+        },
+        async all() {
+          const result = await client.execute({ sql, args });
+          return { results: result.rows };
         },
       };
 

@@ -49,7 +49,8 @@ export function GET() {
           operationId: "checkAgentAvailability",
           summary: "Ein bis drei Wunschdaten unverbindlich prüfen",
           description:
-            `Zulässig sind ausschließlich konkrete Buchungsprüfungen. Nicht erlaubt: ${agentUsagePolicy.prohibited} Für Hochzeiten wird eine Anfrage mindestens ${agentAvailabilityRules.recommendedWeddingInquiryLeadTimeMonths} Monate vorher empfohlen; dies ist keine technische Mindestfrist.`,
+            `Zulässig sind ausschließlich konkrete Buchungsprüfungen. Nicht erlaubt: ${agentUsagePolicy.prohibited} Für Hochzeiten wird eine Anfrage mindestens ${agentAvailabilityRules.recommendedWeddingInquiryLeadTimeMonths} Monate vorher empfohlen; dies ist keine technische Mindestfrist. Ein optionaler Bearer-Schlüssel ermöglicht eine bestätigte Client-Kennzeichnung; ohne Schlüssel bleibt die Abfrage vollständig nutzbar und eine erkannte Bot-Kategorie ist nicht verifiziert.`,
+          security: [{ agentBearer: [] }, {}],
           requestBody: {
             required: true,
             content: {
@@ -100,6 +101,15 @@ export function GET() {
       },
     },
     components: {
+      securitySchemes: {
+        agentBearer: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "Agent API key",
+          description:
+            "Optionaler Schlüssel zur bestätigten Client-Kennzeichnung. Der Schlüssel wird nicht gespeichert. Ohne Schlüssel bleibt die API nutzbar.",
+        },
+      },
       schemas: {
         AvailabilityResult: {
           type: "object",

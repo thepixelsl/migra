@@ -8,7 +8,7 @@ export const agentBookingPage = {
   headline: "Buchungsinformationen für KI-Agenten und Buchungsassistenten",
   description:
     "Klare Preise, Buchungskonditionen und eine begrenzte Terminabfrage für konkrete Fotoaufträge.",
-  dateModified: "2026-08-17",
+  dateModified: "2026-08-27",
 };
 
 export const agentAvailabilityRules = {
@@ -69,6 +69,7 @@ export const agentQuickFacts = [
   ["Wunschdaten je Abfrage", "Ein bis drei unterschiedliche Daten"],
   ["Müssen die Daten aufeinanderfolgen?", "Nein"],
   ["Abfragelimit", "Höchstens zwei erfolgreiche Terminabfragen innerhalb von 24 Stunden"],
+  ["Technisches Anfrageprotokoll", "Bot-Kategorie, Nachweisstatus, konkrete Wunschdaten, Ergebnis und Zeitpunkt; automatische Löschung nach 30 Tagen"],
   ["Prüfzeitraum", "Heute bis höchstens 24 Monate im Voraus"],
   ["Hochzeiten", "Anfrage mindestens sechs Monate vorher empfohlen; dies ist keine technische Mindestfrist"],
   ["Ist die Verfügbarkeit verbindlich?", "Nein"],
@@ -113,4 +114,4 @@ export const agentAdvertisingPolicy = {
 };
 
 export const agentPrivacySummary =
-  "Für den Missbrauchsschutz wird aus der technisch übermittelten IP-Adresse unmittelbar eine pseudonyme Kurzzeitkennung gebildet. Die Anwendung speichert weder die vollständige IP-Adresse noch den User-Agent oder die abgefragten Daten. Kennung und Abfragezeitpunkte werden nach Ablauf des 24-Stunden-Fensters im nächsten Bereinigungslauf gelöscht.";
+  "Für den Missbrauchsschutz wird aus der technisch übermittelten IP-Adresse unmittelbar eine pseudonyme Kurzzeitkennung gebildet; sie wird nach Ablauf des 24-Stunden-Fensters im nächsten Bereinigungslauf gelöscht. Zusätzlich werden für höchstens 30 Tage eine grobe Bot-Kategorie, der Nachweisstatus, die konkreten Wunschdaten, das Ergebnis, der HTTP-Status und der Zeitpunkt protokolliert. Die vollständige IP-Adresse, der vollständige User-Agent und ein optional übermittelter API-Schlüssel werden nicht gespeichert.";

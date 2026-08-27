@@ -42,7 +42,8 @@ function safeEqual(actual, expected) {
 function adminPath(pathname) {
   return pathname === "/admin-termine"
     || pathname.startsWith("/admin-termine/")
-    || pathname === "/api/admin/availability";
+    || pathname === "/api/admin/availability"
+    || pathname === "/api/admin/agent-requests";
 }
 
 function authorizedAdmin(request, env) {
@@ -189,6 +190,7 @@ export async function createBunnyRuntime(options = {}) {
     ...env,
     ASSETS: createAssetBinding(assetDirectory),
     AVAILABILITY_KV: database.kv,
+    AGENT_AUDIT_DB: database.d1,
     AGENT_RATE_LIMIT_DB: database.d1,
     DB: database.d1,
     CONTACT_DB: database.d1,

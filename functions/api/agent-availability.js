@@ -11,6 +11,7 @@ import {
   AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
   agentAvailabilityDateBounds,
 } from "../_agent-availability-contract.js";
+import { writeAgentAvailabilityAudit } from "../_agent-audit.js";
 import {
   json,
   methodNotAllowed,
@@ -203,6 +204,11 @@ export function onRequestGet() {
         maximumSuccessfulRequests: AGENT_RATE_LIMIT_MAX_REQUESTS,
         windowHours: AGENT_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
       },
+      clientIdentification: {
+        authentication: "Optionaler Bearer-Schlüssel für eine bestätigte Client-Kennzeichnung.",
+        unauthenticatedRequestsAllowed: true,
+        userAgentClassificationIsVerified: false,
+      },
     },
     200,
     {
@@ -225,30 +231,50 @@ export async function onRequestPost({ request, env }) {
   try {
     blockedDates = await readBlockedDates(env);
   } catch {
-    return json(
+    const response = json(
       {
         error: "temporarily_unavailable",
         message: "Die Terminprüfung ist gerade nicht verfügbar.",
       },
       503,
     );
+    try {
+      await writeAgentAvailabilityAudit({
+        env,
+        request,
+        dates: parsed.dates,
+        results: [],
+        responseStatus: response.status,
+      });
+    } catch {}
+    return response;
   }
 
   let rateLimit;
   try {
     rateLimit = await reserveAgentAvailabilityRequest(request, env);
   } catch {
-    return json(
+    const response = json(
       {
         error: "temporarily_unavailable",
         message: "Die Agenten-Terminprüfung ist gerade nicht verfügbar.",
       },
       503,
     );
+    try {
+      await writeAgentAvailabilityAudit({
+        env,
+        request,
+        dates: parsed.dates,
+        results: [],
+        responseStatus: response.status,
+      });
+    } catch {}
+    return response;
   }
 
   if (!rateLimit.allowed) {
-    return json(
+    const response = json(
       {
         error: "rate_limited",
         message: "Innerhalb von 24 Stunden sind höchstens zwei erfolgreiche Terminabfragen möglich.",
@@ -263,13 +289,24 @@ export async function onRequestPost({ request, env }) {
       429,
       { "Retry-After": String(retryAfterSeconds(rateLimit)) },
     );
+    try {
+      await writeAgentAvailabilityAudit({
+        env,
+        request,
+        dates: parsed.dates,
+        results: [],
+        responseStatus: response.status,
+      });
+    } catch {}
+    return response;
   }
 
-  return json({
-    results: parsed.dates.map((date) => ({
-      date,
-      available: !blockedDates.includes(date),
-    })),
+  const results = parsed.dates.map((date) => ({
+    date,
+    available: !blockedDates.includes(date),
+  }));
+  const response = json({
+    results,
     advice: { message: ADVICE_MESSAGE },
     rateLimit: {
       limit: rateLimit.limit,
@@ -277,6 +314,16 @@ export async function onRequestPost({ request, env }) {
       resetAt: rateLimit.resetAt,
     },
   });
+  try {
+    await writeAgentAvailabilityAudit({
+      env,
+      request,
+      dates: parsed.dates,
+      results,
+      responseStatus: response.status,
+    });
+  } catch {}
+  return response;
 }
 
 export function onRequest() {

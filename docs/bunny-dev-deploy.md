@@ -55,6 +55,13 @@ Copy the names from `bunny.env.example`. Replace every placeholder. Store the
 database token, admin password, SMTP password, and hash salt as secrets. Keep
 `DEV_NOINDEX=true` for the development URL.
 
+`AGENT_API_CLIENTS_JSON` is optional. It maps a readable client label to a
+Bearer token, for example
+`{"OpenAI Terminassistent":"replace-with-a-long-random-agent-token"}`. Store
+the complete JSON value as a secret. Requests without a matching token remain
+allowed, but any bot category inferred from the User-Agent is displayed as
+unverified in `/admin-termine/`.
+
 Request an outbound port 465 unlock from Bunny Support before enabling the
 contact form. Configure the STRATO SMTP secrets and verify delivery with a real
 end-to-end test. The application deliberately has no HTTP relay or webhook

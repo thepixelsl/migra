@@ -1,6 +1,7 @@
 import * as availability from "../functions/api/availability.js";
 import * as agentAvailability from "../functions/api/agent-availability.js";
 import * as adminAvailability from "../functions/api/admin/availability.js";
+import * as adminAgentRequests from "../functions/api/admin/agent-requests.js";
 import * as contact from "../functions/api/contact.js";
 import { assertAdminAccess } from "../functions/_availability.js";
 
@@ -170,6 +171,10 @@ export default {
 
     if (url.pathname === "/api/admin/availability") {
       return withSecurityHeaders(await handlePagesFunction(adminAvailability, request, env, ctx));
+    }
+
+    if (url.pathname === "/api/admin/agent-requests") {
+      return withSecurityHeaders(await handlePagesFunction(adminAgentRequests, request, env, ctx));
     }
 
     if (url.pathname === "/admin-termine" || url.pathname.startsWith("/admin-termine/")) {

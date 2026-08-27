@@ -44,7 +44,7 @@ const requiredOptionalServiceTerms = [
   "Cookies und Einwilligungen",
   "artbild_consent",
   "Google Tag Manager",
-  "Google Analytics 4",
+  "Google Analytics",
   "Meta Pixel",
   "Microsoft Clarity",
   "Drittlandübermittlungen bei Statistik- und Marketingdiensten",
@@ -86,17 +86,24 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("ein bis drei konkrete Wunschdaten");
   expect(mainText).toContain("höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden");
   expect(mainText).toContain("pseudonyme Kurzzeitkennung");
-  expect(mainText).toContain("weder die vollständige IP-Adresse noch den User-Agent");
+  expect(mainText).toContain("grobe Bot-Kategorie");
+  expect(mainText).toContain("konkret angefragten Wunschdaten");
+  expect(mainText).toContain("jeweilige Verfügbarkeitsergebnis");
+  expect(mainText).toContain("höchstens 30 Tage");
+  expect(mainText).toContain("vollständige IP-Adresse, der vollständige User-Agent");
+  expect(mainText).toContain("optional übermittelter API-Schlüssel werden nicht gespeichert");
+  expect(mainText).toContain("nicht verifiziert");
   expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
-  expect(mainText).toContain("Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta Pixel werden erst nach Ihrer Einwilligung");
-  expect(mainText).toContain("Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
-  expect(mainText).toContain("Wenn Sie ihn deaktivieren, werden Google Analytics 4, Microsoft Clarity und Meta Pixel ebenfalls deaktiviert");
+  expect(mainText).toContain("Google Tag Manager, Google Analytics, Microsoft Clarity und Meta Pixel werden erst nach Ihrer Einwilligung");
+  expect(mainText).toContain("Google Tag Manager, Google Analytics, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
+  expect(mainText).toContain("Wenn Sie ihn deaktivieren, werden Google Analytics, Microsoft Clarity und Meta Pixel ebenfalls deaktiviert");
   expect(mainText).toContain("Vor Ihrer Einwilligung wird der Tag Manager vollständig blockiert");
   expect(mainText).not.toContain("erweiterten Einwilligungsmodus");
   expect(mainText).toContain("Cookie enthält die gewählten Services");
-  expect(mainText).toContain("Einwilligung in den Service „Google Analytics 4“");
+  expect(mainText).toContain("Einwilligung in den Service „Google Analytics“");
+  expect(mainText).not.toContain("Google Analytics 4");
   expect(mainText).toContain("Einwilligung in den Service „Microsoft Clarity“");
   expect(mainText).toContain("Einwilligung in den Service „Meta Pixel“");
   expect(mainText).toContain("Service-Gruppen, Services und Provider");
