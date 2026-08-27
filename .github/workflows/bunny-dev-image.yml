@@ -70,6 +70,6 @@ jobs:
             PUBLIC_GTM_CONTAINER_ID=${{ vars.PUBLIC_GTM_CONTAINER_ID || 'GTM-5TM37JC' }}
             PUBLIC_GA4_MEASUREMENT_ID=${{ vars.PUBLIC_GA4_MEASUREMENT_ID || 'G-TSWGFD1YKF' }}
             PUBLIC_GA4_DATA_RETENTION_MONTHS=${{ vars.PUBLIC_GA4_DATA_RETENTION_MONTHS || '14' }}
-            PUBLIC_CONSENT_VERSION=${{ vars.PUBLIC_CONSENT_VERSION || '2026-08-25.1' }}
+            PUBLIC_CONSENT_VERSION=${{ vars.PUBLIC_CONSENT_VERSION || '2026-08-27.1' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
