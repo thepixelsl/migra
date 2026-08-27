@@ -1,5 +1,5 @@
 import { Buffer } from "node:buffer";
-import { createHash, timingSafeEqual } from "node:crypto";
+import { createHash, createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import { createServer } from "node:http";
 import path from "node:path";
 import { Readable } from "node:stream";
@@ -14,8 +14,11 @@ import { createContactMailer } from "./bunny-mailer.mjs";
 const MODULE_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ASSET_DIRECTORY = path.resolve(MODULE_DIRECTORY, "../dist");
 const MAX_REQUEST_BODY_BYTES = 8 * 1024 * 1024;
+const MAX_ADMIN_LOGIN_BODY_BYTES = 8 * 1024;
+const ADMIN_SESSION_COOKIE = "artbild_admin_session";
+const ADMIN_SESSION_MAX_AGE_SECONDS = 12 * 60 * 60;
 const HSTS_HEADER_VALUE = "max-age=31536000; includeSubDomains; preload";
-const CONTENT_SECURITY_POLICY = [
+const CONTENT_SECURITY_POLICY_DIRECTIVES = [
   "default-src 'self'",
   "base-uri 'self'",
   "object-src 'none'",
@@ -26,8 +29,7 @@ const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms",
   "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com",
-  "upgrade-insecure-requests",
-].join("; ");
+];
 
 function firstHeaderValue(value) {
   return String(value || "").split(",", 1)[0].trim();
@@ -46,23 +48,92 @@ function adminPath(pathname) {
     || pathname === "/api/admin/agent-requests";
 }
 
+function adminLoginPath(pathname) {
+  return pathname === "/admin-login" || pathname === "/admin-login/";
+}
+
+function adminConfiguration(env) {
+  const username = String(env.ADMIN_USERNAME || "");
+  const password = String(env.ADMIN_PASSWORD || "");
+  const sessionSecret = String(env.ADMIN_SESSION_SECRET || password);
+  return {
+    configured: Boolean(username && password && sessionSecret),
+    password,
+    sessionSecret,
+    username,
+  };
+}
+
+function cookieValue(request, name) {
+  const cookie = request.headers.get("cookie") || "";
+  for (const part of cookie.split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 0) continue;
+    if (part.slice(0, separator).trim() === name) {
+      return part.slice(separator + 1).trim();
+    }
+  }
+  return "";
+}
+
+function adminSessionSignature({ expiresAt, nonce, username }, secret) {
+  return createHmac("sha256", secret)
+    .update(`v1\n${expiresAt}\n${nonce}\n${username}`)
+    .digest("base64url");
+}
+
+function validAdminSession(request, configuration) {
+  const value = cookieValue(request, ADMIN_SESSION_COOKIE);
+  const [version, expiresValue, nonce, signature, ...extra] = value.split(".");
+  if (version !== "v1" || !expiresValue || !nonce || !signature || extra.length) return false;
+
+  const expiresAt = Number(expiresValue);
+  const now = Math.floor(Date.now() / 1000);
+  if (!Number.isSafeInteger(expiresAt) || expiresAt <= now) return false;
+  if (!/^[A-Za-z0-9_-]{20,64}$/.test(nonce)) return false;
+
+  const expectedSignature = adminSessionSignature({
+    expiresAt,
+    nonce,
+    username: configuration.username,
+  }, configuration.sessionSecret);
+  return safeEqual(signature, expectedSignature);
+}
+
+function createAdminSessionCookie(configuration, secure = true) {
+  const expiresAt = Math.floor(Date.now() / 1000) + ADMIN_SESSION_MAX_AGE_SECONDS;
+  const nonce = randomBytes(18).toString("base64url");
+  const signature = adminSessionSignature({
+    expiresAt,
+    nonce,
+    username: configuration.username,
+  }, configuration.sessionSecret);
+  const secureAttribute = secure ? "; Secure" : "";
+  return `${ADMIN_SESSION_COOKIE}=v1.${expiresAt}.${nonce}.${signature}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${ADMIN_SESSION_MAX_AGE_SECONDS}${secureAttribute}`;
+}
+
 function authorizedAdmin(request, env) {
-  const expectedUsername = String(env.ADMIN_USERNAME || "");
-  const expectedPassword = String(env.ADMIN_PASSWORD || "");
-  if (!expectedUsername || !expectedPassword) return { configured: false, authorized: false };
+  const configuration = adminConfiguration(env);
+  if (!configuration.configured) return { configured: false, authorized: false };
+
+  if (validAdminSession(request, configuration)) {
+    return { configured: true, authorized: true, method: "session" };
+  }
 
   const authorization = request.headers.get("authorization") || "";
-  if (!authorization.startsWith("Basic ")) return { configured: true, authorized: false };
+  if (!/^Basic\s+/i.test(authorization)) return { configured: true, authorized: false };
 
   try {
-    const decoded = Buffer.from(authorization.slice(6), "base64").toString("utf8");
+    const decoded = Buffer.from(authorization.replace(/^Basic\s+/i, ""), "base64").toString("utf8");
     const separator = decoded.indexOf(":");
     if (separator < 0) return { configured: true, authorized: false };
     const username = decoded.slice(0, separator);
     const password = decoded.slice(separator + 1);
     return {
       configured: true,
-      authorized: safeEqual(username, expectedUsername) && safeEqual(password, expectedPassword),
+      authorized: safeEqual(username, configuration.username)
+        && safeEqual(password, configuration.password),
+      method: "basic",
     };
   } catch {
     return { configured: true, authorized: false };
@@ -70,17 +141,161 @@ function authorizedAdmin(request, env) {
 }
 
 function adminDenied(configured) {
-  const headers = new Headers({
-    "Cache-Control": "no-store",
-    "Content-Type": "text/plain; charset=utf-8",
-    "X-Robots-Tag": "noindex, nofollow, noarchive",
-  });
-  if (configured) headers.set("WWW-Authenticate", 'Basic realm="Artbild Dev", charset="UTF-8"');
-
   return new Response(
     configured ? "Anmeldung erforderlich." : "Admin-Zugang ist noch nicht konfiguriert.",
-    { status: configured ? 401 : 503, headers },
+    {
+      status: configured ? 401 : 503,
+      headers: {
+        "Cache-Control": "no-store",
+        "Content-Type": "text/plain; charset=utf-8",
+        "X-Robots-Tag": "noindex, nofollow, noarchive",
+      },
+    },
   );
+}
+
+function adminRedirect(location) {
+  return new Response(null, {
+    status: 303,
+    headers: {
+      "Cache-Control": "no-store",
+      Location: location,
+    },
+  });
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function adminLoginPage({ configured, error = "", next = "/admin-termine/" }) {
+  const safeNext = next === "/admin-termine/" ? next : "/admin-termine/";
+  const errorMarkup = error
+    ? `<p class="login-error" role="alert">${escapeHtml(error)}</p>`
+    : "";
+  const formMarkup = configured
+    ? `<form method="post" action="/admin-login/">
+        <input type="hidden" name="next" value="${escapeHtml(safeNext)}">
+        <label for="admin-username">Benutzername</label>
+        <input id="admin-username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required autofocus>
+        <label for="admin-password">Passwort</label>
+        <input id="admin-password" name="password" type="password" autocomplete="current-password" required>
+        ${errorMarkup}
+        <button type="submit">Anmelden</button>
+      </form>`
+    : '<p class="login-error" role="alert">Der Admin-Zugang ist noch nicht konfiguriert.</p>';
+
+  return `<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <title>Terminverwaltung anmelden | Artbild-Fotografie</title>
+  <style>
+    :root { color-scheme: light; font-family: Arial, Helvetica, sans-serif; background: #f4f2ee; color: #181818; }
+    * { box-sizing: border-box; }
+    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; }
+    main { width: min(100%, 430px); background: #fff; border: 1px solid #dedbd5; border-radius: 18px; padding: clamp(28px, 8vw, 44px); box-shadow: 0 18px 50px rgba(0,0,0,.08); }
+    .eyebrow { margin: 0 0 10px; color: #6b665e; font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(1.7rem, 8vw, 2.35rem); line-height: 1.1; }
+    .intro { margin: 14px 0 26px; color: #56514a; line-height: 1.55; }
+    form { display: grid; gap: 10px; }
+    label { margin-top: 8px; font-size: .9rem; font-weight: 700; }
+    input { width: 100%; min-height: 50px; border: 1px solid #aaa49b; border-radius: 10px; padding: 11px 13px; font: inherit; font-size: 16px; }
+    input:focus { outline: 3px solid rgba(20,92,75,.22); border-color: #145c4b; }
+    button { min-height: 52px; margin-top: 12px; border: 0; border-radius: 10px; padding: 12px 18px; background: #145c4b; color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    button:focus-visible { outline: 3px solid rgba(20,92,75,.3); outline-offset: 3px; }
+    .login-error { margin: 8px 0 0; padding: 12px 14px; border-radius: 9px; background: #fff0ee; color: #8d1f16; line-height: 1.4; }
+    .privacy { margin: 24px 0 0; color: #6b665e; font-size: .8rem; line-height: 1.45; }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Artbild-Fotografie</p>
+    <h1>Terminverwaltung</h1>
+    <p class="intro">Bitte melden Sie sich an, um gesperrte Termine und Agentenabfragen zu verwalten.</p>
+    ${formMarkup}
+    <p class="privacy">Die Anmeldung wird ausschließlich über eine verschlüsselte HTTPS-Verbindung übertragen. Die Sitzung endet automatisch nach zwölf Stunden.</p>
+  </main>
+</body>
+</html>`;
+}
+
+async function handleAdminLogin(request, env, url) {
+  const configuration = adminConfiguration(env);
+  const next = url.searchParams.get("next") || "/admin-termine/";
+
+  if (request.method === "GET" || request.method === "HEAD") {
+    if (authorizedAdmin(request, env).authorized) {
+      return adminRedirect(new URL("/admin-termine/", url.origin).href);
+    }
+    const response = new Response(adminLoginPage({ configured: configuration.configured, next }), {
+      status: configuration.configured ? 200 : 503,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
+    return request.method === "HEAD"
+      ? new Response(null, { status: response.status, headers: response.headers })
+      : response;
+  }
+
+  if (request.method !== "POST") {
+    return new Response("Method Not Allowed", {
+      status: 405,
+      headers: { Allow: "GET, HEAD, POST" },
+    });
+  }
+
+  const origin = request.headers.get("origin");
+  if (origin && origin !== url.origin) {
+    return new Response("Forbidden", { status: 403 });
+  }
+  if (!configuration.configured) {
+    return new Response(adminLoginPage({ configured: false }), {
+      status: 503,
+      headers: { "Content-Type": "text/html; charset=utf-8" },
+    });
+  }
+
+  const mediaType = (request.headers.get("content-type") || "")
+    .split(";", 1)[0]
+    .trim()
+    .toLowerCase();
+  if (mediaType !== "application/x-www-form-urlencoded") {
+    return new Response("Unsupported Media Type", { status: 415 });
+  }
+
+  const form = new URLSearchParams(await request.text());
+  const credentialsValid = safeEqual(form.get("username") || "", configuration.username)
+    && safeEqual(form.get("password") || "", configuration.password);
+  if (!credentialsValid) {
+    return new Response(adminLoginPage({
+      configured: true,
+      error: "Benutzername oder Passwort ist nicht korrekt.",
+      next: form.get("next") || "/admin-termine/",
+    }), {
+      status: 401,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "Content-Type": "text/html; charset=utf-8",
+      },
+    });
+  }
+
+  const response = adminRedirect(new URL("/admin-termine/", url.origin).href);
+  response.headers.set(
+    "Set-Cookie",
+    createAdminSessionCookie(configuration, url.protocol === "https:"),
+  );
+  return response;
 }
 
 async function readRequestBody(request, maxBytes = MAX_REQUEST_BODY_BYTES) {
@@ -125,7 +340,9 @@ async function toWebRequest(request, env) {
   const url = new URL(request.url || "/", `${publicProtocol}://${publicHost}`);
   const maxBodyBytes = url.pathname === "/api/agent-availability"
     ? AGENT_AVAILABILITY_MAX_BODY_BYTES
-    : MAX_REQUEST_BODY_BYTES;
+    : adminLoginPath(url.pathname)
+      ? MAX_ADMIN_LOGIN_BODY_BYTES
+      : MAX_REQUEST_BODY_BYTES;
   const body = request.method === "GET" || request.method === "HEAD"
     ? undefined
     : await readRequestBody(request, maxBodyBytes);
@@ -139,20 +356,33 @@ async function toWebRequest(request, env) {
 
 function withBunnyHeaders(response, env, pathname = "") {
   const headers = new Headers(response.headers);
+  const securePublicOrigin = String(env.BUNNY_PUBLIC_SCHEME || "https").toLowerCase() !== "http";
   headers.delete("Server");
-  headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
-  headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+  if (securePublicOrigin) headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
+  headers.set("Content-Security-Policy", [
+    ...CONTENT_SECURITY_POLICY_DIRECTIVES,
+    ...(securePublicOrigin ? ["upgrade-insecure-requests"] : []),
+  ].join("; "));
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
   if (env.DEV_NOINDEX !== "false") {
     headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   }
-  if (pathname.startsWith("/api/") || pathname.startsWith("/admin-termine")) {
-    headers.set("Cache-Control", pathname.startsWith("/admin-termine") ? "private, no-store" : "no-store");
+  if (
+    pathname.startsWith("/api/")
+    || pathname.startsWith("/admin-termine")
+    || adminLoginPath(pathname)
+  ) {
+    const privateAdminPage = pathname.startsWith("/admin-termine") || adminLoginPath(pathname);
+    headers.set("Cache-Control", privateAdminPage ? "private, no-store" : "no-store");
   }
-  if (pathname.startsWith("/admin-termine") || pathname.startsWith("/api/admin/")) {
-    headers.append("Vary", "Authorization");
+  if (
+    pathname.startsWith("/admin-termine")
+    || pathname.startsWith("/api/admin/")
+    || adminLoginPath(pathname)
+  ) {
+    headers.set("Vary", "Authorization, Cookie");
   }
   return new Response(response.body, {
     status: response.status,
@@ -225,12 +455,26 @@ export async function createBunnyRuntime(options = {}) {
         return;
       }
 
+      if (adminLoginPath(url.pathname)) {
+        const loginResponse = await handleAdminLogin(request, env, url);
+        await writeNodeResponse(
+          nodeResponse,
+          withBunnyHeaders(loginResponse, env, url.pathname),
+        );
+        return;
+      }
+
       if (adminPath(url.pathname)) {
         const access = authorizedAdmin(request, env);
         if (!access.authorized) {
+          const isAdminPage = url.pathname === "/admin-termine"
+            || url.pathname.startsWith("/admin-termine/");
+          const deniedResponse = access.configured && isAdminPage
+            ? adminRedirect(new URL("/admin-login/?next=/admin-termine/", url.origin).href)
+            : adminDenied(access.configured);
           await writeNodeResponse(
             nodeResponse,
-            withBunnyHeaders(adminDenied(access.configured), env, url.pathname),
+            withBunnyHeaders(deniedResponse, env, url.pathname),
           );
           return;
         }

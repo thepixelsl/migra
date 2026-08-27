@@ -52,8 +52,17 @@ Do not create a separate Pull Zone. The CDN endpoint creates the Bunny dev URL.
 ## 4. Environment variables
 
 Copy the names from `bunny.env.example`. Replace every placeholder. Store the
-database token, admin password, SMTP password, and hash salt as secrets. Keep
-`DEV_NOINDEX=true` for the development URL.
+database token, admin password, SMTP password, hash salt, and—when configured—
+the admin session secret as secrets. Keep `DEV_NOINDEX=true` for the development
+URL.
+
+`/admin-termine/` redirects unauthenticated browsers to `/admin-login/`. The
+form creates a signed, `HttpOnly`, `Secure`, `SameSite=Lax` session cookie that
+expires after twelve hours. `ADMIN_SESSION_SECRET` is optional but recommended
+as an independent long random secret; when it is omitted, the runtime signs
+sessions with `ADMIN_PASSWORD`. Preemptive HTTP Basic authorization remains a
+fallback for command-line clients, but the server no longer sends a Basic-Auth
+browser challenge.
 
 `AGENT_API_CLIENTS_JSON` is optional. It maps a readable client label to a
 Bearer token, for example
@@ -86,6 +95,8 @@ Check the generated `https://...bunny.run` URL, then verify:
 
 1. Homepage, portfolio, galleries, legal pages, and a real 404.
 2. `X-Robots-Tag: noindex, nofollow, noarchive` on the dev URL.
-3. `/admin-termine/` rejects anonymous access and accepts the configured login.
+3. `/admin-termine/` redirects anonymous browsers to `/admin-login/`, accepts
+   the configured form login, and protects the admin APIs with the resulting
+   session cookie.
 4. Blocking and unblocking a test date appears in `/api/availability`.
 5. A contact request is stored in Bunny Database and delivered by email.

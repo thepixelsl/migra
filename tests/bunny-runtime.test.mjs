@@ -45,6 +45,10 @@ function basicAuth(username = "york", password = "dev-secret") {
   return `Basic ${Buffer.from(`${username}:${password}`).toString("base64")}`;
 }
 
+function cookiePair(setCookie) {
+  return String(setCookie || "").split(";", 1)[0];
+}
+
 before(async () => {
   temporaryDirectory = await mkdtemp(path.join(os.tmpdir(), "artbild-bunny-"));
   const assetDirectory = path.join(temporaryDirectory, "dist");
@@ -150,27 +154,106 @@ test("serves the agent Markdown, llms.txt and OpenAPI files with readable types"
   assert.deepEqual(await openapi.json(), { openapi: "3.1.0" });
 });
 
-test("protects the admin page and availability API with dev credentials", async () => {
-  const deniedPage = await fetch(`${baseUrl}/admin-termine/`);
-  assert.equal(deniedPage.status, 401);
-  assert.match(deniedPage.headers.get("www-authenticate") || "", /Basic/);
+test("protects admin routes with an iPhone-compatible login session", async () => {
+  const deniedPage = await fetch(`${baseUrl}/admin-termine/`, { redirect: "manual" });
+  assert.equal(deniedPage.status, 303);
+  assert.equal(
+    deniedPage.headers.get("location"),
+    `${publicUrl}/admin-login/?next=/admin-termine/`,
+  );
+  assert.equal(deniedPage.headers.has("www-authenticate"), false);
 
-  const headers = { Authorization: basicAuth() };
-  const adminPage = await fetch(`${baseUrl}/admin-termine/`, { headers });
+  const loginPage = await fetch(`${baseUrl}/admin-login/`);
+  assert.equal(loginPage.status, 200);
+  assert.equal(loginPage.headers.get("cache-control"), "private, no-store");
+  assert.equal(loginPage.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
+  const loginHtml = await loginPage.text();
+  assert.match(loginHtml, /<h1>Terminverwaltung<\/h1>/);
+  assert.match(loginHtml, /action="\/admin-login\/"/);
+  assert.match(loginHtml, /autocomplete="username"/);
+  assert.match(loginHtml, /autocomplete="current-password"/);
+
+  const invalidLogin = await fetch(`${baseUrl}/admin-login/`, {
+    method: "POST",
+    redirect: "manual",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Origin: publicUrl,
+    },
+    body: new URLSearchParams({
+      next: "/admin-termine/",
+      password: "wrong-password",
+      username: "york",
+    }),
+  });
+  assert.equal(invalidLogin.status, 401);
+  assert.equal(invalidLogin.headers.has("set-cookie"), false);
+  const invalidHtml = await invalidLogin.text();
+  assert.match(invalidHtml, /Benutzername oder Passwort ist nicht korrekt/);
+  assert.doesNotMatch(invalidHtml, /wrong-password/);
+
+  const crossOriginLogin = await fetch(`${baseUrl}/admin-login/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Origin: "https://attacker.example",
+    },
+    body: new URLSearchParams({ password: "dev-secret", username: "york" }),
+  });
+  assert.equal(crossOriginLogin.status, 403);
+
+  const login = await fetch(`${baseUrl}/admin-login/`, {
+    method: "POST",
+    redirect: "manual",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Origin: publicUrl,
+    },
+    body: new URLSearchParams({
+      next: "/admin-termine/",
+      password: "dev-secret",
+      username: "york",
+    }),
+  });
+  assert.equal(login.status, 303);
+  assert.equal(login.headers.get("location"), `${publicUrl}/admin-termine/`);
+  const setCookie = login.headers.get("set-cookie") || "";
+  assert.match(setCookie, /^artbild_admin_session=v1\./);
+  assert.match(setCookie, /; HttpOnly/);
+  assert.match(setCookie, /; SameSite=Lax/);
+  assert.match(setCookie, /; Secure/);
+  assert.match(setCookie, /; Max-Age=43200/);
+
+  const sessionHeaders = { Cookie: cookiePair(setCookie) };
+  const adminPage = await fetch(`${baseUrl}/admin-termine/`, { headers: sessionHeaders });
   assert.equal(adminPage.status, 200);
   assert.equal(adminPage.headers.get("cache-control"), "private, no-store");
 
-  const blockedDates = await fetch(`${baseUrl}/api/admin/availability`, { headers });
+  const blockedDates = await fetch(`${baseUrl}/api/admin/availability`, {
+    headers: sessionHeaders,
+  });
   assert.equal(blockedDates.status, 200);
   assert.deepEqual(await blockedDates.json(), { blockedDates: [] });
 
   const deniedAgentRequests = await fetch(`${baseUrl}/api/admin/agent-requests`);
   assert.equal(deniedAgentRequests.status, 401);
-  assert.match(deniedAgentRequests.headers.get("www-authenticate") || "", /Basic/);
+  assert.equal(deniedAgentRequests.headers.has("www-authenticate"), false);
 
-  const agentRequests = await fetch(`${baseUrl}/api/admin/agent-requests`, { headers });
+  const tamperedSession = await fetch(`${baseUrl}/api/admin/agent-requests`, {
+    headers: { Cookie: `${cookiePair(setCookie)}tampered` },
+  });
+  assert.equal(tamperedSession.status, 401);
+
+  const agentRequests = await fetch(`${baseUrl}/api/admin/agent-requests`, {
+    headers: sessionHeaders,
+  });
   assert.equal(agentRequests.status, 200);
   assert.deepEqual(await agentRequests.json(), { retentionDays: 30, requests: [] });
+
+  const basicFallback = await fetch(`${baseUrl}/admin-termine/`, {
+    headers: { Authorization: basicAuth() },
+  });
+  assert.equal(basicFallback.status, 200);
 });
 
 test("blocks a date through admin and exposes it through the public API", async () => {
