@@ -52,6 +52,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         clarity: false,
         marketing: false,
         services: {
+          googleTagManager: false,
           googleAnalytics: false,
           microsoftClarity: false,
           metaPixel: false,
@@ -98,6 +99,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         if (
           decision.version !== config.consentVersion
           || !services
+          || typeof services.googleTagManager !== "boolean"
           || typeof services.googleAnalytics !== "boolean"
           || typeof services.microsoftClarity !== "boolean"
           || typeof services.metaPixel !== "boolean"
@@ -107,9 +109,10 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         return {
           ...decision,
           services: {
-            googleAnalytics: services.googleAnalytics,
-            microsoftClarity: services.microsoftClarity,
-            metaPixel: services.metaPixel,
+            googleTagManager: services.googleTagManager,
+            googleAnalytics: services.googleTagManager && services.googleAnalytics,
+            microsoftClarity: services.googleTagManager && services.microsoftClarity,
+            metaPixel: services.googleTagManager && services.metaPixel,
           },
         };
       } catch (_) {
@@ -149,6 +152,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
     const storedDecision = readDecision();
     const initialState = {
+      googleTagManager: storedDecision?.services.googleTagManager === true,
       googleAnalytics: storedDecision?.services.googleAnalytics === true,
       microsoftClarity: storedDecision?.services.microsoftClarity === true,
       metaPixel: storedDecision?.services.metaPixel === true,
@@ -183,12 +187,13 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       meta_delivery: "google_tag_manager",
       clarity_delivery: "google_tag_manager",
       ga4_data_retention_months: config.ga4DataRetentionMonths,
-      consent_mode: "advanced",
+      consent_mode: "basic",
       consent_version: config.consentVersion,
     });
 
     const publishState = (state, hasDecision) => {
       const services = {
+        googleTagManager: state.googleTagManager === true,
         googleAnalytics: state.googleAnalytics === true,
         microsoftClarity: state.microsoftClarity === true,
         metaPixel: state.metaPixel === true,
@@ -201,7 +206,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         marketing: services.metaPixel,
         services,
         version: config.consentVersion,
-        mode: "advanced",
+        mode: "basic",
       };
 
       window.ArtbildConsent = publicState;
@@ -213,6 +218,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         ? "granted"
         : "denied";
       document.documentElement.dataset.clarityConsent = publicState.clarity
+        ? "granted"
+        : "denied";
+      document.documentElement.dataset.googleTagManagerConsent = services.googleTagManager
         ? "granted"
         : "denied";
       return publicState;
@@ -309,6 +317,12 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         return currentValue === true;
       };
       const state = {
+        googleTagManager: requestedValue(
+          requestedServices.googleTagManager,
+          nextState?.googleTagManager,
+          undefined,
+          currentServices.googleTagManager,
+        ),
         googleAnalytics: requestedValue(
           requestedServices.googleAnalytics,
           nextState?.googleAnalytics,
@@ -328,6 +342,26 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           currentServices.metaPixel,
         ),
       };
+      const googleTagManagerExplicitlyDenied = requestedServices.googleTagManager === false
+        || nextState?.googleTagManager === false;
+      if (googleTagManagerExplicitlyDenied) {
+        state.googleTagManager = false;
+        state.googleAnalytics = false;
+        state.microsoftClarity = false;
+        state.metaPixel = false;
+      } else if (
+        state.googleAnalytics
+        || state.microsoftClarity
+        || state.metaPixel
+      ) {
+        state.googleTagManager = true;
+      }
+      if (!state.googleTagManager) {
+        state.googleAnalytics = false;
+        state.microsoftClarity = false;
+        state.metaPixel = false;
+      }
+      const googleTagManagerWasGranted = currentServices.googleTagManager === true;
       const clarityWasGranted = currentServices.microsoftClarity === true;
       const metaWasGranted = currentServices.metaPixel === true;
       const decision = {
@@ -372,21 +406,25 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         marketing: state.metaPixel,
         services: { ...state },
         necessary: true,
-        mode: "advanced",
+        mode: "basic",
         version: config.consentVersion,
       };
       window.setTimeout(() => {
         window.dataLayer.push({
           event: "artbild_consent_update",
+          consent_google_tag_manager: state.googleTagManager ? "granted" : "denied",
           consent_analytics: state.googleAnalytics ? "granted" : "denied",
           consent_clarity: state.microsoftClarity ? "granted" : "denied",
           consent_marketing: state.metaPixel ? "granted" : "denied",
           consent_google_analytics: state.googleAnalytics ? "granted" : "denied",
           consent_microsoft_clarity: state.microsoftClarity ? "granted" : "denied",
           consent_meta_pixel: state.metaPixel ? "granted" : "denied",
-          consent_mode: "advanced",
+          consent_mode: "basic",
         });
         window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
+        if (state.googleTagManager) {
+          loadGoogleTagManager();
+        }
         window.setTimeout(() => {
           updateClarityConsent(state.microsoftClarity);
           if (state.metaPixel && typeof window.fbq === "function") {
@@ -397,6 +435,12 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       const publishedState = { ...window.ArtbildConsent };
 
       if (
+        (
+          googleTagManagerWasGranted
+          && !state.googleTagManager
+          && window.__artbildGoogleTagManagerLoaded === true
+        )
+        ||
         (
           clarityWasGranted
           && !state.microsoftClarity
@@ -435,6 +479,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
     window.dataLayer.push({
       event: "artbild_consent_state",
+      consent_google_tag_manager: initialState.googleTagManager ? "granted" : "denied",
       consent_analytics: initialState.googleAnalytics ? "granted" : "denied",
       consent_clarity: initialState.microsoftClarity ? "granted" : "denied",
       consent_marketing: initialState.metaPixel ? "granted" : "denied",
@@ -442,10 +487,12 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       consent_microsoft_clarity: initialState.microsoftClarity ? "granted" : "denied",
       consent_meta_pixel: initialState.metaPixel ? "granted" : "denied",
       consent_decision_present: Boolean(storedDecision),
-      consent_mode: "advanced",
+      consent_mode: "basic",
     });
 
-    loadGoogleTagManager();
+    if (initialState.googleTagManager) {
+      loadGoogleTagManager();
+    }
     window.setTimeout(() => {
       updateClarityConsent(initialState.microsoftClarity);
       if (initialState.metaPixel && typeof window.fbq === "function") {

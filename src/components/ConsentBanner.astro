@@ -24,12 +24,11 @@
         erforderlichen Anfrage- und Verbindungsdaten verarbeitet.
       </p>
       <p>
-        Google Tag Manager und Google Analytics 4 verwenden den erweiterten
-        Einwilligungsmodus. Vor Ihrer Auswahl erhält Google ausschließlich
-        abgelehnte Einwilligungssignale und reduzierte Messsignale ohne
-        Analytics- oder Werbe-Cookies. Microsoft Clarity und das im Tag Manager
-        eingerichtete Meta Pixel bleiben bis zu Ihrer Einwilligung in den
-        jeweiligen Service vollständig blockiert.
+        Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta Pixel
+        bleiben bis zu Ihrer Einwilligung vollständig blockiert. Der Google Tag
+        Manager ist die übergeordnete technische Instanz. Wenn Sie ihn
+        deaktivieren, werden deshalb auch alle darüber gesteuerten Services
+        deaktiviert.
       </p>
     </div>
 
@@ -143,11 +142,12 @@
         hidden
       >
         <p class="consent-dialog__panel-intro">
-          Google Analytics 4, Microsoft Clarity und Meta Pixel können einzeln
-          ausgewählt werden. Die Service-Gruppe „Statistik“ steuert Google
-          Analytics 4 und Microsoft Clarity gemeinsam. Der Google Tag Manager
-          wird bereits vor Ihrer Auswahl mit abgelehnten Einwilligungssignalen
-          geladen; essenzielle Services sind immer aktiv.
+          Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta
+          Pixel können einzeln ausgewählt werden. Die Service-Gruppe „Statistik“
+          steuert Google Analytics 4 und Microsoft Clarity gemeinsam. Der Google
+          Tag Manager ist allen drei Services technisch übergeordnet: Wird er
+          deaktiviert, werden Google Analytics 4, Microsoft Clarity und Meta
+          Pixel ebenfalls deaktiviert. Essenzielle Services sind immer aktiv.
         </p>
 
         <details class="consent-record">
@@ -176,11 +176,16 @@
         <details class="consent-record">
           <summary>
             <span><strong>Google Tag Manager</strong><small>Statistik · Google</small></span>
-            <span>Erweiterter Modus</span>
+            <label class="consent-switch consent-switch--service">
+              <span class="visually-hidden">Google Tag Manager erlauben</span>
+              <input type="checkbox" data-consent-service="googleTagManager">
+              <span aria-hidden="true"></span>
+            </label>
           </summary>
           <div>
             <p><strong>Zweck:</strong> Steuerung von Google Analytics 4, Microsoft Clarity und Meta Pixel.</p>
-            <p><strong>Vor Ihrer Auswahl:</strong> Der Tag Manager wird im erweiterten Einwilligungsmodus mit standardmäßig abgelehnten Signalen geladen. Dabei können reduzierte, cookielose Messsignale an Google übermittelt werden.</p>
+            <p><strong>Vor Ihrer Auswahl:</strong> Der Tag Manager wird nicht geladen und es werden keine Daten an Google übertragen.</p>
+            <p><strong>Abhängigkeit:</strong> Google Analytics 4, Microsoft Clarity und Meta Pixel werden über den Tag Manager gesteuert. Beim Deaktivieren des Tag Managers werden diese Services ebenfalls deaktiviert.</p>
             <p><strong>Host:</strong> <code>www.googletagmanager.com</code>.</p>
           </div>
         </details>
@@ -319,10 +324,13 @@
     const quickActions = dialog.querySelector("[data-consent-quick-actions]");
     const statisticsInput = dialog.querySelector('[data-consent-group="statistics"]');
     const marketingInput = dialog.querySelector('[data-consent-group="marketing"]');
+    const googleTagManagerInput = dialog.querySelector('[data-consent-service="googleTagManager"]');
     const googleAnalyticsInput = dialog.querySelector('[data-consent-service="googleAnalytics"]');
     const microsoftClarityInput = dialog.querySelector('[data-consent-service="microsoftClarity"]');
     const metaPixelInput = dialog.querySelector('[data-consent-service="metaPixel"]');
-    const serviceInputs = [googleAnalyticsInput, microsoftClarityInput, metaPixelInput]
+    const childServiceInputs = [googleAnalyticsInput, microsoftClarityInput, metaPixelInput]
+      .filter((input) => input instanceof HTMLInputElement);
+    const serviceInputs = [googleTagManagerInput, ...childServiceInputs]
       .filter((input) => input instanceof HTMLInputElement);
     const closeButton = dialog.querySelector("[data-consent-close]");
     const customizeButton = dialog.querySelector("[data-consent-customize]");
@@ -351,6 +359,9 @@
     const syncInputs = () => {
       const state = api()?.getState?.() || window.ArtbildConsent || {};
       const services = state.services || {};
+      if (googleTagManagerInput instanceof HTMLInputElement) {
+        googleTagManagerInput.checked = services.googleTagManager === true;
+      }
       if (googleAnalyticsInput instanceof HTMLInputElement) {
         googleAnalyticsInput.checked = services.googleAnalytics === true
           || (services.googleAnalytics === undefined && state.analytics === true);
@@ -408,6 +419,9 @@
 
     statisticsInput?.addEventListener("change", () => {
       if (!(statisticsInput instanceof HTMLInputElement)) return;
+      if (statisticsInput.checked && googleTagManagerInput instanceof HTMLInputElement) {
+        googleTagManagerInput.checked = true;
+      }
       if (googleAnalyticsInput instanceof HTMLInputElement) {
         googleAnalyticsInput.checked = statisticsInput.checked;
       }
@@ -423,12 +437,34 @@
         && metaPixelInput instanceof HTMLInputElement
       ) {
         metaPixelInput.checked = marketingInput.checked;
+        if (marketingInput.checked && googleTagManagerInput instanceof HTMLInputElement) {
+          googleTagManagerInput.checked = true;
+        }
       }
+    });
+
+    googleTagManagerInput?.addEventListener("change", () => {
+      if (!(googleTagManagerInput instanceof HTMLInputElement)) return;
+      if (!googleTagManagerInput.checked) {
+        childServiceInputs.forEach((input) => {
+          input.checked = false;
+        });
+      }
+      syncGroupsFromServices();
     });
 
     serviceInputs.forEach((input) => {
       input.addEventListener("click", (event) => event.stopPropagation());
-      input.addEventListener("change", syncGroupsFromServices);
+      input.addEventListener("change", () => {
+        if (
+          input !== googleTagManagerInput
+          && input.checked
+          && googleTagManagerInput instanceof HTMLInputElement
+        ) {
+          googleTagManagerInput.checked = true;
+        }
+        syncGroupsFromServices();
+      });
     });
 
     const openDialog = (existingDecision) => {
@@ -464,6 +500,7 @@
         const acceptAll = button.getAttribute("data-consent-choice") === "all";
         save({
           services: {
+            googleTagManager: acceptAll,
             googleAnalytics: acceptAll,
             microsoftClarity: acceptAll,
             metaPixel: acceptAll,
@@ -480,6 +517,8 @@
     saveButton?.addEventListener("click", () => {
       save({
         services: {
+          googleTagManager: googleTagManagerInput instanceof HTMLInputElement
+            && googleTagManagerInput.checked,
           googleAnalytics: googleAnalyticsInput instanceof HTMLInputElement
             && googleAnalyticsInput.checked,
           microsoftClarity: microsoftClarityInput instanceof HTMLInputElement

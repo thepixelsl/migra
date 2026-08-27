@@ -247,10 +247,11 @@ import { trackingConfig } from "../config/tracking";
     };
 
     const pushEvent = (payload) => {
+      const tagManagerGranted = window.ArtbildConsent?.services?.googleTagManager === true;
       const analyticsGranted = window.ArtbildConsent?.services?.googleAnalytics === true;
       const marketingGranted = window.ArtbildConsent?.services?.metaPixel === true;
       const clarityGranted = window.ArtbildConsent?.services?.microsoftClarity === true;
-      if (!analyticsGranted && !marketingGranted) return;
+      if (!tagManagerGranted || (!analyticsGranted && !marketingGranted)) return;
 
       const eventPayload = compact({
         page_id: pageId(),
@@ -284,7 +285,7 @@ import { trackingConfig } from "../config/tracking";
       ) return;
       trackingReadyPublished = true;
       window.gtag?.("event", "artbild_tracking_ready", {
-        consent_mode: "advanced",
+        consent_mode: "basic",
         tracking_schema: "artbild_v2",
       });
     };
@@ -295,6 +296,7 @@ import { trackingConfig } from "../config/tracking";
       grantAnalyticsConsent: () => {
         window.artbildConsentApi?.setConsent?.({
           services: {
+            googleTagManager: true,
             googleAnalytics: true,
             microsoftClarity:
               window.ArtbildConsent?.services?.microsoftClarity === true,
@@ -305,6 +307,8 @@ import { trackingConfig } from "../config/tracking";
       revokeAnalyticsConsent: () => {
         window.artbildConsentApi?.setConsent?.({
           services: {
+            googleTagManager:
+              window.ArtbildConsent?.services?.googleTagManager === true,
             googleAnalytics: false,
             microsoftClarity:
               window.ArtbildConsent?.services?.microsoftClarity === true,

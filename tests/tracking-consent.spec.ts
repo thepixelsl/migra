@@ -32,17 +32,16 @@ const readGtagCommands = (page: Page) => page.evaluate(() =>
     .map((entry) => Array.from(entry)),
 );
 
-test("loads GTM with denied defaults before a consent decision", async ({ page }) => {
+test("blocks GTM and all providers before a consent decision", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   await expect(page.locator("[data-consent-dialog]")).toBeVisible();
 
-  await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com/gtm.js")))
-    .toBe(true);
+  expect(requests.some((url) => url.includes("googletagmanager.com/gtm.js"))).toBe(false);
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
   expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
-  await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(1);
+  await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
 
   const commands = await readGtagCommands(page);
   const defaultConsent = commands.find(
@@ -63,9 +62,12 @@ test("updates Google consent when Meta Pixel is selected independently", async (
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
   await page.getByRole("tab", { name: "Services" }).click();
   await page.getByLabel("Meta Pixel erlauben").check();
+  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
+  expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(false);
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
-  expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(true);
+  await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com")))
+    .toBe(true);
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
   expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
 
@@ -125,6 +127,7 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
   });
 
   expect(stored.decision?.services).toEqual({
+    googleTagManager: true,
     googleAnalytics: false,
     microsoftClarity: true,
     metaPixel: false,
@@ -139,6 +142,7 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
 
   await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
   await page.getByRole("tab", { name: "Services" }).click();
+  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
   await expect(page.getByLabel("Google Analytics 4 erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
@@ -152,6 +156,54 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
       .find((entry) => entry?.event === "artbild_consent_update")
       ?.consent_microsoft_clarity,
   }))).toEqual({ clarity: false, update: "denied" });
+});
+
+test("turning off GTM disables every dependent service and reloads without GTM", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Alle akzeptieren" }).click();
+  await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com/gtm.js")))
+    .toBe(true);
+
+  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
+  await page.getByRole("tab", { name: "Services" }).click();
+  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
+  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeChecked();
+  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
+  await expect(page.getByLabel("Meta Pixel erlauben")).toBeChecked();
+
+  await page.getByLabel("Google Tag Manager erlauben").uncheck();
+  await expect(page.getByLabel("Google Analytics 4 erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Microsoft Clarity erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Statistik-Services erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Marketing-Services erlauben")).not.toBeChecked();
+
+  await Promise.all([
+    page.waitForEvent("domcontentloaded"),
+    page.getByRole("button", { name: "Auswahl speichern" }).click(),
+  ]);
+
+  await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
+  const restored = await page.evaluate(() => ({
+    services: window.ArtbildConsent?.services,
+    update: [...(window.dataLayer || [])]
+      .reverse()
+      .find((entry) => entry?.event === "artbild_consent_state"),
+  }));
+  expect(restored.services).toEqual({
+    googleTagManager: false,
+    googleAnalytics: false,
+    microsoftClarity: false,
+    metaPixel: false,
+  });
+  expect(restored.update).toMatchObject({
+    consent_google_tag_manager: "denied",
+    consent_google_analytics: "denied",
+    consent_microsoft_clarity: "denied",
+    consent_meta_pixel: "denied",
+  });
 });
 
 test("does not queue behavioral events before statistics consent", async ({ page }) => {
@@ -253,6 +305,7 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     expect(serviceGeometry.documentOverflow).toBeLessThanOrEqual(0);
     expect(serviceGeometry.widestRightEdge).toBeLessThanOrEqual(viewport.width + 1);
     await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
+    await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
     await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
     await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   }
@@ -276,6 +329,7 @@ test("shows service groups, services and providers without Cloudflare", async ({
   await expect(servicesPanel).toContainText("Google Tag Manager");
   await expect(servicesPanel).toContainText("Microsoft Clarity");
   await expect(servicesPanel).toContainText("über Google Tag Manager");
+  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
   await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();

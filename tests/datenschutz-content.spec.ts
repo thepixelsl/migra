@@ -90,8 +90,11 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
-  expect(mainText).toContain("Microsoft Clarity und das Meta Pixel werden erst nach Ihrer Einwilligung");
-  expect(mainText).toContain("Google Analytics 4, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
+  expect(mainText).toContain("Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta Pixel werden erst nach Ihrer Einwilligung");
+  expect(mainText).toContain("Google Tag Manager, Google Analytics 4, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
+  expect(mainText).toContain("Wenn Sie ihn deaktivieren, werden Google Analytics 4, Microsoft Clarity und Meta Pixel ebenfalls deaktiviert");
+  expect(mainText).toContain("Vor Ihrer Einwilligung wird der Tag Manager vollständig blockiert");
+  expect(mainText).not.toContain("erweiterten Einwilligungsmodus");
   expect(mainText).toContain("Cookie enthält die gewählten Services");
   expect(mainText).toContain("Einwilligung in den Service „Google Analytics 4“");
   expect(mainText).toContain("Einwilligung in den Service „Microsoft Clarity“");
