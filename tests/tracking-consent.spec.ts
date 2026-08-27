@@ -56,12 +56,13 @@ test("loads GTM with denied defaults before a consent decision", async ({ page }
   });
 });
 
-test("updates Google consent independently for statistics and marketing", async ({ page }) => {
+test("updates Google consent when Meta Pixel is selected independently", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Marketing-Services erlauben").check({ force: true });
+  await page.getByRole("tab", { name: "Services" }).click();
+  await page.getByLabel("Meta Pixel erlauben").check();
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(true);
@@ -81,6 +82,78 @@ test("updates Google consent independently for statistics and marketing", async 
   }).toBe(true);
 });
 
+test("stores and restores an independent Microsoft Clarity choice", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Individuell auswählen" }).click();
+  await page.getByRole("tab", { name: "Services" }).click();
+  await page.getByLabel("Microsoft Clarity erlauben").check();
+
+  const statisticsGroupBeforeSave = await page
+    .getByLabel("Statistik-Services erlauben")
+    .evaluate((input: HTMLInputElement) => ({
+      checked: input.checked,
+      indeterminate: input.indeterminate,
+    }));
+  expect(statisticsGroupBeforeSave).toEqual({ checked: false, indeterminate: true });
+
+  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+
+  await expect.poll(() => page.evaluate(() =>
+    (window.dataLayer || []).some((entry) =>
+      entry?.event === "artbild_consent_update"
+      && entry?.consent_microsoft_clarity === "granted"
+    ),
+  )).toBe(true);
+
+  const stored = await page.evaluate(() => {
+    const rawCookie = document.cookie
+      .split(";")
+      .map((part) => part.trim())
+      .find((part) => part.startsWith("artbild_consent="))
+      ?.slice("artbild_consent=".length);
+    const decision = rawCookie ? JSON.parse(decodeURIComponent(rawCookie)) : null;
+    const update = [...(window.dataLayer || [])]
+      .reverse()
+      .find((entry) => entry?.event === "artbild_consent_update");
+    return {
+      decision,
+      state: window.ArtbildConsent,
+      update,
+    };
+  });
+
+  expect(stored.decision?.services).toEqual({
+    googleAnalytics: false,
+    microsoftClarity: true,
+    metaPixel: false,
+  });
+  expect(stored.state?.services).toEqual(stored.decision?.services);
+  expect(stored.update).toMatchObject({
+    consent_google_analytics: "denied",
+    consent_microsoft_clarity: "granted",
+    consent_meta_pixel: "denied",
+  });
+  expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
+
+  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
+  await page.getByRole("tab", { name: "Services" }).click();
+  await expect(page.getByLabel("Google Analytics 4 erlauben")).not.toBeChecked();
+  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
+  await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
+
+  await page.getByLabel("Microsoft Clarity erlauben").uncheck();
+  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+  await expect.poll(() => page.evaluate(() => ({
+    clarity: window.ArtbildConsent?.services?.microsoftClarity,
+    update: [...(window.dataLayer || [])]
+      .reverse()
+      .find((entry) => entry?.event === "artbild_consent_update")
+      ?.consent_microsoft_clarity,
+  }))).toEqual({ clarity: false, update: "denied" });
+});
+
 test("does not queue behavioral events before statistics consent", async ({ page }) => {
   await captureProviderRequests(page);
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
@@ -94,7 +167,10 @@ test("does not queue behavioral events before statistics consent", async ({ page
   expect(beforeConsent).not.toContain("artbild_tracking_ready");
 
   await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Statistik-Services erlauben").check({ force: true });
+  await page.getByLabel("Statistik-Services erlauben").check();
+  await page.getByRole("tab", { name: "Services" }).click();
+  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeChecked();
+  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await page.getByRole("button", { name: "Auswahl speichern" }).click();
 
   await expect.poll(async () => page.evaluate(() =>
@@ -161,6 +237,24 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     await expect(page.getByRole("button", { name: "Alle akzeptieren" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Nur notwendige", exact: true }).first()).toBeVisible();
     await expect(page.getByRole("button", { name: "Individuell auswählen" })).toBeVisible();
+
+    await page.getByRole("button", { name: "Individuell auswählen" }).click();
+    await page.getByRole("tab", { name: "Services" }).click();
+    const servicesPanel = page.getByRole("tabpanel", { name: "Services" });
+    const serviceGeometry = await servicesPanel.evaluate((element) => ({
+      panelOverflow: element.scrollWidth - element.clientWidth,
+      documentOverflow: document.documentElement.scrollWidth - window.innerWidth,
+      widestRightEdge: Math.max(
+        ...[...element.querySelectorAll("summary, label")]
+          .map((child) => child.getBoundingClientRect().right),
+      ),
+    }));
+    expect(serviceGeometry.panelOverflow).toBeLessThanOrEqual(0);
+    expect(serviceGeometry.documentOverflow).toBeLessThanOrEqual(0);
+    expect(serviceGeometry.widestRightEdge).toBeLessThanOrEqual(viewport.width + 1);
+    await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
+    await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
+    await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   }
 });
 
@@ -182,6 +276,12 @@ test("shows service groups, services and providers without Cloudflare", async ({
   await expect(servicesPanel).toContainText("Google Tag Manager");
   await expect(servicesPanel).toContainText("Microsoft Clarity");
   await expect(servicesPanel).toContainText("über Google Tag Manager");
+  await expect(page.getByLabel("Google Analytics 4 erlauben")).toBeVisible();
+  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
+  await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
+  await expect(servicesPanel).not.toContainText("Turnstile");
+  await expect(servicesPanel).not.toContainText("Pinterest");
+  await expect(servicesPanel).not.toContainText("Google Fonts");
 
   await page.getByRole("tab", { name: "Provider" }).click();
   const providersPanel = page.getByRole("tabpanel", { name: "Provider" });

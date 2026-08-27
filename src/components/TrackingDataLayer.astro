@@ -247,8 +247,9 @@ import { trackingConfig } from "../config/tracking";
     };
 
     const pushEvent = (payload) => {
-      const analyticsGranted = window.ArtbildConsent?.analytics === true;
-      const marketingGranted = window.ArtbildConsent?.marketing === true;
+      const analyticsGranted = window.ArtbildConsent?.services?.googleAnalytics === true;
+      const marketingGranted = window.ArtbildConsent?.services?.metaPixel === true;
+      const clarityGranted = window.ArtbildConsent?.services?.microsoftClarity === true;
       if (!analyticsGranted && !marketingGranted) return;
 
       const eventPayload = compact({
@@ -264,6 +265,9 @@ import { trackingConfig } from "../config/tracking";
       eventPayload.consent_marketing = marketingGranted
         ? "granted"
         : "denied";
+      eventPayload.consent_clarity = clarityGranted
+        ? "granted"
+        : "denied";
       if (analyticsGranted) {
         const { event, ...parameters } = eventPayload;
         window.gtag?.("event", event, parameters);
@@ -274,7 +278,10 @@ import { trackingConfig } from "../config/tracking";
     };
 
     const publishTrackingReady = () => {
-      if (trackingReadyPublished || window.ArtbildConsent?.analytics !== true) return;
+      if (
+        trackingReadyPublished
+        || window.ArtbildConsent?.services?.googleAnalytics !== true
+      ) return;
       trackingReadyPublished = true;
       window.gtag?.("event", "artbild_tracking_ready", {
         consent_mode: "advanced",
@@ -287,14 +294,22 @@ import { trackingConfig } from "../config/tracking";
       flush: () => {},
       grantAnalyticsConsent: () => {
         window.artbildConsentApi?.setConsent?.({
-          analytics: true,
-          marketing: window.ArtbildConsent?.marketing === true,
+          services: {
+            googleAnalytics: true,
+            microsoftClarity:
+              window.ArtbildConsent?.services?.microsoftClarity === true,
+            metaPixel: window.ArtbildConsent?.services?.metaPixel === true,
+          },
         });
       },
       revokeAnalyticsConsent: () => {
         window.artbildConsentApi?.setConsent?.({
-          analytics: false,
-          marketing: window.ArtbildConsent?.marketing === true,
+          services: {
+            googleAnalytics: false,
+            microsoftClarity:
+              window.ArtbildConsent?.services?.microsoftClarity === true,
+            metaPixel: window.ArtbildConsent?.services?.metaPixel === true,
+          },
         });
       },
     };
@@ -304,6 +319,8 @@ import { trackingConfig } from "../config/tracking";
         event.detail?.analytics === true ? "granted" : "denied";
       document.documentElement.dataset.marketingConsent =
         event.detail?.marketing === true ? "granted" : "denied";
+      document.documentElement.dataset.clarityConsent =
+        event.detail?.clarity === true ? "granted" : "denied";
       if (event.detail?.analytics === true) publishTrackingReady();
     });
 

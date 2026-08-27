@@ -58,7 +58,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 26. August 2026");
+  expect(mainText).toContain("Stand: 27. August 2026");
   expect(mainText).toContain("Webhosting bei bunny.net");
   expect(mainText).toContain("BunnyWay d.o.o.");
   expect(mainText).toContain("Dunajska cesta 165");
@@ -91,8 +91,11 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
   expect(mainText).toContain("Microsoft Clarity und das Meta Pixel werden erst nach Ihrer Einwilligung");
-  expect(mainText).toContain("Einwilligung in „Statistik“");
-  expect(mainText).toContain("Einwilligung in „Marketing“");
+  expect(mainText).toContain("Google Analytics 4, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
+  expect(mainText).toContain("Cookie enthält die gewählten Services");
+  expect(mainText).toContain("Einwilligung in den Service „Google Analytics 4“");
+  expect(mainText).toContain("Einwilligung in den Service „Microsoft Clarity“");
+  expect(mainText).toContain("Einwilligung in den Service „Meta Pixel“");
   expect(mainText).toContain("Service-Gruppen, Services und Provider");
   expect(mainText).toContain("Google Ireland Limited");
   expect(mainText).toContain("HTTP-Protokolldaten innerhalb von 14 Tagen");

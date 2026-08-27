@@ -28,8 +28,8 @@
         Einwilligungsmodus. Vor Ihrer Auswahl erhält Google ausschließlich
         abgelehnte Einwilligungssignale und reduzierte Messsignale ohne
         Analytics- oder Werbe-Cookies. Microsoft Clarity und das im Tag Manager
-        eingerichtete Meta Pixel bleiben bis zu Ihrer Einwilligung vollständig
-        blockiert.
+        eingerichtete Meta Pixel bleiben bis zu Ihrer Einwilligung in den
+        jeweiligen Service vollständig blockiert.
       </p>
     </div>
 
@@ -104,7 +104,7 @@
           </div>
           <label class="consent-switch">
             <span class="visually-hidden">Statistik-Services erlauben</span>
-            <input type="checkbox" data-consent-analytics>
+            <input type="checkbox" data-consent-group="statistics">
             <span aria-hidden="true"></span>
           </label>
           <p>
@@ -123,7 +123,7 @@
           </div>
           <label class="consent-switch">
             <span class="visually-hidden">Marketing-Services erlauben</span>
-            <input type="checkbox" data-consent-marketing>
+            <input type="checkbox" data-consent-group="marketing">
             <span aria-hidden="true"></span>
           </label>
           <p>
@@ -143,10 +143,11 @@
         hidden
       >
         <p class="consent-dialog__panel-intro">
-          Optionale Services werden über die zugehörige Service-Gruppe
-          gesteuert. Der Google Tag Manager wird bereits vor Ihrer Auswahl mit
-          abgelehnten Einwilligungssignalen geladen; essenzielle Services sind
-          immer aktiv.
+          Google Analytics 4, Microsoft Clarity und Meta Pixel können einzeln
+          ausgewählt werden. Die Service-Gruppe „Statistik“ steuert Google
+          Analytics 4 und Microsoft Clarity gemeinsam. Der Google Tag Manager
+          wird bereits vor Ihrer Auswahl mit abgelehnten Einwilligungssignalen
+          geladen; essenzielle Services sind immer aktiv.
         </p>
 
         <details class="consent-record">
@@ -187,7 +188,11 @@
         <details class="consent-record">
           <summary>
             <span><strong>Google Analytics 4</strong><small>Statistik · Google</small></span>
-            <span>Über Statistik</span>
+            <label class="consent-switch consent-switch--service">
+              <span class="visually-hidden">Google Analytics 4 erlauben</span>
+              <input type="checkbox" data-consent-service="googleAnalytics">
+              <span aria-hidden="true"></span>
+            </label>
           </summary>
           <div>
             <p><strong>Zweck:</strong> Reichweitenmessung und Auswertung ausgewählter Interaktionen.</p>
@@ -199,7 +204,11 @@
         <details class="consent-record">
           <summary>
             <span><strong>Microsoft Clarity</strong><small>Statistik · Microsoft · über Google Tag Manager</small></span>
-            <span>Über Statistik</span>
+            <label class="consent-switch consent-switch--service">
+              <span class="visually-hidden">Microsoft Clarity erlauben</span>
+              <input type="checkbox" data-consent-service="microsoftClarity">
+              <span aria-hidden="true"></span>
+            </label>
           </summary>
           <div>
             <p><strong>Zweck:</strong> Heatmaps, technische Sitzungswiedergaben und Analyse der Bedienbarkeit.</p>
@@ -211,7 +220,11 @@
         <details class="consent-record">
           <summary>
             <span><strong>Meta Pixel</strong><small>Marketing · Meta · über Google Tag Manager</small></span>
-            <span>Über Marketing</span>
+            <label class="consent-switch consent-switch--service">
+              <span class="visually-hidden">Meta Pixel erlauben</span>
+              <input type="checkbox" data-consent-service="metaPixel">
+              <span aria-hidden="true"></span>
+            </label>
           </summary>
           <div>
             <p><strong>Zweck:</strong> Messung von Kontaktaktionen, Zielgruppenbildung und Remarketing.</p>
@@ -304,8 +317,13 @@
 
     const details = dialog.querySelector("[data-consent-details]");
     const quickActions = dialog.querySelector("[data-consent-quick-actions]");
-    const analyticsInput = dialog.querySelector("[data-consent-analytics]");
-    const marketingInput = dialog.querySelector("[data-consent-marketing]");
+    const statisticsInput = dialog.querySelector('[data-consent-group="statistics"]');
+    const marketingInput = dialog.querySelector('[data-consent-group="marketing"]');
+    const googleAnalyticsInput = dialog.querySelector('[data-consent-service="googleAnalytics"]');
+    const microsoftClarityInput = dialog.querySelector('[data-consent-service="microsoftClarity"]');
+    const metaPixelInput = dialog.querySelector('[data-consent-service="metaPixel"]');
+    const serviceInputs = [googleAnalyticsInput, microsoftClarityInput, metaPixelInput]
+      .filter((input) => input instanceof HTMLInputElement);
     const closeButton = dialog.querySelector("[data-consent-close]");
     const customizeButton = dialog.querySelector("[data-consent-customize]");
     const saveButton = dialog.querySelector("[data-consent-save]");
@@ -315,14 +333,37 @@
 
     const api = () => window.artbildConsentApi;
 
+    const syncGroupsFromServices = () => {
+      const googleAnalytics = googleAnalyticsInput instanceof HTMLInputElement
+        && googleAnalyticsInput.checked;
+      const microsoftClarity = microsoftClarityInput instanceof HTMLInputElement
+        && microsoftClarityInput.checked;
+      if (statisticsInput instanceof HTMLInputElement) {
+        statisticsInput.checked = googleAnalytics && microsoftClarity;
+        statisticsInput.indeterminate = googleAnalytics !== microsoftClarity;
+      }
+      if (marketingInput instanceof HTMLInputElement && metaPixelInput instanceof HTMLInputElement) {
+        marketingInput.checked = metaPixelInput.checked;
+        marketingInput.indeterminate = false;
+      }
+    };
+
     const syncInputs = () => {
       const state = api()?.getState?.() || window.ArtbildConsent || {};
-      if (analyticsInput instanceof HTMLInputElement) {
-        analyticsInput.checked = state.analytics === true;
+      const services = state.services || {};
+      if (googleAnalyticsInput instanceof HTMLInputElement) {
+        googleAnalyticsInput.checked = services.googleAnalytics === true
+          || (services.googleAnalytics === undefined && state.analytics === true);
       }
-      if (marketingInput instanceof HTMLInputElement) {
-        marketingInput.checked = state.marketing === true;
+      if (microsoftClarityInput instanceof HTMLInputElement) {
+        microsoftClarityInput.checked = services.microsoftClarity === true
+          || (services.microsoftClarity === undefined && state.clarity === true);
       }
+      if (metaPixelInput instanceof HTMLInputElement) {
+        metaPixelInput.checked = services.metaPixel === true
+          || (services.metaPixel === undefined && state.marketing === true);
+      }
+      syncGroupsFromServices();
     };
 
     const setDetailsVisible = (visible) => {
@@ -365,6 +406,31 @@
       });
     });
 
+    statisticsInput?.addEventListener("change", () => {
+      if (!(statisticsInput instanceof HTMLInputElement)) return;
+      if (googleAnalyticsInput instanceof HTMLInputElement) {
+        googleAnalyticsInput.checked = statisticsInput.checked;
+      }
+      if (microsoftClarityInput instanceof HTMLInputElement) {
+        microsoftClarityInput.checked = statisticsInput.checked;
+      }
+      statisticsInput.indeterminate = false;
+    });
+
+    marketingInput?.addEventListener("change", () => {
+      if (
+        marketingInput instanceof HTMLInputElement
+        && metaPixelInput instanceof HTMLInputElement
+      ) {
+        metaPixelInput.checked = marketingInput.checked;
+      }
+    });
+
+    serviceInputs.forEach((input) => {
+      input.addEventListener("click", (event) => event.stopPropagation());
+      input.addEventListener("change", syncGroupsFromServices);
+    });
+
     const openDialog = (existingDecision) => {
       if (window.ArtbildConsent?.enabled === false) return;
       openedForExistingDecision = existingDecision;
@@ -396,7 +462,13 @@
     dialog.querySelectorAll("[data-consent-choice]").forEach((button) => {
       button.addEventListener("click", () => {
         const acceptAll = button.getAttribute("data-consent-choice") === "all";
-        save({ analytics: acceptAll, marketing: acceptAll });
+        save({
+          services: {
+            googleAnalytics: acceptAll,
+            microsoftClarity: acceptAll,
+            metaPixel: acceptAll,
+          },
+        });
       });
     });
 
@@ -407,8 +479,13 @@
 
     saveButton?.addEventListener("click", () => {
       save({
-        analytics: analyticsInput instanceof HTMLInputElement && analyticsInput.checked,
-        marketing: marketingInput instanceof HTMLInputElement && marketingInput.checked,
+        services: {
+          googleAnalytics: googleAnalyticsInput instanceof HTMLInputElement
+            && googleAnalyticsInput.checked,
+          microsoftClarity: microsoftClarityInput instanceof HTMLInputElement
+            && microsoftClarityInput.checked,
+          metaPixel: metaPixelInput instanceof HTMLInputElement && metaPixelInput.checked,
+        },
       });
     });
 
@@ -695,6 +772,10 @@
     white-space: nowrap;
   }
 
+  .consent-record summary .consent-switch {
+    cursor: default;
+  }
+
   .consent-record summary:focus-visible {
     outline: 3px solid #c09a70;
     outline-offset: 3px;
@@ -761,6 +842,7 @@
     border-radius: 20px;
     background: #ded8d1;
     cursor: pointer;
+    pointer-events: none;
   }
 
   .consent-switch > span:last-child::after {
@@ -779,6 +861,11 @@
   .consent-switch input:checked + span {
     border-color: #4f684e;
     background: #4f684e;
+  }
+
+  .consent-switch input:indeterminate + span {
+    border-color: #4f684e;
+    background: linear-gradient(90deg, #4f684e 50%, #ded8d1 50%);
   }
 
   .consent-switch input:checked + span::after {
@@ -877,8 +964,8 @@
     }
 
     .consent-record summary {
-      grid-template-columns: minmax(0, 1fr);
-      gap: 5px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
     }
 
     .consent-record summary > span:last-child {
