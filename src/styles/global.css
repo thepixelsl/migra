@@ -1001,6 +1001,92 @@ h3 {
   justify-content: center;
 }
 
+.gallery-nav__item {
+  position: relative;
+}
+
+.gallery-nav__item > a {
+  position: relative;
+  z-index: 2;
+}
+
+.gallery-nav__item--has-submenu > a::after {
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  width: 28px;
+  height: 1px;
+  background: #74777b;
+  content: "";
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.35);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+
+.gallery-nav__item--has-submenu:hover > a::after,
+.gallery-nav__item--has-submenu:focus-within > a::after,
+.gallery-nav__item.is-current-section > a::after {
+  opacity: 1;
+  transform: translateX(-50%) scaleX(1);
+}
+
+.gallery-nav__submenu {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 50%;
+  z-index: 1200;
+  width: min(320px, calc(100vw - 48px));
+  margin: 0;
+  padding: 24px 0 20px;
+  list-style: none;
+  background: #eff0f0;
+  box-shadow: 0 24px 46px rgba(27, 29, 32, 0.13);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 12px);
+  transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+}
+
+.gallery-nav__submenu::before {
+  position: absolute;
+  top: 0;
+  left: 42px;
+  width: 42px;
+  height: 1px;
+  background: #74777b;
+  content: "";
+}
+
+.gallery-nav__item--has-submenu:hover > .gallery-nav__submenu,
+.gallery-nav__item--has-submenu:focus-within > .gallery-nav__submenu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+}
+
+.gallery-nav--home .gallery-nav__group--home .gallery-nav__submenu a,
+.gallery-nav--stacked .gallery-nav__group--home .gallery-nav__submenu a {
+  display: block;
+  min-height: 0;
+  padding: 13px 42px;
+  font-size: 17px;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+.gallery-nav__submenu a[aria-current="page"] {
+  color: #8a6d5a;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-nav__item--has-submenu > a::after,
+  .gallery-nav__submenu {
+    transition: none;
+  }
+}
+
 .gallery-nav--home .gallery-nav__group--home a,
 .gallery-nav--stacked .gallery-nav__group--home a {
   display: inline-flex;

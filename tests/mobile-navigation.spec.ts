@@ -77,9 +77,53 @@ test("desktop navigation remains active", async ({ page }) => {
   expect(navigationAlignment.itemCount).toBe(6);
   expect(navigationAlignment.centerDifference).toBeLessThanOrEqual(1);
 
+  const importantDestinations = [
+    "/standesamt-hamburg/",
+    "/hochzeitsfotograf-preise/",
+    "/kontakt/",
+    "/sicherer-kontakt/",
+    "/impressum/",
+    "/datenschutz/",
+    "/portfolio/",
+    "/gallery-category/hochzeit/",
+    "/gallery-category/travel/",
+  ];
+
+  for (const destination of importantDestinations) {
+    await expect(page.locator(`.gallery-nav__submenu a[href="${destination}"]`)).toHaveCount(1);
+  }
+
+  const contactItem = page.locator(".gallery-nav__item", {
+    has: page.getByRole("link", { name: "Kontakt", exact: true }),
+  }).first();
+  const contactSubmenu = contactItem.locator(".gallery-nav__submenu");
+
+  await expect(contactSubmenu).toHaveCSS("visibility", "hidden");
+  await contactItem.hover();
+  await expect(contactSubmenu).toBeVisible();
+  await expect(contactSubmenu).toHaveCSS("opacity", "1");
+  await expect(contactSubmenu.getByRole("link", { name: "Preise & Pakete" })).toBeVisible();
+
+  const submenuBounds = await contactSubmenu.boundingBox();
+  expect(submenuBounds?.x).toBeGreaterThanOrEqual(0);
+  expect((submenuBounds?.x ?? 0) + (submenuBounds?.width ?? 0)).toBeLessThanOrEqual(1280);
+
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({
     path: `${screenshotDirectory}/desktop-navigation.png`,
     fullPage: false,
   });
+
+  await page.mouse.move(0, 799);
+
+  const blogItem = page.locator(".gallery-nav__item", {
+    has: page.getByRole("link", { name: "Blog", exact: true }),
+  }).first();
+  const blogTrigger = blogItem.getByRole("link", { name: "Blog", exact: true });
+  const blogSubmenu = blogItem.locator(".gallery-nav__submenu");
+
+  await blogTrigger.focus();
+  await expect(blogSubmenu).toBeVisible();
+  await page.keyboard.press("Tab");
+  await expect(blogSubmenu.getByRole("link", { name: "Ratgeber Übersicht" })).toBeFocused();
 });

@@ -11,6 +11,7 @@ export type NavigationItem = {
   badge?: string;
   external?: boolean;
   emphasis?: "primary" | "cta";
+  children?: NavigationItem[];
 };
 
 export type NavigationGroup = {
@@ -40,6 +41,44 @@ export const desktopNavigationItems: NavigationItem[] = [
     contentTopic: "portfolio",
     userIntent: "beispielbilder_ansehen",
     journeyStage: "auswahl",
+    children: [
+      {
+        label: "Portfolio Übersicht",
+        href: "/portfolio/",
+        trackingId: "desktop_portfolio_overview",
+        ctaType: "navigation",
+        contentTopic: "portfolio",
+        userIntent: "beispielbilder_ansehen",
+        journeyStage: "auswahl",
+      },
+      {
+        label: "Hochzeitsgalerien",
+        href: "/gallery-category/hochzeit/",
+        trackingId: "desktop_portfolio_weddings",
+        ctaType: "portfolio_category",
+        contentTopic: "hochzeitsgalerien",
+        userIntent: "hochzeitsgalerien_ansehen",
+        journeyStage: "auswahl",
+      },
+      {
+        label: "People & Editorial",
+        href: "/portfolio/?category=peoplefotografie",
+        trackingId: "desktop_portfolio_people",
+        ctaType: "portfolio_filter",
+        contentTopic: "peoplefotografie",
+        userIntent: "people_portfolio_ansehen",
+        journeyStage: "auswahl",
+      },
+      {
+        label: "Travel & Destination",
+        href: "/gallery-category/travel/",
+        trackingId: "desktop_portfolio_travel",
+        ctaType: "portfolio_category",
+        contentTopic: "travel_fotografie",
+        userIntent: "travel_portfolio_ansehen",
+        journeyStage: "auswahl",
+      },
+    ],
   },
   {
     label: "Kontakt",
@@ -51,6 +90,35 @@ export const desktopNavigationItems: NavigationItem[] = [
     contentTopic: "kontaktmoeglichkeiten",
     userIntent: "kontakt_aufnehmen",
     journeyStage: "anfrage",
+    children: [
+      {
+        label: "Kontakt & Anfrage",
+        href: "/kontakt/",
+        trackingId: "desktop_contact_request",
+        ctaType: "navigation",
+        contentTopic: "kontaktmoeglichkeiten",
+        userIntent: "kontakt_aufnehmen",
+        journeyStage: "anfrage",
+      },
+      {
+        label: "Sicherer Kontakt",
+        href: "/sicherer-kontakt/",
+        trackingId: "desktop_secure_contact",
+        ctaType: "navigation",
+        contentTopic: "sicherer_kontakt",
+        userIntent: "sicher_kontakt_aufnehmen",
+        journeyStage: "anfrage",
+      },
+      {
+        label: "Preise & Pakete",
+        href: "/hochzeitsfotograf-preise/",
+        trackingId: "desktop_prices",
+        ctaType: "navigation",
+        contentTopic: "preise_pakete",
+        userIntent: "preise_pruefen",
+        journeyStage: "vergleich",
+      },
+    ],
   },
   {
     label: "Blog",
@@ -62,6 +130,44 @@ export const desktopNavigationItems: NavigationItem[] = [
     contentTopic: "hochzeitsratgeber",
     userIntent: "ratgeber_lesen",
     journeyStage: "information",
+    children: [
+      {
+        label: "Ratgeber Übersicht",
+        href: "/blog/",
+        trackingId: "desktop_blog_overview",
+        ctaType: "navigation",
+        contentTopic: "hochzeitsratgeber",
+        userIntent: "ratgeber_lesen",
+        journeyStage: "information",
+      },
+      {
+        label: "Standesamtfinder Hamburg",
+        href: "/standesamt-hamburg/",
+        trackingId: "desktop_registry_office_finder",
+        ctaType: "navigation",
+        contentTopic: "standesamt_hamburg",
+        userIntent: "standesamt_finden",
+        journeyStage: "planung",
+      },
+      {
+        label: "Trautermin Hamburg",
+        href: "/trautermin-hamburg-online-reservieren/",
+        trackingId: "desktop_ceremony_date_hamburg",
+        ctaType: "navigation",
+        contentTopic: "trautermin_hamburg",
+        userIntent: "trautermin_planen",
+        journeyStage: "planung",
+      },
+      {
+        label: "Hochzeitsfotograf Ratgeber",
+        href: "/hochzeitsfotograf-ratgeber/",
+        trackingId: "desktop_wedding_photographer_guide",
+        ctaType: "navigation",
+        contentTopic: "hochzeitsfotograf_ratgeber",
+        userIntent: "fotografenwahl_vorbereiten",
+        journeyStage: "information",
+      },
+    ],
   },
   {
     label: "Über mich",
@@ -73,6 +179,35 @@ export const desktopNavigationItems: NavigationItem[] = [
     contentTopic: "ueber_mich",
     userIntent: "vertrauen_aufbauen",
     journeyStage: "vertrauen",
+    children: [
+      {
+        label: "Über York Augustin",
+        href: "/about/",
+        trackingId: "desktop_about_york",
+        ctaType: "navigation",
+        contentTopic: "ueber_mich",
+        userIntent: "vertrauen_aufbauen",
+        journeyStage: "vertrauen",
+      },
+      {
+        label: "Impressum",
+        href: "/impressum/",
+        trackingId: "desktop_legal_notice",
+        ctaType: "navigation",
+        contentTopic: "impressum",
+        userIntent: "anbieterinformationen_lesen",
+        journeyStage: "vertrauen",
+      },
+      {
+        label: "Datenschutz",
+        href: "/datenschutz/",
+        trackingId: "desktop_privacy",
+        ctaType: "navigation",
+        contentTopic: "datenschutz",
+        userIntent: "datenschutz_lesen",
+        journeyStage: "vertrauen",
+      },
+    ],
   },
   {
     label: "Newsletter",

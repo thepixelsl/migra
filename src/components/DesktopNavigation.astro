@@ -1,5 +1,5 @@
 ---
-import { desktopNavigationItems } from "../data/navigation";
+import { desktopNavigationItems, type NavigationItem } from "../data/navigation";
 import TrackingDataLayer from "./TrackingDataLayer.astro";
 
 const enableTracking = Astro.props.enableTracking ?? true;
@@ -22,6 +22,10 @@ const isCurrent = (href: string) => {
   const targetPath = normalizePath(new URL(href, Astro.url).pathname);
   return currentPath === targetPath;
 };
+
+const isCurrentSection = (href: string, children: NavigationItem[] = []) => (
+  isCurrent(href) || children.some((child) => isCurrent(child.href))
+);
 ---
 
 {enableTracking && <TrackingDataLayer />}
@@ -52,7 +56,13 @@ const isCurrent = (href: string) => {
   </a>
   <ul class="gallery-nav__group gallery-nav__group--home">
     {desktopNavigationItems.map((item, index) => (
-      <li>
+      <li
+        class:list={[
+          "gallery-nav__item",
+          { "gallery-nav__item--has-submenu": item.children?.length },
+          { "is-current-section": isCurrentSection(item.href, item.children) },
+        ]}
+      >
         <a
           href={item.href}
           aria-current={isCurrent(item.href) ? "page" : undefined}
@@ -67,6 +77,32 @@ const isCurrent = (href: string) => {
         >
           {item.label}
         </a>
+        {item.children?.length && (
+          <ul
+            class="gallery-nav__submenu"
+            aria-label={`${item.label} Untermenü`}
+            data-desktop-submenu
+          >
+            {item.children.map((child, childIndex) => (
+              <li>
+                <a
+                  href={child.href}
+                  aria-current={isCurrent(child.href) ? "page" : undefined}
+                  data-track-event="cta_click"
+                  data-cta-id={child.trackingId}
+                  data-cta-type={child.ctaType ?? "navigation"}
+                  data-section-id="desktop_navigation_submenu"
+                  data-content-topic={child.contentTopic ?? "site_navigation"}
+                  data-user-intent={child.userIntent ?? "navigate"}
+                  data-journey-stage={child.journeyStage ?? "all"}
+                  data-position={`desktop_nav_${index + 1}_submenu_${childIndex + 1}`}
+                >
+                  {child.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
       </li>
     ))}
   </ul>
