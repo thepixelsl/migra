@@ -18,6 +18,9 @@ export type NavigationGroup = {
   label: string;
   items: NavigationItem[];
   secondary?: boolean;
+  contentTopic?: string;
+  userIntent?: string;
+  journeyStage?: string;
 };
 
 export const desktopNavigationItems: NavigationItem[] = [
@@ -121,27 +124,27 @@ export const desktopNavigationItems: NavigationItem[] = [
     ],
   },
   {
-    label: "Blog",
+    label: "Planung",
     href: "/blog/",
-    description: "Ratgeber für Hochzeit, Standesamt und Planung",
+    description: "Standesämter, Trautermine und Hochzeitsratgeber",
     seoContext: "Hochzeitsratgeber Hamburg",
-    trackingId: "desktop_blog",
+    trackingId: "desktop_planning",
     ctaType: "navigation",
-    contentTopic: "hochzeitsratgeber",
-    userIntent: "ratgeber_lesen",
-    journeyStage: "information",
+    contentTopic: "hochzeitsplanung",
+    userIntent: "hochzeit_planen",
+    journeyStage: "planung",
     children: [
       {
-        label: "Ratgeber Übersicht",
+        label: "Planung & Ratgeber",
         href: "/blog/",
-        trackingId: "desktop_blog_overview",
+        trackingId: "desktop_planning_overview",
         ctaType: "navigation",
         contentTopic: "hochzeitsratgeber",
         userIntent: "ratgeber_lesen",
         journeyStage: "information",
       },
       {
-        label: "Standesamtfinder Hamburg",
+        label: "Standesämter & Trauorte",
         href: "/standesamt-hamburg/",
         trackingId: "desktop_registry_office_finder",
         ctaType: "navigation",
@@ -281,6 +284,35 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         contentTopic: "ueber_mich",
         userIntent: "vertrauen_aufbauen",
         journeyStage: "vertrauen",
+      },
+    ],
+  },
+  {
+    label: "Planung",
+    secondary: true,
+    contentTopic: "hochzeitsplanung",
+    userIntent: "hochzeit_planen",
+    journeyStage: "planung",
+    items: [
+      {
+        label: "Standesämter & Trauorte",
+        href: "/standesamt-hamburg/",
+        seoContext: "Hamburger Standesämter und besondere Trauorte",
+        trackingId: "mobile_registry_office_finder",
+        ctaType: "planning_tool",
+        contentTopic: "standesamt_hamburg",
+        userIntent: "standesamt_finden",
+        journeyStage: "planung",
+      },
+      {
+        label: "Trautermin Hamburg",
+        href: "/trautermin-hamburg-online-reservieren/",
+        seoContext: "Trautermin in Hamburg online reservieren",
+        trackingId: "mobile_ceremony_date_hamburg",
+        ctaType: "planning_tool",
+        contentTopic: "trautermin_hamburg",
+        userIntent: "trautermin_planen",
+        journeyStage: "planung",
       },
     ],
   },

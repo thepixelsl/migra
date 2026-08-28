@@ -23,6 +23,12 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   await expect(navigation).toBeVisible();
   await expect(toggleState).toHaveAttribute("aria-expanded", "true");
   await expect(navigation.getByRole("link", { name: "Kontakt", exact: true })).toBeVisible();
+  await expect(
+    navigation.getByRole("link", { name: "Standesämter & Trauorte", exact: true }),
+  ).toHaveAttribute("href", "/standesamt-hamburg/");
+  await expect(
+    navigation.getByRole("link", { name: "Trautermin Hamburg", exact: true }),
+  ).toHaveAttribute("href", "/trautermin-hamburg-online-reservieren/");
   await page.waitForTimeout(350);
 
   const linkHeights = await page.locator(
@@ -116,14 +122,17 @@ test("desktop navigation remains active", async ({ page }) => {
 
   await page.mouse.move(0, 799);
 
-  const blogItem = page.locator(".gallery-nav__item", {
-    has: page.getByRole("link", { name: "Blog", exact: true }),
+  const planningItem = page.locator(".gallery-nav__item", {
+    has: page.getByRole("link", { name: "Planung", exact: true }),
   }).first();
-  const blogTrigger = blogItem.getByRole("link", { name: "Blog", exact: true });
-  const blogSubmenu = blogItem.locator(".gallery-nav__submenu");
+  const planningTrigger = planningItem.getByRole("link", { name: "Planung", exact: true });
+  const planningSubmenu = planningItem.locator(".gallery-nav__submenu");
 
-  await blogTrigger.focus();
-  await expect(blogSubmenu).toBeVisible();
+  await planningTrigger.focus();
+  await expect(planningSubmenu).toBeVisible();
+  await expect(
+    planningSubmenu.getByRole("link", { name: "Standesämter & Trauorte" }),
+  ).toHaveAttribute("href", "/standesamt-hamburg/");
   await page.keyboard.press("Tab");
-  await expect(blogSubmenu.getByRole("link", { name: "Ratgeber Übersicht" })).toBeFocused();
+  await expect(planningSubmenu.getByRole("link", { name: "Planung & Ratgeber" })).toBeFocused();
 });

@@ -121,9 +121,9 @@ const isCurrent = (item: NavigationItem) => {
             ]}
             aria-labelledby={`mobile-navigation-${group.label.toLowerCase()}`}
             data-track-section={`mobile_navigation_${toTrackingId(group.label)}`}
-            data-content-topic={group.secondary ? "hochzeitsgalerien" : "site_navigation"}
-            data-user-intent={group.secondary ? "hochzeitsgalerien_ansehen" : "navigate"}
-            data-journey-stage={group.secondary ? "auswahl" : "all"}
+            data-content-topic={group.contentTopic ?? (group.secondary ? "hochzeitsgalerien" : "site_navigation")}
+            data-user-intent={group.userIntent ?? (group.secondary ? "hochzeitsgalerien_ansehen" : "navigate")}
+            data-journey-stage={group.journeyStage ?? (group.secondary ? "auswahl" : "all")}
             data-content-format="navigation_group"
             data-position={group.secondary ? "mobile_secondary" : "mobile_primary"}
           >
