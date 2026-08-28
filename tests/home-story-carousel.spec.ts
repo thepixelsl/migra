@@ -22,12 +22,12 @@ test("story carousel is visibly navigable and advances one card at a time on des
   const controlLabel = carousel.locator(".story-carousel__control-label");
 
   await carousel.scrollIntoViewIfNeeded();
-  await expect(cards).toHaveCount(6);
+  await expect(cards).toHaveCount(7);
   await expect(cards.first()).toHaveRole("article");
   await expect(cards.first()).not.toHaveAttribute("role", "group");
   await expect(cards.first()).toHaveAttribute("aria-roledescription", "Folie");
-  await expect(cards.first()).toHaveAccessibleName(/1 von 6: Hochzeit von Steffi & Dominik/);
-  await expect(cards.first().locator("a")).toHaveAttribute("href", "/gallery/steffi-dominik/");
+  await expect(cards.first()).toHaveAccessibleName(/1 von 7: Paarshooting Mallorca/);
+  await expect(cards.first().locator("a")).toHaveAttribute("href", "/gallery/paarshooting-mallorca/");
 
   for (const href of requestedGalleries) {
     await expect(carousel.locator(`a[href="${href}"]`)).toHaveCount(1);
@@ -43,7 +43,7 @@ test("story carousel is visibly navigable and advances one card at a time on des
   await expect(carousel.locator(".story-carousel__navigation > button")).toHaveCount(2);
   await expect(carousel.locator(".story-carousel__navigation > .story-carousel__position")).toHaveCount(1);
   await expect(carousel.locator("[data-story-current]")).toHaveText("1–4");
-  await expect(status).toHaveText("Galerien 1 bis 4 von 6");
+  await expect(status).toHaveText("Galerien 1 bis 4 von 7");
 
   const controlStyleParity = await page.evaluate(() => {
     const storyButton = document.querySelector<HTMLElement>("[data-story-previous]");
@@ -124,10 +124,10 @@ test("story carousel is visibly navigable and advances one card at a time on des
   expect(initialLayout.cardWidths.every((width) => width >= 265 && width <= 280)).toBe(true);
   expect(initialLayout.mediaRatios[0]).toBeCloseTo(2 / 3, 2);
   expect(initialLayout.mediaRatios[1]).toBeCloseTo(3 / 4, 2);
-  expect(initialLayout.visibleStates).toEqual(["false", "false", "false", "false", "true", "true"]);
+  expect(initialLayout.visibleStates).toEqual(["false", "false", "false", "false", "true", "true", "true"]);
 
   await next.click();
-  await expect(status).toHaveText("Galerien 2 bis 5 von 6");
+  await expect(status).toHaveText("Galerien 2 bis 5 von 7");
   await expect(carousel.locator("[data-story-current]")).toHaveText("2–5");
   await expect(previous).toBeEnabled();
   await expect(next).toBeEnabled();
@@ -136,8 +136,13 @@ test("story carousel is visibly navigable and advances one card at a time on des
     .toBeGreaterThan(250);
 
   await next.click();
-  await expect(status).toHaveText("Galerien 3 bis 6 von 6");
+  await expect(status).toHaveText("Galerien 3 bis 6 von 7");
   await expect(carousel.locator("[data-story-current]")).toHaveText("3–6");
+  await expect(next).toBeEnabled();
+
+  await next.click();
+  await expect(status).toHaveText("Galerien 4 bis 7 von 7");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("4–7");
   await expect(next).toBeDisabled();
 
   const zurichImage = carousel.locator('a[href="/brautpaar-in-zuerich/"] img');
@@ -146,7 +151,7 @@ test("story carousel is visibly navigable and advances one card at a time on des
   await expect(zurichImage).toHaveCSS("object-fit", "contain");
 
   await previous.click();
-  await expect(status).toHaveText("Galerien 2 bis 5 von 6");
+  await expect(status).toHaveText("Galerien 3 bis 6 von 7");
 
   const overflow = await page.evaluate(
     () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
@@ -170,8 +175,8 @@ test("story carousel keeps its arrow-counter controls and two-card layout on tab
   await expect(next).toBeVisible();
   await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
   await expect(carousel.locator("[data-story-current]")).toHaveText("1–2");
-  await expect(status).toHaveText("Galerien 1 bis 2 von 6");
-  await expect(cards).toHaveCount(6);
+  await expect(status).toHaveText("Galerien 1 bis 2 von 7");
+  await expect(cards).toHaveCount(7);
 
   const tabletLayout = await carousel.evaluate((element) => {
     const storyViewport = element.querySelector<HTMLElement>("[data-story-viewport]");
@@ -199,19 +204,21 @@ test("story carousel keeps its arrow-counter controls and two-card layout on tab
   expect(tabletLayout.mediaRatios[0]).toBeCloseTo(2 / 3, 2);
   expect(tabletLayout.mediaRatios[1]).toBeCloseTo(3 / 4, 2);
   expect(tabletLayout.nextCardPreview).toBeGreaterThan(12);
-  expect(tabletLayout.visibleStates).toEqual(["false", "false", "true", "true", "true", "true"]);
+  expect(tabletLayout.visibleStates).toEqual(["false", "false", "true", "true", "true", "true", "true"]);
 
   await next.click();
-  await expect(status).toHaveText("Galerien 2 bis 3 von 6");
+  await expect(status).toHaveText("Galerien 2 bis 3 von 7");
   await expect(carousel.locator("[data-story-current]")).toHaveText("2–3");
 
   await next.click();
-  await expect(status).toHaveText("Galerien 3 bis 4 von 6");
+  await expect(status).toHaveText("Galerien 3 bis 4 von 7");
   await next.click();
-  await expect(status).toHaveText("Galerien 4 bis 5 von 6");
+  await expect(status).toHaveText("Galerien 4 bis 5 von 7");
   await next.click();
-  await expect(status).toHaveText("Galerien 5 bis 6 von 6");
-  await expect(carousel.locator("[data-story-current]")).toHaveText("5–6");
+  await expect(status).toHaveText("Galerien 5 bis 6 von 7");
+  await next.click();
+  await expect(status).toHaveText("Galerien 6 bis 7 von 7");
+  await expect(carousel.locator("[data-story-current]")).toHaveText("6–7");
   await expect(next).toBeDisabled();
 
   const overflow = await page.evaluate(
