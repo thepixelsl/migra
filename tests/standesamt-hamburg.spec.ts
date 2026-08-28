@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
+import { mkdirSync } from "node:fs";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const pageUrl = `${baseUrl}/standesamt-hamburg/`;
+const heroScreenshotDirectory = "screenshots/qa-standesamt-hamburg";
 
 const settleLayout = async (page: Page) => {
   await page.evaluate(
@@ -111,6 +113,48 @@ const expectStableFinder = (actual: FinderLayout, baseline: FinderLayout) => {
   );
   expectNoOverflow(actual);
 };
+
+test("hero title lines stay separated on desktop and mobile", async ({ page }) => {
+  mkdirSync(heroScreenshotDirectory, { recursive: true });
+
+  for (const viewport of [
+    { width: 1440, height: 900 },
+    { width: 390, height: 844 },
+    { width: 320, height: 720 },
+  ]) {
+    await page.setViewportSize(viewport);
+    await page.goto(pageUrl, { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+
+    const titleLayout = await page.evaluate(() => {
+      const title = document.querySelector<HTMLElement>(".finder-hero h1");
+      const titleParts = title?.querySelectorAll<HTMLElement>("span");
+      const lead = document.querySelector<HTMLElement>(".finder-hero__lead");
+
+      if (!title || !titleParts || titleParts.length !== 2 || !lead) {
+        throw new Error("Finder hero typography is incomplete");
+      }
+
+      const first = titleParts[0].getBoundingClientRect();
+      const second = titleParts[1].getBoundingClientRect();
+      const leadBounds = lead.getBoundingClientRect();
+
+      return {
+        titleGap: second.top - first.bottom,
+        leadGap: leadBounds.top - second.bottom,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+
+    expect(titleLayout.titleGap).toBeGreaterThanOrEqual(8);
+    expect(titleLayout.leadGap).toBeGreaterThanOrEqual(20);
+    expect(titleLayout.overflow).toBe(0);
+
+    await page.locator(".finder-hero__copy").screenshot({
+      path: `${heroScreenshotDirectory}/hero-${viewport.width}.png`,
+    });
+  }
+});
 
 test("Hamburg image separates both finder tasks without overflow", async ({ page }) => {
   for (const viewport of [

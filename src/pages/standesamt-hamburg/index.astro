@@ -962,6 +962,8 @@ const schemaGraph = {
   }
 
   .finder-hero h1 {
+    display: grid;
+    row-gap: clamp(16px, 1.6vw, 24px);
     font-size: clamp(54px, 6.3vw, 92px);
     line-height: .96;
   }
@@ -2325,10 +2327,10 @@ const schemaGraph = {
 
   /* Finart-inspired refinement: editorial planning aid instead of control panel. */
   .finder-hero h1 span:last-child {
-    margin-top: .08em;
+    margin-top: 0;
     font-family: "Bestermind", "Playfair Display", Georgia, serif;
     font-size: 1.08em;
-    line-height: .88;
+    line-height: .95;
     transform: translateX(.04em) rotate(-1.5deg);
   }
 
