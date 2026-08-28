@@ -29,6 +29,21 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   await expect(
     navigation.getByRole("link", { name: "Trautermin Hamburg", exact: true }),
   ).toHaveAttribute("href", "/trautermin-hamburg-online-reservieren/");
+  const navigationGroups = navigation.locator(".mobile-navigation__group");
+  await expect(navigationGroups.locator("h2")).toHaveText([
+    "Hauptmenü",
+    "Galerien",
+    "Planung",
+  ]);
+
+  const galleryGroup = navigationGroups.filter({ hasText: "Galerien" });
+  const planningGroup = navigationGroups.filter({ hasText: "Planung" });
+  await expect(galleryGroup).not.toHaveClass(/is-secondary/);
+  await expect(planningGroup).toHaveClass(/is-secondary/);
+  await expect(
+    galleryGroup.getByRole("link", { name: "Hochzeitsgalerien", exact: true }),
+  ).toBeVisible();
+  await expect(galleryGroup.locator(".mobile-navigation__arrow")).toBeVisible();
   await page.waitForTimeout(350);
 
   const linkHeights = await page.locator(
@@ -52,6 +67,59 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   await page.locator(".mobile-navigation__close").press("Escape");
   await expect(toggleState).toHaveAttribute("aria-expanded", "false");
   await expect(navigation).toBeHidden();
+});
+
+test("gallery link stays prominent above planning at 320px", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto(`${baseUrl}/portfolio/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "Menü öffnen" }).click();
+
+  const navigation = page.getByRole("navigation", { name: "Mobile Hauptnavigation" });
+  const navigationGroups = navigation.locator(".mobile-navigation__group");
+  const galleryGroup = navigationGroups.filter({ hasText: "Galerien" });
+  const planningGroup = navigationGroups.filter({ hasText: "Planung" });
+  const galleryLink = galleryGroup.getByRole("link", {
+    name: "Hochzeitsgalerien",
+    exact: true,
+  });
+
+  await expect(navigationGroups.locator("h2")).toHaveText([
+    "Hauptmenü",
+    "Galerien",
+    "Planung",
+  ]);
+  await expect(galleryLink).toBeVisible();
+  await expect(galleryGroup.locator(".mobile-navigation__arrow")).toBeVisible();
+  await page.waitForTimeout(350);
+
+  const galleryBounds = await galleryGroup.boundingBox();
+  const planningBounds = await planningGroup.boundingBox();
+  const galleryLinkBounds = await galleryLink.boundingBox();
+  expect(galleryBounds).not.toBeNull();
+  expect(planningBounds).not.toBeNull();
+  expect((galleryBounds?.y ?? 0) + (galleryBounds?.height ?? 0))
+    .toBeLessThanOrEqual(planningBounds?.y ?? 0);
+  expect(galleryLinkBounds?.height).toBeGreaterThanOrEqual(44);
+
+  const typography = await page.evaluate(() => {
+    const galleryTitle = document.querySelector<HTMLElement>(
+      ".mobile-navigation__group:not(.is-secondary) a[href='/portfolio/'] .mobile-navigation__link-title",
+    );
+    const planningTitle = document.querySelector<HTMLElement>(
+      ".mobile-navigation__group.is-secondary .mobile-navigation__link-title",
+    );
+
+    return {
+      gallerySize: Number.parseFloat(getComputedStyle(galleryTitle!).fontSize),
+      planningSize: Number.parseFloat(getComputedStyle(planningTitle!).fontSize),
+    };
+  });
+  expect(typography.gallerySize).toBeGreaterThan(typography.planningSize);
+
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+  );
+  expect(overflow).toBe(0);
 });
 
 test("desktop navigation remains active", async ({ page }) => {

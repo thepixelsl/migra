@@ -288,6 +288,24 @@ export const mobileNavigationGroups: NavigationGroup[] = [
     ],
   },
   {
+    label: "Galerien",
+    contentTopic: "hochzeitsgalerien",
+    userIntent: "hochzeitsgalerien_ansehen",
+    journeyStage: "auswahl",
+    items: [
+      {
+        label: "Hochzeitsgalerien",
+        href: "/portfolio/?category=hochzeit",
+        seoContext: "Hochzeitsgalerien Hamburg Standesamt Elopement Destination Wedding",
+        trackingId: "mobile_hochzeitsgalerien",
+        ctaType: "portfolio_filter",
+        contentTopic: "hochzeitsgalerien",
+        userIntent: "hochzeitsgalerien_ansehen",
+        journeyStage: "auswahl",
+      },
+    ],
+  },
+  {
     label: "Planung",
     secondary: true,
     contentTopic: "hochzeitsplanung",
@@ -313,22 +331,6 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         contentTopic: "trautermin_hamburg",
         userIntent: "trautermin_planen",
         journeyStage: "planung",
-      },
-    ],
-  },
-  {
-    label: "Galerien",
-    secondary: true,
-    items: [
-      {
-        label: "Hochzeitsgalerien",
-        href: "/portfolio/?category=hochzeit",
-        seoContext: "Hochzeitsgalerien Hamburg Standesamt Elopement Destination Wedding",
-        trackingId: "mobile_hochzeitsgalerien",
-        ctaType: "portfolio_filter",
-        contentTopic: "hochzeitsgalerien",
-        userIntent: "hochzeitsgalerien_ansehen",
-        journeyStage: "auswahl",
       },
     ],
   },
