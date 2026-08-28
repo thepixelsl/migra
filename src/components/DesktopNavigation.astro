@@ -2,6 +2,8 @@
 import { desktopNavigationItems } from "../data/navigation";
 import TrackingDataLayer from "./TrackingDataLayer.astro";
 
+const enableTracking = Astro.props.enableTracking ?? true;
+
 const normalizePath = (path: string) => {
   if (path === "/") {
     return "/";
@@ -22,7 +24,7 @@ const isCurrent = (href: string) => {
 };
 ---
 
-<TrackingDataLayer />
+{enableTracking && <TrackingDataLayer />}
 
 <nav
   class="gallery-nav gallery-nav--stacked"

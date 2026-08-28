@@ -32,6 +32,20 @@ const readGtagCommands = (page: Page) => page.evaluate(() =>
     .map((entry) => Array.from(entry)),
 );
 
+test("keeps the agent reference page free of consent UI and optional tracking", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+
+  await expect(page.getByRole("heading", {
+    name: "Buchungsinformationen für KI-Agenten und Buchungsassistenten",
+  })).toBeVisible();
+  await expect(page.locator("[data-consent-dialog]")).toHaveCount(0);
+  await expect(page.locator("#artbild-tracking-config")).toHaveCount(0);
+  await expect(page.locator("script[data-artbild-provider]")).toHaveCount(0);
+  expect(requests).toEqual([]);
+});
+
 test("blocks GTM and all providers before a consent decision", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
