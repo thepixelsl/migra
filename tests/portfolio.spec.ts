@@ -84,3 +84,34 @@ test("mobile portfolio keeps the Zurich entry centered without horizontal drift"
     fullPage: false,
   });
 });
+
+test("Hamburg is the first gallery in both Travel views", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(`${baseUrl}/portfolio/?category=travel`, {
+    waitUntil: "domcontentloaded",
+  });
+
+  const necessaryCookies = page.getByRole("button", { name: "Nur notwendige" });
+  if (await necessaryCookies.isVisible()) await necessaryCookies.click();
+
+  const visiblePortfolioCards = page.locator("[data-portfolio-entry]:visible");
+  await expect(visiblePortfolioCards.first()).toContainText(
+    "Landschaftsbilder und Portraits von der Stadt Hamburg",
+  );
+  await expect(visiblePortfolioCards.first().locator("a")).toHaveAttribute(
+    "href",
+    "/gallery/hamburg/",
+  );
+
+  await page.goto(`${baseUrl}/gallery-category/travel/`, {
+    waitUntil: "domcontentloaded",
+  });
+
+  const firstTravelCard = page.locator(".travel-card").first();
+  await expect(firstTravelCard.getByRole("heading", { name: "Hamburg" })).toBeVisible();
+  await expect(firstTravelCard.locator("a")).toHaveAttribute("href", "/gallery/hamburg/");
+  await expect(firstTravelCard.locator("img")).toHaveAttribute(
+    "alt",
+    "Landschaftsfotografie und Travel Bilder aus Hamburg - Vorschau",
+  );
+});

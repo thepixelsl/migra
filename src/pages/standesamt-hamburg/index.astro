@@ -1,8 +1,10 @@
 ---
 import FaviconHead from "../../components/FaviconHead.astro";
+import { Image } from "astro:assets";
 import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import hamburgInterludeImage from "../../assets/travel-galleries/hamburg/ART_4701-HDR-Bearbeitet_web.jpg";
 import { hamburgStadtteile } from "../../data/hamburgStadtteile";
 import { standesaemter } from "../../data/standesaemter";
 import { trauorte, type Trauort } from "../../data/trauorte";
@@ -15,7 +17,7 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Standesamtfinder Hamburg: Adressen & Kontakt";
 const description =
   "Standesamtfinder Hamburg: Wohnsitzstandesamt finden und besondere Trauorte in Hamburg und Umgebung mit Buchungsweg, Adresse und offiziellen Links vergleichen.";
-const dateModified = "2026-08-08";
+const dateModified = "2026-08-28";
 const heroImagePath =
   "/migrated-assets/standesamt-hamburg/rathaus-altona.jpg";
 const heroImageUrl = `${siteUrl}${heroImagePath}`;
@@ -422,6 +424,18 @@ const schemaGraph = {
 
           </div>
         </section>
+
+        <figure class="finder-interlude">
+          <Image
+            src={hamburgInterludeImage}
+            alt="Hamburger Stadtlandschaft am Wasser im warmen Abendlicht"
+            widths={[640, 960, 1280, 1600]}
+            sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 1100px) calc(100vw - 88px), 980px"
+            loading="lazy"
+            decoding="async"
+          />
+          <figcaption>Hamburg · Abendlicht am Wasser</figcaption>
+        </figure>
 
         <section
           class="trauort-section finder-task finder-task--venue"
@@ -2451,6 +2465,35 @@ const schemaGraph = {
     letter-spacing: .14em;
   }
 
+  .finder-interlude {
+    width: min(980px, 100%);
+    margin: clamp(54px, 7vw, 92px) auto;
+  }
+
+  .finder-interlude :global(img) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #f3f1ec;
+  }
+
+  .finder-interlude figcaption {
+    margin: 12px 0 0;
+    color: #81796f;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    line-height: 1.6;
+    text-align: right;
+    text-transform: uppercase;
+  }
+
+  .finder-interlude + .finder-task--venue {
+    margin-top: 0;
+  }
+
   .finder-result,
   .trauort-result {
     margin-top: clamp(18px, 3vw, 42px);
@@ -2628,6 +2671,14 @@ const schemaGraph = {
 
     .finder-hero__lead {
       font-size: 20px;
+    }
+
+    .finder-interlude {
+      margin: 44px auto;
+    }
+
+    .finder-interlude :global(img) {
+      aspect-ratio: 4 / 3;
     }
 
     .finder-task__header {

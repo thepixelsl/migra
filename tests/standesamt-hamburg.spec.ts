@@ -112,6 +112,51 @@ const expectStableFinder = (actual: FinderLayout, baseline: FinderLayout) => {
   expectNoOverflow(actual);
 };
 
+test("Hamburg image separates both finder tasks without overflow", async ({ page }) => {
+  for (const viewport of [
+    { name: "desktop", width: 1280, height: 900 },
+    { name: "mobile", width: 390, height: 844 },
+  ]) {
+    await page.setViewportSize({ width: viewport.width, height: viewport.height });
+    await page.goto(pageUrl, { waitUntil: "domcontentloaded" });
+
+    const necessaryCookies = page.getByRole("button", { name: "Nur notwendige" });
+    if (await necessaryCookies.isVisible()) await necessaryCookies.click();
+
+    const state = await page.evaluate(() => {
+      const officeTask = document.querySelector<HTMLElement>(".finder-task--office");
+      const interlude = document.querySelector<HTMLElement>(".finder-interlude");
+      const image = interlude?.querySelector<HTMLImageElement>("img");
+      const venueTask = document.querySelector<HTMLElement>(".finder-task--venue");
+
+      if (!officeTask || !interlude || !image || !venueTask) {
+        throw new Error("Finder image interlude is incomplete");
+      }
+
+      const officeBounds = officeTask.getBoundingClientRect();
+      const imageBounds = image.getBoundingClientRect();
+      const interludeBounds = interlude.getBoundingClientRect();
+      const venueBounds = venueTask.getBoundingClientRect();
+
+      return {
+        source: image.currentSrc || image.getAttribute("src") || "",
+        alt: image.alt,
+        officeBeforeImage: officeBounds.bottom <= interludeBounds.top,
+        imageBeforeVenue: interludeBounds.bottom <= venueBounds.top,
+        imageRatio: imageBounds.width / imageBounds.height,
+        overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+
+    expect(state.source).toContain("ART_4701-HDR-Bearbeitet_web");
+    expect(state.alt).toBe("Hamburger Stadtlandschaft am Wasser im warmen Abendlicht");
+    expect(state.officeBeforeImage).toBe(true);
+    expect(state.imageBeforeVenue).toBe(true);
+    expect(state.overflow).toBe(0);
+    expect(state.imageRatio).toBeCloseTo(viewport.name === "mobile" ? 4 / 3 : 16 / 9, 1);
+  }
+});
+
 test("mobile finder stays fixed while its result changes", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.emulateMedia({ reducedMotion: "reduce" });

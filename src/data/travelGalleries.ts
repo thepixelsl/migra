@@ -261,7 +261,11 @@ export const travelGalleries: TravelGallery[] = [
       "ART_4418-Bearbeitet-1.jpg",
     ],
   },
-];
+].sort((left, right) => {
+  if (left.slug === "hamburg") return -1;
+  if (right.slug === "hamburg") return 1;
+  return 0;
+});
 
 export const travelGalleryBySlug = Object.fromEntries(
   travelGalleries.map((gallery) => [gallery.slug, gallery]),

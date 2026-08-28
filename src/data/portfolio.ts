@@ -14,6 +14,7 @@ import gentlemen from "../assets/portfolio/gentlemen.jpg";
 import connyAlex from "../assets/portfolio/conny-alex.jpg";
 import barberhouseHamburg from "../assets/portfolio/barberhouse-hamburg.jpg";
 import nordenKueste from "../assets/portfolio/norden-kueste.jpg";
+import travelHamburg from "../assets/travel-galleries/hamburg/ART_4701-HDR-Bearbeitet_web.jpg";
 import travelParis from "../assets/travel-galleries/paris/DSC_4967.jpg";
 import travelVenedig from "../assets/travel-galleries/venedig/ART_8436-HDR.jpg";
 import travelTeneriffa from "../assets/travel-galleries/teneriffa/K1024_Unbenannt-28.jpg";
@@ -229,6 +230,16 @@ const entries: PortfolioEntry[] = [
     href: "/gallery/braeutigam-im-barberhouse-hamburg/",
     image: barberhouseHamburg,
     alt: "Bräutigam beim Styling im Barberhouse Hamburg",
+    aspect: "landscape",
+  },
+  {
+    title: "Landschaftsbilder und Portraits von der Stadt Hamburg",
+    category: "Hamburg",
+    filter: "Travel",
+    date: "05.07.2019",
+    href: "/gallery/hamburg/",
+    image: travelHamburg,
+    alt: "Hamburger Stadtlandschaft am Wasser im warmen Abendlicht",
     aspect: "landscape",
   },
   {
