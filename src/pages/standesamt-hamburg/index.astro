@@ -190,7 +190,7 @@ const schemaGraph = {
           <header class="finder-task__header">
             <div class="finder-task__heading">
               <div class="finder-task__step">
-                <span class="finder-task__number" aria-hidden="true">1</span>
+                <span class="finder-task__number" aria-hidden="true">01</span>
                 <p class="eyebrow">Für die Anmeldung</p>
               </div>
               <h2 id="finder-heading">Standesamt finden</h2>
@@ -431,7 +431,7 @@ const schemaGraph = {
           <header class="finder-task__header">
             <div class="finder-task__heading">
               <div class="finder-task__step">
-                <span class="finder-task__number" aria-hidden="true">2</span>
+                <span class="finder-task__number" aria-hidden="true">02</span>
                 <p class="eyebrow">Für die Trauung</p>
               </div>
               <h2 id="trauort-heading">Aussenlocation finden</h2>
@@ -2309,6 +2309,256 @@ const schemaGraph = {
     outline-offset: 4px;
   }
 
+  /* Finart-inspired refinement: editorial planning aid instead of control panel. */
+  .finder-hero h1 span:last-child {
+    margin-top: .08em;
+    font-family: "Bestermind", "Playfair Display", Georgia, serif;
+    font-size: 1.08em;
+    line-height: .88;
+    transform: translateX(.04em) rotate(-1.5deg);
+  }
+
+  .finder-task,
+  .finder-task--venue {
+    --task-accent: #9b6f4f;
+    --task-tint: #f3f1ec;
+    overflow: visible;
+    border: 0;
+    border-top: 1px solid #d8d0c7;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .finder-task__header {
+    padding: clamp(46px, 6vw, 76px) clamp(8px, 2vw, 24px) clamp(38px, 5vw, 62px);
+    border-bottom: 0;
+    background: transparent;
+  }
+
+  .finder-task__step {
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .finder-task__number {
+    display: block;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: transparent;
+    color: #b7a18e;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: 24px;
+    font-weight: 400;
+    letter-spacing: .08em;
+    line-height: 1;
+  }
+
+  .finder-task__header .eyebrow {
+    color: #8f7a69;
+  }
+
+  .finder-task__heading h2 {
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(40px, 4.5vw, 62px);
+    line-height: 1;
+  }
+
+  .finder-task__explanation {
+    padding-left: clamp(22px, 3vw, 40px);
+    border-left: 1px solid #cdbfb2;
+  }
+
+  .finder-task__explanation .finder-task__question {
+    color: #8f7a69;
+    letter-spacing: .18em;
+  }
+
+  .finder-task__explanation .finder-task__notice {
+    border-top-color: #ded5cc;
+    color: #6f6a64;
+    font-weight: 500;
+  }
+
+  .finder-task__body {
+    padding: clamp(30px, 5vw, 64px);
+    background: #f3f1ec;
+  }
+
+  .finder-interaction,
+  .trauort-interaction {
+    grid-template-columns: minmax(280px, .68fr) minmax(0, 1.32fr);
+    gap: clamp(26px, 4vw, 54px);
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .finder-toolbar,
+  .trauort-search {
+    border: 0;
+    background: transparent;
+  }
+
+  .finder-toolbar {
+    display: flex;
+  }
+
+  .finder-search,
+  .trauort-search {
+    width: 100%;
+    padding: clamp(10px, 2vw, 24px) 0;
+  }
+
+  .finder-search__label label,
+  .trauort-search__label label {
+    color: #8f7a69;
+    font-size: 9px;
+    letter-spacing: .22em;
+  }
+
+  .finder-district__field,
+  .trauort-search__field {
+    padding: 0;
+    border: 0;
+    border-bottom: 1px solid #a99e93;
+    background: transparent;
+  }
+
+  .finder-district__field:focus-within,
+  .trauort-search__field:focus-within {
+    border-color: #202633;
+    box-shadow: 0 2px 0 #202633;
+  }
+
+  .finder-search select,
+  .trauort-search select {
+    min-height: 68px;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2vw, 30px);
+  }
+
+  .finder-search__help,
+  .trauort-search__help {
+    color: #81796f;
+    font-style: italic;
+  }
+
+  .finder-jurisdiction-link,
+  .finder-search button,
+  .trauort-search__reset {
+    color: #6d4f3c;
+    letter-spacing: .14em;
+  }
+
+  .finder-result,
+  .trauort-result {
+    margin-top: clamp(18px, 3vw, 42px);
+    background: #fff;
+    box-shadow: 0 24px 70px rgba(55, 45, 38, .08);
+  }
+
+  .finder-result__header,
+  .trauort-result__header {
+    min-height: 58px;
+    padding: 18px clamp(24px, 3vw, 34px) 10px;
+    border-bottom: 0;
+    background: transparent;
+  }
+
+  .finder-result__header h3,
+  .trauort-result__header h3 {
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(21px, 2.1vw, 27px);
+  }
+
+  .finder-result__state,
+  .trauort-result__state,
+  .finder-result[data-state="selected"] .finder-result__state,
+  .trauort-result[data-state="selected"] .trauort-result__state {
+    display: block;
+    flex: 0 0 auto;
+    min-height: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #9b6f4f;
+    font-size: 8px;
+    letter-spacing: .18em;
+    text-align: right;
+  }
+
+  .finder-result__placeholder,
+  .finder-compact-card,
+  .trauort-result__placeholder,
+  .trauort-compact-card {
+    padding-right: clamp(24px, 3vw, 34px);
+    padding-left: clamp(24px, 3vw, 34px);
+  }
+
+  .finder-result__placeholder-title,
+  .finder-compact-card__header h4,
+  .trauort-result__placeholder-title,
+  .trauort-compact-card__header h4 {
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+  }
+
+  .finder-result__preview,
+  .trauort-result__preview {
+    display: none;
+  }
+
+  .finder-compact-card__contacts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: 20px;
+  }
+
+  .finder-compact-card__contacts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding: 12px 0 0;
+    border-top-color: #ded5cc;
+  }
+
+  .trauort-compact-card__facts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin-top: 22px;
+  }
+
+  .trauort-compact-card__facts > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 5px;
+    padding: 12px 0 0;
+    border-top-color: #ded5cc;
+  }
+
+  .office-directory summary,
+  .trauort-directory > summary {
+    min-height: 68px;
+    padding: 16px 0;
+    border: 0;
+    border-top: 1px solid #d8d0c7;
+    border-bottom: 1px solid #d8d0c7;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(18px, 1.6vw, 23px);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .calendar-link {
+    min-height: 64px;
+    padding: 16px 0;
+    border: 0;
+    border-bottom: 1px solid #d8d0c7;
+    background: transparent;
+    color: #6d4f3c;
+    letter-spacing: .14em;
+  }
+
   @media (forced-colors: active) {
     .finder-district__field:focus-within,
     .trauort-search__field:focus-within {
@@ -2341,7 +2591,7 @@ const schemaGraph = {
     .finder-toolbar,
     .trauort-search {
       border-right: 0;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 0;
     }
 
     .finder-more__resources .finder-utility-links {
@@ -2449,17 +2699,20 @@ const schemaGraph = {
 
     .trauort-result__placeholder,
     .trauort-compact-card {
-      min-height: 420px;
+      height: 460px;
+      min-height: 460px;
       padding: 16px 18px 18px;
     }
 
     .trauort-result__header {
-      min-height: 50px;
+      height: 68px;
+      min-height: 68px;
       padding: 9px 18px;
     }
 
     .trauort-result__state {
-      flex-basis: 80px;
+      flex-basis: auto;
+      white-space: nowrap;
     }
 
     .trauort-result__preview > div,
@@ -2497,6 +2750,12 @@ const schemaGraph = {
     .finder-compact-card__contacts > div {
       grid-template-columns: 62px minmax(0, 1fr);
       gap: 10px;
+    }
+
+    .finder-compact-card__contacts,
+    .trauort-compact-card__facts {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0;
     }
 
     .finder-compact-card__links {
