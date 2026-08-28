@@ -7,13 +7,47 @@
 
     const viewport = carousel.querySelector("[data-story-viewport]");
     const track = carousel.querySelector("[data-story-track]");
-    const cards = Array.from(carousel.querySelectorAll("[data-story-card]"));
+    const originalCards = Array.from(carousel.querySelectorAll("[data-story-card]"));
+    const mobileLayout = window.matchMedia("(max-width: 620px)");
     const previous = carousel.querySelector("[data-story-previous]");
     const next = carousel.querySelector("[data-story-next]");
     const current = carousel.querySelector("[data-story-current]");
     const status = carousel.querySelector("[data-story-status]");
+    const totals = Array.from(carousel.querySelectorAll("[data-story-total]"));
 
-    if (!viewport || !track || cards.length === 0) return;
+    if (!viewport || !track || originalCards.length === 0) return;
+
+    let cards = [];
+
+    const configureCardsForLayout = () => {
+      originalCards.forEach((card) => track.append(card));
+
+      const mobileOnlyCard = originalCards.find((card) => card.hasAttribute("data-story-mobile-only"));
+      if (mobileLayout.matches && mobileOnlyCard) track.prepend(mobileOnlyCard);
+
+      cards = Array.from(track.querySelectorAll("[data-story-card]")).filter(
+        (card) => mobileLayout.matches || !card.hasAttribute("data-story-mobile-only"),
+      );
+
+      originalCards
+        .filter((card) => !cards.includes(card))
+        .forEach((card) => {
+          card.setAttribute("aria-hidden", "true");
+          card.querySelectorAll("a, button, [tabindex]").forEach((element) => {
+            element.setAttribute("tabindex", "-1");
+          });
+        });
+
+      cards.forEach((card, index) => {
+        const position = card.querySelector("[data-story-card-position]");
+        if (position) position.textContent = `${index + 1} von ${cards.length}:`;
+      });
+      totals.forEach((total) => {
+        total.textContent = String(cards.length);
+      });
+    };
+
+    configureCardsForLayout();
 
     carousel.dataset.storyReady = "true";
     carousel.classList.add("is-enhanced");
@@ -153,6 +187,9 @@
       resizeFrame = window.requestAnimationFrame(() => {
         window.clearTimeout(settleTimer);
         programmaticIndex = null;
+        const previousCardCount = cards.length;
+        configureCardsForLayout();
+        if (cards.length !== previousCardCount) activeIndex = 0;
         const targetIndex = Math.min(activeIndex, cards.length - calculateVisibleCount());
         viewport.scrollTo({
           left: cards[Math.max(0, targetIndex)].offsetLeft,

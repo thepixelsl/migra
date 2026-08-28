@@ -2296,6 +2296,10 @@ footer nav[aria-label="Footer"]::before,
   min-width: 0;
 }
 
+.story-card--mobile-only {
+  display: none;
+}
+
 .story-card a,
 .planning-card a,
 .mini-portfolio-grid a {
@@ -4215,6 +4219,7 @@ footer nav[aria-label="Footer"]::before,
 
   .services-compass__media {
     width: min(88%, 440px);
+    justify-self: center;
   }
 
   .services-compass__media figcaption {
@@ -4483,6 +4488,11 @@ footer nav[aria-label="Footer"]::before,
     --story-media-ratio: 4 / 5;
     --story-media-width: 100%;
     padding-top: 0;
+  }
+
+  .story-carousel .story-card--mobile-only {
+    display: block;
+    order: -1;
   }
 
   .story-carousel__navigation {

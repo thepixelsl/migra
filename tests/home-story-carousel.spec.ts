@@ -3,6 +3,7 @@ import { expect, test } from "@playwright/test";
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
 const requestedGalleries = [
+  "/gallery/paarshooting-mallorca/",
   "/braut-fotoshooting-fraser-suites-hamburg/",
   "/gallery/traumhochzeit-in-hamburg/",
   "/brautpaar-in-zuerich/",
@@ -14,7 +15,7 @@ test("story carousel is visibly navigable and advances one card at a time on des
 
   const carousel = page.locator("[data-story-carousel]");
   const viewport = carousel.locator("[data-story-viewport]");
-  const cards = carousel.locator("[data-story-card]");
+  const cards = carousel.locator("[data-story-card]:visible");
   const previous = carousel.locator("[data-story-previous]");
   const next = carousel.locator("[data-story-next]");
   const status = carousel.locator("[data-story-status]");
@@ -25,7 +26,8 @@ test("story carousel is visibly navigable and advances one card at a time on des
   await expect(cards.first()).toHaveRole("article");
   await expect(cards.first()).not.toHaveAttribute("role", "group");
   await expect(cards.first()).toHaveAttribute("aria-roledescription", "Folie");
-  await expect(cards.first()).toHaveAccessibleName(/1 von 6: .+/);
+  await expect(cards.first()).toHaveAccessibleName(/1 von 6: Hochzeit von Steffi & Dominik/);
+  await expect(cards.first().locator("a")).toHaveAttribute("href", "/gallery/steffi-dominik/");
 
   for (const href of requestedGalleries) {
     await expect(carousel.locator(`a[href="${href}"]`)).toHaveCount(1);
@@ -101,7 +103,8 @@ test("story carousel is visibly navigable and advances one card at a time on des
 
   const initialLayout = await carousel.evaluate((element) => {
     const storyViewport = element.querySelector<HTMLElement>("[data-story-viewport]");
-    const storyCards = Array.from(element.querySelectorAll<HTMLElement>("[data-story-card]"));
+    const storyCards = Array.from(element.querySelectorAll<HTMLElement>("[data-story-card]"))
+      .filter((card) => getComputedStyle(card).display !== "none");
     const mediaRatios = storyCards.slice(2, 4).map((card) => {
       const media = card.querySelector<HTMLElement>(".story-card__media");
       const bounds = media?.getBoundingClientRect();
@@ -157,7 +160,7 @@ test("story carousel keeps its arrow-counter controls and two-card layout on tab
   await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
   const carousel = page.locator("[data-story-carousel]");
-  const cards = carousel.locator("[data-story-card]");
+  const cards = carousel.locator("[data-story-card]:visible");
   const previous = carousel.locator("[data-story-previous]");
   const next = carousel.locator("[data-story-next]");
   const status = carousel.locator("[data-story-status]");
@@ -168,10 +171,12 @@ test("story carousel keeps its arrow-counter controls and two-card layout on tab
   await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
   await expect(carousel.locator("[data-story-current]")).toHaveText("1–2");
   await expect(status).toHaveText("Galerien 1 bis 2 von 6");
+  await expect(cards).toHaveCount(6);
 
   const tabletLayout = await carousel.evaluate((element) => {
     const storyViewport = element.querySelector<HTMLElement>("[data-story-viewport]");
-    const storyCards = Array.from(element.querySelectorAll<HTMLElement>("[data-story-card]"));
+    const storyCards = Array.from(element.querySelectorAll<HTMLElement>("[data-story-card]"))
+      .filter((card) => getComputedStyle(card).display !== "none");
     const step = (storyCards[1]?.offsetLeft ?? 0) - (storyCards[0]?.offsetLeft ?? 0);
     const mediaRatios = storyCards.slice(2, 4).map((card) => {
       const media = card.querySelector<HTMLElement>(".story-card__media");
@@ -228,7 +233,7 @@ test("story carousel places only arrows and counter between image and text on mo
   const current = carousel.locator("[data-story-current]");
 
   await carousel.scrollIntoViewIfNeeded();
-  await expect(status).toHaveText("Galerie 1 von 6");
+  await expect(status).toHaveText("Galerie 1 von 7");
   await expect(current).toHaveText("1");
   await expect(previous).toBeVisible();
   await expect(previous).toBeDisabled();
@@ -236,6 +241,10 @@ test("story carousel places only arrows and counter between image and text on mo
   await expect(next).toBeEnabled();
   await expect(carousel.locator("[data-story-pagination], [data-story-dot]")).toHaveCount(0);
   await expect(carousel.locator("a button")).toHaveCount(0);
+  await expect(carousel.locator("[data-story-card]").first().locator("a")).toHaveAttribute(
+    "href",
+    "/gallery/paarshooting-mallorca/",
+  );
 
   const mobileLayout = await carousel.evaluate((element) => {
     const storyViewport = element.querySelector<HTMLElement>("[data-story-viewport]");
@@ -284,7 +293,7 @@ test("story carousel places only arrows and counter between image and text on mo
   expect(mobileLayout.positionCenter).toBeLessThan(mobileLayout.nextCenter);
 
   await next.click();
-  await expect(status).toHaveText("Galerie 2 von 6");
+  await expect(status).toHaveText("Galerie 2 von 7");
   await expect(current).toHaveText("2");
   await expect
     .poll(() => viewport.evaluate((element) => Math.round(element.scrollLeft)))
@@ -292,18 +301,20 @@ test("story carousel places only arrows and counter between image and text on mo
 
   await viewport.focus();
   await viewport.press("ArrowRight");
-  await expect(status).toHaveText("Galerie 3 von 6");
+  await expect(status).toHaveText("Galerie 3 von 7");
   await expect(current).toHaveText("3");
 
   await viewport.press("ArrowRight");
-  await expect(status).toHaveText("Galerie 4 von 6");
+  await expect(status).toHaveText("Galerie 4 von 7");
   await expect(current).toHaveText("4");
 
   await viewport.press("ArrowRight");
-  await expect(status).toHaveText("Galerie 5 von 6");
+  await expect(status).toHaveText("Galerie 5 von 7");
   await viewport.press("ArrowRight");
-  await expect(status).toHaveText("Galerie 6 von 6");
-  await expect(current).toHaveText("6");
+  await expect(status).toHaveText("Galerie 6 von 7");
+  await viewport.press("ArrowRight");
+  await expect(status).toHaveText("Galerie 7 von 7");
+  await expect(current).toHaveText("7");
 
   const zurichImage = carousel.locator('a[href="/brautpaar-in-zuerich/"] img');
   await expect(zurichImage).toBeVisible();
