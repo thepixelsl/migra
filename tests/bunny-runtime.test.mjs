@@ -63,6 +63,10 @@ before(async () => {
     writeFile(path.join(assetDirectory, "fuer-agenten.md"), "# Buchungsinformationen für KI-Agenten"),
     writeFile(path.join(assetDirectory, "llms.txt"), "# Artbild-Fotografie"),
     writeFile(
+      path.join(assetDirectory, "sitemap.xml"),
+      '<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>',
+    ),
+    writeFile(
       path.join(assetDirectory, "api", "agent-availability", "openapi.json"),
       JSON.stringify({ openapi: "3.1.0" }),
     ),
@@ -169,6 +173,11 @@ test("serves the agent Markdown, llms.txt and OpenAPI files with readable types"
   assert.equal(llms.status, 200);
   assert.equal(llms.headers.get("content-type"), "text/plain; charset=utf-8");
   assert.match(await llms.text(), /Artbild-Fotografie/);
+
+  const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
+  assert.equal(sitemap.status, 200);
+  assert.equal(sitemap.headers.get("content-type"), "application/xml; charset=utf-8");
+  assert.match(await sitemap.text(), /<urlset>/);
 
   const openapi = await fetch(`${baseUrl}/api/agent-availability/openapi.json`);
   assert.equal(openapi.status, 200);
