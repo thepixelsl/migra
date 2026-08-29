@@ -27,7 +27,7 @@ FROM node:22-alpine AS runtime
 WORKDIR /app
 
 LABEL org.opencontainers.image.source="https://github.com/thepixelsl/migra"
-LABEL org.opencontainers.image.description="Artbild Fotografie development runtime for bunny.net Magic Containers"
+LABEL org.opencontainers.image.description="Artbild Fotografie runtime for bunny.net Magic Containers"
 
 ENV NODE_ENV=production
 ENV HOST=0.0.0.0

@@ -85,7 +85,7 @@ before(async () => {
       CONTACT_FROM: "mail@example.com",
       CONTACT_HASH_SALT: "test-only-random-salt-with-32-characters",
       CONTACT_TO: "info@example.com",
-      DEV_NOINDEX: "true",
+      DEV_NOINDEX: "false",
       STRATO_SMTP_PASS: "not-used-by-test-mailer",
       STRATO_SMTP_USER: "mail@example.com",
     },
@@ -107,6 +107,29 @@ test("health and readiness endpoints report a ready persistent database", async 
     assert.deepEqual(await response.json(), { ok: true, database: "bunny" });
     assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
   }
+});
+
+test("indexes only the configured production host", async () => {
+  const production = await fetch(`${baseUrl}/`, {
+    headers: { "X-Forwarded-Host": "artbild-fotografie.de" },
+  });
+  assert.equal(production.status, 200);
+  assert.equal(production.headers.has("x-robots-tag"), false);
+
+  const preview = await fetch(`${baseUrl}/`, {
+    headers: { "X-Forwarded-Host": "mc-k5f22r07h0.bunny.run" },
+  });
+  assert.equal(preview.status, 200);
+  assert.equal(preview.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
+
+  const privateProductionPage = await fetch(`${baseUrl}/admin-login/`, {
+    headers: { "X-Forwarded-Host": "artbild-fotografie.de" },
+  });
+  assert.equal(privateProductionPage.status, 200);
+  assert.equal(
+    privateProductionPage.headers.get("x-robots-tag"),
+    "noindex, nofollow, noarchive",
+  );
 });
 
 test("serves static pages, redirects directories, and preserves a real 404", async () => {

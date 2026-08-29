@@ -354,8 +354,22 @@ async function toWebRequest(request, env) {
   });
 }
 
-function withBunnyHeaders(response, env, pathname = "") {
+function indexableHosts(env) {
+  return new Set(
+    String(
+      env.BUNNY_INDEXABLE_HOSTS
+        || "artbild-fotografie.de,www.artbild-fotografie.de",
+    )
+      .split(",")
+      .map((hostname) => hostname.trim().toLowerCase())
+      .filter(Boolean),
+  );
+}
+
+function withBunnyHeaders(response, env, requestUrl) {
   const headers = new Headers(response.headers);
+  const hostname = String(requestUrl?.hostname || "").toLowerCase();
+  const pathname = String(requestUrl?.pathname || "");
   const securePublicOrigin = String(env.BUNNY_PUBLIC_SCHEME || "https").toLowerCase() !== "http";
   headers.delete("Server");
   if (securePublicOrigin) headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
@@ -366,7 +380,12 @@ function withBunnyHeaders(response, env, pathname = "") {
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
-  if (env.DEV_NOINDEX !== "false") {
+  const privatePath = pathname.startsWith("/api/")
+    || pathname.startsWith("/admin-termine")
+    || adminLoginPath(pathname);
+  const productionIndexingEnabled = env.DEV_NOINDEX === "false";
+  const recognizedProductionHost = indexableHosts(env).has(hostname);
+  if (!productionIndexingEnabled || !recognizedProductionHost || privatePath) {
     headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
   }
   if (
@@ -451,7 +470,7 @@ export async function createBunnyRuntime(options = {}) {
             "Content-Type": "application/json; charset=utf-8",
           },
         });
-        await writeNodeResponse(nodeResponse, withBunnyHeaders(health, env, url.pathname));
+        await writeNodeResponse(nodeResponse, withBunnyHeaders(health, env, url));
         return;
       }
 
@@ -459,7 +478,7 @@ export async function createBunnyRuntime(options = {}) {
         const loginResponse = await handleAdminLogin(request, env, url);
         await writeNodeResponse(
           nodeResponse,
-          withBunnyHeaders(loginResponse, env, url.pathname),
+          withBunnyHeaders(loginResponse, env, url),
         );
         return;
       }
@@ -474,7 +493,7 @@ export async function createBunnyRuntime(options = {}) {
             : adminDenied(access.configured);
           await writeNodeResponse(
             nodeResponse,
-            withBunnyHeaders(deniedResponse, env, url.pathname),
+            withBunnyHeaders(deniedResponse, env, url),
           );
           return;
         }
@@ -484,7 +503,7 @@ export async function createBunnyRuntime(options = {}) {
           await writeNodeResponse(nodeResponse, withBunnyHeaders(new Response("Forbidden", {
             status: 403,
             headers: { "Content-Type": "text/plain; charset=utf-8" },
-          }), env, url.pathname));
+          }), env, url));
           return;
         }
 
@@ -502,11 +521,12 @@ export async function createBunnyRuntime(options = {}) {
         },
         passThroughOnException() {},
       });
-      await writeNodeResponse(nodeResponse, withBunnyHeaders(response, env, url.pathname));
+      await writeNodeResponse(nodeResponse, withBunnyHeaders(response, env, url));
     } catch (error) {
       const status = error instanceof RangeError ? 413 : 500;
       if (status === 500) console.error("Unhandled Bunny request error", error);
-      const pathname = new URL(nodeRequest.url || "/", "http://bunny.internal").pathname;
+      const requestUrl = new URL(nodeRequest.url || "/", "http://bunny.internal");
+      const pathname = requestUrl.pathname;
       const agentPayloadTooLarge = status === 413
         && pathname === "/api/agent-availability";
       const response = agentPayloadTooLarge
@@ -526,7 +546,7 @@ export async function createBunnyRuntime(options = {}) {
         );
       await writeNodeResponse(
         nodeResponse,
-        withBunnyHeaders(response, env, pathname),
+        withBunnyHeaders(response, env, requestUrl),
       );
     }
   });

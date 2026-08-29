@@ -1,10 +1,19 @@
-name: Build Bunny dev image
+name: Build Bunny image
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Build target
+        required: true
+        default: development
+        type: choice
+        options:
+          - development
+          - production
 
 concurrency:
-  group: bunny-dev-image
+  group: bunny-image-${{ inputs.target }}
   cancel-in-progress: true
 
 permissions:
@@ -51,8 +60,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=dev
-            type=sha,prefix=sha-
+            type=raw,value=dev,enable=${{ inputs.target == 'development' }}
+            type=sha,prefix=sha-,enable=${{ inputs.target == 'development' }}
+            type=raw,value=production,enable=${{ inputs.target == 'production' }}
+            type=sha,prefix=prod-sha-,enable=${{ inputs.target == 'production' }}
 
       - name: Build and push linux/amd64 image
         uses: docker/build-push-action@v6
@@ -64,7 +75,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           build-args: |
-            PUBLIC_SITE_URL=https://mc-k5f22r07h0.bunny.run
+            PUBLIC_SITE_URL=${{ inputs.target == 'production' && 'https://artbild-fotografie.de' || 'https://mc-k5f22r07h0.bunny.run' }}
             PUBLIC_TRACKING_ENV=${{ vars.PUBLIC_TRACKING_ENV || 'production' }}
             PUBLIC_TRACKING_ALLOWED_HOSTS=${{ vars.PUBLIC_TRACKING_ALLOWED_HOSTS || 'artbild-fotografie.de,www.artbild-fotografie.de' }}
             PUBLIC_GTM_CONTAINER_ID=${{ vars.PUBLIC_GTM_CONTAINER_ID || 'GTM-5TM37JC' }}
