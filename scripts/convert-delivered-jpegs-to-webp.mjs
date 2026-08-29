@@ -26,11 +26,17 @@ const textExtensions = new Set([
 ]);
 const jpegReferencePattern = /(?:https?:\/\/|\/)[^"'<>\s]*?\.jpe?g/gi;
 const jpegFilePattern = /\.jpe?g$/i;
+const passthroughVerificationFiles = new Set([
+  path.join(distDir, "pinterest-78b70.html"),
+  path.join(distDir, "pinterest-e6785.html"),
+]);
 
 await assertDirectory(distDir);
 
 const initialFiles = await listFiles(distDir);
-const textFiles = initialFiles.filter((file) => textExtensions.has(path.extname(file)));
+const textFiles = initialFiles.filter(
+  (file) => textExtensions.has(path.extname(file)) && !passthroughVerificationFiles.has(file),
+);
 const jpegFiles = initialFiles.filter((file) => jpegFilePattern.test(file));
 const textByFile = new Map(
   await Promise.all(
@@ -116,7 +122,9 @@ const remainingJpegFiles = finalFiles.filter((file) => jpegFilePattern.test(file
 const remainingReferences = [];
 const remainingMimeTypes = [];
 
-for (const file of finalFiles.filter((entry) => textExtensions.has(path.extname(entry)))) {
+for (const file of finalFiles.filter(
+  (entry) => textExtensions.has(path.extname(entry)) && !passthroughVerificationFiles.has(entry),
+)) {
   const content = await fs.readFile(file, "utf8");
   const jpegReferences = [...content.matchAll(jpegReferencePattern)].map((match) => match[0]);
 

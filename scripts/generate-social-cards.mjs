@@ -27,6 +27,7 @@ const excludedRoutePatterns = [
   /^\/admin-termine(?:\/|$)/,
   /^\/api(?:\/|$)/,
   /^\/(?:danke|thank-you)(?:\/|$)/,
+  /^\/(?:Gensw_[^/]+|google[^/]+|yandex_[^/]+|pinterest-[^/]+)\/?$/i,
 ];
 
 const excludedImagePattern =
