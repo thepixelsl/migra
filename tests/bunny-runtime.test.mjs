@@ -64,7 +64,11 @@ before(async () => {
     writeFile(path.join(assetDirectory, "llms.txt"), "# Artbild-Fotografie"),
     writeFile(
       path.join(assetDirectory, "sitemap.xml"),
-      '<?xml version="1.0" encoding="UTF-8"?><urlset></urlset>',
+      '<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?><urlset></urlset>',
+    ),
+    writeFile(
+      path.join(assetDirectory, "sitemap.xsl"),
+      '<?xml version="1.0" encoding="UTF-8"?><xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"></xsl:stylesheet>',
     ),
     writeFile(
       path.join(assetDirectory, "api", "agent-availability", "openapi.json"),
@@ -177,7 +181,14 @@ test("serves the agent Markdown, llms.txt and OpenAPI files with readable types"
   const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
   assert.equal(sitemap.status, 200);
   assert.equal(sitemap.headers.get("content-type"), "application/xml; charset=utf-8");
-  assert.match(await sitemap.text(), /<urlset>/);
+  const sitemapXml = await sitemap.text();
+  assert.match(sitemapXml, /xml-stylesheet type="text\/xsl" href="\/sitemap\.xsl"/);
+  assert.match(sitemapXml, /<urlset>/);
+
+  const sitemapStylesheet = await fetch(`${baseUrl}/sitemap.xsl`);
+  assert.equal(sitemapStylesheet.status, 200);
+  assert.equal(sitemapStylesheet.headers.get("content-type"), "text/xsl; charset=utf-8");
+  assert.match(await sitemapStylesheet.text(), /<xsl:stylesheet/);
 
   const openapi = await fetch(`${baseUrl}/api/agent-availability/openapi.json`);
   assert.equal(openapi.status, 200);

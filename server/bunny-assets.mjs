@@ -21,6 +21,7 @@ const CONTENT_TYPES = new Map([
   [".webp", "image/webp"],
   [".woff2", "font/woff2"],
   [".xml", "application/xml; charset=utf-8"],
+  [".xsl", "text/xsl; charset=utf-8"],
 ]);
 
 function notFound() {
