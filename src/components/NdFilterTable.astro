@@ -56,6 +56,18 @@ const rows = [
       Bei ausreichender Lichteinstrahlung kann ein erneutes Fokussieren dennoch möglich sein,
       obwohl sich ein starker ND-Filter vor dem Objektiv befindet.
     </p>
+    <p class="nd-filter-table__download">
+      <a
+        href="/wp-content/uploads/2019/08/ND-Filter-Tabelle.pdf"
+        download="ND-Filter-Tabelle.pdf"
+        type="application/pdf"
+      >
+        ND-Filter Tabelle als PDF herunterladen
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M12 3v12m0 0 5-5m-5 5-5-5M5 21h14"></path>
+        </svg>
+      </a>
+    </p>
   </div>
 
   <div
@@ -112,6 +124,52 @@ const rows = [
 
   .nd-filter-table__copy p {
     margin: 0 0 1.25em;
+  }
+
+  .nd-filter-table__copy .nd-filter-table__download {
+    margin-top: 1.8em;
+  }
+
+  .nd-filter-table__download a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 13px 18px;
+    border: 1px solid #202633;
+    background: #202633;
+    color: #fff;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .nd-filter-table__download svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 12px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+  }
+
+  .nd-filter-table__download a:hover,
+  .nd-filter-table__download a:focus-visible {
+    background: transparent;
+    color: #202633;
+  }
+
+  .nd-filter-table__download a:focus-visible {
+    outline: 3px solid #202633;
+    outline-offset: 4px;
   }
 
   .nd-filter-table__region {
@@ -214,6 +272,10 @@ const rows = [
 
     tbody th {
       min-width: 175px;
+    }
+
+    .nd-filter-table__download a {
+      width: 100%;
     }
   }
 </style>

@@ -50,6 +50,17 @@ test("restores the complete original ND filter table with accessible semantics",
   await expect(table.locator("tbody tr").filter({ hasText: "1/8 Sekunde" }).locator("td").nth(3)).toHaveText("2 s");
   await expect(table.locator("tbody tr").filter({ hasText: "8 Sekunden" }).locator("td").last()).toHaveText("> 20 m");
 
+  const download = page.getByRole("link", {
+    name: "ND-Filter Tabelle als PDF herunterladen",
+  });
+  await expect(download).toBeVisible();
+  await expect(download).toHaveAttribute(
+    "href",
+    "/wp-content/uploads/2019/08/ND-Filter-Tabelle.pdf",
+  );
+  await expect(download).toHaveAttribute("download", "ND-Filter-Tabelle.pdf");
+  await expect(download).toHaveAttribute("type", "application/pdf");
+
   const tableText = await table.textContent();
   expect(tableText).not.toMatch(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/);
 });
@@ -81,4 +92,11 @@ test("keeps the complete table usable on mobile without cropping the document", 
     "sticky",
   );
   await expect(page.locator(".migrated-hero img")).toHaveCSS("object-fit", "contain");
+
+  const download = page.getByRole("link", {
+    name: "ND-Filter Tabelle als PDF herunterladen",
+  });
+  const downloadBox = await download.boundingBox();
+  expect(downloadBox?.width).toBeLessThanOrEqual(390);
+  expect(downloadBox?.height).toBeGreaterThanOrEqual(48);
 });
