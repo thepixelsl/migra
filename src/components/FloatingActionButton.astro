@@ -309,7 +309,6 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
   floatingActionRoots.forEach((root) => {
     if (!(root instanceof HTMLElement) || root.dataset.floatingActionReady === "true") return;
     root.dataset.floatingActionReady = "true";
-    root.toggleAttribute("data-floating-action-android", /Android/i.test(window.navigator.userAgent));
 
     const elements = {
       toggle: root.querySelector("[data-floating-action-toggle]"),
@@ -1181,12 +1180,6 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
   }
 
   @media (max-width: 480px) {
-    .floating-action[data-floating-action-android] {
-      --fab-glass-bg: rgba(255, 255, 255, .84);
-      --fab-glass-bd: rgba(255, 255, 255, .68);
-      --fab-glass-hover: rgba(255, 255, 255, .52);
-    }
-
     .floating-action__item {
       min-height: 52px;
       padding: 16px;
@@ -1226,14 +1219,6 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 
     .floating-action__error {
       color: #ff9aa0;
-    }
-  }
-
-  @media (max-width: 480px) and (prefers-color-scheme: dark) {
-    .floating-action[data-floating-action-android] {
-      --fab-glass-bg: rgba(20, 20, 22, .84);
-      --fab-glass-bd: rgba(255, 255, 255, .24);
-      --fab-glass-hover: rgba(255, 255, 255, .14);
     }
   }
 
