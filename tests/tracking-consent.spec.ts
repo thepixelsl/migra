@@ -347,6 +347,50 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
   }
 });
 
+test("shows a clear X when reopened consent settings are closed", async ({ page }) => {
+  for (const viewport of [
+    { width: 390, height: 844 },
+    { width: 1280, height: 900 },
+  ]) {
+    await page.context().clearCookies();
+    await page.setViewportSize(viewport);
+    await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+    await page.getByRole("button", { name: "Nur notwendige", exact: true }).first().click();
+    await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
+
+    const closeButton = page.getByRole("button", {
+      name: "Datenschutz-Einstellungen schließen",
+    });
+    const closeIcon = closeButton.locator("svg");
+    await expect(closeButton).toBeVisible();
+    await expect(closeIcon).toHaveCount(1);
+
+    const geometry = await closeButton.evaluate((button) => {
+      const buttonRect = button.getBoundingClientRect();
+      const icon = button.querySelector("svg");
+      const iconRect = icon?.getBoundingClientRect();
+      const path = icon?.querySelector("path");
+      return {
+        buttonWidth: buttonRect.width,
+        buttonHeight: buttonRect.height,
+        iconWidth: iconRect?.width ?? 0,
+        iconHeight: iconRect?.height ?? 0,
+        strokeWidth: path ? Number.parseFloat(getComputedStyle(path).strokeWidth) : 0,
+      };
+    });
+    expect(geometry.buttonWidth).toBeGreaterThanOrEqual(48);
+    expect(geometry.buttonHeight).toBeGreaterThanOrEqual(48);
+    expect(geometry.iconWidth).toBeGreaterThanOrEqual(22);
+    expect(geometry.iconHeight).toBeGreaterThanOrEqual(22);
+    expect(geometry.strokeWidth).toBeGreaterThanOrEqual(2.4);
+
+    await closeButton.click();
+    await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+    await expect(page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }))
+      .toBeVisible();
+  }
+});
+
 test("shows service groups, services and providers without Cloudflare", async ({ page }) => {
   await captureProviderRequests(page);
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });

@@ -12,7 +12,9 @@
       data-consent-close
       hidden
     >
-      <span aria-hidden="true">×</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M5 5 19 19M19 5 5 19"></path>
+      </svg>
     </button>
 
     <div class="consent-dialog__intro">
@@ -616,19 +618,31 @@
     padding: clamp(28px, 5vw, 54px);
   }
 
-  .consent-dialog__close {
+  .consent-dialog .consent-dialog__close {
     position: absolute;
     top: 14px;
     right: 16px;
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
     padding: 0;
-    border: 0;
+    border: 1px solid #292622;
     background: transparent;
-    color: inherit;
-    font-size: 30px;
+    color: #292622;
     line-height: 1;
     cursor: pointer;
+  }
+
+  .consent-dialog__close svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 2.4;
+    transform: translate(-50%, -50%);
   }
 
   .consent-dialog__eyebrow {

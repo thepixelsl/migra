@@ -15,6 +15,11 @@ import {
   AGENT_RATE_LIMIT_WINDOW_MS,
   reserveAgentAvailabilityRequest,
 } from "../functions/_agent-rate-limit.js";
+import {
+  PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+  PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS,
+  reservePublicAvailabilityDate,
+} from "../functions/_public-availability-rate-limit.js";
 import { contactDateBoundsAt } from "../functions/_contact-date-bounds.js";
 import { onRequestPost as handleContactPost } from "../functions/api/contact.js";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
@@ -316,7 +321,9 @@ test("blocks a date through admin and exposes it through the public API", async 
   assert.equal(adminResponse.status, 200);
   assert.equal((await adminResponse.json()).available, false);
 
-  const publicResponse = await fetch(`${baseUrl}/api/availability?date=${date}`);
+  const publicResponse = await fetch(`${baseUrl}/api/availability?date=${date}`, {
+    headers: { "X-Real-IP": "198.51.100.70" },
+  });
   assert.equal(publicResponse.status, 200);
   assert.deepEqual(await publicResponse.json(), { date, available: false });
 
@@ -330,6 +337,49 @@ test("blocks a date through admin and exposes it through the public API", async 
     body: JSON.stringify({ date, action: "unblock" }),
   });
   assert.equal(crossOrigin.status, 403);
+});
+
+test("limits public availability checks to three unique calendar dates per 24 hours", async () => {
+  const ip = "198.51.100.71";
+  const dates = [0, 1, 2, 3].map((days) => shiftDate(CONTACT_TEST_DATE, days));
+  const request = (date) => fetch(`${baseUrl}/api/availability?date=${date}`, {
+    headers: { "X-Real-IP": ip },
+  });
+
+  for (const [index, date] of dates.slice(0, 3).entries()) {
+    const response = await request(date);
+    assert.equal(response.status, 200);
+    assert.equal(response.headers.get("x-ratelimit-limit"), "3");
+    assert.equal(response.headers.get("x-ratelimit-remaining"), String(2 - index));
+    assert.deepEqual(await response.json(), { date, available: true });
+  }
+
+  const repeated = await request(dates[0]);
+  assert.equal(repeated.status, 200);
+  assert.equal(repeated.headers.get("x-ratelimit-remaining"), "0");
+
+  const limited = await request(dates[3]);
+  assert.equal(limited.status, 429);
+  assert.ok(Number(limited.headers.get("retry-after")) > 0);
+  assert.equal(limited.headers.get("x-ratelimit-limit"), "3");
+  assert.equal(limited.headers.get("x-ratelimit-remaining"), "0");
+  assert.match((await limited.json()).message, /drei unterschiedliche Kalendertage/);
+
+  const otherClient = await fetch(`${baseUrl}/api/availability?date=${dates[3]}`, {
+    headers: { "X-Real-IP": "198.51.100.72" },
+  });
+  assert.equal(otherClient.status, 200);
+
+  const rows = await runtime.database.client.execute({
+    sql: `SELECT ip_hash, requested_date, requested_at
+      FROM public_availability_requests
+      WHERE requested_date IN (?, ?, ?, ?)
+      ORDER BY requested_date`,
+    args: dates,
+  });
+  assert.equal(rows.rows.length, PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES + 1);
+  assert.ok(rows.rows.every((row) => /^[0-9a-f]{64}$/.test(String(row.ip_hash))));
+  assert.ok(rows.rows.every((row) => Number.isFinite(Number(row.requested_at))));
 });
 
 test("documents the agent availability API for machine clients", async () => {
@@ -812,6 +862,58 @@ test("uses one EU Durable Object per HMAC identity when Bunny D1 is absent", asy
   );
 });
 
+test("uses a separate EU Durable Object identity for public availability limits", async () => {
+  const rawIp = "203.0.113.43";
+  const date = "2030-06-15";
+  const resetAt = new Date(Date.now() + PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS).toISOString();
+  let selectedJurisdiction = "";
+  let selectedName = "";
+  let invokedPath = "";
+  let invokedDate = "";
+
+  const env = {
+    CONTACT_HASH_SALT: "public-do-test-only-random-salt-with-32-characters",
+    AGENT_RATE_LIMITER: {
+      jurisdiction(value) {
+        selectedJurisdiction = value;
+        return {
+          getByName(name) {
+            selectedName = name;
+            return {
+              async fetch(input, init) {
+                invokedPath = new URL(input).pathname;
+                invokedDate = JSON.parse(init.body).date;
+                return Response.json({
+                  allowed: true,
+                  limit: PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+                  remaining: 2,
+                  resetAt,
+                });
+              },
+            };
+          },
+        };
+      },
+    },
+  };
+  const request = new Request(`https://example.test/api/availability?date=${date}`, {
+    headers: { "CF-Connecting-IP": rawIp },
+  });
+
+  const rateLimit = await reservePublicAvailabilityDate(request, env, date);
+  assert.deepEqual(rateLimit, {
+    allowed: true,
+    limit: 3,
+    remaining: 2,
+    resetAt,
+  });
+  assert.equal(selectedJurisdiction, "eu");
+  assert.match(selectedName, /^[0-9a-f]{64}$/);
+  assert.notEqual(selectedName, rawIp);
+  assert.equal(invokedPath, "/reserve-public-date");
+  assert.equal(invokedDate, date);
+});
+
 test("keeps Durable Object reservations atomic and alarms away expired timestamps", async () => {
   class FakeStorage {
     constructor() {
@@ -881,6 +983,71 @@ test("keeps Durable Object reservations atomic and alarms away expired timestamp
   assert.equal(storage.alarmAt, start + 1_000 + AGENT_RATE_LIMIT_WINDOW_MS);
 
   limiter.currentTime = () => start + 1_000 + AGENT_RATE_LIMIT_WINDOW_MS + 1;
+  await limiter.alarm();
+  assert.deepEqual([...storage.values.keys()], []);
+  assert.equal(storage.alarmAt, null);
+});
+
+test("keeps public date reservations atomic in the Durable Object", async () => {
+  class FakeStorage {
+    constructor() {
+      this.values = new Map();
+      this.alarmAt = null;
+      this.transactionQueue = Promise.resolve();
+    }
+
+    async transaction(callback) {
+      const previous = this.transactionQueue;
+      let release;
+      this.transactionQueue = new Promise((resolve) => {
+        release = resolve;
+      });
+      await previous;
+      try {
+        return await callback({
+          get: async (key) => structuredClone(this.values.get(key)),
+          put: async (key, value) => this.values.set(key, structuredClone(value)),
+          delete: async (key) => this.values.delete(key),
+        });
+      } finally {
+        release();
+      }
+    }
+
+    async setAlarm(timestamp) {
+      this.alarmAt = timestamp;
+    }
+
+    async deleteAlarm() {
+      this.alarmAt = null;
+    }
+  }
+
+  const storage = new FakeStorage();
+  const limiter = new AgentRateLimiter({ storage });
+  const start = Date.UTC(2031, 0, 1, 12);
+  limiter.currentTime = () => start;
+  const reserve = (date) => limiter.fetch(new Request(
+    "https://agent-rate-limiter.internal/reserve-public-date",
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date }),
+    },
+  ));
+
+  const dates = ["2031-06-01", "2031-06-02", "2031-06-03", "2031-06-04"];
+  const responses = await Promise.all(dates.map(reserve));
+  const states = await Promise.all(responses.map((response) => response.json()));
+  assert.equal(states.filter((state) => state.allowed).length, 3);
+  assert.equal(states.filter((state) => !state.allowed).length, 1);
+
+  const repeated = await reserve(dates[0]);
+  assert.equal((await repeated.json()).allowed, true);
+  assert.equal(storage.values.get("publicAvailabilityDates").length, 3);
+  assert.equal(storage.alarmAt, start + PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS);
+
+  limiter.currentTime = () => start + PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS + 1;
   await limiter.alarm();
   assert.deepEqual([...storage.values.keys()], []);
   assert.equal(storage.alarmAt, null);

@@ -82,6 +82,8 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Kontakt über WhatsApp");
   expect(mainText).toContain("WhatsApp Ireland Limited");
   expect(mainText).toContain("vorgegebene Nachrichtentext an WhatsApp übermittelt");
+  expect(mainText).toContain("höchstens drei unterschiedliche Kalendertage innerhalb von 24 Stunden");
+  expect(mainText).toContain("Wiederholte Prüfungen desselben Datums erhöhen die Anzahl nicht");
   expect(mainText).toContain("Begrenzte Terminabfrage für Buchungsagenten");
   expect(mainText).toContain("ein bis drei konkrete Wunschdaten");
   expect(mainText).toContain("höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden");

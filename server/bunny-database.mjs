@@ -42,6 +42,17 @@ const SCHEMA_STATEMENTS = [
     ON agent_availability_requests (ip_hash, requested_at)`,
   `CREATE INDEX IF NOT EXISTS idx_agent_availability_requests_time
     ON agent_availability_requests (requested_at)`,
+  `CREATE TABLE IF NOT EXISTS public_availability_requests (
+    id TEXT PRIMARY KEY,
+    ip_hash TEXT NOT NULL,
+    requested_date TEXT NOT NULL,
+    requested_at INTEGER NOT NULL,
+    UNIQUE (ip_hash, requested_date)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_public_availability_requests_ip_time
+    ON public_availability_requests (ip_hash, requested_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_public_availability_requests_time
+    ON public_availability_requests (requested_at)`,
   `CREATE TABLE IF NOT EXISTS agent_availability_audit (
     id TEXT PRIMARY KEY,
     requested_at INTEGER NOT NULL,
@@ -58,6 +69,7 @@ const SCHEMA_STATEMENTS = [
 
 const CONTACT_CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const AGENT_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
+const PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const AGENT_AUDIT_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
 async function pruneContactRequests(client) {
@@ -83,6 +95,14 @@ async function pruneAgentAvailabilityRequests(client, now = Date.now()) {
   });
 }
 
+async function prunePublicAvailabilityRequests(client, now = Date.now()) {
+  await client.execute({
+    sql: `DELETE FROM public_availability_requests
+      WHERE requested_at <= ?`,
+    args: [now - PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS],
+  });
+}
+
 async function pruneAgentAvailabilityAudit(client, now = Date.now()) {
   await client.execute({
     sql: `DELETE FROM agent_availability_audit
@@ -94,6 +114,7 @@ async function pruneAgentAvailabilityAudit(client, now = Date.now()) {
 async function pruneStoredData(client) {
   await pruneContactRequests(client);
   await pruneAgentAvailabilityRequests(client);
+  await prunePublicAvailabilityRequests(client);
   await pruneAgentAvailabilityAudit(client);
 }
 
@@ -149,6 +170,9 @@ export async function createBunnyDatabase(env = process.env) {
     },
     async cleanupAgentAvailabilityRequests(now) {
       await pruneAgentAvailabilityRequests(client, now);
+    },
+    async cleanupPublicAvailabilityRequests(now) {
+      await prunePublicAvailabilityRequests(client, now);
     },
     async cleanupAgentAvailabilityAudit(now) {
       await pruneAgentAvailabilityAudit(client, now);

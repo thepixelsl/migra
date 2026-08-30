@@ -30,6 +30,7 @@ GET /api/availability?date=YYYY-MM-DD
 ```
 
 Die öffentliche API gibt niemals die komplette Liste aus. Gespeichert werden nur blockierte Datumswerte im Format `YYYY-MM-DD` unter dem KV-Key `blockedDates`.
+Pro pseudonymer Kurzzeitkennung können innerhalb von 24 Stunden höchstens drei unterschiedliche Kalendertage geprüft werden. Wiederholte Prüfungen desselben Datums verbrauchen keinen zusätzlichen Tag. Die Begrenzung wird serverseitig sowohl im Bunny-Runtime als auch im Cloudflare-Worker durchgesetzt.
 
 ### Cloudflare KV
 

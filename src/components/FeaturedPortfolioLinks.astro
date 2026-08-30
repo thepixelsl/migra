@@ -19,18 +19,8 @@ type FeaturedPortfolioLink = {
 };
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
-const transparentPixel = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 
 const links: FeaturedPortfolioLink[] = [
-  {
-    title: "Lovebirds am Elbstrand",
-    href: "/gallery/lovebirds-am-elbstrand/",
-    location: "Hamburg, Elbstrand",
-    image: lovebirdsElbstrand,
-    alt: "Verlobungsshooting am Elbstrand in Hamburg",
-    imagePosition: "center center",
-    serviceType: "Verlobungsshooting",
-  },
   {
     title: "Paarshooting Mallorca",
     href: "/gallery/paarshooting-mallorca/",
@@ -39,6 +29,15 @@ const links: FeaturedPortfolioLink[] = [
     alt: "Paarshooting auf Mallorca",
     imagePosition: "center center",
     serviceType: "Paarshooting",
+  },
+  {
+    title: "Lovebirds am Elbstrand",
+    href: "/gallery/lovebirds-am-elbstrand/",
+    location: "Hamburg, Elbstrand",
+    image: lovebirdsElbstrand,
+    alt: "Verlobungsshooting am Elbstrand in Hamburg",
+    imagePosition: "center center",
+    serviceType: "Verlobungsshooting",
   },
   {
     title: "Standesamtliche Trauung in Altona",
@@ -213,9 +212,10 @@ const schema = {
               style={`--image-position: ${entry.imagePosition ?? "center center"}; --image-aspect: ${entry.imageAspect}`}
             >
               <img
-                src={transparentPixel}
-                data-src={entry.imageFallback}
-                data-srcset={entry.imageSrcset}
+                src={index === 0 ? entry.imageFallback : undefined}
+                srcset={index === 0 ? entry.imageSrcset : undefined}
+                data-src={index === 0 ? undefined : entry.imageFallback}
+                data-srcset={index === 0 ? undefined : entry.imageSrcset}
                 sizes="50vw"
                 alt=""
                 width={entry.image.width}

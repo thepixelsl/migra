@@ -441,6 +441,7 @@ export async function createBunnyRuntime(options = {}) {
     AVAILABILITY_KV: database.kv,
     AGENT_AUDIT_DB: database.d1,
     AGENT_RATE_LIMIT_DB: database.d1,
+    PUBLIC_AVAILABILITY_RATE_LIMIT_DB: database.d1,
     DB: database.d1,
     CONTACT_DB: database.d1,
     ...(contactMailer ? { CONTACT_MAILER: contactMailer } : {}),

@@ -137,6 +137,7 @@ const privacyContent = `
 
 <h2 id="terminverfuegbarkeit">6. Terminverfügbarkeit</h2>
 <p>Wenn Sie die öffentliche Terminabfrage nutzen, wird das von Ihnen ausgewählte Datum an den Server dieser Website übermittelt und dort mit bereits gesperrten Daten abgeglichen. Für diese Abfrage sind weder Ihr Name noch Ihre Kontaktdaten erforderlich.</p>
+<p>Um die automatische Prüfung auf höchstens drei unterschiedliche Kalendertage innerhalb von 24 Stunden zu begrenzen, wird aus der beim Zugriff technisch übermittelten IP-Adresse unmittelbar mit einem geheimen Zusatz eine pseudonyme Kurzzeitkennung gebildet. Für diese Begrenzung werden nur die Kennung, die geprüften Daten und die Zeitpunkte der ersten Prüfung gespeichert. Wiederholte Prüfungen desselben Datums erhöhen die Anzahl nicht. Die vollständige IP-Adresse wird nicht gespeichert; abgelaufene Einträge werden im nächsten regelmäßigen Bereinigungslauf gelöscht.</p>
 
 <h2 id="terminabfrage-buchungsagenten">7. Begrenzte Terminabfrage für Buchungsagenten</h2>
 <p>Auf der Seite „Für Buchungsagenten“ können pro Anfrage ein bis drei konkrete Wunschdaten an den Server dieser Website übermittelt und mit bereits gesperrten Daten abgeglichen werden. Die zurückgegebene Auskunft ist unverbindlich und bewirkt weder eine Reservierung noch eine automatisierte Buchungsentscheidung.</p>
