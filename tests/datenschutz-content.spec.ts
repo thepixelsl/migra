@@ -220,3 +220,31 @@ test("contact form confirms notice instead of requesting unnecessary consent", a
   await expect(privacyLabel.locator("input")).toHaveAttribute("required", "");
   await expect(page.locator("[data-contact-date]")).toHaveValue("");
 });
+
+test("contact form sets current local date bounds and keeps a safe POST fallback", async ({ page }) => {
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+
+  const dateField = page.locator("[data-contact-date]");
+  const actual = await dateField.evaluate((input: HTMLInputElement) => ({
+    min: input.min,
+    max: input.max,
+    describedBy: input.getAttribute("aria-describedby"),
+  }));
+  const expected = await page.evaluate(() => {
+    const today = new Date();
+    const pad = (value: number) => String(value).padStart(2, "0");
+    const iso = (date: Date) => `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+    const maximum = new Date(today.getFullYear() + 2, today.getMonth(), 1);
+    const lastDay = new Date(maximum.getFullYear(), maximum.getMonth() + 1, 0).getDate();
+    maximum.setDate(Math.min(today.getDate(), lastDay));
+    return { min: iso(today), max: iso(maximum) };
+  });
+
+  expect(actual).toEqual({ ...expected, describedBy: null });
+  await expect(page.locator("#kontaktformular")).toHaveAttribute("method", "post");
+  await expect(page.locator("#kontaktformular")).toHaveAttribute("action", "/api/contact");
+  await expect(page.locator("#contact-message")).not.toHaveAttribute("aria-describedby", /.+/);
+  await expect(page.locator("body")).not.toContainText(
+    "Optional, falls etwas Besonderes wichtig ist. Bitte keine Links oder Code-Fragmente senden",
+  );
+});

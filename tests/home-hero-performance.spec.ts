@@ -31,6 +31,7 @@ test("mobile hero requests responsive modern images and only its immediate set",
   await page.goto(baseUrl, { waitUntil: "load" });
 
   const slider = page.locator(".hero-slider--mobile");
+  const desktopSlider = page.locator(".hero-slider--desktop");
   const toggle = slider.locator("[data-slider-toggle]");
   await toggle.evaluate((button: HTMLButtonElement) => button.click());
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
@@ -67,6 +68,8 @@ test("mobile hero requests responsive modern images and only its immediate set",
   expect(delivery.deferredCount).toBe(7);
   expect([...originalImageRequests]).toEqual([]);
   expect(heroRequests.size).toBeLessThanOrEqual(3);
+  await expect(slider.locator('img[fetchpriority="high"]')).toHaveCount(1);
+  await expect(desktopSlider.locator('img[fetchpriority="high"]')).toHaveCount(0);
 });
 
 test("percentage-based positioning keeps the hero centered and navigable", async ({ page }) => {

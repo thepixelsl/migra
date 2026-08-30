@@ -1,4 +1,4 @@
-// The versioned filename ensures Bunny serves this carousel revision immediately.
+// Bundled by Astro so every content change receives a new asset URL.
 (() => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 

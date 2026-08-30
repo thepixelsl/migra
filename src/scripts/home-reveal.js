@@ -1,3 +1,4 @@
+// Bundled by Astro so every content change receives a new asset URL.
 (() => {
   const targets = Array.from(document.querySelectorAll("[data-home-reveal]"));
   if (targets.length === 0) return;

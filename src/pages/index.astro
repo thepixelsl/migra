@@ -41,6 +41,11 @@ import instagramLogo from "../assets/home/social/instagram-glyph-gradient.png";
 import pinterestLogo from "../assets/home/social/pinterest-badge-primary.png";
 import contactEmailIcon from "../assets/home/contact/email-icon.png";
 import contactPlannerIcon from "../assets/home/contact/weekly-planner-icon.png";
+import heroSliderScript from "../scripts/hero-slider.js?url&no-inline";
+import homeRevealScript from "../scripts/home-reveal.js?url&no-inline";
+import portfolioShowcaseCarouselScript from "../scripts/portfolio-showcase-carousel.js?url&no-inline";
+import storyCarouselScript from "../scripts/story-carousel.js?url&no-inline";
+import vendorCarouselScript from "../scripts/vendor-carousel.js?url&no-inline";
 
 type StoryCard = {
   title: string;
@@ -448,11 +453,11 @@ const homepageSchema = {
   <link rel="canonical" href={`${homepageSiteUrl}/`}>
   <title>Hochzeitsfotograf Hamburg</title>
   <script type="application/ld+json" set:html={JSON.stringify(homepageSchema)}></script>
-  <script src="/js/hero-slider.js" defer></script>
-  <script src="/js/home-reveal.js" defer></script>
-  <script src="/js/story-carousel-20260828.js" defer></script>
-  <script src="/js/portfolio-showcase-carousel.js" defer></script>
-  <script src="/js/vendor-carousel.js" defer></script>
+  <script is:inline src={heroSliderScript} defer></script>
+  <script is:inline src={homeRevealScript} defer></script>
+  <script is:inline src={storyCarouselScript} defer></script>
+  <script is:inline src={portfolioShowcaseCarouselScript} defer></script>
+  <script is:inline src={vendorCarouselScript} defer></script>
 </head>
 <body id="top">
   <header class="gallery-header">
@@ -487,8 +492,6 @@ const homepageSchema = {
               src={heroParis17Image}
               fallbackSrc="/images/paris_braut_fotoshooting-17.jpg"
               alt="Braut beim Fotoshooting in Paris"
-              deferred={false}
-              priority
             />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="97" data-focus-y="61">
@@ -589,8 +592,6 @@ const homepageSchema = {
               src={heroParis17Image}
               fallbackSrc="/images/paris_braut_fotoshooting-17.jpg"
               alt="Braut beim Fotoshooting in Paris"
-              deferred={false}
-              priority
             />
           </figure>
           <figure class="hero-slider__slide" data-focus-x="98" data-focus-y="99">

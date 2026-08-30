@@ -1,3 +1,4 @@
+// Bundled by Astro so every content change receives a new asset URL.
 (() => {
   const finder = document.querySelector("[data-standesamt-finder]");
   if (!finder) return;

@@ -15,6 +15,7 @@ import {
   AGENT_RATE_LIMIT_WINDOW_MS,
   reserveAgentAvailabilityRequest,
 } from "../functions/_agent-rate-limit.js";
+import { contactDateBoundsAt } from "../functions/_contact-date-bounds.js";
 import { onRequestPost as handleContactPost } from "../functions/api/contact.js";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { AgentRateLimiter } from "../src/AgentRateLimiter.js";
@@ -33,6 +34,8 @@ function shiftDate(value, days) {
 }
 
 const AGENT_DATE_BOUNDS = agentAvailabilityDateBounds();
+const CONTACT_DATE_BOUNDS = contactDateBoundsAt(new Date(), "Europe/Berlin");
+const CONTACT_TEST_DATE = shiftDate(CONTACT_DATE_BOUNDS.minDate, 30);
 const AGENT_TEST_DATES = {
   first: shiftDate(AGENT_DATE_BOUNDS.maxDate, -120),
   blocked: shiftDate(AGENT_DATE_BOUNDS.maxDate, -90),
@@ -162,7 +165,7 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
 test("uses immutable caching for built Astro assets", async () => {
   const response = await fetch(`${baseUrl}/_astro/app.js`);
   assert.equal(response.status, 200);
-  assert.equal(response.headers.get("cache-control"), "public, max-age=31556952, immutable");
+  assert.equal(response.headers.get("cache-control"), "public, max-age=31536000, immutable");
 });
 
 test("serves the agent Markdown, llms.txt and OpenAPI files with readable types", async () => {
@@ -888,7 +891,7 @@ test("accepts a valid contact request through the injected Node mailer", async (
   form.set("name", "Test Paar");
   form.set("email", "test@example.com");
   form.set("request_type", "hochzeit");
-  form.set("event_date", "2030-08-22");
+  form.set("event_date", CONTACT_TEST_DATE);
   form.set("location", "Hamburg");
   form.set("message", "Kontrollierte Testanfrage");
   form.set("security_year", String(new Date().getFullYear()));
@@ -924,6 +927,46 @@ test("accepts a valid contact request through the injected Node mailer", async (
   assert.equal(stored.rows[0].security_year, null);
   assert.equal(stored.rows[0].user_agent, null);
   assert.match(String(stored.rows[0].ip_hash), /^[0-9a-f]{64}$/);
+});
+
+test("rejects malformed, past, and overly distant contact dates with 4xx responses", async () => {
+  const cases = [
+    ["2026-02-30", /gültiges Datum/],
+    [shiftDate(CONTACT_DATE_BOUNDS.minDate, -1), /Vergangenheit/],
+    [shiftDate(CONTACT_DATE_BOUNDS.maxDate, 1), /höchstens/],
+  ];
+
+  for (const [eventDate, expectedMessage] of cases) {
+    const form = new FormData();
+    form.set("name", "Datumsprüfung");
+    form.set("email", "date-check@example.com");
+    form.set("request_type", "hochzeit");
+    form.set("event_date", eventDate);
+    form.set("location", "Hamburg");
+    form.set("security_year", String(new Date().getFullYear()));
+    form.set("privacy", "yes");
+
+    const response = await fetch(`${baseUrl}/api/contact`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "X-Requested-With": "fetch",
+      },
+      body: form,
+    });
+
+    assert.equal(response.status, 422);
+    assert.match((await response.json()).message, expectedMessage);
+  }
+});
+
+test("keeps the contact endpoint POST-only and ignores query-string dates", async () => {
+  const response = await fetch(
+    `${baseUrl}/api/contact?event_date=${encodeURIComponent(CONTACT_TEST_DATE)}`,
+    { redirect: "manual" },
+  );
+  assert.equal(response.status, 405);
+  assert.doesNotMatch(await response.text(), new RegExp(CONTACT_TEST_DATE));
 });
 
 test("removes short-lived security data and expires database copies", async () => {
@@ -973,7 +1016,7 @@ test("rejects a valid request when direct STRATO SMTP is not configured", async 
   form.set("name", "SMTP Test");
   form.set("email", "smtp@example.com");
   form.set("request_type", "hochzeit");
-  form.set("event_date", "2030-08-22");
+  form.set("event_date", CONTACT_TEST_DATE);
   form.set("location", "Hamburg");
   form.set("message", "Kontrollierte Testanfrage ohne Mailtransport");
   form.set("security_year", String(new Date().getFullYear()));

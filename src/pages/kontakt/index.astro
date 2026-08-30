@@ -342,12 +342,8 @@ const schemaGraph = {
                 name="message"
                 rows="5"
                 maxlength="1200"
-                aria-describedby="contact-message-hint"
                 data-agent-field="message"
               ></textarea>
-              <p id="contact-message-hint">
-                Optional, falls etwas Besonderes wichtig ist. Bitte keine Links oder Code-Fragmente senden.
-              </p>
             </div>
 
             <div
@@ -384,6 +380,7 @@ const schemaGraph = {
             <span>
               Ich habe die Datenschutzerklärung zur Kenntnis genommen. Meine
               Angaben werden zur Bearbeitung der Anfrage verarbeitet. Weitere Informationen stehen in der
+              {" "}
               <a
                 href="/datenschutz/"
                 data-track-event="cta_click"
@@ -582,6 +579,8 @@ const schemaGraph = {
     </footer>
 
     <script>
+      import { contactDateBoundsAt } from "../../../functions/_contact-date-bounds.js";
+
       const contactForm = document.querySelector("[data-contact-form]");
 
       if (contactForm instanceof HTMLFormElement) {
@@ -599,6 +598,11 @@ const schemaGraph = {
         const submit = contactForm.querySelector("[data-contact-submit]");
         if (loadedAt instanceof HTMLInputElement) loadedAt.value = String(Date.now());
         if (jsEnabled instanceof HTMLInputElement) jsEnabled.value = "1";
+        if (dateField instanceof HTMLInputElement) {
+          const { minDate, maxDate } = contactDateBoundsAt();
+          dateField.min = minDate;
+          dateField.max = maxDate;
+        }
 
         const syncRequestType = () => {
           const isTfp = requestType instanceof HTMLSelectElement && requestType.value === "tfp";

@@ -8,6 +8,8 @@ import hamburgInterludeImage from "../../assets/travel-galleries/hamburg/ART_470
 import { hamburgStadtteile } from "../../data/hamburgStadtteile";
 import { standesaemter } from "../../data/standesaemter";
 import { trauorte, type Trauort } from "../../data/trauorte";
+import standesamtFinderScript from "../../scripts/standesamt-finder.js?url&no-inline";
+import standesamtTrauorteScript from "../../scripts/standesamt-trauorte.js?url&no-inline";
 import "../../styles/global.css";
 
 const siteUrl =
@@ -133,8 +135,8 @@ const schemaGraph = {
     >
     <meta name="twitter:card" content="summary_large_image">
     <script type="application/ld+json" set:html={JSON.stringify(schemaGraph)}></script>
-    <script src="/js/standesamt-finder-fixed-20260731.js" defer></script>
-    <script src="/js/standesamt-trauorte.js" defer></script>
+    <script is:inline src={standesamtFinderScript} defer></script>
+    <script is:inline src={standesamtTrauorteScript} defer></script>
   </head>
   <body class="standesamt-page">
     <header class="gallery-header">

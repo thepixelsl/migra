@@ -221,7 +221,7 @@ export default {
     }
 
     if (url.pathname.startsWith("/_astro/")) {
-      responseHeaders.set("Cache-Control", "public, max-age=31556952, immutable");
+      responseHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
     }
 
     if (!isExplicitDownloadPath(url.pathname)) {

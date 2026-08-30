@@ -1,3 +1,8 @@
+import {
+  contactDateBoundsAt,
+  validateContactDate,
+} from "../_contact-date-bounds.js";
+
 const JSON_HEADERS = {
   "Content-Type": "application/json; charset=utf-8",
   "Cache-Control": "no-store",
@@ -91,18 +96,6 @@ function cleanHeaderText(value, maxLength = MAX_TEXT_LENGTH) {
 
 function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value);
-}
-
-function validDateValue(value) {
-  if (!value) return true;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return (
-    date.getUTCFullYear() === year
-    && date.getUTCMonth() === month - 1
-    && date.getUTCDate() === day
-  );
 }
 
 function countUrls(value) {
@@ -357,9 +350,21 @@ function validate(payload) {
   }
   if (!ALLOWED_REQUEST_TYPES.has(payload.requestType)) return { error: "Bitte wählt aus, worum es geht." };
   if (!payload.location || payload.location.length < 2) return { error: "Bitte nennt den Ort oder die Stadt." };
-  if (!validDateValue(payload.eventDate)) return { error: "Bitte verwendet ein gültiges Datum." };
   if (payload.requestType !== "tfp" && !payload.eventDate) {
     return { error: "Bitte tragt euer Wunschdatum ein, damit ich die Verfügbarkeit prüfen kann." };
+  }
+  if (payload.eventDate) {
+    const dateBounds = contactDateBoundsAt(new Date(), "Europe/Berlin");
+    const dateValidation = validateContactDate(payload.eventDate, dateBounds);
+    if (dateValidation === "invalid") {
+      return { error: "Bitte verwendet ein gültiges Datum im Format JJJJ-MM-TT." };
+    }
+    if (dateValidation === "past") {
+      return { error: "Das Wunschdatum darf nicht in der Vergangenheit liegen." };
+    }
+    if (dateValidation === "too_far") {
+      return { error: `Das Wunschdatum darf höchstens bis zum ${dateBounds.maxDate} liegen.` };
+    }
   }
   if (payload.message.length > MAX_MESSAGE_LENGTH) {
     return { error: "Die Nachricht ist zu lang. Bitte kürzt sie etwas." };

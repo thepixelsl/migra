@@ -1,19 +1,20 @@
+// Bundled by Astro so every content change receives a new asset URL.
 (() => {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  document.querySelectorAll("[data-portfolio-showcase-carousel]").forEach((carousel) => {
-    if (carousel.dataset.portfolioShowcaseReady === "true") return;
+  document.querySelectorAll("[data-vendor-carousel]").forEach((carousel) => {
+    if (carousel.dataset.vendorCarouselReady === "true") return;
 
-    const viewport = carousel.querySelector("[data-portfolio-showcase-viewport]");
-    const cards = Array.from(carousel.querySelectorAll("[data-portfolio-showcase-card]"));
-    const previous = carousel.querySelector("[data-portfolio-showcase-previous]");
-    const next = carousel.querySelector("[data-portfolio-showcase-next]");
-    const current = carousel.querySelector("[data-portfolio-showcase-current]");
-    const status = carousel.querySelector("[data-portfolio-showcase-status]");
+    const viewport = carousel.querySelector("[data-vendor-carousel-viewport]");
+    const cards = Array.from(carousel.querySelectorAll("[data-vendor-carousel-card]"));
+    const previous = carousel.querySelector("[data-vendor-carousel-previous]");
+    const next = carousel.querySelector("[data-vendor-carousel-next]");
+    const current = carousel.querySelector("[data-vendor-carousel-current]");
+    const status = carousel.querySelector("[data-vendor-carousel-status]");
 
     if (!viewport || cards.length === 0) return;
 
-    carousel.dataset.portfolioShowcaseReady = "true";
+    carousel.dataset.vendorCarouselReady = "true";
     carousel.classList.add("is-enhanced");
 
     let activeIndex = 0;
@@ -23,7 +24,7 @@
     let heightFrame = 0;
     let statusTimer = 0;
     let programmaticTimer = 0;
-    let isProgrammaticScroll = false;
+    let programmaticIndex = null;
 
     const cardStep = () => {
       if (cards.length < 2) return cards[0].getBoundingClientRect().width;
@@ -97,8 +98,8 @@
       if (current) current.textContent = visibleRange;
       updateStatus(
         firstNumber === lastNumber
-          ? `Arbeit ${firstNumber} von ${cards.length}`
-          : `Arbeiten ${firstNumber} bis ${lastNumber} von ${cards.length}`,
+          ? `Dienstleister ${firstNumber} von ${cards.length}`
+          : `Dienstleister ${firstNumber} bis ${lastNumber} von ${cards.length}`,
         announce,
       );
       if (previous) previous.disabled = activeIndex === 0;
@@ -114,8 +115,9 @@
 
     const finishProgrammaticScroll = () => {
       if (programmaticTimer) window.clearTimeout(programmaticTimer);
-      isProgrammaticScroll = false;
-      update(closestIndex(), { announce: true });
+      const targetIndex = programmaticIndex;
+      programmaticIndex = null;
+      update(targetIndex ?? closestIndex(), { announce: true });
     };
 
     const goTo = (requestedIndex) => {
@@ -125,14 +127,19 @@
         Math.min(requestedIndex, cards.length - visibleCount),
       );
 
-      isProgrammaticScroll = true;
+      programmaticIndex = targetIndex;
       if (programmaticTimer) window.clearTimeout(programmaticTimer);
       update(targetIndex, { announce: true });
+      const targetLeft = cards[targetIndex].offsetLeft;
       viewport.scrollTo({
-        left: cards[targetIndex].offsetLeft,
+        left: targetLeft,
         behavior: reduceMotion.matches ? "auto" : "smooth",
       });
-      programmaticTimer = window.setTimeout(finishProgrammaticScroll, reduceMotion.matches ? 40 : 700);
+      if (reduceMotion.matches) viewport.scrollLeft = targetLeft;
+      programmaticTimer = window.setTimeout(
+        finishProgrammaticScroll,
+        reduceMotion.matches ? 80 : 700,
+      );
     };
 
     previous?.addEventListener("click", () => goTo(activeIndex - 1));
@@ -146,13 +153,15 @@
     });
 
     viewport.addEventListener("scroll", () => {
-      if (isProgrammaticScroll) return;
+      if (programmaticIndex !== null) return;
       if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
       scrollFrame = window.requestAnimationFrame(() => update(closestIndex()));
     }, { passive: true });
 
     viewport.addEventListener("scrollend", () => {
-      if (isProgrammaticScroll) {
+      if (programmaticIndex !== null) {
+        const targetLeft = cards[programmaticIndex]?.offsetLeft ?? 0;
+        if (Math.abs(viewport.scrollLeft - targetLeft) > 2) return;
         finishProgrammaticScroll();
       } else {
         update(closestIndex(), { announce: true });

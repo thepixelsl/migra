@@ -69,7 +69,7 @@
       this.nextButton?.addEventListener("click", this.onNextClick);
       this.toggleButton?.addEventListener("click", this.onToggleClick);
 
-      this.render(true);
+      this.render(true, true);
       this.queueNeighborImages();
       this.queueDeferredImages();
       this.root.classList.add("is-ready");
@@ -84,6 +84,10 @@
       this.clearNeighborTimer();
       this.root.classList.remove("is-ready", "is-dragging");
       this.root.hidden = true;
+      this.root.querySelectorAll('img[fetchpriority="high"]').forEach((image) => {
+        image.removeAttribute("fetchpriority");
+        image.loading = "lazy";
+      });
 
       this.root.removeEventListener("mouseenter", this.onMouseEnter);
       this.root.removeEventListener("mouseleave", this.onMouseLeave);
@@ -110,7 +114,7 @@
       return offset;
     }
 
-    render(loadActive = false) {
+    render(loadActive = false, prioritizeActive = false) {
       this.slides.forEach((slide, slideIndex) => {
         const offset = this.offsetFor(slideIndex);
         const isActive = offset === 0;
@@ -121,7 +125,7 @@
         slide.setAttribute("aria-hidden", isActive ? "false" : "true");
 
         if (loadActive && isActive) {
-          this.loadImage(slide, isActive);
+          this.loadImage(slide, { eager: true, priority: prioritizeActive });
         }
       });
     }
@@ -132,10 +136,10 @@
       return Boolean((image.currentSrc || image.src) && image.complete && image.naturalWidth > 0);
     }
 
-    prepareSlide(slideIndex, isPriority = false) {
+    prepareSlide(slideIndex) {
       const slide = this.slides[slideIndex];
       if (!slide) return false;
-      this.loadImage(slide, isPriority);
+      this.loadImage(slide, { eager: true });
       return this.imageIsReady(slide);
     }
 
@@ -143,7 +147,7 @@
       const count = this.slides.length;
       const targetIndex = (slideIndex + count) % count;
 
-      if (!this.prepareSlide(targetIndex, true)) {
+      if (!this.prepareSlide(targetIndex)) {
         this.queueNeighborImages();
         return;
       }
@@ -261,13 +265,13 @@
       this.play();
     }
 
-    loadImage(slide, isPriority = false) {
+    loadImage(slide, { eager = false, priority = false } = {}) {
       const image = slide.querySelector("img");
       if (!image) return;
 
-      image.loading = isPriority ? "eager" : "lazy";
+      image.loading = eager ? "eager" : "lazy";
       image.decoding = "async";
-      if (isPriority) image.setAttribute("fetchpriority", "high");
+      if (priority) image.setAttribute("fetchpriority", "high");
 
       if (image.dataset.srcset) {
         image.srcset = image.dataset.srcset;
@@ -305,7 +309,7 @@
         .map((item) => item.slide);
 
       if (this.mode === "mobile") {
-        neighbors.forEach((slide) => this.loadImage(slide, false));
+        neighbors.forEach((slide) => this.loadImage(slide));
         this.neighborQueue = [];
         return;
       }
@@ -320,7 +324,7 @@
 
       this.neighborTimer = window.setTimeout(() => {
         const slide = this.neighborQueue.shift();
-        if (slide) this.loadImage(slide, false);
+        if (slide) this.loadImage(slide);
         this.scheduleNextNeighborImage();
       }, 120);
     }
@@ -331,7 +335,7 @@
 
       const loadNext = () => {
         const slide = this.preloadQueue.shift();
-        if (slide) this.loadImage(slide, false);
+        if (slide) this.loadImage(slide);
         this.scheduleNextDeferredImage();
       };
 
