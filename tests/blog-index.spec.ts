@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
-import { isMigratedPageIndexable } from "../src/lib/migratedSeoPolicy";
+import { shouldListBlogPost } from "../src/lib/blogIndexPolicy";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const migratedPages = JSON.parse(
   readFileSync(new URL("../src/data/migratedPages.json", import.meta.url), "utf8"),
 ) as Array<{ path: string; type: string }>;
 const expectedPostPaths = migratedPages
-  .filter((entry) => entry.type === "post" && isMigratedPageIndexable(entry.path))
+  .filter(shouldListBlogPost)
   .map((entry) => entry.path)
   .sort();
 const blogMediaExpectations = [
@@ -55,7 +55,7 @@ const blogMediaExpectations = [
   },
 ] as const;
 
-test("blog index uses the configured site URL and exposes the indexable migrated posts", async ({
+test("blog index uses the configured site URL and exposes the selected migrated posts", async ({
   page,
 }) => {
   const response = await page.goto(`${baseUrl}/blog/`, {
@@ -143,6 +143,7 @@ test("blog index uses the configured site URL and exposes the indexable migrated
     );
   expect(new Set(cardPaths).size).toBe(cardPaths.length);
   expect([...cardPaths].sort()).toEqual(expectedPostPaths);
+  expect(cardPaths).toContain("/wie-sollte-man-hochzeitsfotos-sichern/");
 
   const labelledArticles = await cards.evaluateAll((articles) =>
     articles.map((article) => {

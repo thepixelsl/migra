@@ -5,7 +5,7 @@ import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import migratedPages from "../../data/migratedPages.json";
-import { isMigratedPageIndexable } from "../../lib/migratedSeoPolicy";
+import { shouldListBlogPost } from "../../lib/blogIndexPolicy";
 import "../../styles/global.css";
 import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-titel.jpg";
 import fraserCardImage from "../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
@@ -27,6 +27,7 @@ type MigratedPost = {
   contentHtml?: string;
   datePublished?: string;
   heroImage?: MigratedImage;
+  galleryImages?: MigratedImage[];
 };
 
 const canonicalSiteUrl =
@@ -95,10 +96,21 @@ const formatPublishedDate = (date?: string) => {
     year: "numeric",
   }).format(timestamp);
 };
+const getImageArea = (image: MigratedImage) =>
+  (image.width ?? 0) * (image.height ?? 0);
+const isCardImage = (image?: MigratedImage) =>
+  Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
+const getCardImage = (entry: MigratedPost) => {
+  const dedicatedImage = dedicatedPostCardImages[entry.path];
+  if (dedicatedImage) return dedicatedImage;
+  if (isCardImage(entry.heroImage)) return entry.heroImage;
+
+  return [...(entry.galleryImages ?? [])]
+    .filter(isCardImage)
+    .sort((left, right) => getImageArea(right) - getImageArea(left))[0];
+};
 const blogPosts = (migratedPages as MigratedPost[])
-  .filter(
-    (entry) => entry.type === "post" && isMigratedPageIndexable(entry.path),
-  )
+  .filter(shouldListBlogPost)
   .sort(
     (left, right) =>
       getPublishedTimestamp(right.datePublished) - getPublishedTimestamp(left.datePublished),
@@ -107,14 +119,7 @@ const blogPosts = (migratedPages as MigratedPost[])
     ...entry,
     category: getPostCategory(entry.path),
     formattedDate: formatPublishedDate(entry.datePublished),
-    cardImage:
-      dedicatedPostCardImages[entry.path] ??
-      (entry.heroImage?.width &&
-      entry.heroImage?.height &&
-      entry.heroImage.width >= 480 &&
-      entry.heroImage.height >= 280
-        ? entry.heroImage
-        : undefined),
+    cardImage: getCardImage(entry),
   }));
 
 const collectionItems = [
