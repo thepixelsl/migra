@@ -249,12 +249,33 @@ const sitemapStylesheet = `<?xml version="1.0" encoding="UTF-8"?>
 </xsl:stylesheet>
 `;
 
+const privateRobotPaths = [
+  "/admin-login/",
+  "/admin-termine/",
+  "/api/admin/",
+];
+
+const allowedAiUserAgents = [
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "Google-Extended",
+  "ClaudeBot",
+  "Claude-SearchBot",
+  "Claude-User",
+  "PerplexityBot",
+  "Perplexity-User",
+];
+
 const robots = [
+  "# AI assistants, search and model crawlers",
+  ...allowedAiUserAgents.map((userAgent) => `User-agent: ${userAgent}`),
+  "Allow: /",
+  ...privateRobotPaths.map((pathname) => `Disallow: ${pathname}`),
+  "",
   "User-agent: *",
   "Allow: /",
-  "Disallow: /admin-login/",
-  "Disallow: /admin-termine/",
-  "Disallow: /api/admin/",
+  ...privateRobotPaths.map((pathname) => `Disallow: ${pathname}`),
   `Sitemap: ${PRODUCTION_ORIGIN}/sitemap.xml`,
   "",
 ].join("\n");
