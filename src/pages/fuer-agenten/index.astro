@@ -26,7 +26,7 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const markdownPath = agentBookingPage.markdownPath;
 const apiPath = agentBookingPage.apiPath;
 const apiUrl = `${siteUrl}${apiPath}`;
-const singleDateApiPath = agentBookingPage.singleDateApiPath;
+const singleDateApiPath = agentBookingPage.singleDateAliasPath;
 const singleDateApiUrl = `${siteUrl}${singleDateApiPath}`;
 const singleDateUrlTemplate = `${singleDateApiUrl}?date=YYYY-MM-DD`;
 const openApiPath = "/api/agent-availability/openapi.json";
@@ -237,7 +237,8 @@ const schemaGraph = {
           <p class="agent-quickstart__note">
             Pro Aufruf ist ein Datum möglich; innerhalb von {singleDateAvailabilityRules.windowHours} Stunden
             können höchstens {singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage
-            geprüft werden. Das Ergebnis ist unverbindlich und keine Reservierung.
+            geprüft werden. Das Limit gilt gemeinsam für <code>{agentBookingPage.singleDateAliasPath}</code> und
+            <code>{agentBookingPage.singleDateApiPath}</code>. Das Ergebnis ist unverbindlich und keine Reservierung.
           </p>
         </section>
 
@@ -536,7 +537,7 @@ const schemaGraph = {
         if (!quickForm.reportValidity() || !quickDateInput) return;
 
         const submit = quickForm.querySelector<HTMLButtonElement>('button[type="submit"]');
-        const endpoint = quickForm.dataset.singleDateEndpoint || "/api/availability";
+        const endpoint = quickForm.dataset.singleDateEndpoint || "/api/agent-availability";
         submit?.setAttribute("disabled", "");
         showMessage(quickResult, "Der Termin wird geprüft …", "pending");
 

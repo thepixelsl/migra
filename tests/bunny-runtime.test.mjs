@@ -485,6 +485,38 @@ test("limits public availability checks to three unique calendar dates per 24 ho
   assert.ok(rows.rows.every((row) => Number.isFinite(Number(row.requested_at))));
 });
 
+test("shares the single-date rate limit across the agent GET alias and the legacy route", async () => {
+  const ip = "198.51.100.73";
+  const dates = [10, 11, 12, 13].map((days) => shiftDate(CONTACT_TEST_DATE, days));
+  const request = (pathname, date) => fetch(`${baseUrl}${pathname}?date=${date}`, {
+    headers: { "X-Real-IP": ip },
+  });
+
+  const first = await request("/api/agent-availability", dates[0]);
+  assert.equal(first.status, 200);
+  assert.equal(first.headers.get("x-ratelimit-limit"), "3");
+  assert.equal(first.headers.get("x-ratelimit-remaining"), "2");
+  assert.deepEqual(await first.json(), { date: dates[0], available: true });
+
+  const repeatedThroughLegacyRoute = await request("/api/availability", dates[0]);
+  assert.equal(repeatedThroughLegacyRoute.status, 200);
+  assert.equal(repeatedThroughLegacyRoute.headers.get("x-ratelimit-remaining"), "2");
+
+  const second = await request("/api/agent-availability", dates[1]);
+  assert.equal(second.status, 200);
+  assert.equal(second.headers.get("x-ratelimit-remaining"), "1");
+
+  const third = await request("/api/availability", dates[2]);
+  assert.equal(third.status, 200);
+  assert.equal(third.headers.get("x-ratelimit-remaining"), "0");
+
+  const limited = await request("/api/agent-availability", dates[3]);
+  assert.equal(limited.status, 429);
+  assert.equal(limited.headers.get("x-ratelimit-limit"), "3");
+  assert.equal(limited.headers.get("x-ratelimit-remaining"), "0");
+  assert.match((await limited.json()).message, /drei unterschiedliche Kalendertage/);
+});
+
 test("documents the agent availability API for machine clients", async () => {
   const response = await fetch(`${baseUrl}/api/agent-availability`);
   assert.equal(response.status, 200);
@@ -492,12 +524,18 @@ test("documents the agent availability API for machine clients", async () => {
 
   const documentation = await response.json();
   assert.equal(documentation.endpoint, "/api/agent-availability");
-  assert.equal(documentation.singleDateQuery.endpoint, "/api/availability");
+  assert.equal(documentation.singleDateQuery.endpoint, "/api/agent-availability");
   assert.equal(documentation.singleDateQuery.method, "GET");
   assert.equal(
     documentation.singleDateQuery.urlTemplate,
+    "/api/agent-availability?date=YYYY-MM-DD",
+  );
+  assert.equal(documentation.singleDateQuery.alternateEndpoint, "/api/availability");
+  assert.equal(
+    documentation.singleDateQuery.alternateUrlTemplate,
     "/api/availability?date=YYYY-MM-DD",
   );
+  assert.equal(documentation.singleDateQuery.sharedRateLimitAcrossEndpoints, true);
   assert.equal(documentation.singleDateQuery.maximumDates, 1);
   assert.equal(
     documentation.singleDateQuery.rateLimit.maximumUniqueDates,

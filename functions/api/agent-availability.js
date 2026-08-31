@@ -22,6 +22,7 @@ import {
   parseDateValue,
   readBlockedDates,
 } from "../_availability.js";
+import { onRequestGet as onSingleDateAvailabilityGet } from "./availability.js";
 
 const ADVICE_MESSAGE = "Die Verfügbarkeitsauskunft ist unverbindlich. Hochzeiten bitte mindestens sechs Monate im Voraus anfragen.";
 
@@ -160,7 +161,12 @@ export function onRequestOptions() {
   return optionsResponse();
 }
 
-export function onRequestGet() {
+export function onRequestGet({ request, env }) {
+  const url = new URL(request.url);
+  if (url.searchParams.has("date")) {
+    return onSingleDateAvailabilityGet({ request, env });
+  }
+
   const { minDate, maxDate } = agentAvailabilityDateBounds();
   return json(
     {
@@ -168,9 +174,12 @@ export function onRequestGet() {
       description: "Prüft ein bis drei konkrete Wunschdaten, ohne die Liste gesperrter Termine offenzulegen.",
       endpoint: "/api/agent-availability",
       singleDateQuery: {
-        endpoint: "/api/availability",
+        endpoint: "/api/agent-availability",
         method: "GET",
-        urlTemplate: "/api/availability?date=YYYY-MM-DD",
+        urlTemplate: "/api/agent-availability?date=YYYY-MM-DD",
+        alternateEndpoint: "/api/availability",
+        alternateUrlTemplate: "/api/availability?date=YYYY-MM-DD",
+        sharedRateLimitAcrossEndpoints: true,
         maximumDates: 1,
         rateLimit: {
           maximumUniqueDates: PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,

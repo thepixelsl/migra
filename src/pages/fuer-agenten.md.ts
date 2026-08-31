@@ -30,7 +30,7 @@ export function GET() {
   const siteUrl = (import.meta.env.SITE || "https://artbild-fotografie.de").replace(/\/$/, "");
   const htmlUrl = `${siteUrl}${agentBookingPage.path}`;
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
-  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
+  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
   const openApiUrl = `${siteUrl}/api/agent-availability/openapi.json`;
   const contactUrl = `${siteUrl}${agentBookingPage.contactPath}`;
   const privacyUrl = `${siteUrl}${agentBookingPage.privacyPath}`;
@@ -51,6 +51,7 @@ export function GET() {
     `- Aufruf: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
     "- Pro Aufruf: genau ein Wunschdatum",
     `- Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
+    `- Gemeinsames Limit: ${agentBookingPage.singleDateAliasPath} und ${agentBookingPage.singleDateApiPath} verwenden denselben Zähler`,
     "- Antwortfelder: date und available",
     "- available: true bedeutet aktuell verfügbar",
     "- available: false bedeutet aktuell nicht verfügbar",

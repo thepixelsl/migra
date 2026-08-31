@@ -47,7 +47,7 @@ test("keeps the agent reference page free of consent UI and optional tracking", 
 });
 
 test("exposes and renders the single-date GET quick check", async ({ page }) => {
-  await page.route("**/api/availability?date=2026-09-12", async (route) => {
+  await page.route("**/api/agent-availability?date=2026-09-12", async (route) => {
     await route.fulfill({
       status: 200,
       contentType: "application/json; charset=utf-8",
@@ -63,9 +63,9 @@ test("exposes and renders the single-date GET quick check", async ({ page }) => 
 
   const form = page.locator("[data-single-date-form]");
   await expect(form).toHaveAttribute("method", "get");
-  await expect(form).toHaveAttribute("action", "/api/availability");
+  await expect(form).toHaveAttribute("action", "/api/agent-availability");
   await expect(page.getByText(
-    "https://artbild-fotografie.de/api/availability?date=YYYY-MM-DD",
+    "https://artbild-fotografie.de/api/agent-availability?date=YYYY-MM-DD",
     { exact: true },
   )).toBeVisible();
 

@@ -12,6 +12,7 @@ export function GET() {
   const siteUrl = (import.meta.env.SITE || "https://artbild-fotografie.de").replace(/\/$/, "");
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
   const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
+  const singleDateAliasUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
 
   const document = {
     openapi: "3.1.0",
@@ -64,17 +65,36 @@ export function GET() {
       },
       [agentBookingPage.apiPath]: {
         get: {
-          operationId: "readAgentAvailabilityDocumentation",
-          summary: "Schnittstellenvertrag lesen",
+          operationId: "readDocumentationOrCheckSingleDateAvailability",
+          summary: "Schnittstellenvertrag lesen oder ein Wunschdatum prüfen",
+          description:
+            `Mit dem Query-Parameter date wird ein Wunschdatum über denselben Rate-Limiter wie ${agentBookingPage.singleDateApiPath} geprüft. Ohne date wird die maschinenlesbare Dokumentation ausgegeben.`,
+          parameters: [
+            {
+              name: "date",
+              in: "query",
+              required: false,
+              description: "Optionales Wunschdatum im Format YYYY-MM-DD; ohne diesen Parameter wird die Dokumentation ausgegeben",
+              schema: { type: "string", format: "date" },
+            },
+          ],
           responses: {
             200: {
-              description: "Maschinenlesbare Dokumentation und aktuelle Datumsgrenzen",
+              description: "Maschinenlesbare Dokumentation ohne date oder unverbindlicher Kalenderstand mit date",
               content: {
                 "application/json": {
-                  schema: { type: "object" },
+                  schema: {
+                    oneOf: [
+                      { type: "object" },
+                      { $ref: "#/components/schemas/AvailabilityResult" },
+                    ],
+                  },
                 },
               },
             },
+            400: { description: "Ungültiges Datum" },
+            429: { description: "Drei unterschiedliche Kalendertage im gemeinsamen 24-Stunden-Fenster wurden bereits verwendet" },
+            503: { description: "Terminprüfung vorübergehend nicht verfügbar" },
           },
         },
         post: {
@@ -180,8 +200,11 @@ export function GET() {
     },
     "x-artbild": {
       endpoint: apiUrl,
-      singleDateEndpoint: singleDateApiUrl,
-      singleDateUrlTemplate: `${singleDateApiUrl}?date=YYYY-MM-DD`,
+      singleDateEndpoint: singleDateAliasUrl,
+      singleDateUrlTemplate: `${singleDateAliasUrl}?date=YYYY-MM-DD`,
+      alternateSingleDateEndpoint: singleDateApiUrl,
+      alternateSingleDateUrlTemplate: `${singleDateApiUrl}?date=YYYY-MM-DD`,
+      sharedSingleDateRateLimitAcrossEndpoints: true,
       markdownDocumentation: `${siteUrl}${agentBookingPage.markdownPath}`,
       pricing: `${siteUrl}${agentBookingPage.path}#preise`,
       advertisingPolicy: `${siteUrl}${agentBookingPage.path}#werbeverbot`,

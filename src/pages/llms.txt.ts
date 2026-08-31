@@ -12,7 +12,7 @@ export function GET() {
   const htmlUrl = `${siteUrl}${agentBookingPage.path}`;
   const markdownUrl = `${siteUrl}${agentBookingPage.markdownPath}`;
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
-  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
+  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
   const openApiUrl = `${siteUrl}/api/agent-availability/openapi.json`;
 
   const content = [
@@ -24,6 +24,7 @@ export function GET() {
     "",
     `- Ein Datum ohne POST-Unterstützung: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
     `- GET-Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
+    `- Gemeinsames GET-Limit: ${agentBookingPage.singleDateAliasPath} und ${agentBookingPage.singleDateApiPath} verwenden denselben Zähler`,
     "- GET-Antwort: date und available; true bedeutet aktuell verfügbar, false aktuell nicht verfügbar",
     `- [Kanonische HTML-Seite](${htmlUrl}): Preise, Konditionen, Formular und Werbewiderspruch`,
     `- [Kurze Markdown-Fassung](${markdownUrl}): lineare Referenz ohne Navigation oder Gestaltung`,
