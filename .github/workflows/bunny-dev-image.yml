@@ -44,6 +44,9 @@ jobs:
       - name: Test Bunny runtime
         run: npm run test:bunny
 
+      - name: Test migrated HTML sanitizer
+        run: npm run test:migration-sanitizer
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
