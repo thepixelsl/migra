@@ -64,6 +64,13 @@ test("exposes and renders the single-date GET quick check", async ({ page }) => 
   const form = page.locator("[data-single-date-form]");
   await expect(form).toHaveAttribute("method", "get");
   await expect(form).toHaveAttribute("action", "/api/agent-availability");
+  await expect(form).toHaveAttribute("toolname", "check_single_date_availability");
+  await expect(form).toHaveAttribute("tooldescription", /genau ein Wunschdatum/);
+  await expect(form).toHaveAttribute("toolautosubmit", "");
+  await expect(page.locator("#agent-quick-date")).toHaveAttribute(
+    "toolparamdescription",
+    "Das zu prüfende Wunschdatum im Format YYYY-MM-DD.",
+  );
   await expect(page.getByText(
     "https://artbild-fotografie.de/api/agent-availability?date=YYYY-MM-DD",
     { exact: true },
@@ -78,6 +85,163 @@ test("exposes and renders the single-date GET quick check", async ({ page }) => 
   await expect(page.locator("[data-single-date-result]")).toContainText(
     "Noch 2 unterschiedliche Kalendertag(e)",
   );
+  await expect(page).toHaveURL(`${baseUrl}/fuer-agenten/`);
+});
+
+test("returns a structured result for the single-date WebMCP tool", async ({ page }) => {
+  await page.route("**/api/agent-availability?date=2026-09-12", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      headers: {
+        "X-RateLimit-Limit": "3",
+        "X-RateLimit-Remaining": "2",
+        "X-RateLimit-Reset": "2026-09-01T12:00:00.000Z",
+      },
+      body: JSON.stringify({ date: "2026-09-12", available: true }),
+    });
+  });
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+  await page.getByLabel("Wunschdatum", { exact: true }).fill("2026-09-12");
+
+  const response = await page.evaluate(async () => {
+    const form = document.querySelector<HTMLFormElement>("[data-single-date-form]");
+    if (!form) throw new Error("Single-date form not found");
+
+    let responsePromise: Promise<unknown> | undefined;
+    const event = new SubmitEvent("submit", { bubbles: true, cancelable: true });
+    Object.defineProperties(event, {
+      agentInvoked: { value: true },
+      respondWith: {
+        value: (operation: Promise<unknown>) => {
+          responsePromise = operation;
+        },
+      },
+    });
+    form.dispatchEvent(event);
+
+    if (!responsePromise) throw new Error("WebMCP response was not registered");
+    return responsePromise;
+  });
+
+  expect(response).toEqual({
+    ok: true,
+    date: "2026-09-12",
+    available: true,
+    availabilityIsBinding: false,
+    createsReservation: false,
+    rateLimit: {
+      limit: 3,
+      remaining: 2,
+      resetAt: "2026-09-01T12:00:00.000Z",
+    },
+  });
+});
+
+test("exposes the multi-date form as a structured WebMCP tool", async ({ page }) => {
+  let requestBody: unknown;
+  await page.route("**/api/agent-availability", async (route) => {
+    if (route.request().method() !== "POST") {
+      await route.continue();
+      return;
+    }
+
+    requestBody = route.request().postDataJSON();
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      body: JSON.stringify({
+        results: [
+          { date: "2026-09-12", available: true },
+          { date: "2026-10-03", available: false },
+        ],
+        advice: { message: "Unverbindliche Auskunft; keine Reservierung." },
+        rateLimit: { limit: 2, remaining: 1, resetAt: "2026-09-01T12:00:00.000Z" },
+      }),
+    });
+  });
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+
+  const form = page.locator("[data-agent-availability-form]");
+  await expect(form).toHaveAttribute("toolname", "check_multiple_date_availability");
+  await expect(form).toHaveAttribute("tooldescription", /ein bis drei unterschiedliche Wunschdaten/);
+  await expect(form).toHaveAttribute("toolautosubmit", "");
+  const webMcpDateInputs = form.locator('input[type="date"]');
+  await expect(webMcpDateInputs).toHaveCount(3);
+  await expect(webMcpDateInputs.nth(0)).toHaveAttribute("name", "date1");
+  await expect(webMcpDateInputs.nth(1)).toHaveAttribute("name", "date2");
+  await expect(webMcpDateInputs.nth(2)).toHaveAttribute("name", "date3");
+  for (const input of await webMcpDateInputs.all()) {
+    await expect(input).toHaveAttribute(
+      "toolparamdescription",
+      /Wunschdatum im Format YYYY-MM-DD/,
+    );
+  }
+
+  await page.locator("#agent-date-1").fill("2026-09-12");
+  await page.locator("#agent-date-2").fill("2026-10-03");
+
+  const response = await page.evaluate(async () => {
+    const form = document.querySelector<HTMLFormElement>("[data-agent-availability-form]");
+    if (!form) throw new Error("Multi-date form not found");
+
+    let responsePromise: Promise<unknown> | undefined;
+    const event = new SubmitEvent("submit", { bubbles: true, cancelable: true });
+    Object.defineProperties(event, {
+      agentInvoked: { value: true },
+      respondWith: {
+        value: (operation: Promise<unknown>) => {
+          responsePromise = operation;
+        },
+      },
+    });
+    form.dispatchEvent(event);
+
+    if (!responsePromise) throw new Error("WebMCP response was not registered");
+    return responsePromise;
+  });
+
+  expect(requestBody).toEqual({ dates: ["2026-09-12", "2026-10-03"] });
+  expect(response).toEqual({
+    ok: true,
+    results: [
+      { date: "2026-09-12", available: true },
+      { date: "2026-10-03", available: false },
+    ],
+    advice: { message: "Unverbindliche Auskunft; keine Reservierung." },
+    rateLimit: { limit: 2, remaining: 1, resetAt: "2026-09-01T12:00:00.000Z" },
+    availabilityIsBinding: false,
+    createsReservation: false,
+  });
+});
+
+test("keeps the multi-date availability form usable without a WebMCP agent", async ({ page }) => {
+  await page.route("**/api/agent-availability", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      body: JSON.stringify({
+        results: [
+          { date: "2026-09-12", available: true },
+          { date: "2026-10-03", available: false },
+        ],
+        advice: { message: "Der Kalenderstand ist unverbindlich und reserviert keinen Termin." },
+        rateLimit: { limit: 2, remaining: 1, resetAt: "2026-09-01T12:00:00.000Z" },
+      }),
+    });
+  });
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+  await page.locator("#agent-date-1").fill("2026-09-12");
+  await page.locator("#agent-date-2").fill("2026-10-03");
+  await page.getByRole("button", { name: "Wunschdaten unverbindlich prüfen" }).click();
+
+  const result = page.locator("[data-agent-availability-result]");
+  await expect(result).toContainText("12.09.2026aktuell verfügbar");
+  await expect(result).toContainText("03.10.2026aktuell nicht verfügbar");
+  await expect(result).toContainText("Noch 1 Abfrage(n)");
   await expect(page).toHaveURL(`${baseUrl}/fuer-agenten/`);
 });
 

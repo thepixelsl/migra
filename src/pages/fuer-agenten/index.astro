@@ -218,13 +218,23 @@ const schemaGraph = {
             class="agent-quickstart__form"
             method="get"
             action={singleDateApiPath}
+            toolname="check_single_date_availability"
+            tooldescription="Prüft genau ein Wunschdatum unverbindlich auf die aktuelle Verfügbarkeit bei Artbild-Fotografie. Die Prüfung reserviert keinen Termin und unterliegt dem gemeinsamen Abfragelimit."
+            toolautosubmit
             data-single-date-form
             data-single-date-endpoint={singleDateApiPath}
             aria-describedby="schnellstart-hinweis"
           >
             <div class="agent-quickstart__field">
               <label for="agent-quick-date">Wunschdatum</label>
-              <input id="agent-quick-date" type="date" name="date" required autocomplete="off">
+              <input
+                id="agent-quick-date"
+                type="date"
+                name="date"
+                required
+                autocomplete="off"
+                toolparamdescription="Das zu prüfende Wunschdatum im Format YYYY-MM-DD."
+              >
             </div>
             <button type="submit">Termin unverbindlich prüfen</button>
           </form>
@@ -347,6 +357,9 @@ const schemaGraph = {
 
           <form
             class="agent-check"
+            toolname="check_multiple_date_availability"
+            tooldescription="Prüft ein bis drei unterschiedliche Wunschdaten unverbindlich auf die aktuelle Verfügbarkeit bei Artbild-Fotografie. Die Daten müssen nicht aufeinanderfolgen. Die Prüfung reserviert keinen Termin und unterliegt dem Abfragelimit."
+            toolautosubmit
             data-agent-availability-form
             data-clarity-mask
             data-track-form
@@ -364,15 +377,34 @@ const schemaGraph = {
               <div class="agent-check__dates">
                 <div>
                   <label for="agent-date-1">1. Wunschdatum <span>erforderlich</span></label>
-                  <input id="agent-date-1" type="date" name="date" required autocomplete="off">
+                  <input
+                    id="agent-date-1"
+                    type="date"
+                    name="date1"
+                    required
+                    autocomplete="off"
+                    toolparamdescription="Das erste und erforderliche Wunschdatum im Format YYYY-MM-DD."
+                  >
                 </div>
                 <div>
                   <label for="agent-date-2">2. Wunschdatum <span>optional</span></label>
-                  <input id="agent-date-2" type="date" name="date" autocomplete="off">
+                  <input
+                    id="agent-date-2"
+                    type="date"
+                    name="date2"
+                    autocomplete="off"
+                    toolparamdescription="Ein optionales zweites Wunschdatum im Format YYYY-MM-DD."
+                  >
                 </div>
                 <div>
                   <label for="agent-date-3">3. Wunschdatum <span>optional</span></label>
-                  <input id="agent-date-3" type="date" name="date" autocomplete="off">
+                  <input
+                    id="agent-date-3"
+                    type="date"
+                    name="date3"
+                    autocomplete="off"
+                    toolparamdescription="Ein optionales drittes Wunschdatum im Format YYYY-MM-DD."
+                  >
                 </div>
               </div>
             </fieldset>
@@ -532,9 +564,38 @@ const schemaGraph = {
         target.append(paragraph);
       };
 
-      quickForm?.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (!quickForm.reportValidity() || !quickDateInput) return;
+      type WebMcpSubmitEvent = SubmitEvent & {
+        readonly agentInvoked?: boolean;
+        respondWith?: (response: Promise<unknown>) => void;
+      };
+
+      const respondToWebMcp = (event: SubmitEvent, operation: Promise<unknown>) => {
+        const webMcpEvent = event as WebMcpSubmitEvent;
+        if (webMcpEvent.agentInvoked && typeof webMcpEvent.respondWith === "function") {
+          webMcpEvent.respondWith(operation);
+        }
+      };
+
+      const rateLimitFromHeaders = (headers: Headers) => {
+        const limit = headers.get("X-RateLimit-Limit");
+        const remaining = headers.get("X-RateLimit-Remaining");
+        const resetAt = headers.get("X-RateLimit-Reset");
+
+        return {
+          limit: limit === null ? null : Number(limit),
+          remaining: remaining === null ? null : Number(remaining),
+          resetAt,
+        };
+      };
+
+      const checkSingleDateAvailability = async () => {
+        if (!quickForm || !quickDateInput || !quickForm.reportValidity()) {
+          return {
+            ok: false,
+            error: "invalid_input",
+            message: "Bitte gib genau ein gültiges Wunschdatum an.",
+          };
+        }
 
         const submit = quickForm.querySelector<HTMLButtonElement>('button[type="submit"]');
         const endpoint = quickForm.dataset.singleDateEndpoint || "/api/agent-availability";
@@ -549,61 +610,94 @@ const schemaGraph = {
           const payload = await response.json();
 
           if (!response.ok) {
-            showMessage(
-              quickResult,
-              payload.message || "Die Terminprüfung ist gerade nicht möglich.",
-              "error",
-            );
-            return;
+            const message = payload.message || "Die Terminprüfung ist gerade nicht möglich.";
+            showMessage(quickResult, message, "error");
+            return {
+              ok: false,
+              status: response.status,
+              error: payload.error || "availability_check_failed",
+              message,
+              rateLimit: rateLimitFromHeaders(response.headers),
+            };
           }
 
-          if (!quickResult) return;
-          quickResult.hidden = false;
-          quickResult.dataset.state = "success";
-          quickResult.replaceChildren();
+          if (quickResult) {
+            quickResult.hidden = false;
+            quickResult.dataset.state = "success";
+            quickResult.replaceChildren();
 
-          const heading = document.createElement("h3");
-          heading.textContent = "Unverbindliches Ergebnis";
-          quickResult.append(heading);
+            const heading = document.createElement("h3");
+            heading.textContent = "Unverbindliches Ergebnis";
+            quickResult.append(heading);
 
-          const status = document.createElement("p");
-          const date = document.createElement("strong");
-          date.textContent = formatDate(payload.date);
-          status.append(date, `: ${payload.available ? "aktuell verfügbar" : "aktuell nicht verfügbar"}`);
-          quickResult.append(status);
+            const status = document.createElement("p");
+            const date = document.createElement("strong");
+            date.textContent = formatDate(payload.date);
+            status.append(date, `: ${payload.available ? "aktuell verfügbar" : "aktuell nicht verfügbar"}`);
+            quickResult.append(status);
 
-          const note = document.createElement("p");
-          note.textContent = "Der Kalenderstand ist unverbindlich und reserviert keinen Termin.";
-          quickResult.append(note);
+            const note = document.createElement("p");
+            note.textContent = "Der Kalenderstand ist unverbindlich und reserviert keinen Termin.";
+            quickResult.append(note);
 
-          const remaining = response.headers.get("X-RateLimit-Remaining");
-          if (remaining !== null) {
-            const remainingNote = document.createElement("p");
-            remainingNote.className = "agent-check__remaining";
-            remainingNote.textContent = `Noch ${remaining} unterschiedliche Kalendertag(e) in diesem 24-Stunden-Fenster.`;
-            quickResult.append(remainingNote);
+            const remaining = response.headers.get("X-RateLimit-Remaining");
+            if (remaining !== null) {
+              const remainingNote = document.createElement("p");
+              remainingNote.className = "agent-check__remaining";
+              remainingNote.textContent = `Noch ${remaining} unterschiedliche Kalendertag(e) in diesem 24-Stunden-Fenster.`;
+              quickResult.append(remainingNote);
+            }
           }
+
+          return {
+            ok: true,
+            date: payload.date,
+            available: payload.available,
+            availabilityIsBinding: false,
+            createsReservation: false,
+            rateLimit: rateLimitFromHeaders(response.headers),
+          };
         } catch {
-          showMessage(
-            quickResult,
-            "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.",
-            "error",
-          );
+          const message = "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.";
+          showMessage(quickResult, message, "error");
+          return {
+            ok: false,
+            error: "temporarily_unavailable",
+            message,
+          };
         } finally {
           submit?.removeAttribute("disabled");
         }
+      };
+
+      quickForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const operation = checkSingleDateAvailability();
+        respondToWebMcp(event, operation);
+        void operation;
       });
 
-      form?.addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (!form.reportValidity()) return;
+      const checkMultipleDateAvailability = async () => {
+        if (!form || !form.reportValidity()) {
+          return {
+            ok: false,
+            error: "invalid_input",
+            message: "Bitte gib mindestens ein gültiges Wunschdatum an.",
+          };
+        }
+
         const submit = form.querySelector<HTMLButtonElement>('button[type="submit"]');
         const dates = dateInputs.map((input) => input.value).filter(Boolean);
         const uniqueDates = [...new Set(dates)];
 
         if (uniqueDates.length !== dates.length) {
-          showMessage(result, "Bitte wähle unterschiedliche Wunschdaten.", "error");
-          return;
+          const message = "Bitte wähle unterschiedliche Wunschdaten.";
+          showMessage(result, message, "error");
+          return {
+            ok: false,
+            error: "duplicate_dates",
+            message,
+          };
         }
 
         submit?.setAttribute("disabled", "");
@@ -621,53 +715,75 @@ const schemaGraph = {
           const payload = await response.json();
 
           if (!response.ok) {
-            showMessage(
-              result,
-              payload.message || "Die Terminprüfung ist gerade nicht möglich.",
-              "error",
-            );
-            return;
+            const message = payload.message || "Die Terminprüfung ist gerade nicht möglich.";
+            showMessage(result, message, "error");
+            return {
+              ok: false,
+              status: response.status,
+              error: payload.error || "availability_check_failed",
+              message,
+              rateLimit: payload.rateLimit || null,
+            };
           }
 
-          if (!result) return;
-          result.hidden = false;
-          result.dataset.state = "success";
-          result.replaceChildren();
+          if (result) {
+            result.hidden = false;
+            result.dataset.state = "success";
+            result.replaceChildren();
 
-          const heading = document.createElement("h3");
-          heading.textContent = "Ergebnis der unverbindlichen Terminprüfung";
-          result.append(heading);
+            const heading = document.createElement("h3");
+            heading.textContent = "Ergebnis der unverbindlichen Terminprüfung";
+            result.append(heading);
 
-          const list = document.createElement("ul");
-          for (const item of payload.results || []) {
-            const listItem = document.createElement("li");
-            const date = document.createElement("strong");
-            date.textContent = formatDate(item.date);
-            const status = document.createElement("span");
-            status.textContent = item.available ? "aktuell verfügbar" : "aktuell nicht verfügbar";
-            listItem.append(date, status);
-            list.append(listItem);
+            const list = document.createElement("ul");
+            for (const item of payload.results || []) {
+              const listItem = document.createElement("li");
+              const date = document.createElement("strong");
+              date.textContent = formatDate(item.date);
+              const status = document.createElement("span");
+              status.textContent = item.available ? "aktuell verfügbar" : "aktuell nicht verfügbar";
+              listItem.append(date, status);
+              list.append(listItem);
+            }
+            result.append(list);
+
+            const note = document.createElement("p");
+            note.textContent = payload.advice?.message
+              || "Der Kalenderstand ist unverbindlich und reserviert keinen Termin.";
+            result.append(note);
+
+            const remaining = document.createElement("p");
+            remaining.className = "agent-check__remaining";
+            remaining.textContent = `Noch ${payload.rateLimit?.remaining ?? 0} Abfrage(n) in diesem 24-Stunden-Fenster.`;
+            result.append(remaining);
           }
-          result.append(list);
 
-          const note = document.createElement("p");
-          note.textContent = payload.advice?.message
-            || "Der Kalenderstand ist unverbindlich und reserviert keinen Termin.";
-          result.append(note);
-
-          const remaining = document.createElement("p");
-          remaining.className = "agent-check__remaining";
-          remaining.textContent = `Noch ${payload.rateLimit?.remaining ?? 0} Abfrage(n) in diesem 24-Stunden-Fenster.`;
-          result.append(remaining);
+          return {
+            ok: true,
+            results: payload.results || [],
+            advice: payload.advice || null,
+            rateLimit: payload.rateLimit || null,
+            availabilityIsBinding: false,
+            createsReservation: false,
+          };
         } catch {
-          showMessage(
-            result,
-            "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.",
-            "error",
-          );
+          const message = "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.";
+          showMessage(result, message, "error");
+          return {
+            ok: false,
+            error: "temporarily_unavailable",
+            message,
+          };
         } finally {
           submit?.removeAttribute("disabled");
         }
+      };
+
+      form?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const operation = checkMultipleDateAvailability();
+        respondToWebMcp(event, operation);
+        void operation;
       });
     </script>
   </body>
