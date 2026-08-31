@@ -7,6 +7,7 @@ import NdFilterTable from "../components/NdFilterTable.astro";
 import migratedPages from "../data/migratedPages.json";
 import { modernizePrivacyContent } from "../lib/privacyContent";
 import { getMigratedSeoPolicy } from "../lib/migratedSeoPolicy";
+import { sanitizeMigratedHtml } from "../../scripts/lib/sanitize-migrated-html.mjs";
 import "../styles/gallery-masonry.css";
 import "../styles/global.css";
 
@@ -106,7 +107,7 @@ const galleryImages = isGallery
     : page.galleryImages
   : page.galleryImages.filter((image) => isLargeEnough(image));
 const hasGallery = galleryImages.length > 0;
-const normalizedContentHtml = page.contentHtml.replace(
+const normalizedContentHtml = sanitizeMigratedHtml(page.contentHtml).replace(
   /\b(href|action)=["']https?:\/\/(?:www\.)?artbild-fotografie\.(?:de|ch)(\/[^"']*)?["']/gi,
   (_match, attribute, path = "/") => `${attribute}="${path}"`,
 );

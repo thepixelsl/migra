@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
-    "prebuild": "node scripts/validate-tracking-config.mjs",
+    "prebuild": "node scripts/validate-tracking-config.mjs && npm run test:migration-sanitizer",
     "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run seo:files",
     "social:cards": "node scripts/generate-social-cards.mjs",
     "social:cards:validate": "node scripts/validate-social-cards.mjs",
@@ -17,6 +17,7 @@
     "preview": "astro preview --host 127.0.0.1",
     "start:bunny": "node server/bunny-server.mjs",
     "test:bunny": "node --test tests/bunny-runtime.test.mjs",
+    "test:migration-sanitizer": "node --test tests/migrated-html-sanitizer.test.mjs",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
     "astro": "astro"

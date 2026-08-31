@@ -22,6 +22,10 @@ import {
 } from "../functions/_public-availability-rate-limit.js";
 import { contactDateBoundsAt } from "../functions/_contact-date-bounds.js";
 import { onRequestPost as handleContactPost } from "../functions/api/contact.js";
+import {
+  ADMIN_AUTH_MAX_ATTEMPTS,
+  ADMIN_AUTH_RATE_LIMIT_WINDOW_MS,
+} from "../server/admin-auth-rate-limit.mjs";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { AgentRateLimiter } from "../src/AgentRateLimiter.js";
 import { agentAvailabilityRules } from "../src/data/agentBooking.mjs";
@@ -305,6 +309,102 @@ test("protects admin routes with an iPhone-compatible login session", async () =
     headers: { Authorization: basicAuth() },
   });
   assert.equal(basicFallback.status, 200);
+});
+
+test("atomically rate-limits form and Basic admin authentication in one persistent budget", async () => {
+  await runtime.database.client.execute("DELETE FROM admin_auth_attempts");
+
+  const invalidFormAttempt = (index) => fetch(`${baseUrl}/admin-login/`, {
+    method: "POST",
+    redirect: "manual",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      Origin: publicUrl,
+      "X-Real-IP": `198.51.100.${index + 1}`,
+    },
+    body: new URLSearchParams({
+      next: "/admin-termine/",
+      password: "fixed-invalid-password",
+      username: "york",
+    }),
+  });
+
+  for (let index = 0; index < ADMIN_AUTH_MAX_ATTEMPTS - 1; index += 1) {
+    const response = await invalidFormAttempt(index);
+    assert.equal(response.status, 401);
+    assert.equal(
+      response.headers.get("x-ratelimit-remaining"),
+      String(ADMIN_AUTH_MAX_ATTEMPTS - index - 1),
+    );
+  }
+
+  const finalAllowedAttempt = await fetch(`${baseUrl}/admin-termine/`, {
+    redirect: "manual",
+    headers: {
+      Authorization: basicAuth("york", "fixed-invalid-password"),
+      "X-Real-IP": "203.0.113.200",
+    },
+  });
+  assert.equal(finalAllowedAttempt.status, 303);
+
+  const blocked = await invalidFormAttempt(250);
+  assert.equal(blocked.status, 429);
+  assert.equal(blocked.headers.get("x-ratelimit-remaining"), "0");
+  assert.ok(Number(blocked.headers.get("retry-after")) > 0);
+  assert.match(await blocked.text(), /Zu viele Anmeldeversuche/);
+
+  const stored = await runtime.database.client.execute(`
+    SELECT scope, COUNT(*) AS count
+    FROM admin_auth_attempts
+    GROUP BY scope
+    ORDER BY scope
+  `);
+  assert.deepEqual(
+    stored.rows.map((row) => ({ count: Number(row.count), scope: row.scope })),
+    [
+      { count: ADMIN_AUTH_MAX_ATTEMPTS, scope: "account" },
+    ],
+  );
+
+  await runtime.database.client.execute("DELETE FROM admin_auth_attempts");
+  const concurrent = await Promise.all(
+    Array.from(
+      { length: ADMIN_AUTH_MAX_ATTEMPTS * 2 },
+      (_, index) => invalidFormAttempt(index + 50),
+    ),
+  );
+  assert.equal(concurrent.filter((response) => response.status === 401).length, ADMIN_AUTH_MAX_ATTEMPTS);
+  assert.equal(concurrent.filter((response) => response.status === 429).length, ADMIN_AUTH_MAX_ATTEMPTS);
+
+  const expiredAt = Date.now() - ADMIN_AUTH_RATE_LIMIT_WINDOW_MS - 1;
+  await runtime.database.client.execute({
+    sql: "UPDATE admin_auth_attempts SET attempted_at = ?",
+    args: [expiredAt],
+  });
+  await runtime.database.cleanupAdminAuthenticationAttempts(Date.now());
+
+  const recovered = await fetch(`${baseUrl}/admin-termine/`, {
+    headers: { Authorization: basicAuth() },
+  });
+  assert.equal(recovered.status, 200);
+
+  const originalPrepare = runtime.database.d1.prepare;
+  const originalConsoleError = console.error;
+  runtime.database.d1.prepare = () => {
+    throw new Error("simulated_admin_rate_limit_database_failure");
+  };
+  console.error = (...args) => {
+    assert.match(String(args[0] || ""), /Admin authentication rate limiter failed/);
+  };
+  try {
+    const unavailable = await invalidFormAttempt(400);
+    assert.equal(unavailable.status, 503);
+    assert.equal(unavailable.headers.has("set-cookie"), false);
+    assert.match(await unavailable.text(), /Anmeldung ist vorübergehend nicht verfügbar/);
+  } finally {
+    runtime.database.d1.prepare = originalPrepare;
+    console.error = originalConsoleError;
+  }
 });
 
 test("blocks a date through admin and exposes it through the public API", async () => {

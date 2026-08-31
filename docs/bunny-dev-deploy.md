@@ -64,6 +64,13 @@ sessions with `ADMIN_PASSWORD`. Preemptive HTTP Basic authorization remains a
 fallback for command-line clients, but the server no longer sends a Basic-Auth
 browser challenge.
 
+Form login and HTTP Basic share one persistent account-wide attempt budget in
+Bunny Database. After five credential attempts within fifteen minutes, new
+credential logins return `429 Too Many Requests` with `Retry-After` until the
+window expires. A successful credential login clears the budget; an already
+valid signed session does not consume it. This account-wide boundary is
+intentional so changing forwarded IP headers cannot bypass the protection.
+
 `AGENT_API_CLIENTS_JSON` is optional. It maps a readable client label to a
 Bearer token, for example
 `{"OpenAI Terminassistent":"replace-with-a-long-random-agent-token"}`. Store

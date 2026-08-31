@@ -2,6 +2,11 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 
+import {
+  extractMigratedMainHtml,
+  sanitizeMigratedHtml,
+} from "./lib/sanitize-migrated-html.mjs";
+
 const siteUrl = "https://artbild-fotografie.de";
 const dataFile = "src/data/migratedPages.json";
 const publicAssetRoot = "public/migrated-assets";
@@ -190,66 +195,6 @@ const downloadAsset = async (url, pagePath) => {
   };
 };
 
-const normalizeInternalLinks = (html) =>
-  html
-    .replace(/https:\/\/artbild-fotografie\.de(\/(?!wp-content\/uploads\/)[^"' <)]*)/g, "$1")
-    .replace(/http:\/\/artbild-fotografie\.de(\/(?!wp-content\/uploads\/)[^"' <)]*)/g, "$1");
-
-const safeHref = (href = "") => {
-  const trimmed = href.trim();
-  if (
-    trimmed.startsWith("/")
-    || trimmed.startsWith("#")
-    || trimmed.startsWith("https://")
-    || trimmed.startsWith("http://")
-    || trimmed.startsWith("mailto:")
-    || trimmed.startsWith("tel:")
-  ) {
-    return trimmed.replace(/"/g, "&quot;");
-  }
-  return "";
-};
-
-const sanitizeContent = (html = "", assetMap = new Map()) => {
-  let content = html
-    .replace(/<script[\s\S]*?<\/script>/gi, "")
-    .replace(/<style[\s\S]*?<\/style>/gi, "")
-    .replace(/<noscript[\s\S]*?<\/noscript>/gi, "")
-    .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-    .replace(/<object[\s\S]*?<\/object>/gi, "")
-    .replace(/<embed\b[^>]*>/gi, "")
-    .replace(/<form[\s\S]*?<\/form>/gi, "")
-    .replace(/<input\b[^>]*>/gi, "")
-    .replace(/<button[\s\S]*?<\/button>/gi, "")
-    .replace(/<!--[\s\S]*?-->/g, "")
-    .replace(/\[[^\]]+\]/g, "")
-    .replace(/<figure[\s\S]*?<\/figure>/gi, "")
-    .replace(/<img\b[^>]*>/gi, "");
-
-  content = normalizeInternalLinks(content);
-
-  for (const [original, local] of assetMap.entries()) {
-    content = content.replaceAll(original, local);
-    content = content.replaceAll(original.replace(/&/g, "&amp;"), local);
-  }
-
-  content = content
-    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority|on[\w-]+)="[^"]*"/gi, "")
-    .replace(/\s(?:class|style|id|data-[\w-]+|sizes|srcset|loading|decoding|fetchpriority|on[\w-]+)='[^']*'/gi, "")
-    .replace(/<a\b([^>]*)>/gi, (tag, attrs) => {
-      const href = safeHref(attrs.match(/\shref=["']([^"']+)["']/i)?.[1]);
-      const rel = href && !href.startsWith("/") && !href.startsWith("#") ? ' rel="noopener"' : "";
-      const target = href && !href.startsWith("/") && !href.startsWith("#") ? ' target="_blank"' : "";
-      return href ? `<a href="${href}"${rel}${target}>` : "<a>";
-    })
-    .replace(/<(\/?)(span|div|font|center)[^>]*>/gi, "")
-    .replace(/<p>\s*<\/p>/gi, "")
-    .replace(/\n{3,}/g, "\n\n")
-    .trim();
-
-  return content;
-};
-
 const extractMetaFromHtml = (html) => {
   const title =
     html.match(/<meta property=["']og:title["'] content=["']([^"']+)["']/i)?.[1] ||
@@ -263,19 +208,6 @@ const extractMetaFromHtml = (html) => {
     title: stripTags(title.replace(/\s*\|\s*Artbild.*$/i, "")),
     description: stripTags(description),
   };
-};
-
-const extractMainHtml = (html) => {
-  const candidates = [
-    /<div[^>]+class=["'][^"']*entry-content[^"']*["'][^>]*>([\s\S]*?)<\/div>\s*<\/article>/i,
-    /<main[^>]*>([\s\S]*?)<\/main>/i,
-    /<article[^>]*>([\s\S]*?)<\/article>/i,
-  ];
-  for (const pattern of candidates) {
-    const match = html.match(pattern);
-    if (match?.[1]) return match[1];
-  }
-  return "";
 };
 
 const restItemFor = async (missing) => {
@@ -302,7 +234,7 @@ const migrateOne = async (missing) => {
   const html = await fetchText(missing.url);
   const restItem = await restItemFor(missing).catch(() => null);
   const meta = extractMetaFromHtml(html);
-  const rawContent = restItem?.content?.rendered || extractMainHtml(html);
+  const rawContent = restItem?.content?.rendered || extractMigratedMainHtml(html);
   const rawTitle = restItem?.title?.rendered || meta.title;
   const title = stripTags(rawTitle);
   const eyebrow =
@@ -335,7 +267,7 @@ const migrateOne = async (missing) => {
 
   const imageAssets = assets.filter((asset) => !asset.isPdf);
   const pdfAssets = assets.filter((asset) => asset.isPdf);
-  let contentHtml = sanitizeContent(rawContent, assetMap);
+  let contentHtml = sanitizeMigratedHtml(rawContent, assetMap);
 
   if (missing.sitemap === "gallery-sitemap.xml") {
     const galleryIntro = meta.description || makeExcerpt(rawContent, title);
@@ -353,6 +285,7 @@ const migrateOne = async (missing) => {
       .join("");
     contentHtml = `${contentHtml}\n${links}`;
   }
+  contentHtml = sanitizeMigratedHtml(contentHtml);
 
   const galleryImages = imageAssets.map((asset, index) => ({
     src: asset.src,
@@ -393,10 +326,10 @@ const makeBlogIndex = (pages) => {
   const posts = pages
     .filter((page) => page.type === "post")
     .sort((a, b) => String(b.datePublished || "").localeCompare(String(a.datePublished || "")));
-  const contentHtml = `<p>Planungstipps, Fotogeschichten und technische Notizen aus dem Archiv von Artbild-Fotografie.</p>
+  const contentHtml = sanitizeMigratedHtml(`<p>Planungstipps, Fotogeschichten und technische Notizen aus dem Archiv von Artbild-Fotografie.</p>
 <ul>${posts
     .map((post) => `<li><a href="${post.path}">${post.title}</a></li>`)
-    .join("")}</ul>`;
+    .join("")}</ul>`);
   return {
     path: "/blog/",
     sourceUrl: `${siteUrl}/blog/`,

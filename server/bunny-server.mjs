@@ -7,6 +7,11 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { AGENT_AVAILABILITY_MAX_BODY_BYTES } from "../functions/_agent-availability-contract.js";
 import worker from "../src/worker.js";
+import {
+  adminAuthenticationRetryAfterSeconds,
+  clearAdminAuthenticationAttempts,
+  reserveAdminAuthenticationAttempt,
+} from "./admin-auth-rate-limit.mjs";
 import { createAssetBinding } from "./bunny-assets.mjs";
 import { createBunnyDatabase } from "./bunny-database.mjs";
 import { createContactMailer } from "./bunny-mailer.mjs";
@@ -112,7 +117,44 @@ function createAdminSessionCookie(configuration, secure = true) {
   return `${ADMIN_SESSION_COOKIE}=v1.${expiresAt}.${nonce}.${signature}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${ADMIN_SESSION_MAX_AGE_SECONDS}${secureAttribute}`;
 }
 
-function authorizedAdmin(request, env) {
+async function authenticateAdminCredentials(
+  { password, username },
+  configuration,
+  rateLimitDatabase,
+  method,
+) {
+  let rateLimit;
+  try {
+    rateLimit = await reserveAdminAuthenticationAttempt(rateLimitDatabase, {
+      secret: configuration.sessionSecret,
+    });
+  } catch (error) {
+    console.error("Admin authentication rate limiter failed", error);
+    return { configured: true, authorized: false, unavailable: true };
+  }
+
+  if (!rateLimit.allowed) {
+    return { configured: true, authorized: false, method, rateLimit, rateLimited: true };
+  }
+
+  const usernameValid = safeEqual(username, configuration.username);
+  const passwordValid = safeEqual(password, configuration.password);
+  const authorized = usernameValid && passwordValid;
+  if (authorized) {
+    try {
+      await clearAdminAuthenticationAttempts(rateLimitDatabase, {
+        secret: configuration.sessionSecret,
+      });
+    } catch (error) {
+      console.error("Admin authentication rate-limit reset failed", error);
+      return { configured: true, authorized: false, unavailable: true };
+    }
+  }
+
+  return { configured: true, authorized, method, rateLimit };
+}
+
+async function authorizedAdmin(request, env, rateLimitDatabase) {
   const configuration = adminConfiguration(env);
   if (!configuration.configured) return { configured: false, authorized: false };
 
@@ -129,14 +171,19 @@ function authorizedAdmin(request, env) {
     if (separator < 0) return { configured: true, authorized: false };
     const username = decoded.slice(0, separator);
     const password = decoded.slice(separator + 1);
-    return {
-      configured: true,
-      authorized: safeEqual(username, configuration.username)
-        && safeEqual(password, configuration.password),
-      method: "basic",
-    };
+    return authenticateAdminCredentials(
+      { password, username },
+      configuration,
+      rateLimitDatabase,
+      "basic",
+    );
   } catch {
-    return { configured: true, authorized: false };
+    return authenticateAdminCredentials(
+      { password: "", username: "" },
+      configuration,
+      rateLimitDatabase,
+      "basic",
+    );
   }
 }
 
@@ -162,6 +209,54 @@ function adminRedirect(location) {
       Location: location,
     },
   });
+}
+
+function adminRateLimitHeaders(rateLimit, includeRetryAfter = false) {
+  const headers = new Headers({
+    "Cache-Control": "private, no-store",
+    "X-RateLimit-Limit": String(rateLimit.limit),
+    "X-RateLimit-Remaining": String(rateLimit.remaining),
+  });
+  const resetAt = Date.parse(rateLimit.resetAt || "");
+  if (Number.isFinite(resetAt)) {
+    headers.set("X-RateLimit-Reset", String(Math.ceil(resetAt / 1000)));
+  }
+  if (includeRetryAfter) {
+    headers.set("Retry-After", String(adminAuthenticationRetryAfterSeconds(rateLimit)));
+  }
+  return headers;
+}
+
+function adminRateLimited(rateLimit, html = false) {
+  const headers = adminRateLimitHeaders(rateLimit, true);
+  headers.set("Content-Type", html ? "text/html; charset=utf-8" : "text/plain; charset=utf-8");
+  return new Response(
+    html
+      ? adminLoginPage({
+        configured: true,
+        error: "Zu viele Anmeldeversuche. Bitte warten Sie kurz und versuchen Sie es dann erneut.",
+      })
+      : "Zu viele Anmeldeversuche. Bitte später erneut versuchen.",
+    { status: 429, headers },
+  );
+}
+
+function adminAuthenticationUnavailable(html = false) {
+  return new Response(
+    html
+      ? adminLoginPage({
+        configured: true,
+        error: "Die Anmeldung ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
+      })
+      : "Die Anmeldung ist vorübergehend nicht verfügbar.",
+    {
+      status: 503,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "Content-Type": html ? "text/html; charset=utf-8" : "text/plain; charset=utf-8",
+      },
+    },
+  );
 }
 
 function escapeHtml(value) {
@@ -227,14 +322,17 @@ function adminLoginPage({ configured, error = "", next = "/admin-termine/" }) {
 </html>`;
 }
 
-async function handleAdminLogin(request, env, url) {
+async function handleAdminLogin(request, env, url, rateLimitDatabase) {
   const configuration = adminConfiguration(env);
   const next = url.searchParams.get("next") || "/admin-termine/";
 
   if (request.method === "GET" || request.method === "HEAD") {
-    if (authorizedAdmin(request, env).authorized) {
+    const access = await authorizedAdmin(request, env, rateLimitDatabase);
+    if (access.authorized) {
       return adminRedirect(new URL("/admin-termine/", url.origin).href);
     }
+    if (access.rateLimited) return adminRateLimited(access.rateLimit, true);
+    if (access.unavailable) return adminAuthenticationUnavailable(true);
     const response = new Response(adminLoginPage({ configured: configuration.configured, next }), {
       status: configuration.configured ? 200 : 503,
       headers: {
@@ -274,19 +372,27 @@ async function handleAdminLogin(request, env, url) {
   }
 
   const form = new URLSearchParams(await request.text());
-  const credentialsValid = safeEqual(form.get("username") || "", configuration.username)
-    && safeEqual(form.get("password") || "", configuration.password);
-  if (!credentialsValid) {
+  const access = await authenticateAdminCredentials(
+    {
+      password: form.get("password") || "",
+      username: form.get("username") || "",
+    },
+    configuration,
+    rateLimitDatabase,
+    "form",
+  );
+  if (access.rateLimited) return adminRateLimited(access.rateLimit, true);
+  if (access.unavailable) return adminAuthenticationUnavailable(true);
+  if (!access.authorized) {
+    const headers = adminRateLimitHeaders(access.rateLimit);
+    headers.set("Content-Type", "text/html; charset=utf-8");
     return new Response(adminLoginPage({
       configured: true,
       error: "Benutzername oder Passwort ist nicht korrekt.",
       next: form.get("next") || "/admin-termine/",
     }), {
       status: 401,
-      headers: {
-        "Cache-Control": "private, no-store",
-        "Content-Type": "text/html; charset=utf-8",
-      },
+      headers,
     });
   }
 
@@ -476,7 +582,12 @@ export async function createBunnyRuntime(options = {}) {
       }
 
       if (adminLoginPath(url.pathname)) {
-        const loginResponse = await handleAdminLogin(request, env, url);
+        const loginResponse = await handleAdminLogin(
+          request,
+          env,
+          url,
+          database.d1,
+        );
         await writeNodeResponse(
           nodeResponse,
           withBunnyHeaders(loginResponse, env, url),
@@ -485,13 +596,17 @@ export async function createBunnyRuntime(options = {}) {
       }
 
       if (adminPath(url.pathname)) {
-        const access = authorizedAdmin(request, env);
+        const access = await authorizedAdmin(request, env, database.d1);
         if (!access.authorized) {
           const isAdminPage = url.pathname === "/admin-termine"
             || url.pathname.startsWith("/admin-termine/");
-          const deniedResponse = access.configured && isAdminPage
-            ? adminRedirect(new URL("/admin-login/?next=/admin-termine/", url.origin).href)
-            : adminDenied(access.configured);
+          const deniedResponse = access.rateLimited
+            ? adminRateLimited(access.rateLimit)
+            : access.unavailable
+              ? adminAuthenticationUnavailable()
+              : access.configured && isAdminPage
+                ? adminRedirect(new URL("/admin-login/?next=/admin-termine/", url.origin).href)
+                : adminDenied(access.configured);
           await writeNodeResponse(
             nodeResponse,
             withBunnyHeaders(deniedResponse, env, url),

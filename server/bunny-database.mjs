@@ -1,5 +1,7 @@
 import { createClient } from "@libsql/client";
 
+import { ADMIN_AUTH_RATE_LIMIT_WINDOW_MS } from "./admin-auth-rate-limit.mjs";
+
 const SCHEMA_STATEMENTS = [
   `CREATE TABLE IF NOT EXISTS app_kv (
     key TEXT PRIMARY KEY,
@@ -53,6 +55,16 @@ const SCHEMA_STATEMENTS = [
     ON public_availability_requests (ip_hash, requested_at)`,
   `CREATE INDEX IF NOT EXISTS idx_public_availability_requests_time
     ON public_availability_requests (requested_at)`,
+  `CREATE TABLE IF NOT EXISTS admin_auth_attempts (
+    id TEXT PRIMARY KEY,
+    bucket_hash TEXT NOT NULL,
+    scope TEXT NOT NULL,
+    attempted_at INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_admin_auth_attempts_bucket_time
+    ON admin_auth_attempts (bucket_hash, attempted_at)`,
+  `CREATE INDEX IF NOT EXISTS idx_admin_auth_attempts_time
+    ON admin_auth_attempts (attempted_at)`,
   `CREATE TABLE IF NOT EXISTS agent_availability_audit (
     id TEXT PRIMARY KEY,
     requested_at INTEGER NOT NULL,
@@ -103,6 +115,14 @@ async function prunePublicAvailabilityRequests(client, now = Date.now()) {
   });
 }
 
+async function pruneAdminAuthenticationAttempts(client, now = Date.now()) {
+  await client.execute({
+    sql: `DELETE FROM admin_auth_attempts
+      WHERE attempted_at <= ?`,
+    args: [now - ADMIN_AUTH_RATE_LIMIT_WINDOW_MS],
+  });
+}
+
 async function pruneAgentAvailabilityAudit(client, now = Date.now()) {
   await client.execute({
     sql: `DELETE FROM agent_availability_audit
@@ -115,6 +135,7 @@ async function pruneStoredData(client) {
   await pruneContactRequests(client);
   await pruneAgentAvailabilityRequests(client);
   await prunePublicAvailabilityRequests(client);
+  await pruneAdminAuthenticationAttempts(client);
   await pruneAgentAvailabilityAudit(client);
 }
 
@@ -173,6 +194,9 @@ export async function createBunnyDatabase(env = process.env) {
     },
     async cleanupPublicAvailabilityRequests(now) {
       await prunePublicAvailabilityRequests(client, now);
+    },
+    async cleanupAdminAuthenticationAttempts(now) {
+      await pruneAdminAuthenticationAttempts(client, now);
     },
     async cleanupAgentAvailabilityAudit(now) {
       await pruneAgentAvailabilityAudit(client, now);
