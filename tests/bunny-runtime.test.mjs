@@ -28,7 +28,10 @@ import {
 } from "../server/admin-auth-rate-limit.mjs";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { AgentRateLimiter } from "../src/AgentRateLimiter.js";
-import { agentAvailabilityRules } from "../src/data/agentBooking.mjs";
+import {
+  agentAvailabilityRules,
+  singleDateAvailabilityRules,
+} from "../src/data/agentBooking.mjs";
 
 let baseUrl;
 let publicUrl;
@@ -489,6 +492,22 @@ test("documents the agent availability API for machine clients", async () => {
 
   const documentation = await response.json();
   assert.equal(documentation.endpoint, "/api/agent-availability");
+  assert.equal(documentation.singleDateQuery.endpoint, "/api/availability");
+  assert.equal(documentation.singleDateQuery.method, "GET");
+  assert.equal(
+    documentation.singleDateQuery.urlTemplate,
+    "/api/availability?date=YYYY-MM-DD",
+  );
+  assert.equal(documentation.singleDateQuery.maximumDates, 1);
+  assert.equal(
+    documentation.singleDateQuery.rateLimit.maximumUniqueDates,
+    PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+  );
+  assert.equal(
+    documentation.singleDateQuery.rateLimit.windowHours,
+    PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
+  );
+  assert.deepEqual(documentation.singleDateQuery.responseFields, ["date", "available"]);
   assert.equal(documentation.documentation, "/fuer-agenten/");
   assert.equal(documentation.markdownDocumentation, "/fuer-agenten.md");
   assert.equal(documentation.openapi, "/api/agent-availability/openapi.json");
@@ -544,6 +563,15 @@ test("documents the agent availability API for machine clients", async () => {
   );
   assert.equal(agentAvailabilityRules.maximumSuccessfulRequests, 2);
   assert.equal(agentAvailabilityRules.windowHours, 24);
+  assert.equal(singleDateAvailabilityRules.maximumDates, 1);
+  assert.equal(
+    singleDateAvailabilityRules.maximumUniqueDatesPerWindow,
+    PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+  );
+  assert.equal(
+    singleDateAvailabilityRules.windowHours,
+    PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
+  );
 
   const options = await fetch(`${baseUrl}/api/agent-availability`, { method: "OPTIONS" });
   assert.equal(options.status, 204);

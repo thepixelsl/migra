@@ -11,6 +11,10 @@ import {
   AGENT_AVAILABILITY_RECOMMENDED_WEDDING_INQUIRY_LEAD_TIME_MONTHS,
   agentAvailabilityDateBounds,
 } from "../_agent-availability-contract.js";
+import {
+  PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+  PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS,
+} from "../_public-availability-rate-limit.js";
 import { writeAgentAvailabilityAudit } from "../_agent-audit.js";
 import {
   json,
@@ -163,6 +167,17 @@ export function onRequestGet() {
       name: "Artbild-Fotografie Agenten-Terminabfrage",
       description: "Prüft ein bis drei konkrete Wunschdaten, ohne die Liste gesperrter Termine offenzulegen.",
       endpoint: "/api/agent-availability",
+      singleDateQuery: {
+        endpoint: "/api/availability",
+        method: "GET",
+        urlTemplate: "/api/availability?date=YYYY-MM-DD",
+        maximumDates: 1,
+        rateLimit: {
+          maximumUniqueDates: PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
+          windowHours: PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
+        },
+        responseFields: ["date", "available"],
+      },
       documentation: "/fuer-agenten/",
       markdownDocumentation: "/fuer-agenten.md",
       openapi: "/api/agent-availability/openapi.json",

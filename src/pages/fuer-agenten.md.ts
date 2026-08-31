@@ -10,6 +10,7 @@ import {
   agentQuickFacts,
   agentUsagePolicy,
   agentWorkflow,
+  singleDateAvailabilityRules,
 } from "../data/agentBooking.mjs";
 
 export const prerender = true;
@@ -29,6 +30,7 @@ export function GET() {
   const siteUrl = (import.meta.env.SITE || "https://artbild-fotografie.de").replace(/\/$/, "");
   const htmlUrl = `${siteUrl}${agentBookingPage.path}`;
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
+  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
   const openApiUrl = `${siteUrl}/api/agent-availability/openapi.json`;
   const contactUrl = `${siteUrl}${agentBookingPage.contactPath}`;
   const privacyUrl = `${siteUrl}${agentBookingPage.privacyPath}`;
@@ -42,6 +44,19 @@ export function GET() {
     "",
     "Diese Seite ist eine kurze Referenz für konkrete Anfragen zur Buchung fotografischer Leistungen. Sie ist keine Erlaubnis für Werbung oder Akquise.",
     "",
+    "## Termin schnell prüfen (GET)",
+    "",
+    "Für Web-Fetch-Tools ohne POST-Unterstützung steht die Einzelabfrage per GET bereit:",
+    "",
+    `- Aufruf: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
+    "- Pro Aufruf: genau ein Wunschdatum",
+    `- Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
+    "- Antwortfelder: date und available",
+    "- available: true bedeutet aktuell verfügbar",
+    "- available: false bedeutet aktuell nicht verfügbar",
+    "- Ergebnis verbindlich: Nein",
+    "- Reservierung durch die Abfrage: Nein",
+    "",
     "## Kurzfassung",
     "",
     ...agentQuickFacts.map(([term, description]) => `- ${term}: ${description}`),
@@ -50,7 +65,7 @@ export function GET() {
     "",
     ...agentWorkflow.map((step, index) => `${index + 1}. ${step}`),
     "",
-    "## Terminprüfung per API",
+    "## Mehrere Wunschdaten per POST",
     "",
     `- Dokumentation: GET ${apiUrl}`,
     `- OpenAPI 3.1: ${openApiUrl}`,

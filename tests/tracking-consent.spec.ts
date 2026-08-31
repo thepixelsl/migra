@@ -38,12 +38,47 @@ test("keeps the agent reference page free of consent UI and optional tracking", 
   await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
 
   await expect(page.getByRole("heading", {
-    name: "Buchungsinformationen für KI-Agenten und Buchungsassistenten",
+    name: "Terminprüfung für KI-Agenten",
   })).toBeVisible();
   await expect(page.locator("[data-consent-dialog]")).toHaveCount(0);
   await expect(page.locator("#artbild-tracking-config")).toHaveCount(0);
   await expect(page.locator("script[data-artbild-provider]")).toHaveCount(0);
   expect(requests).toEqual([]);
+});
+
+test("exposes and renders the single-date GET quick check", async ({ page }) => {
+  await page.route("**/api/availability?date=2026-09-12", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json; charset=utf-8",
+      headers: {
+        "X-RateLimit-Limit": "3",
+        "X-RateLimit-Remaining": "2",
+      },
+      body: JSON.stringify({ date: "2026-09-12", available: false }),
+    });
+  });
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+
+  const form = page.locator("[data-single-date-form]");
+  await expect(form).toHaveAttribute("method", "get");
+  await expect(form).toHaveAttribute("action", "/api/availability");
+  await expect(page.getByText(
+    "https://artbild-fotografie.de/api/availability?date=YYYY-MM-DD",
+    { exact: true },
+  )).toBeVisible();
+
+  await page.getByLabel("Wunschdatum", { exact: true }).fill("2026-09-12");
+  await page.getByRole("button", { name: "Termin unverbindlich prüfen" }).click();
+
+  await expect(page.locator("[data-single-date-result]")).toContainText(
+    "12.09.2026: aktuell nicht verfügbar",
+  );
+  await expect(page.locator("[data-single-date-result]")).toContainText(
+    "Noch 2 unterschiedliche Kalendertag(e)",
+  );
+  await expect(page).toHaveURL(`${baseUrl}/fuer-agenten/`);
 });
 
 test("blocks GTM and all providers before a consent decision", async ({ page }) => {

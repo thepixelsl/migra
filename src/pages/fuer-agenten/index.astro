@@ -15,6 +15,7 @@ import {
   agentQuickFacts,
   agentUsagePolicy,
   agentWorkflow,
+  singleDateAvailabilityRules,
 } from "../../data/agentBooking.mjs";
 import socialImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import "../../styles/global.css";
@@ -25,6 +26,9 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const markdownPath = agentBookingPage.markdownPath;
 const apiPath = agentBookingPage.apiPath;
 const apiUrl = `${siteUrl}${apiPath}`;
+const singleDateApiPath = agentBookingPage.singleDateApiPath;
+const singleDateApiUrl = `${siteUrl}${singleDateApiPath}`;
+const singleDateUrlTemplate = `${singleDateApiUrl}?date=YYYY-MM-DD`;
 const openApiPath = "/api/agent-availability/openapi.json";
 const title = agentBookingPage.title;
 const headline = agentBookingPage.headline;
@@ -106,21 +110,34 @@ const schemaGraph = {
       "@id": `${apiUrl}#api`,
       name: "Begrenzte Terminabfrage für KI-Agenten und Buchungsassistenten",
       description:
-        `Prüft pro Anfrage ein bis drei unterschiedliche Wunschdaten innerhalb der nächsten ${agentAvailabilityRules.maximumAdvanceMonths} Monate. Pro Kurzzeitkennung sind höchstens ${agentAvailabilityRules.maximumSuccessfulRequests} erfolgreiche Abfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden möglich. Die Abfrage reserviert keinen Termin.`,
+        `Bietet einen GET-Schnellzugriff für genau ein Datum sowie eine POST-Abfrage für ein bis drei unterschiedliche Wunschdaten innerhalb der nächsten ${agentAvailabilityRules.maximumAdvanceMonths} Monate. Die Abfrage reserviert keinen Termin.`,
       documentation: pageUrl,
       termsOfService: `${pageUrl}#konditionen`,
       provider: { "@id": `${siteUrl}/#organization` },
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: apiUrl,
-          httpMethod: "POST",
-          encodingType: "application/json",
-          contentType: "application/json",
+      potentialAction: [
+        {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${singleDateApiUrl}?date={date}`,
+            httpMethod: "GET",
+            encodingType: "application/x-www-form-urlencoded",
+            contentType: "application/json",
+          },
+          query: "Genau ein Wunschdatum im Format YYYY-MM-DD",
         },
-        query: "Ein bis drei unterschiedliche Wunschdaten im Format YYYY-MM-DD; die Daten müssen nicht aufeinanderfolgen",
-      },
+        {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: apiUrl,
+            httpMethod: "POST",
+            encodingType: "application/json",
+            contentType: "application/json",
+          },
+          query: "Ein bis drei unterschiedliche Wunschdaten im Format YYYY-MM-DD; die Daten müssen nicht aufeinanderfolgen",
+        },
+      ],
     },
     {
       "@type": "ProfessionalService",
@@ -184,6 +201,47 @@ const schemaGraph = {
         <header class="agent-document__header">
           <p class="agent-label">Referenz für automatisierte und menschliche Buchungsassistenten</p>
           <h1>{headline}</h1>
+        </header>
+
+        <section class="agent-quickstart" id="schnellstart" aria-labelledby="schnellstart-title">
+          <p class="agent-label">Schnellzugriff ohne POST-Unterstützung</p>
+          <h2 id="schnellstart-title">Termin schnell prüfen</h2>
+          <p>
+            Ein einzelnes Wunschdatum kann direkt per GET geprüft werden. Dieser
+            Aufruf funktioniert auch mit Web-Fetch-Tools, die keinen JSON-Body senden können.
+          </p>
+          <p class="agent-quickstart__endpoint">
+            <strong>Direkter GET-Aufruf</strong>
+            <code>{singleDateUrlTemplate}</code>
+          </p>
+          <form
+            class="agent-quickstart__form"
+            method="get"
+            action={singleDateApiPath}
+            data-single-date-form
+            data-single-date-endpoint={singleDateApiPath}
+            aria-describedby="schnellstart-hinweis"
+          >
+            <div class="agent-quickstart__field">
+              <label for="agent-quick-date">Wunschdatum</label>
+              <input id="agent-quick-date" type="date" name="date" required autocomplete="off">
+            </div>
+            <button type="submit">Termin unverbindlich prüfen</button>
+          </form>
+          <div class="agent-check__result" data-single-date-result aria-live="polite" hidden></div>
+          <div class="agent-quickstart__response" id="schnellstart-hinweis">
+            <strong>Antwort:</strong>
+            <code>{`{"date":"YYYY-MM-DD","available":true}`}</code>
+            <span><code>available: true</code> bedeutet aktuell verfügbar, <code>available: false</code> aktuell nicht verfügbar.</span>
+          </div>
+          <p class="agent-quickstart__note">
+            Pro Aufruf ist ein Datum möglich; innerhalb von {singleDateAvailabilityRules.windowHours} Stunden
+            können höchstens {singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage
+            geprüft werden. Das Ergebnis ist unverbindlich und keine Reservierung.
+          </p>
+        </section>
+
+        <div class="agent-document__intro">
           <p class="agent-lead">
             Diese Seite enthält die vollständigen Preise, Regeln und Schnittstellen
             für konkrete Anfragen zu fotografischen Leistungen. Die Terminprüfung
@@ -201,11 +259,12 @@ const schemaGraph = {
             <a href={apiPath} type="application/json">JSON</a>
             <a href={openApiPath} type="application/json">OpenAPI 3.1</a>
           </nav>
-        </header>
+        </div>
 
         <nav class="agent-toc" aria-label="Inhalt dieser Seite">
           <strong>Inhalt</strong>
           <ol>
+            <li><a href="#schnellstart">Termin schnell prüfen</a></li>
             <li><a href="#kurzfassung">Kurzfassung</a></li>
             <li><a href="#vorgehen">Vorgehen</a></li>
             <li><a href="#schnittstelle">Terminprüfung per API</a></li>
@@ -243,15 +302,17 @@ const schemaGraph = {
           <p class="agent-label">Maschinenlesbare Terminprüfung</p>
           <h2 id="schnittstelle-title">Terminprüfung per API</h2>
           <p>
-            Die Schnittstelle akzeptiert ausschließlich JSON. Die Daten müssen
-            unterschiedlich sein, aber nicht aufeinanderfolgen. Eine erfolgreiche
-            Antwort zeigt nur den aktuellen Kalenderstand.
+            Für ein einzelnes Datum steht der GET-Schnellzugriff zur Verfügung.
+            Die POST-Schnittstelle akzeptiert ausschließlich JSON und prüft ein bis
+            drei unterschiedliche, nicht zwingend aufeinanderfolgende Wunschdaten.
+            Eine erfolgreiche Antwort zeigt nur den aktuellen Kalenderstand.
           </p>
 
           <dl class="agent-contract">
+            <div><dt>Ein Datum per GET</dt><dd><code>GET {singleDateApiPath}?date=YYYY-MM-DD</code></dd></div>
             <div><dt>Dokumentation</dt><dd><a href={apiPath}><code>GET {apiPath}</code></a></dd></div>
             <div><dt>OpenAPI</dt><dd><a href={openApiPath}><code>{openApiPath}</code></a></dd></div>
-            <div><dt>Terminprüfung</dt><dd><code>POST {apiPath}</code></dd></div>
+            <div><dt>Mehrere Daten per POST</dt><dd><code>POST {apiPath}</code></dd></div>
             <div><dt>Content-Type</dt><dd><code>application/json</code></dd></div>
             <div><dt>Erlaubte Felder</dt><dd>Nur <code>dates</code></dd></div>
             <div><dt>Anzahl</dt><dd>Ein bis drei unterschiedliche Wunschdaten</dd></div>
@@ -276,8 +337,8 @@ const schemaGraph = {
         </section>
 
         <section class="agent-section" id="terminabfrage" aria-labelledby="terminabfrage-title">
-          <p class="agent-label">Bedienbare Alternative zur API</p>
-          <h2 id="terminabfrage-title">Terminprüfung im Browser</h2>
+          <p class="agent-label">Mehrere Wunschdaten im Browser</p>
+          <h2 id="terminabfrage-title">Ein bis drei Termine prüfen</h2>
           <p id="terminabfrage-description">
             Wähle ein bis drei unterschiedliche Daten. Leere optionale Felder werden
             nicht übertragen. Die Rückmeldung ist unverbindlich und keine Reservierung.
@@ -409,6 +470,9 @@ const schemaGraph = {
     </footer>
 
     <script>
+      const quickForm = document.querySelector<HTMLFormElement>("[data-single-date-form]");
+      const quickResult = document.querySelector<HTMLElement>("[data-single-date-result]");
+      const quickDateInput = quickForm?.querySelector<HTMLInputElement>('input[name="date"]') || null;
       const form = document.querySelector<HTMLFormElement>("[data-agent-availability-form]");
       const result = document.querySelector<HTMLElement>("[data-agent-availability-result]");
       const dateInputs = form
@@ -439,7 +503,9 @@ const schemaGraph = {
         ].join("-");
       })();
 
-      dateInputs.forEach((input) => {
+      const allDateInputs = quickDateInput ? [quickDateInput, ...dateInputs] : dateInputs;
+
+      allDateInputs.forEach((input) => {
         input.min = berlinToday;
         input.max = maximumDate;
       });
@@ -451,15 +517,81 @@ const schemaGraph = {
         timeZone: "UTC",
       }).format(new Date(`${value}T00:00:00Z`));
 
-      const showMessage = (message: string, state: "success" | "error" | "pending") => {
-        if (!result) return;
-        result.hidden = false;
-        result.dataset.state = state;
-        result.replaceChildren();
+      const showMessage = (
+        target: HTMLElement | null,
+        message: string,
+        state: "success" | "error" | "pending",
+      ) => {
+        if (!target) return;
+        target.hidden = false;
+        target.dataset.state = state;
+        target.replaceChildren();
         const paragraph = document.createElement("p");
         paragraph.textContent = message;
-        result.append(paragraph);
+        target.append(paragraph);
       };
+
+      quickForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!quickForm.reportValidity() || !quickDateInput) return;
+
+        const submit = quickForm.querySelector<HTMLButtonElement>('button[type="submit"]');
+        const endpoint = quickForm.dataset.singleDateEndpoint || "/api/availability";
+        submit?.setAttribute("disabled", "");
+        showMessage(quickResult, "Der Termin wird geprüft …", "pending");
+
+        try {
+          const response = await fetch(
+            `${endpoint}?date=${encodeURIComponent(quickDateInput.value)}`,
+            { headers: { Accept: "application/json" } },
+          );
+          const payload = await response.json();
+
+          if (!response.ok) {
+            showMessage(
+              quickResult,
+              payload.message || "Die Terminprüfung ist gerade nicht möglich.",
+              "error",
+            );
+            return;
+          }
+
+          if (!quickResult) return;
+          quickResult.hidden = false;
+          quickResult.dataset.state = "success";
+          quickResult.replaceChildren();
+
+          const heading = document.createElement("h3");
+          heading.textContent = "Unverbindliches Ergebnis";
+          quickResult.append(heading);
+
+          const status = document.createElement("p");
+          const date = document.createElement("strong");
+          date.textContent = formatDate(payload.date);
+          status.append(date, `: ${payload.available ? "aktuell verfügbar" : "aktuell nicht verfügbar"}`);
+          quickResult.append(status);
+
+          const note = document.createElement("p");
+          note.textContent = "Der Kalenderstand ist unverbindlich und reserviert keinen Termin.";
+          quickResult.append(note);
+
+          const remaining = response.headers.get("X-RateLimit-Remaining");
+          if (remaining !== null) {
+            const remainingNote = document.createElement("p");
+            remainingNote.className = "agent-check__remaining";
+            remainingNote.textContent = `Noch ${remaining} unterschiedliche Kalendertag(e) in diesem 24-Stunden-Fenster.`;
+            quickResult.append(remainingNote);
+          }
+        } catch {
+          showMessage(
+            quickResult,
+            "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+            "error",
+          );
+        } finally {
+          submit?.removeAttribute("disabled");
+        }
+      });
 
       form?.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -469,12 +601,12 @@ const schemaGraph = {
         const uniqueDates = [...new Set(dates)];
 
         if (uniqueDates.length !== dates.length) {
-          showMessage("Bitte wähle unterschiedliche Wunschdaten.", "error");
+          showMessage(result, "Bitte wähle unterschiedliche Wunschdaten.", "error");
           return;
         }
 
         submit?.setAttribute("disabled", "");
-        showMessage("Die Termine werden geprüft …", "pending");
+        showMessage(result, "Die Termine werden geprüft …", "pending");
 
         try {
           const response = await fetch("/api/agent-availability", {
@@ -488,7 +620,11 @@ const schemaGraph = {
           const payload = await response.json();
 
           if (!response.ok) {
-            showMessage(payload.message || "Die Terminprüfung ist gerade nicht möglich.", "error");
+            showMessage(
+              result,
+              payload.message || "Die Terminprüfung ist gerade nicht möglich.",
+              "error",
+            );
             return;
           }
 
@@ -523,7 +659,11 @@ const schemaGraph = {
           remaining.textContent = `Noch ${payload.rateLimit?.remaining ?? 0} Abfrage(n) in diesem 24-Stunden-Fenster.`;
           result.append(remaining);
         } catch {
-          showMessage("Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.", "error");
+          showMessage(
+            result,
+            "Die Terminprüfung ist gerade nicht erreichbar. Bitte versuche es später erneut.",
+            "error",
+          );
         } finally {
           submit?.removeAttribute("disabled");
         }
@@ -622,6 +762,94 @@ const schemaGraph = {
 
   .agent-formats span {
     font-weight: 800;
+  }
+
+  .agent-quickstart {
+    scroll-margin-top: 24px;
+    margin-top: clamp(26px, 4vw, 42px);
+    padding: clamp(24px, 4vw, 36px);
+    border: 1px solid rgba(32, 38, 51, .22);
+    background: #f7f3ee;
+  }
+
+  .agent-quickstart h2 {
+    font-size: clamp(30px, 3.8vw, 40px);
+  }
+
+  .agent-quickstart__endpoint {
+    display: grid;
+    gap: 7px;
+    padding: 15px 17px;
+    border-left: 4px solid #94684a;
+    background: #fff;
+  }
+
+  .agent-quickstart__endpoint strong {
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .agent-quickstart__endpoint code,
+  .agent-quickstart__response code {
+    overflow-wrap: anywhere;
+    font: 13px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  .agent-quickstart__form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: end;
+    margin-top: 22px;
+  }
+
+  .agent-quickstart__field {
+    min-width: 0;
+  }
+
+  .agent-quickstart__field label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .agent-quickstart__field input {
+    width: 100%;
+    min-width: 0;
+    min-height: 48px;
+    padding: 9px;
+    border: 1px solid rgba(32, 38, 51, .28);
+    border-radius: 0;
+    background: #fff;
+    color: #202633;
+    font: inherit;
+  }
+
+  .agent-quickstart__response {
+    display: grid;
+    gap: 7px;
+    margin-top: 18px;
+    color: #545a65;
+    font-size: 13px;
+  }
+
+  .agent-quickstart__response > code {
+    width: fit-content;
+    max-width: 100%;
+    padding: 8px 10px;
+    background: #202633;
+    color: #fff;
+  }
+
+  .agent-quickstart__note {
+    color: #676d77;
+    font-size: 13px;
+  }
+
+  .agent-document__intro {
+    margin-top: clamp(32px, 5vw, 48px);
   }
 
   .agent-toc {
@@ -758,6 +986,7 @@ const schemaGraph = {
     font: inherit;
   }
 
+  .agent-quickstart button,
   .agent-check button,
   .agent-primary-link {
     display: inline-flex;
@@ -778,6 +1007,15 @@ const schemaGraph = {
   }
 
   .agent-check button:disabled {
+    cursor: wait;
+    opacity: .55;
+  }
+
+  .agent-quickstart button {
+    margin-top: 0;
+  }
+
+  .agent-quickstart button:disabled {
     cursor: wait;
     opacity: .55;
   }
@@ -859,6 +1097,7 @@ const schemaGraph = {
     }
 
     .agent-toc ol,
+    .agent-quickstart__form,
     .agent-check__dates {
       grid-template-columns: 1fr;
     }
@@ -870,6 +1109,7 @@ const schemaGraph = {
       gap: 4px;
     }
 
+    .agent-quickstart button,
     .agent-check button,
     .agent-primary-link {
       width: 100%;

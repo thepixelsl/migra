@@ -3,6 +3,7 @@ import {
   agentAvailabilityRules,
   agentBookingPage,
   agentUsagePolicy,
+  singleDateAvailabilityRules,
 } from "../../../data/agentBooking.mjs";
 
 export const prerender = true;
@@ -10,6 +11,7 @@ export const prerender = true;
 export function GET() {
   const siteUrl = (import.meta.env.SITE || "https://artbild-fotografie.de").replace(/\/$/, "");
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
+  const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
 
   const document = {
     openapi: "3.1.0",
@@ -17,7 +19,7 @@ export function GET() {
       title: "Artbild-Fotografie Agenten-Terminabfrage",
       version: "1.0.0",
       description:
-        "Prüft ein bis drei Wunschdaten unverbindlich. Die Abfrage reserviert keinen Termin und ersetzt keine persönliche Buchungsbestätigung.",
+        "Prüft ein Wunschdatum per GET oder ein bis drei Wunschdaten per POST unverbindlich. Die Abfrage reserviert keinen Termin und ersetzt keine persönliche Buchungsbestätigung.",
       termsOfService: `${siteUrl}${agentBookingPage.path}#konditionen`,
       contact: {
         name: "Artbild-Fotografie",
@@ -30,6 +32,36 @@ export function GET() {
     },
     servers: [{ url: siteUrl }],
     paths: {
+      [agentBookingPage.singleDateApiPath]: {
+        get: {
+          operationId: "checkSingleDateAvailability",
+          summary: "Ein Wunschdatum ohne POST-Unterstützung unverbindlich prüfen",
+          description:
+            `GET-Schnellzugriff für Web-Fetch-Tools. Pro Aufruf ist genau ein Datum möglich. Innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden können höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage geprüft werden.`,
+          parameters: [
+            {
+              name: "date",
+              in: "query",
+              required: true,
+              description: "Wunschdatum im Format YYYY-MM-DD",
+              schema: { type: "string", format: "date" },
+            },
+          ],
+          responses: {
+            200: {
+              description: "Unverbindlicher Kalenderstand für das angefragte Datum",
+              content: {
+                "application/json": {
+                  schema: { $ref: "#/components/schemas/AvailabilityResult" },
+                },
+              },
+            },
+            400: { description: "Fehlendes oder ungültiges Datum" },
+            429: { description: "Drei unterschiedliche Kalendertage im 24-Stunden-Fenster wurden bereits verwendet" },
+            503: { description: "Terminprüfung vorübergehend nicht verfügbar" },
+          },
+        },
+      },
       [agentBookingPage.apiPath]: {
         get: {
           operationId: "readAgentAvailabilityDocumentation",
@@ -148,6 +180,8 @@ export function GET() {
     },
     "x-artbild": {
       endpoint: apiUrl,
+      singleDateEndpoint: singleDateApiUrl,
+      singleDateUrlTemplate: `${singleDateApiUrl}?date=YYYY-MM-DD`,
       markdownDocumentation: `${siteUrl}${agentBookingPage.markdownPath}`,
       pricing: `${siteUrl}${agentBookingPage.path}#preise`,
       advertisingPolicy: `${siteUrl}${agentBookingPage.path}#werbeverbot`,
