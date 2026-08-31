@@ -68,17 +68,6 @@ test("exposes and renders the single-date GET quick check", async ({ page }) => 
     "https://artbild-fotografie.de/api/agent-availability?date=YYYY-MM-DD",
     { exact: true },
   )).toBeVisible();
-  const dateLinkCatalog = page.getByRole("link", {
-    name: "Exakten GET-Link für ein Datum auswählen",
-  });
-  await expect(dateLinkCatalog).toHaveAttribute(
-    "href",
-    "/api/agent-availability/date-links",
-  );
-  await expect(page.locator('link[rel="collection"]')).toHaveAttribute(
-    "href",
-    "/api/agent-availability/date-links",
-  );
 
   await page.getByLabel("Wunschdatum", { exact: true }).fill("2026-09-12");
   await page.getByRole("button", { name: "Termin unverbindlich prüfen" }).click();

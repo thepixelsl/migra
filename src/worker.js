@@ -1,6 +1,5 @@
 import * as availability from "../functions/api/availability.js";
 import * as agentAvailability from "../functions/api/agent-availability.js";
-import * as agentAvailabilityDateLinks from "../functions/api/agent-availability/date-links.js";
 import * as adminAvailability from "../functions/api/admin/availability.js";
 import * as adminAgentRequests from "../functions/api/admin/agent-requests.js";
 import * as contact from "../functions/api/contact.js";
@@ -25,7 +24,6 @@ const CONTENT_SECURITY_POLICY = [
 const DOWNLOAD_PATH_PREFIXES = ["/downloads/"];
 const AGENT_MARKDOWN_LINK_HEADER = [
   '</fuer-agenten/>; rel="canonical"; type="text/html"',
-  '</api/agent-availability/date-links>; rel="collection"; type="text/html"',
   '</api/agent-availability>; rel="service-doc"; type="application/json"',
   '</api/agent-availability/openapi.json>; rel="service-desc"; type="application/json"',
 ].join(", ");
@@ -171,10 +169,6 @@ export default {
       return withSecurityHeaders(await handlePagesFunction(agentAvailability, request, env, ctx));
     }
 
-    if (url.pathname === "/api/agent-availability/date-links") {
-      return withSecurityHeaders(await handlePagesFunction(agentAvailabilityDateLinks, request, env, ctx));
-    }
-
     if (url.pathname === "/api/admin/availability") {
       return withSecurityHeaders(await handlePagesFunction(adminAvailability, request, env, ctx));
     }
@@ -222,12 +216,7 @@ export default {
       responseHeaders.set("Content-Type", "application/json; charset=utf-8");
       responseHeaders.set(
         "Link",
-        '</fuer-agenten/>; rel="service-doc"; type="text/html", </api/agent-availability/date-links>; rel="collection"; type="text/html", </api/agent-availability>; rel="service-doc"; type="application/json"',
-      );
-    } else if (url.pathname === "/llms.txt") {
-      responseHeaders.set(
-        "Link",
-        '</fuer-agenten/>; rel="service-doc"; type="text/html", </api/agent-availability/date-links>; rel="collection"; type="text/html"',
+        '</fuer-agenten/>; rel="service-doc"; type="text/html", </api/agent-availability>; rel="service-doc"; type="application/json"',
       );
     }
 

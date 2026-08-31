@@ -45,13 +45,6 @@ function shiftDate(value, days) {
   return date.toISOString().slice(0, 10);
 }
 
-function inclusiveDateCount(minDate, maxDate) {
-  return Math.round(
-    (Date.parse(`${maxDate}T00:00:00Z`) - Date.parse(`${minDate}T00:00:00Z`))
-      / (24 * 60 * 60 * 1000),
-  ) + 1;
-}
-
 const AGENT_DATE_BOUNDS = agentAvailabilityDateBounds();
 const CONTACT_DATE_BOUNDS = contactDateBoundsAt(new Date(), "Europe/Berlin");
 const CONTACT_TEST_DATE = shiftDate(CONTACT_DATE_BOUNDS.minDate, 30);
@@ -179,6 +172,9 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
   const missing = await fetch(`${baseUrl}/gibt-es-nicht/`);
   assert.equal(missing.status, 404);
   assert.match(await missing.text(), /Nicht gefunden/);
+
+  const removedDateLinkCatalog = await fetch(`${baseUrl}/api/agent-availability/date-links`);
+  assert.equal(removedDateLinkCatalog.status, 404);
 });
 
 test("uses immutable caching for built Astro assets", async () => {
@@ -193,12 +189,16 @@ test("serves the agent Markdown, llms.txt and OpenAPI files with readable types"
   assert.equal(markdown.headers.get("content-type"), "text/markdown; charset=utf-8");
   assert.match(markdown.headers.get("link") || "", /<\/fuer-agenten\/>; rel="canonical"/);
   assert.match(markdown.headers.get("link") || "", /rel="service-desc"/);
-  assert.match(await markdown.text(), /Buchungsinformationen für KI-Agenten/);
+  const markdownText = await markdown.text();
+  assert.match(markdownText, /Buchungsinformationen für KI-Agenten/);
+  assert.doesNotMatch(markdownText, /agent-availability\/date-links/);
 
   const llms = await fetch(`${baseUrl}/llms.txt`);
   assert.equal(llms.status, 200);
   assert.equal(llms.headers.get("content-type"), "text/plain; charset=utf-8");
-  assert.match(await llms.text(), /Artbild-Fotografie/);
+  const llmsText = await llms.text();
+  assert.match(llmsText, /Artbild-Fotografie/);
+  assert.doesNotMatch(llmsText, /agent-availability\/date-links/);
 
   const sitemap = await fetch(`${baseUrl}/sitemap.xml`);
   assert.equal(sitemap.status, 200);
@@ -524,36 +524,6 @@ test("shares the single-date rate limit across the agent GET alias and the legac
   assert.match((await limited.json()).message, /drei unterschiedliche Kalendertage/);
 });
 
-test("publishes exact noindex GET links without revealing availability or using the limiter", async () => {
-  const response = await fetch(`${baseUrl}/api/agent-availability/date-links`);
-  assert.equal(response.status, 200);
-  assert.equal(response.headers.get("content-type"), "text/html; charset=utf-8");
-  assert.equal(response.headers.get("cache-control"), "no-store");
-  assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
-  assert.match(response.headers.get("link"), /rel="collection"|rel="self"/);
-
-  const html = await response.text();
-  const linkedDates = Array.from(html.matchAll(/data-date="(\d{4}-\d{2}-\d{2})"/g), (match) => match[1]);
-  assert.equal(linkedDates.length, inclusiveDateCount(
-    AGENT_DATE_BOUNDS.minDate,
-    AGENT_DATE_BOUNDS.maxDate,
-  ));
-  assert.equal(linkedDates[0], AGENT_DATE_BOUNDS.minDate);
-  assert.equal(linkedDates.at(-1), AGENT_DATE_BOUNDS.maxDate);
-  assert.match(
-    html,
-    new RegExp(`${publicUrl.replaceAll(".", "\\.")}\/api\/agent-availability\\?date=${CONTACT_TEST_DATE}`),
-  );
-  assert.doesNotMatch(html, /"available"\s*:\s*(?:true|false)/);
-
-  const availability = await fetch(
-    `${baseUrl}/api/agent-availability?date=${CONTACT_TEST_DATE}`,
-    { headers: { "X-Real-IP": "198.51.100.74" } },
-  );
-  assert.equal(availability.status, 200);
-  assert.equal(availability.headers.get("x-ratelimit-remaining"), "2");
-});
-
 test("documents the agent availability API for machine clients", async () => {
   const response = await fetch(`${baseUrl}/api/agent-availability`);
   assert.equal(response.status, 200);
@@ -561,22 +531,11 @@ test("documents the agent availability API for machine clients", async () => {
 
   const documentation = await response.json();
   assert.equal(documentation.endpoint, "/api/agent-availability");
-  assert.equal(documentation.preferredMethodForOneDate, "GET");
-  assert.equal(documentation.dateLinkCatalog, "/api/agent-availability/date-links");
-  assert.deepEqual(documentation.getOnlyClientWorkflow, [
-    "GET /api/agent-availability/date-links öffnen.",
-    "Den dort verlinkten, exakten GET-Aufruf für das gewünschte Datum öffnen.",
-    "date und available aus der JSON-Antwort auswerten.",
-  ]);
   assert.equal(documentation.singleDateQuery.endpoint, "/api/agent-availability");
   assert.equal(documentation.singleDateQuery.method, "GET");
   assert.equal(
     documentation.singleDateQuery.urlTemplate,
     "/api/agent-availability?date=YYYY-MM-DD",
-  );
-  assert.equal(
-    documentation.singleDateQuery.dateLinkCatalog,
-    "/api/agent-availability/date-links",
   );
   assert.equal(documentation.singleDateQuery.alternateEndpoint, "/api/availability");
   assert.equal(

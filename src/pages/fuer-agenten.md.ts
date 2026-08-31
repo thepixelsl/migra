@@ -31,7 +31,6 @@ export function GET() {
   const htmlUrl = `${siteUrl}${agentBookingPage.path}`;
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
   const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
-  const dateLinkCatalogUrl = `${siteUrl}${agentBookingPage.dateLinkCatalogPath}`;
   const openApiUrl = `${siteUrl}/api/agent-availability/openapi.json`;
   const contactUrl = `${siteUrl}${agentBookingPage.contactPath}`;
   const privacyUrl = `${siteUrl}${agentBookingPage.privacyPath}`;
@@ -49,9 +48,6 @@ export function GET() {
     "",
     "Für Web-Fetch-Tools ohne POST-Unterstützung steht die Einzelabfrage per GET bereit:",
     "",
-    `- Exakte, bereits verlinkte Datums-URLs: [GET-Linkliste öffnen](${dateLinkCatalogUrl})`,
-    "- Für streng freigabebasierte Web-Fetch-Tools: zuerst die GET-Linkliste öffnen, dort das gewünschte Datum auswählen und anschließend genau dessen Link abrufen.",
-    "- Für ein einzelnes Datum nicht auf POST ausweichen.",
     `- Aufruf: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
     "- Pro Aufruf: genau ein Wunschdatum",
     `- Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
@@ -138,7 +134,7 @@ export function GET() {
     headers: {
       "Content-Type": "text/markdown; charset=utf-8",
       "Cache-Control": "public, max-age=3600",
-      Link: `<${htmlUrl}>; rel=\"canonical\", <${dateLinkCatalogUrl}>; rel=\"collection\"; type=\"text/html\", <${apiUrl}>; rel=\"service-doc\"; type=\"application/json\", <${openApiUrl}>; rel=\"service-desc\"; type=\"application/json\"`,
+      Link: `<${htmlUrl}>; rel=\"canonical\", <${apiUrl}>; rel=\"service-doc\"; type=\"application/json\", <${openApiUrl}>; rel=\"service-desc\"; type=\"application/json\"`,
     },
   });
 }
