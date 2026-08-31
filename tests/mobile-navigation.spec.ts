@@ -24,6 +24,9 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   await expect(toggleState).toHaveAttribute("aria-expanded", "true");
   await expect(navigation.getByRole("link", { name: "Kontakt", exact: true })).toBeVisible();
   await expect(
+    navigation.getByRole("link", { name: "TFP Shootings", exact: true }),
+  ).toHaveAttribute("href", "/newsletter/");
+  await expect(
     navigation.getByRole("link", { name: "Standesämter & Trauorte", exact: true }),
   ).toHaveAttribute("href", "/standesamt-hamburg/");
   await expect(
