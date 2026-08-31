@@ -2,6 +2,7 @@ export const agentBookingPage = {
   path: "/fuer-agenten/",
   markdownPath: "/fuer-agenten.md",
   apiPath: "/api/agent-availability",
+  dateLinkCatalogPath: "/api/agent-availability/date-links",
   singleDateAliasPath: "/api/agent-availability",
   singleDateApiPath: "/api/availability",
   contactPath: "/kontakt/",

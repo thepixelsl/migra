@@ -171,12 +171,20 @@ export function onRequestGet({ request, env }) {
   return json(
     {
       name: "Artbild-Fotografie Agenten-Terminabfrage",
-      description: "Prüft ein bis drei konkrete Wunschdaten, ohne die Liste gesperrter Termine offenzulegen.",
+      description: "Prüft ein konkretes Wunschdatum per GET oder ein bis drei Wunschdaten per POST, ohne die Liste gesperrter Termine offenzulegen.",
       endpoint: "/api/agent-availability",
+      preferredMethodForOneDate: "GET",
+      dateLinkCatalog: "/api/agent-availability/date-links",
+      getOnlyClientWorkflow: [
+        "GET /api/agent-availability/date-links öffnen.",
+        "Den dort verlinkten, exakten GET-Aufruf für das gewünschte Datum öffnen.",
+        "date und available aus der JSON-Antwort auswerten.",
+      ],
       singleDateQuery: {
         endpoint: "/api/agent-availability",
         method: "GET",
         urlTemplate: "/api/agent-availability?date=YYYY-MM-DD",
+        dateLinkCatalog: "/api/agent-availability/date-links",
         alternateEndpoint: "/api/availability",
         alternateUrlTemplate: "/api/availability?date=YYYY-MM-DD",
         sharedRateLimitAcrossEndpoints: true,
@@ -237,7 +245,7 @@ export function onRequestGet({ request, env }) {
     200,
     {
       "Content-Language": "de",
-      Link: '</fuer-agenten/>; rel="service-doc"; type="text/html", </fuer-agenten.md>; rel="alternate"; type="text/markdown", </api/agent-availability/openapi.json>; rel="service-desc"; type="application/json"',
+      Link: '</fuer-agenten/>; rel="service-doc"; type="text/html", </api/agent-availability/date-links>; rel="collection"; type="text/html", </fuer-agenten.md>; rel="alternate"; type="text/markdown", </api/agent-availability/openapi.json>; rel="service-desc"; type="application/json"',
     },
   );
 }

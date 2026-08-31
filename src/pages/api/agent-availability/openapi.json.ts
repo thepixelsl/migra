@@ -13,6 +13,7 @@ export function GET() {
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
   const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateApiPath}`;
   const singleDateAliasUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
+  const dateLinkCatalogUrl = `${siteUrl}${agentBookingPage.dateLinkCatalogPath}`;
 
   const document = {
     openapi: "3.1.0",
@@ -33,6 +34,24 @@ export function GET() {
     },
     servers: [{ url: siteUrl }],
     paths: {
+      [agentBookingPage.dateLinkCatalogPath]: {
+        get: {
+          operationId: "listExactSingleDateAvailabilityLinks",
+          summary: "Exakte GET-Links für alle aktuell erlaubten Wunschdaten auflisten",
+          description:
+            "Einstiegsseite für Web-Fetch-Tools mit strenger URL-Freigabe. Die HTML-Antwort enthält einen echten Link für jedes erlaubte Datum, aber keine Verfügbarkeiten. Erst das Öffnen eines Datumslinks verwendet den gemeinsamen GET-Limiter.",
+          responses: {
+            200: {
+              description: "Nicht indexierbarer HTML-Linkkatalog für den aktuellen 24-Monats-Zeitraum",
+              content: {
+                "text/html": {
+                  schema: { type: "string" },
+                },
+              },
+            },
+          },
+        },
+      },
       [agentBookingPage.singleDateApiPath]: {
         get: {
           operationId: "checkSingleDateAvailability",
@@ -200,6 +219,8 @@ export function GET() {
     },
     "x-artbild": {
       endpoint: apiUrl,
+      preferredMethodForOneDate: "GET",
+      singleDateLinkCatalog: dateLinkCatalogUrl,
       singleDateEndpoint: singleDateAliasUrl,
       singleDateUrlTemplate: `${singleDateAliasUrl}?date=YYYY-MM-DD`,
       alternateSingleDateEndpoint: singleDateApiUrl,

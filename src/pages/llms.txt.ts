@@ -13,6 +13,7 @@ export function GET() {
   const markdownUrl = `${siteUrl}${agentBookingPage.markdownPath}`;
   const apiUrl = `${siteUrl}${agentBookingPage.apiPath}`;
   const singleDateApiUrl = `${siteUrl}${agentBookingPage.singleDateAliasPath}`;
+  const dateLinkCatalogUrl = `${siteUrl}${agentBookingPage.dateLinkCatalogPath}`;
   const openApiUrl = `${siteUrl}/api/agent-availability/openapi.json`;
 
   const content = [
@@ -22,6 +23,8 @@ export function GET() {
     "",
     "## Buchungsinformationen für Agenten",
     "",
+    `- GET-only und streng freigabebasierte Web-Fetch-Tools: zuerst [die Liste exakter Datumslinks](${dateLinkCatalogUrl}) öffnen, dann den dort vorhandenen Link für das gewünschte Datum unverändert abrufen.`,
+    "- Für ein einzelnes Datum nicht auf POST ausweichen.",
     `- Ein Datum ohne POST-Unterstützung: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
     `- GET-Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
     `- Gemeinsames GET-Limit: ${agentBookingPage.singleDateAliasPath} und ${agentBookingPage.singleDateApiPath} verwenden denselben Zähler`,

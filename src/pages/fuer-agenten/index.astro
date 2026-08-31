@@ -29,6 +29,7 @@ const apiUrl = `${siteUrl}${apiPath}`;
 const singleDateApiPath = agentBookingPage.singleDateAliasPath;
 const singleDateApiUrl = `${siteUrl}${singleDateApiPath}`;
 const singleDateUrlTemplate = `${singleDateApiUrl}?date=YYYY-MM-DD`;
+const dateLinkCatalogPath = agentBookingPage.dateLinkCatalogPath;
 const openApiPath = "/api/agent-availability/openapi.json";
 const title = agentBookingPage.title;
 const headline = agentBookingPage.headline;
@@ -173,6 +174,7 @@ const schemaGraph = {
     <link rel="alternate" type="application/json" href={apiPath} title="JSON-Dokumentation der Terminabfrage">
     <link rel="service-doc" type="application/json" href={apiPath} title="Schnittstellendokumentation">
     <link rel="service-desc" type="application/json" href={openApiPath} title="OpenAPI-Beschreibung">
+    <link rel="collection" type="text/html" href={dateLinkCatalogPath} title="Exakte GET-Links für einzelne Wunschdaten">
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
     <meta property="og:title" content={title}>
@@ -209,6 +211,13 @@ const schemaGraph = {
           <p>
             Ein einzelnes Wunschdatum kann direkt per GET geprüft werden. Dieser
             Aufruf funktioniert auch mit Web-Fetch-Tools, die keinen JSON-Body senden können.
+          </p>
+          <p>
+            Web-Fetch-Tools mit strenger URL-Freigabe öffnen zuerst die verlinkte
+            Datumsliste und danach den dort vorhandenen Link für das gewünschte Datum.
+          </p>
+          <p>
+            <a class="agent-primary-link" href={dateLinkCatalogPath}>Exakten GET-Link für ein Datum auswählen</a>
           </p>
           <p class="agent-quickstart__endpoint">
             <strong>Direkter GET-Aufruf</strong>
@@ -258,6 +267,7 @@ const schemaGraph = {
             <a href={pagePath} aria-current="page">HTML</a>
             <a href={markdownPath} type="text/markdown">Markdown</a>
             <a href={apiPath} type="application/json">JSON</a>
+            <a href={dateLinkCatalogPath} type="text/html">GET-Links</a>
             <a href={openApiPath} type="application/json">OpenAPI 3.1</a>
           </nav>
         </div>
@@ -311,6 +321,7 @@ const schemaGraph = {
 
           <dl class="agent-contract">
             <div><dt>Ein Datum per GET</dt><dd><code>GET {singleDateApiPath}?date=YYYY-MM-DD</code></dd></div>
+            <div><dt>Exakte Datumslinks</dt><dd><a href={dateLinkCatalogPath}><code>GET {dateLinkCatalogPath}</code></a></dd></div>
             <div><dt>Dokumentation</dt><dd><a href={apiPath}><code>GET {apiPath}</code></a></dd></div>
             <div><dt>OpenAPI</dt><dd><a href={openApiPath}><code>{openApiPath}</code></a></dd></div>
             <div><dt>Mehrere Daten per POST</dt><dd><code>POST {apiPath}</code></dd></div>
@@ -380,6 +391,7 @@ const schemaGraph = {
             <div class="agent-check__result" data-agent-availability-result aria-live="polite" hidden></div>
             <noscript>
               JavaScript ist für dieses Formular erforderlich. Nutze alternativ die
+              <a href={dateLinkCatalogPath}>Liste exakter GET-Links</a> oder die
               <a href={apiPath}>JSON-Dokumentation der Termin-Schnittstelle</a>.
             </noscript>
           </form>
@@ -1005,6 +1017,10 @@ const schemaGraph = {
     text-align: center;
     text-decoration: none;
     text-transform: uppercase;
+  }
+
+  .agent-document .agent-primary-link {
+    color: #fff;
   }
 
   .agent-check button:disabled {
