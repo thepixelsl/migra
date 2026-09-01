@@ -17,35 +17,64 @@ const expectedParagraphs = [
   "Pickel oder ähnliches die Dir an Deinem Hochzeitstag Ärger machen, werde ich natürlich entfernen, das ist selbstverständlich.",
 ];
 
-test("about longform keeps the supplied copy in a calm desktop spread", async ({ page }) => {
+const suppliedCopySelector = [
+  ".about-wedding-guide__lead > p",
+  ".about-approach__step > p:not(.about-approach__number)",
+  ".about-credential > p:last-child",
+  ".about-faq__item > p:not(.about-faq__number)",
+].join(", ");
+
+const faqQuestions = [
+  "Wie viele Bilder bekommen wir?",
+  "Was gehört zur Bildübergabe?",
+  "Entstehen weitere Kosten?",
+  "Was bedeutet Bildbearbeitung und Retusche?",
+];
+
+test("about content has a clear editorial hierarchy on desktop", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.goto(`${baseUrl}/about/`, { waitUntil: "domcontentloaded" });
   await page.evaluate(() => document.fonts.ready);
 
-  const section = page.locator(".about-longform");
-  const columns = section.locator(".about-column");
+  const section = page.locator(".about-wedding-guide");
+  const approach = section.locator(".about-approach");
+  const steps = approach.locator(".about-approach__step");
+  const faqItems = section.locator(".about-faq__item");
+  const suppliedCopy = section.locator(suppliedCopySelector);
 
   await expect(section.getByRole("heading", { name: "Hochzeitsfotograf Hamburg" })).toBeVisible();
-  await expect(columns).toHaveCount(2);
-  await expect(columns.nth(0).locator("p")).toHaveCount(6);
-  await expect(columns.nth(1).locator("p")).toHaveCount(6);
-  await expect(section.locator("p")).toHaveText(expectedParagraphs);
+  await expect(section.getByRole("heading", { name: "Vertrauen beginnt vor dem Hochzeitstag" })).toBeVisible();
+  await expect(section.getByRole("heading", { name: "Mehr als nur ein Bildermacher" })).toBeVisible();
+  await expect(section.getByRole("heading", { name: "Antworten vor Eurer Buchung" })).toBeVisible();
+  await expect(steps).toHaveCount(2);
+  await expect(faqItems).toHaveCount(4);
+  await expect(faqItems.locator("h4")).toHaveText(faqQuestions);
+  await expect(suppliedCopy).toHaveCount(12);
+  await expect(suppliedCopy).toHaveText(expectedParagraphs);
 
   const layout = await section.evaluate((element) => {
-    const heading = element.querySelector("h2");
-    const columnElements = [...element.querySelectorAll(".about-column")];
+    const header = element.querySelector(".about-wedding-guide__header")!;
+    const approach = element.querySelector(".about-approach")!;
+    const faqList = element.querySelector(".about-faq__list")!;
+    const steps = [...element.querySelectorAll(".about-approach__step")];
     return {
-      headingSize: Number.parseFloat(getComputedStyle(heading!).fontSize),
-      gridColumns: getComputedStyle(element.querySelector(".about-columns")!).gridTemplateColumns,
-      columnWidths: columnElements.map((column) => column.getBoundingClientRect().width),
-      secondColumnBorder: getComputedStyle(columnElements[1]).borderLeftWidth,
+      headerColumns: getComputedStyle(header).gridTemplateColumns,
+      approachColumns: getComputedStyle(approach).gridTemplateColumns,
+      faqColumns: getComputedStyle(faqList).gridTemplateColumns,
+      stepWidths: steps.map((step) => step.getBoundingClientRect().width),
+      secondStepBorder: getComputedStyle(steps[1]).borderLeftWidth,
+      faqBackgrounds: [...element.querySelectorAll(".about-faq__item")].map(
+        (item) => getComputedStyle(item).backgroundColor,
+      ),
     };
   });
 
-  expect(layout.headingSize).toBeLessThanOrEqual(30);
-  expect(layout.gridColumns.split(" ")).toHaveLength(2);
-  expect(layout.columnWidths[0]).toBeCloseTo(layout.columnWidths[1], 0);
-  expect(layout.secondColumnBorder).toBe("1px");
+  expect(layout.headerColumns.split(" ")).toHaveLength(2);
+  expect(layout.approachColumns.split(" ")).toHaveLength(2);
+  expect(layout.faqColumns.split(" ")).toHaveLength(2);
+  expect(layout.stepWidths[0]).toBeCloseTo(layout.stepWidths[1], 0);
+  expect(layout.secondStepBorder).toBe("1px");
+  expect(layout.faqBackgrounds.every((background) => background === "rgba(0, 0, 0, 0)")).toBe(true);
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
 });
 
@@ -53,24 +82,34 @@ for (const viewport of [
   { name: "tablet", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
 ]) {
-  test(`about longform stacks cleanly on ${viewport.name}`, async ({ page }) => {
+  test(`about editorial modules stack cleanly on ${viewport.name}`, async ({ page }) => {
     await page.setViewportSize({ width: viewport.width, height: viewport.height });
     await page.goto(`${baseUrl}/about/`, { waitUntil: "domcontentloaded" });
 
-    const section = page.locator(".about-longform");
-    const columns = section.locator(".about-column");
-    await expect(columns).toHaveCount(2);
-    await expect(columns.nth(1)).toHaveCSS("border-top-width", "1px");
-    await expect(columns.nth(1)).toHaveCSS("border-left-width", "0px");
+    const section = page.locator(".about-wedding-guide");
+    const steps = section.locator(".about-approach__step");
+    const faqItems = section.locator(".about-faq__item");
+    await expect(steps).toHaveCount(2);
+    await expect(faqItems).toHaveCount(4);
+    await expect(steps.nth(1)).toHaveCSS("border-top-width", "1px");
+    await expect(steps.nth(1)).toHaveCSS("border-left-width", "0px");
+    await expect(section.locator(suppliedCopySelector)).toHaveText(expectedParagraphs);
 
-    const boxes = await columns.evaluateAll((elements) =>
+    const stepBoxes = await steps.evaluateAll((elements) =>
       elements.map((element) => {
         const box = element.getBoundingClientRect();
         return { left: box.left, right: box.right, top: box.top, bottom: box.bottom };
       }),
     );
-    expect(boxes[1].top).toBeGreaterThan(boxes[0].bottom);
-    expect(boxes.every((box) => box.left >= 0 && box.right <= viewport.width)).toBe(true);
+    const faqBoxes = await faqItems.evaluateAll((elements) =>
+      elements.map((element) => {
+        const box = element.getBoundingClientRect();
+        return { left: box.left, right: box.right, top: box.top, bottom: box.bottom };
+      }),
+    );
+    expect(stepBoxes[1].top).toBeGreaterThan(stepBoxes[0].bottom);
+    expect(faqBoxes[1].top).toBeGreaterThan(faqBoxes[0].bottom);
+    expect([...stepBoxes, ...faqBoxes].every((box) => box.left >= 0 && box.right <= viewport.width)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
   });
 }

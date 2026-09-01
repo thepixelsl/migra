@@ -360,11 +360,14 @@ const schemaGraph = {
       </div>
     </section>
 
-    <section class="about-longform" aria-labelledby="about-wedding-hamburg">
-      <h2 id="about-wedding-hamburg">Hochzeitsfotograf Hamburg</h2>
-      <div class="about-columns">
-        <div class="about-column">
-          <p>
+    <section class="about-wedding-guide" aria-labelledby="about-wedding-hamburg">
+      <header class="about-wedding-guide__header">
+        <div class="about-wedding-guide__title">
+          <p class="about-kicker">Arbeitsweise &amp; Leistungen</p>
+          <h2 id="about-wedding-hamburg">Hochzeitsfotograf Hamburg</h2>
+        </div>
+        <div class="about-wedding-guide__lead" data-copy-group="haltung">
+          <p class="about-wedding-guide__quote">
             Von einem Fotografen, der wie ein fremder Dienstleister wirkt, lässt man sich bestimmt
             nicht so gerne fotografieren, als von einem anderen Gast.
           </p>
@@ -373,6 +376,13 @@ const schemaGraph = {
             Selbstverständlich hat jeder <strong>Hochzeitsfotograf</strong> seinen Stil und in diesem Stil
             kann er auch am besten seine Hochzeitsfotografie machen.
           </p>
+        </div>
+      </header>
+
+      <div class="about-approach" aria-label="So begleite ich Eure Hochzeit">
+        <article class="about-approach__step" data-copy-group="kennenlernen">
+          <p class="about-approach__number"><span>01</span> Vor der Hochzeit</p>
+          <h3>Vertrauen beginnt vor dem Hochzeitstag</h3>
           <p>
             Am besten funktioniert die <strong>Hochzeitsfotografie</strong> aus meiner Sicht, wenn Ihr mich
             zu einfach fotografieren lasst und auf meine Erfahrung vertraut. Damit Ihr trotzdem die Bilder
@@ -384,6 +394,11 @@ const schemaGraph = {
             lernt mich kennen sondern auch ich Euch. Ich erfahre, wie ich Euch am besten fotografieren
             kann, welchen Stil Ihr mögt und wir bauen eine Verbindung auf.
           </p>
+        </article>
+
+        <article class="about-approach__step" data-copy-group="hochzeitstag">
+          <p class="about-approach__number"><span>02</span> Am Hochzeitstag</p>
+          <h3>Mehr als nur ein Bildermacher</h3>
           <p>
             Bei der <strong>Hochzeit</strong> ist der <strong>Fotograf</strong> mehr als nur ein Bildermacher.
             Weißes Seidenpflaster und Nähzeug, wie man Manschettenknöpfe richtig trägt und ob Krawatte,
@@ -394,38 +409,72 @@ const schemaGraph = {
             begleiten. Manchmal lohnt es sich auch eine Reportage zu splitten, gerade wenn die Hochzeit
             in Italien oder Spanien stattfinden soll.
           </p>
-        </div>
-        <div class="about-column">
-          <p>
-            Bei mir bekommt Ihr alles an guten Bildern, die am Tag der Hochzeit entstehen. Nirgends steht
-            eine feste Zahl.
-          </p>
-          <p>
-            Natürlich werden alle Bilder bearbeitet und ich erstelle eine Auswahl aus farbigen und
-            schwarzweiß Bildern. Aus den schönsten Bildern erstelle ich eine <strong>Diashow</strong>, eine
-            Online-Galerie und auch ein <strong>Fotobuch</strong>. (Diashow und Fotobuch, sowie eine
-            individuelle, von einer Manufaktur handgefertigte Holzschatulle, mit USB-Stick sind für
-            Gasnztagesbuchungen verfügbar).
-          </p>
-          <p>
-            York Augustin ist eingetragener Fotograf in der Handwerksrolle der Hansestadt Hamburg.
-          </p>
-          <p>
-            Es kommen <strong>keine weiteren Kosten</strong> auf Euch zu. Möchtet Ihr eine
-            {" "}<strong>Fotobox</strong> dazu buchen? Kein Problem, ich empfehle Euch einen guten und sehr
-            günstigen Anbieter hier aus Norddeutschland.
-          </p>
-          <p>
-            Bearbeitung der Bilder bedeutet, dass sie einen farbigen Look oder auch Schwarzweiß-Look
-            meiner Wahl erhalten. Das bedeutet nicht, dass ich Bilder retuschiere. Eine
-            {" "}<strong>Retusche</strong> ist jedoch für wenige, ausgewählte Bilder ohne Aufpreis möglich.
-          </p>
-          <p>
-            Pickel oder ähnliches die Dir an Deinem Hochzeitstag Ärger machen, werde ich natürlich
-            entfernen, das ist selbstverständlich.
-          </p>
-        </div>
+        </article>
       </div>
+
+      <section class="about-faq" aria-labelledby="about-faq-title">
+        <div class="about-faq__heading">
+          <div>
+            <p class="about-kicker">Gut zu wissen</p>
+            <h3 id="about-faq-title">Antworten vor Eurer Buchung</h3>
+          </div>
+          <p>Die wichtigsten Fragen zu Bildanzahl, Übergabe, Kosten und Retusche auf einen Blick.</p>
+        </div>
+
+        <div class="about-faq__list">
+          <article class="about-faq__item" data-copy-group="bildanzahl">
+            <p class="about-faq__number" aria-hidden="true">01</p>
+            <h4>Wie viele Bilder bekommen wir?</h4>
+            <p>
+              Bei mir bekommt Ihr alles an guten Bildern, die am Tag der Hochzeit entstehen. Nirgends steht
+              eine feste Zahl.
+            </p>
+          </article>
+
+          <article class="about-faq__item" data-copy-group="bilduebergabe">
+            <p class="about-faq__number" aria-hidden="true">02</p>
+            <h4>Was gehört zur Bildübergabe?</h4>
+            <p>
+              Natürlich werden alle Bilder bearbeitet und ich erstelle eine Auswahl aus farbigen und
+              schwarzweiß Bildern. Aus den schönsten Bildern erstelle ich eine <strong>Diashow</strong>, eine
+              Online-Galerie und auch ein <strong>Fotobuch</strong>. (Diashow und Fotobuch, sowie eine
+              individuelle, von einer Manufaktur handgefertigte Holzschatulle, mit USB-Stick sind für
+              Gasnztagesbuchungen verfügbar).
+            </p>
+          </article>
+
+          <aside class="about-credential" aria-label="Handwerklicher Nachweis">
+            <p class="about-credential__label">Geprüftes Handwerk</p>
+            <p data-copy-group="nachweis">
+              York Augustin ist eingetragener Fotograf in der Handwerksrolle der Hansestadt Hamburg.
+            </p>
+          </aside>
+
+          <article class="about-faq__item" data-copy-group="kosten">
+            <p class="about-faq__number" aria-hidden="true">03</p>
+            <h4>Entstehen weitere Kosten?</h4>
+            <p>
+              Es kommen <strong>keine weiteren Kosten</strong> auf Euch zu. Möchtet Ihr eine
+              {" "}<strong>Fotobox</strong> dazu buchen? Kein Problem, ich empfehle Euch einen guten und sehr
+              günstigen Anbieter hier aus Norddeutschland.
+            </p>
+          </article>
+
+          <article class="about-faq__item" data-copy-group="retusche">
+            <p class="about-faq__number" aria-hidden="true">04</p>
+            <h4>Was bedeutet Bildbearbeitung und Retusche?</h4>
+            <p>
+              Bearbeitung der Bilder bedeutet, dass sie einen farbigen Look oder auch Schwarzweiß-Look
+              meiner Wahl erhalten. Das bedeutet nicht, dass ich Bilder retuschiere. Eine
+              {" "}<strong>Retusche</strong> ist jedoch für wenige, ausgewählte Bilder ohne Aufpreis möglich.
+            </p>
+            <p>
+              Pickel oder ähnliches die Dir an Deinem Hochzeitstag Ärger machen, werde ich natürlich
+              entfernen, das ist selbstverständlich.
+            </p>
+          </article>
+        </div>
+      </section>
     </section>
 
     <section class="about-portfolio" aria-labelledby="about-portfolio-title">
@@ -571,7 +620,7 @@ const schemaGraph = {
   }
 
   .about-section h2,
-  .about-longform h2 {
+  .about-wedding-guide h2 {
     margin: 0;
     color: #222631;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -649,7 +698,7 @@ const schemaGraph = {
   }
 
   .about-section,
-  .about-longform,
+  .about-wedding-guide,
   .about-portfolio {
     width: min(1040px, calc(100% - 44px));
     margin: clamp(92px, 12vw, 172px) auto 0;
@@ -665,7 +714,7 @@ const schemaGraph = {
   }
 
   .about-section h2,
-  .about-longform h2 {
+  .about-wedding-guide h2 {
     font-size: clamp(38px, 5vw, 68px);
   }
 
@@ -685,7 +734,7 @@ const schemaGraph = {
 
   .about-copy,
   .about-duo p,
-  .about-columns,
+  .about-wedding-guide,
   .about-portfolio > p {
     color: #5f5a54;
     font-size: clamp(17px, 1.25vw, 20px);
@@ -693,8 +742,7 @@ const schemaGraph = {
   }
 
   .about-copy p,
-  .about-duo p,
-  .about-columns p {
+  .about-duo p {
     margin: 0;
   }
 
@@ -739,63 +787,215 @@ const schemaGraph = {
     text-transform: uppercase;
   }
 
-  .about-longform {
-    position: relative;
+  .about-wedding-guide {
     width: min(1180px, calc(100% - 44px));
-    padding: clamp(52px, 6vw, 78px) clamp(28px, 5.4vw, 72px);
-    background: #fff;
-    text-align: center;
+    color: #5f5a54;
   }
 
-  .about-longform::before,
-  .about-longform::after {
-    position: absolute;
-    left: 50%;
-    width: min(920px, calc(100% - 88px));
-    height: 1px;
-    background: #e9e3dc;
-    content: "";
-    transform: translateX(-50%);
+  .about-wedding-guide p {
+    margin: 0;
   }
 
-  .about-longform::before {
-    top: 0;
+  .about-wedding-guide strong {
+    color: #34363b;
+    font-weight: 600;
   }
 
-  .about-longform::after {
-    bottom: 0;
-  }
-
-  .about-longform h2 {
-    font-size: clamp(24px, 2vw, 30px);
-    letter-spacing: .03em;
-    line-height: 1.35;
-  }
-
-  .about-columns {
-    margin-top: clamp(42px, 5vw, 62px);
+  .about-wedding-guide__header {
+    padding: clamp(52px, 6vw, 82px) 0 clamp(58px, 7vw, 96px);
     display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(34px, 5vw, 62px);
-    text-align: left;
+    gap: clamp(38px, 6vw, 82px);
+    border-top: 1px solid #ded7ce;
   }
 
-  .about-column {
+  .about-wedding-guide__title .about-kicker,
+  .about-faq__heading .about-kicker {
+    margin-bottom: 22px;
+  }
+
+  .about-wedding-guide__title h2 {
+    max-width: 620px;
+    font-size: clamp(42px, 5vw, 70px);
+    line-height: 1.02;
+  }
+
+  .about-wedding-guide__lead {
+    max-width: 720px;
+  }
+
+  .about-wedding-guide__quote {
+    color: #333741;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(27px, 2.55vw, 39px);
+    line-height: 1.42;
+  }
+
+  .about-wedding-guide__lead > p + p {
+    margin-top: clamp(24px, 3vw, 34px);
+    padding-left: clamp(20px, 3vw, 42px);
+    border-left: 1px solid #b88c6c;
+    font-size: clamp(17px, 1.2vw, 19px);
+    line-height: 1.82;
+  }
+
+  .about-approach {
+    padding: clamp(38px, 6vw, 74px) clamp(24px, 5vw, 72px);
+    display: grid;
+    gap: clamp(36px, 5vw, 66px);
+    background: #f4f1ec;
+  }
+
+  .about-approach__step {
     min-width: 0;
   }
 
-  .about-column + .about-column {
-    padding-top: clamp(34px, 5vw, 48px);
-    border-top: 1px solid #e9e3dc;
+  .about-approach__step + .about-approach__step {
+    padding-top: clamp(36px, 5vw, 54px);
+    border-top: 1px solid #d9d1c8;
   }
 
-  .about-columns p + p {
-    margin-top: 19px;
+  .about-approach__number {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
   }
 
-  .about-columns strong {
-    color: #34363b;
-    font-weight: 600;
+  .about-approach__number span {
+    color: #b89a84;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: 31px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .about-approach__step h3 {
+    margin: 18px 0 0;
+    color: #272b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(28px, 2.5vw, 38px);
+    font-weight: 400;
+    line-height: 1.16;
+  }
+
+  .about-approach__step h3 + p {
+    margin-top: clamp(26px, 3vw, 36px);
+  }
+
+  .about-approach__step > p:not(.about-approach__number) {
+    font-size: clamp(17px, 1.2vw, 19px);
+    line-height: 1.82;
+  }
+
+  .about-approach__step > p + p {
+    margin-top: 20px;
+  }
+
+  .about-credential {
+    margin-top: clamp(42px, 6vw, 72px);
+    padding: clamp(28px, 3.5vw, 42px) 0;
+    display: grid;
+    gap: 16px;
+    border-top: 1px solid #ded7ce;
+    border-bottom: 1px solid #ded7ce;
+  }
+
+  .about-credential__label {
+    color: #8a6d5a;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+  }
+
+  .about-credential > p:last-child {
+    color: #3e4148;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(21px, 2vw, 29px);
+    line-height: 1.45;
+  }
+
+  .about-faq {
+    margin-top: clamp(72px, 9vw, 126px);
+  }
+
+  .about-faq__heading {
+    display: grid;
+    gap: 26px;
+    align-items: end;
+  }
+
+  .about-faq__heading h3 {
+    margin: 0;
+    color: #272b34;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(36px, 4.2vw, 58px);
+    font-weight: 400;
+    line-height: 1.05;
+  }
+
+  .about-faq__heading > p {
+    max-width: 520px;
+    color: #777069;
+    font-size: clamp(16px, 1.15vw, 18px);
+    line-height: 1.72;
+  }
+
+  .about-faq__list {
+    margin-top: clamp(42px, 6vw, 72px);
+    display: grid;
+    gap: clamp(38px, 5vw, 64px);
+  }
+
+  .about-faq__list .about-credential {
+    grid-column: 1 / -1;
+    margin-top: 0;
+  }
+
+  .about-faq__item {
+    padding-top: clamp(24px, 3vw, 32px);
+    display: grid;
+    grid-template-columns: 30px minmax(0, 1fr);
+    column-gap: 18px;
+    border-top: 1px solid #d8d0c7;
+  }
+
+  .about-faq__number {
+    grid-row: 1 / span 4;
+    color: #b08b70;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .14em;
+  }
+
+  .about-faq__item h4 {
+    margin: 0;
+    color: #2c3038;
+    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
+    font-size: clamp(23px, 2vw, 30px);
+    font-weight: 400;
+    line-height: 1.25;
+  }
+
+  .about-faq__item h4 + p {
+    margin-top: 20px;
+  }
+
+  .about-faq__item > p:not(.about-faq__number) {
+    grid-column: 2;
+    font-size: clamp(16px, 1.12vw, 18px);
+    line-height: 1.78;
+  }
+
+  .about-faq__item > p:not(.about-faq__number) + p {
+    margin-top: 16px;
   }
 
   .about-portfolio {
@@ -914,24 +1114,46 @@ const schemaGraph = {
       grid-template-columns: minmax(300px, .88fr) minmax(0, 1.12fr);
     }
 
-    .about-columns {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(64px, 7vw, 96px);
-      hyphens: auto;
-      text-align: justify;
-      text-justify: inter-word;
-    }
-
-    .about-column + .about-column {
-      padding-top: 0;
-      padding-left: clamp(32px, 3.5vw, 48px);
-      border-top: 0;
-      border-left: 1px solid #e9e3dc;
-    }
-
     .about-portfolio__grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
       align-items: start;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .about-wedding-guide__header {
+      grid-template-columns: minmax(290px, .78fr) minmax(0, 1.22fr);
+      gap: clamp(70px, 9vw, 130px);
+      align-items: start;
+    }
+
+    .about-approach {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(48px, 6vw, 82px);
+    }
+
+    .about-approach__step + .about-approach__step {
+      padding-top: 0;
+      padding-left: clamp(48px, 6vw, 82px);
+      border-top: 0;
+      border-left: 1px solid #d9d1c8;
+    }
+
+    .about-credential {
+      grid-template-columns: minmax(220px, .42fr) minmax(0, 1fr);
+      gap: clamp(42px, 7vw, 96px);
+      align-items: center;
+    }
+
+    .about-faq__heading {
+      grid-template-columns: minmax(360px, .92fr) minmax(0, .68fr);
+      gap: clamp(60px, 9vw, 140px);
+    }
+
+    .about-faq__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(58px, 8vw, 112px);
+      row-gap: clamp(48px, 6vw, 76px);
     }
   }
 
