@@ -813,9 +813,13 @@ const schemaGraph = {
     margin-bottom: 22px;
   }
 
+  .about-wedding-guide__title {
+    min-width: 0;
+  }
+
   .about-wedding-guide__title h2 {
-    max-width: 620px;
-    font-size: clamp(42px, 5vw, 70px);
+    max-width: 100%;
+    font-size: clamp(42px, 5vw, 64px);
     line-height: 1.02;
   }
 
@@ -1122,8 +1126,8 @@ const schemaGraph = {
 
   @media (min-width: 900px) {
     .about-wedding-guide__header {
-      grid-template-columns: minmax(290px, .78fr) minmax(0, 1.22fr);
-      gap: clamp(70px, 9vw, 130px);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(48px, 6vw, 82px);
       align-items: start;
     }
 

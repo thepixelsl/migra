@@ -78,6 +78,42 @@ test("about content has a clear editorial hierarchy on desktop", async ({ page }
   expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
 });
 
+test("about desktop title stays inside its column without touching the lead copy", async ({ page }) => {
+  await page.goto(`${baseUrl}/about/`, { waitUntil: "domcontentloaded" });
+  await page.evaluate(() => document.fonts.ready);
+
+  for (const width of [900, 1024, 1280, 1512, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+
+    const layout = await page.locator(".about-wedding-guide__header").evaluate((header) => {
+      const title = header.querySelector(".about-wedding-guide__title h2")!;
+      const lead = header.querySelector(".about-wedding-guide__lead")!;
+      const titleColumn = title.getBoundingClientRect();
+      const leadBox = lead.getBoundingClientRect();
+      const titleText = document.createRange();
+      titleText.selectNodeContents(title);
+      const titleTextBox = titleText.getBoundingClientRect();
+
+      return {
+        titleColumnRight: titleColumn.right,
+        titleTextRight: titleTextBox.right,
+        leadLeft: leadBox.left,
+        titleOverflow: title.scrollWidth - title.clientWidth,
+        documentOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      };
+    });
+
+    expect(layout.titleTextRight, `title text exceeds its column at ${width}px`).toBeLessThanOrEqual(
+      layout.titleColumnRight + 1,
+    );
+    expect(layout.titleTextRight, `title text touches the lead copy at ${width}px`).toBeLessThan(
+      layout.leadLeft,
+    );
+    expect(layout.titleOverflow, `title overflows at ${width}px`).toBeLessThanOrEqual(1);
+    expect(layout.documentOverflow, `document overflows at ${width}px`).toBe(0);
+  }
+});
+
 for (const viewport of [
   { name: "tablet", width: 768, height: 1024 },
   { name: "mobile", width: 390, height: 844 },
