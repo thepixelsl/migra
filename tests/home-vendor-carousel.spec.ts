@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4322";
 
 const vendorLinks = [
-  "https://www.instagram.com/katharina.seidl/",
+  "https://katharinaseidldesign.de/",
   "https://foboxy.de/",
   "/gallery/ella-deck-couture/",
   "/gallery/visagistin-manja-biebow/",
