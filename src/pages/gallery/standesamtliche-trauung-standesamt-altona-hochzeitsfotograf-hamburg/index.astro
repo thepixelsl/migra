@@ -450,6 +450,10 @@ const schemaGraph = {
       </section>
 
       <nav class="altona-related" aria-label="Weitere Hochzeitsgeschichten aus Hamburg">
+        <a href="/standesamt-hamburg/">
+          <span>Planung</span>
+          Standesämter und besondere Trauorte in Hamburg
+        </a>
         <a href="/gallery/hochzeitsfotos-hamburg/">
           <span>Getting Ready</span>
           Hochzeitsfotos in den Fraser Suites Hamburg
@@ -701,20 +705,21 @@ const schemaGraph = {
   }
 
   .altona-offer > div {
-    margin-top: 34px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 14px;
+    width: min(620px, 100%);
+    margin: 34px auto 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
   }
 
   .altona-offer a {
-    min-height: 50px;
-    padding: 0 22px;
+    min-height: 52px;
+    padding: 12px 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #2c3039;
+    gap: 12px;
+    border: 0;
     color: #2c3039;
     font-family: "Raleway", Arial, sans-serif;
     font-size: 10px;
@@ -724,29 +729,42 @@ const schemaGraph = {
     text-transform: uppercase;
   }
 
+  .altona-offer a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .altona-offer a::after {
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
   .altona-offer a.is-primary {
-    background: #2c3039;
-    color: #fff;
+    background: transparent;
+    color: #2c3039;
   }
 
   .altona-related {
     width: min(1180px, calc(100% - 48px));
     margin: 0 auto clamp(100px, 10vw, 148px);
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     border-block: 1px solid #dedad4;
   }
 
   .altona-related a {
-    min-height: 164px;
-    padding: 32px 28px;
+    min-height: 138px;
+    padding: 28px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #292c35;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(20px, 2vw, 27px);
+    font-size: clamp(18px, 1.7vw, 24px);
     line-height: 1.3;
     text-align: center;
     text-decoration: none;
@@ -802,6 +820,19 @@ const schemaGraph = {
       justify-self: start;
       white-space: normal;
     }
+
+    .altona-related {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .altona-related a:nth-child(3) {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+
+    .altona-related a:nth-child(4) {
+      border-top: 1px solid #dedad4;
+    }
   }
 
   @media (max-width: 620px) {
@@ -843,8 +874,12 @@ const schemaGraph = {
     }
 
     .altona-offer > div {
-      align-items: stretch;
-      flex-direction: column;
+      grid-template-columns: 1fr;
+    }
+
+    .altona-offer a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
     }
 
     .altona-related {
@@ -853,7 +888,7 @@ const schemaGraph = {
     }
 
     .altona-related a {
-      min-height: 134px;
+      min-height: 116px;
     }
 
     .altona-related a + a {

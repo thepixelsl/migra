@@ -331,18 +331,32 @@ const schemaGraph = {
           Auch Videografen habe ich in meinem Netzwerk, wenn es Euer Wunsch ist einen Hochzeitsfilm
           zu erhalten.
         </p>
-        <a
-          class="about-text-link"
-          href="/kontakt/"
-          data-track-event="contact_click"
-          data-cta-id="about_network_contact"
-          data-cta-type="contact_form"
-          data-section-id="about_network"
-          data-content-topic="fotografen_netzwerk"
-          data-user-intent="kontakt_aufnehmen"
-          data-journey-stage="conversion"
-          data-position="section_end"
-        >Schreibe mir jetzt!</a>
+        <nav class="about-next-links" aria-label="Preise und Kontakt">
+          <a
+            class="about-text-link"
+            href="/hochzeitsfotograf-preise/"
+            data-track-event="cta_click"
+            data-cta-id="about_preise_pakete"
+            data-cta-type="pricing_link"
+            data-section-id="about_network"
+            data-content-topic="preise_pakete"
+            data-user-intent="preise_pruefen"
+            data-journey-stage="vergleich"
+            data-position="section_end"
+          >Preise und Leistungen ansehen</a>
+          <a
+            class="about-text-link"
+            href="/kontakt/"
+            data-track-event="contact_click"
+            data-cta-id="about_network_contact"
+            data-cta-type="contact_form"
+            data-section-id="about_network"
+            data-content-topic="fotografen_netzwerk"
+            data-user-intent="kontakt_aufnehmen"
+            data-journey-stage="conversion"
+            data-position="section_end"
+          >Schreibe mir jetzt!</a>
+        </nav>
       </div>
     </section>
 
@@ -529,6 +543,31 @@ const schemaGraph = {
     letter-spacing: .34em;
     line-height: 1.6;
     text-transform: uppercase;
+  }
+
+  .about-next-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 28px;
+    margin-top: 30px;
+  }
+
+  .about-next-links .about-text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #d9d4ce;
+  }
+
+  .about-next-links .about-text-link::after {
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .about-section h2,

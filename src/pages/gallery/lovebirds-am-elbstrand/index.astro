@@ -286,7 +286,16 @@ const schemaGraph = {
             <h2>Vergleiche Preise &amp; Leistungen</h2>
             <p>Sieh Dir meine Preise an und vergleiche gerne die Angebote anderer Fotografen. Bei uns inklusive: die Bearbeitung aller Bilder. Keine Extrakosten, keine versteckten Kosten.</p>
             <p>Alle Pakete sind Rundum-Sorglos-Pakete. Wenn Du Deinen Termin anfragen möchtest, bevor dieser vergeben ist, kannst Du stets unverbindlich anfragen.</p>
-            <a href="/hochzeitsfotograf-preise/">Hier klicken!</a>
+            <a
+              href="/hochzeitsfotograf-preise/"
+              data-track-event="cta_click"
+              data-cta-id="lovebirds_preise_pakete"
+              data-cta-type="pricing_link"
+              data-section-id="lovebirds_price_note"
+              data-content-topic="preise_pakete"
+              data-user-intent="preise_pruefen"
+              data-journey-stage="vergleich"
+            >Preise und Pakete für Hochzeitsreportagen ansehen</a>
           </section>
         </div>
       </section>
@@ -468,21 +477,34 @@ const schemaGraph = {
   }
 
   .lovebirds-price-note {
-    padding: clamp(42px, 5vw, 66px);
-    background: #f3f1ec;
+    padding: clamp(34px, 4vw, 52px) 0;
+    border-block: 1px solid #dedad4;
     text-align: center;
   }
 
   .lovebirds-price-note a {
     display: inline-flex;
+    align-items: center;
+    gap: 12px;
     margin-top: 18px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #cfc9c2;
     color: #242731;
     font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: .28em;
+    letter-spacing: .2em;
     text-decoration: none;
     text-transform: uppercase;
+  }
+
+  .lovebirds-price-note a::after {
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
   }
 
   .lovebirds-contact {

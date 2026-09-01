@@ -66,6 +66,7 @@ const heroTitleLines =
     : undefined;
 const isStandesamtHamburgPage = page.path === "/standesamt-hamburg/";
 const isNdFilterTablePage = page.path === "/nd-filter-tabelle/";
+const isWeddingPhotoBackupPage = page.path === "/wie-sollte-man-hochzeitsfotos-sichern/";
 const isLargeEnough = (image?: MigratedImage) =>
   Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
 const getImageArea = (image: MigratedImage) => (image.width ?? 0) * (image.height ?? 0);
@@ -371,6 +372,46 @@ const schemaGraph = {
           </section>
         )}
 
+        {isWeddingPhotoBackupPage && (
+          <aside
+            class="migrated-funnel"
+            aria-labelledby="migrated-funnel-title"
+            data-track-section="hochzeitsfotos_sichern_funnel"
+            data-content-topic="hochzeitsfotografie_hamburg"
+            data-user-intent="hochzeitsfotograf_pruefen"
+            data-journey-stage="orientierung"
+            data-content-format="cta_section"
+            data-position="after_article"
+          >
+            <div>
+              <p class="migrated-kicker">Von der Sicherung zur Reportage</p>
+              <h2 id="migrated-funnel-title">Hochzeitsreportagen und Leistungen entdecken</h2>
+            </div>
+            <nav aria-label="Nächste Schritte zur Hochzeitsreportage">
+              <a
+                href="/portfolio/"
+                data-track-event="cta_click"
+                data-cta-id="hochzeitsfotos_sichern_portfolio"
+                data-cta-type="portfolio_link"
+                data-section-id="hochzeitsfotos_sichern_funnel"
+                data-content-topic="hochzeitsreportage_hamburg"
+                data-user-intent="beispielbilder_ansehen"
+                data-journey-stage="auswahl"
+              >Fertige Hochzeitsreportagen ansehen</a>
+              <a
+                href="/hochzeitsfotograf-preise/"
+                data-track-event="cta_click"
+                data-cta-id="hochzeitsfotos_sichern_preise"
+                data-cta-type="pricing_link"
+                data-section-id="hochzeitsfotos_sichern_funnel"
+                data-content-topic="preise_pakete"
+                data-user-intent="preise_pruefen"
+                data-journey-stage="vergleich"
+              >Pakete und Leistungen ansehen</a>
+            </nav>
+          </aside>
+        )}
+
         <footer class="migrated-footer">
           <a href="/portfolio/">Portfolio ansehen</a>
           <a href="/sicherer-kontakt/">Kontakt aufnehmen</a>
@@ -658,6 +699,64 @@ const schemaGraph = {
     border-top: 1px solid var(--line);
   }
 
+  .migrated-funnel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .8fr);
+    gap: clamp(28px, 5vw, 70px);
+    align-items: center;
+    margin-top: clamp(58px, 8vw, 118px);
+    padding: clamp(34px, 4vw, 52px) 0;
+    border-block: 1px solid var(--line);
+  }
+
+  .migrated-funnel h2 {
+    margin: 0;
+    font-size: clamp(30px, 3.5vw, 48px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .migrated-funnel nav {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  .migrated-funnel a {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px 2px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .17em;
+    line-height: 1.5;
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 180ms ease, padding 180ms ease;
+  }
+
+  .migrated-funnel a::after {
+    flex: 0 0 auto;
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .migrated-funnel a:hover,
+  .migrated-funnel a:focus-visible {
+    color: #9b6f4f;
+    padding-inline: 8px;
+  }
+
   .migrated-footer a {
     color: var(--ink);
     font-family: "Raleway", Arial, sans-serif;
@@ -682,6 +781,10 @@ const schemaGraph = {
       grid-template-columns: 1fr;
       gap: 22px;
       padding: 22px;
+    }
+
+    .migrated-funnel {
+      grid-template-columns: 1fr;
     }
 
     .standesamt-planning-note a {

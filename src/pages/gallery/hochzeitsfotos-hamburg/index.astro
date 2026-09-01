@@ -336,7 +336,19 @@ const schemaGraph = {
         </div>
         <div class="wedding-discover__actions">
           <a href="/portfolio/">Gesamtes Portfolio ansehen</a>
-          <a class="is-primary" href="/kontakt/">Freien Termin anfragen</a>
+          <a href="/hochzeitsfotograf-preise/">Preise &amp; Leistungen ansehen</a>
+          <a
+            class="is-primary"
+            href="/kontakt/"
+            data-floating-action-external-availability
+            data-track-event="cta_click"
+            data-cta-id="hochzeitsfotos_hamburg_termin_pruefen"
+            data-cta-type="availability_check"
+            data-section-id="hochzeitsfotos_hamburg_entdecken"
+            data-content-topic="terminverfuegbarkeit"
+            data-user-intent="termin_pruefen"
+            data-journey-stage="anfrage"
+          >Termin prüfen</a>
         </div>
       </section>
     </article>
@@ -502,15 +514,15 @@ const schemaGraph = {
   }
 
   .wedding-discover__links a {
-    min-height: 180px;
-    padding: 34px 28px;
+    min-height: 150px;
+    padding: 30px 24px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     color: #292c35;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(20px, 2vw, 27px);
+    font-size: clamp(19px, 1.8vw, 25px);
     line-height: 1.3;
     text-decoration: none;
   }
@@ -536,19 +548,19 @@ const schemaGraph = {
 
   .wedding-discover__actions {
     margin-top: 42px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    border-block: 1px solid #dedad4;
   }
 
   .wedding-discover__actions a {
-    min-height: 50px;
-    padding: 0 22px;
+    min-height: 54px;
+    padding: 12px 20px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #2c3039;
+    gap: 12px;
+    border: 0;
     color: #2c3039;
     font-family: "Raleway", Arial, sans-serif;
     font-size: 10px;
@@ -558,9 +570,23 @@ const schemaGraph = {
     text-transform: uppercase;
   }
 
+  .wedding-discover__actions a + a {
+    border-left: 1px solid #dedad4;
+  }
+
+  .wedding-discover__actions a::after {
+    flex: 0 0 auto;
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
   .wedding-discover__actions a.is-primary {
-    background: #2c3039;
-    color: #fff;
+    background: transparent;
+    color: #2c3039;
   }
 
   .wedding-discover a:focus-visible,
@@ -607,7 +633,7 @@ const schemaGraph = {
     }
 
     .wedding-discover__links a {
-      min-height: 138px;
+      min-height: 118px;
     }
 
     .wedding-discover__links a + a {
@@ -616,8 +642,18 @@ const schemaGraph = {
     }
 
     .wedding-discover__actions {
-      align-items: stretch;
-      flex-direction: column;
+      grid-template-columns: 1fr;
+    }
+
+    .wedding-discover__actions a + a {
+      border-top: 1px solid #dedad4;
+      border-left: 0;
+    }
+
+    .wedding-discover__actions a {
+      justify-content: space-between;
+      padding-inline: 56px 116px;
+      text-align: left;
     }
   }
 </style>

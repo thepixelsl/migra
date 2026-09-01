@@ -19,7 +19,7 @@ const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Standesamtfinder Hamburg: Adressen & Kontakt";
 const description =
   "Standesamtfinder Hamburg: Wohnsitzstandesamt finden und besondere Trauorte in Hamburg und Umgebung mit Buchungsweg, Adresse und offiziellen Links vergleichen.";
-const dateModified = "2026-08-28";
+const dateModified = "2026-09-01";
 const heroImagePath =
   "/migrated-assets/standesamt-hamburg/rathaus-altona.jpg";
 const heroImageUrl = `${siteUrl}${heroImagePath}`;
@@ -655,6 +655,50 @@ const schemaGraph = {
           </div>
 
           </div>
+        </section>
+
+        <section
+          class="finder-funnel"
+          aria-labelledby="finder-funnel-heading"
+          data-track-section="standesamt_fotografie_funnel"
+          data-content-topic="standesamtliche_hochzeitsfotografie"
+          data-user-intent="fotografische_begleitung_pruefen"
+          data-journey-stage="auswahl"
+          data-content-format="cta_section"
+          data-position="after_finder"
+        >
+          <div>
+            <p class="eyebrow">Nach dem Standesamt</p>
+            <h2 id="finder-funnel-heading">
+              So sieht eine standesamtliche Hochzeitsreportage aus
+            </h2>
+            <p>
+              Entdeckt eine vollständige Bildstrecke aus Hamburg-Altona und
+              prüft danach die passenden Pakete für eure fotografische Begleitung.
+            </p>
+          </div>
+          <nav aria-label="Nächste Schritte zur Hochzeitsreportage">
+            <a
+              href="/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/"
+              data-track-event="cta_click"
+              data-cta-id="standesamt_fotografie_reportage"
+              data-cta-type="gallery_link"
+              data-section-id="standesamt_fotografie_funnel"
+              data-content-topic="standesamtliche_hochzeitsfotografie"
+              data-user-intent="beispielbilder_ansehen"
+              data-journey-stage="auswahl"
+            >Standesamtliche Hochzeitsreportage ansehen</a>
+            <a
+              href="/hochzeitsfotograf-preise/"
+              data-track-event="cta_click"
+              data-cta-id="standesamt_fotografie_preise"
+              data-cta-type="pricing_link"
+              data-section-id="standesamt_fotografie_funnel"
+              data-content-topic="preise_pakete"
+              data-user-intent="preise_pruefen"
+              data-journey-stage="vergleich"
+            >Preise für standesamtliche Begleitungen</a>
+          </nav>
         </section>
 
         <section class="finder-more" aria-labelledby="finder-more-heading">
@@ -1582,6 +1626,73 @@ const schemaGraph = {
     min-width: 0;
     gap: 10px;
     margin: 0;
+  }
+
+  .finder-funnel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .78fr);
+    gap: clamp(30px, 5vw, 72px);
+    align-items: center;
+    margin-top: clamp(62px, 8vw, 104px);
+    padding: clamp(34px, 4vw, 52px) 0;
+    border-block: 1px solid #dedad4;
+  }
+
+  .finder-funnel h2 {
+    margin: 0;
+    color: #202633;
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 400;
+    line-height: 1.12;
+  }
+
+  .finder-funnel p:not(.eyebrow) {
+    max-width: 62ch;
+    margin: 18px 0 0;
+    color: #6f6a64;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .finder-funnel nav {
+    display: grid;
+    border-top: 1px solid #dedad4;
+  }
+
+  .finder-funnel a {
+    display: flex;
+    min-height: 48px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 14px 2px;
+    border-bottom: 1px solid #dedad4;
+    color: #202633;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .17em;
+    line-height: 1.5;
+    text-align: left;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 180ms ease, padding 180ms ease;
+  }
+
+  .finder-funnel a::after {
+    flex: 0 0 auto;
+    color: #9b6f4f;
+    content: "→";
+    font-family: Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .finder-funnel a:hover,
+  .finder-funnel a:focus-visible {
+    color: #9b6f4f;
+    padding-inline: 8px;
   }
 
   .finder-more {
@@ -2630,6 +2741,7 @@ const schemaGraph = {
     .finder-task__header,
     .finder-interaction,
     .trauort-interaction,
+    .finder-funnel,
     .finder-more__header,
     .finder-more__resources {
       grid-template-columns: 1fr;

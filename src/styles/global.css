@@ -3236,56 +3236,69 @@ footer nav[aria-label="Footer"]::before,
   max-width: 820px;
 }
 
+.contact-note__pricing-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 0 0 8px;
+  border-bottom: 1px solid var(--line);
+  color: var(--ink);
+  font-family: "Raleway", Arial, sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .18em;
+  line-height: 1.5;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.contact-note__pricing-link::after {
+  color: var(--accent);
+  content: "→";
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
 .contact-note__actions {
   width: min(100%, 420px);
   min-width: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: 1fr;
+  gap: 0;
   justify-self: end;
+  border-block: 1px solid var(--line);
 }
 
 .contact-note__actions .contact-note__action {
   position: relative;
-  isolation: isolate;
   width: auto;
   min-width: 0;
-  min-height: 224px;
+  min-height: 74px;
   display: grid;
-  grid-template-rows: 126px auto;
-  gap: 14px;
-  place-items: center;
-  align-content: center;
-  overflow: hidden;
-  padding: 24px 20px 22px;
-  border: 1px solid rgb(155 111 79 / .2);
-  border-radius: 18px;
-  background:
-    radial-gradient(circle at 50% 18%, rgb(255 255 255 / .94), transparent 44%),
-    linear-gradient(145deg, #fff 0%, #f8f4ee 58%, #f1ebe3 100%);
-  box-shadow:
-    0 18px 42px rgb(74 60 48 / .08),
-    inset 0 1px 0 rgb(255 255 255 / .9);
+  grid-template-columns: 58px minmax(0, 1fr) 22px;
+  grid-template-rows: 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 9px 2px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
   color: #50545c;
-  text-align: center;
-  transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease, color 260ms ease;
+  text-align: left;
+  transition: color 180ms ease, padding 180ms ease;
 }
 
-.contact-note__actions .contact-note__action::before {
-  position: absolute;
-  z-index: 0;
-  inset: 8px;
-  border: 1px solid rgb(155 111 79 / .08);
-  border-radius: 12px;
-  content: "";
-  pointer-events: none;
+.contact-note__actions .contact-note__action + .contact-note__action {
+  border-top: 1px solid var(--line);
 }
 
 .contact-note__action-icon {
-  position: relative;
-  z-index: 1;
-  width: 132px;
-  height: 126px;
+  width: 58px;
+  height: 56px;
   display: grid;
   place-items: center;
 }
@@ -3299,25 +3312,23 @@ footer nav[aria-label="Footer"]::before,
 }
 
 .contact-note__action--contact .contact-note__action-icon img {
-  width: 116px;
-  height: 116px;
+  width: 50px;
+  height: 50px;
 }
 
 .contact-note__action--availability .contact-note__action-icon img {
-  width: 128px;
-  height: 128px;
+  width: 56px;
+  height: 56px;
 }
 
 .contact-note__action-label {
-  position: relative;
-  z-index: 1;
-  max-width: 17ch;
+  max-width: none;
 }
 
 .contact-note__action-arrow {
-  position: absolute;
-  right: 17px;
-  bottom: 14px;
+  position: static;
+  align-self: center;
+  justify-self: end;
   color: var(--accent);
   font-family: Arial, sans-serif;
   font-size: 18px;
@@ -3329,17 +3340,15 @@ footer nav[aria-label="Footer"]::before,
 
 .contact-note__actions .contact-note__action:hover,
 .contact-note__actions .contact-note__action:focus-visible {
-  border-color: rgb(155 111 79 / .42);
-  box-shadow:
-    0 24px 54px rgb(74 60 48 / .14),
-    inset 0 1px 0 rgb(255 255 255 / .96);
-  transform: translateY(-4px);
+  box-shadow: none;
+  padding-inline: 8px;
+  transform: none;
 }
 
 .contact-note__actions .contact-note__action:hover .contact-note__action-icon img,
 .contact-note__actions .contact-note__action:focus-visible .contact-note__action-icon img {
-  filter: drop-shadow(0 12px 15px rgb(74 60 48 / .14));
-  transform: translateY(-2px) scale(1.025);
+  filter: drop-shadow(0 9px 12px rgb(74 60 48 / .1));
+  transform: none;
 }
 
 .contact-note__actions .contact-note__action:hover .contact-note__action-arrow,
@@ -4382,7 +4391,7 @@ footer nav[aria-label="Footer"]::before,
   .contact-note__actions {
     width: 100%;
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 0;
   }
 
   .related-links a,
@@ -4392,34 +4401,29 @@ footer nav[aria-label="Footer"]::before,
   }
 
   .contact-note__actions .contact-note__action {
-    min-height: 112px;
-    grid-template-columns: 88px minmax(0, 1fr) 24px;
+    min-height: 74px;
+    grid-template-columns: 58px minmax(0, 1fr) 22px;
     grid-template-rows: 1fr;
-    gap: 12px;
+    gap: 16px;
     justify-items: start;
-    padding: 14px 18px 14px 14px;
-    border-radius: 15px;
+    padding: 9px 2px;
+    border-radius: 0;
     text-align: left;
   }
 
-  .contact-note__actions .contact-note__action::before {
-    inset: 6px;
-    border-radius: 10px;
-  }
-
   .contact-note__action-icon {
-    width: 88px;
-    height: 82px;
+    width: 58px;
+    height: 56px;
   }
 
   .contact-note__action--contact .contact-note__action-icon img {
-    width: 78px;
-    height: 78px;
+    width: 50px;
+    height: 50px;
   }
 
   .contact-note__action--availability .contact-note__action-icon img {
-    width: 88px;
-    height: 88px;
+    width: 56px;
+    height: 56px;
   }
 
   .contact-note__action-label {
