@@ -4,15 +4,17 @@
 
 Die Website trennt Einwilligung, Ereignisse und Anbieter:
 
-1. `TrackingHead.astro` liest eine bestehende Einwilligung, setzt vor allen
-   Tags die Google-Consent-Standardwerte und lädt GTM im Advanced Mode.
+1. `TrackingHead.astro` liest eine bestehende Einwilligung und setzt vor allen
+   Tags die Google-Consent-Standardwerte auf `denied`. GTM wird nur nach einer
+   aktuellen oder gespeicherten Einwilligung für mindestens einen optionalen
+   Service geladen.
 2. `ConsentBanner.astro` verwaltet die Kategorien `necessary`, `analytics` und
    `marketing`.
 3. `TrackingDataLayer.astro` erzeugt ausschließlich strukturierte Ereignisse
    ohne Formularinhalte oder angefragte Termine.
 4. Google Analytics wird über den Google Tag Manager konfiguriert. Vor einer
-   Einwilligung arbeitet das Google-Tag mit abgelehnten Speicher- und
-   Personalisierungssignalen.
+   Einwilligung werden weder GTM noch das Google-Tag geladen; dadurch entstehen
+   auch keine cookielosen Google-Signale.
 5. Microsoft Clarity liegt im GTM und benötigt zusätzlich
    `analytics_storage=granted` sowie ein freigegebenes Statistikereignis.
 6. Das Meta Pixel liegt im GTM und benötigt zusätzlich `ad_storage=granted`
@@ -51,7 +53,7 @@ PUBLIC_TRACKING_ALLOWED_HOSTS=artbild-fotografie.de,www.artbild-fotografie.de
 PUBLIC_GTM_CONTAINER_ID=GTM-5TM37JC
 PUBLIC_GA4_MEASUREMENT_ID=G-TSWGFD1YKF
 PUBLIC_GA4_DATA_RETENTION_MONTHS=14
-PUBLIC_CONSENT_VERSION=2026-08-25.1
+PUBLIC_CONSENT_VERSION=2026-09-02.1
 ```
 
 Diese Werte müssen dem Astro-Build zur Verfügung stehen. Ein Eintrag unter
@@ -79,10 +81,11 @@ Anschließend muss neu gebaut und deployt werden.
 
 ## Google Tag Manager
 
-Der Google Tag Manager wird auf erlaubten öffentlichen Hosts im Advanced Mode
+Der Google Tag Manager wird auf erlaubten öffentlichen Hosts nur im Basic Mode
+und erst nach einer Einwilligung für mindestens einen optionalen Service
 geladen. Vorher setzt die Website `analytics_storage`, `ad_storage`,
-`ad_user_data` und `ad_personalization` auf `denied`. Google-Tags können dadurch
-reduzierte, cookielose Signale senden. Verhaltens-, Sichtbarkeits- und
+`ad_user_data` und `ad_personalization` auf `denied`. Es werden keine
+cookielosen Google-Signale gesendet. Verhaltens-, Sichtbarkeits- und
 Formularereignisse der Website werden ohne Statistik-Einwilligung weder
 vorgemerkt noch später nachgesendet.
 
@@ -224,10 +227,10 @@ security_storage=granted
 ```
 
 Zusätzlich sind `ads_data_redaction=true` und `url_passthrough=false` gesetzt.
-GTM und das Google-Tag werden im Advanced Mode geladen; Analytics- und
-Werbe-Cookies bleiben bei abgelehnter Einwilligung blockiert. Microsoft Clarity
-und Meta werden als nicht Google-eigene Tags vor der passenden Einwilligung
-vollständig blockiert.
+GTM und das Google-Tag werden vor einer passenden Einwilligung vollständig
+blockiert. Microsoft Clarity und Meta bleiben ebenfalls bis zur jeweils
+passenden Einwilligung vollständig blockiert. GTM ist eine interne technische
+Abhängigkeit und wird im Banner nicht als eigene Auswahl präsentiert.
 
 Der First-Party-Cookie `artbild_consent` speichert Auswahl, Version und
 Zeitpunkt für sechs Monate. Eine Änderung von `PUBLIC_CONSENT_VERSION`
@@ -235,8 +238,8 @@ invalidiert alte Entscheidungen und zeigt den Banner erneut.
 
 ## Abnahme vor Production
 
-1. Frisches Browserprofil: GTM und cookielose Google-Signale möglich, keine
-   Anfrage an Microsoft oder Meta.
+1. Frisches Browserprofil: keine Anfrage an GTM, Google Analytics, Microsoft
+   Clarity oder Meta.
 2. „Nur notwendige“: keine GA-, Clarity-, FBP- oder FBC-Cookies.
 3. Nur Statistik: GTM/GA4 und Clarity aktiv, Meta weiterhin vollständig blockiert.
 4. Nur Marketing: Meta lädt, Clarity bleibt vollständig blockiert.

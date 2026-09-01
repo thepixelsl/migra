@@ -9,7 +9,7 @@ test.use({
   },
 });
 
-const providerRequest = /https:\/\/(?:www\.googletagmanager\.com|www\.clarity\.ms|connect\.facebook\.net)\//;
+const providerRequest = /https:\/\/(?:www\.googletagmanager\.com|www\.google-analytics\.com|www\.clarity\.ms|connect\.facebook\.net)\//;
 
 const captureProviderRequests = async (page: Page) => {
   const requests: string[] = [];
@@ -272,12 +272,10 @@ test("updates Google consent when Meta Pixel is selected independently", async (
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
-  await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByRole("tab", { name: "Services" }).click();
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
   await page.getByLabel("Meta Pixel erlauben").check();
-  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
   expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(false);
-  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
 
   await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com")))
     .toBe(true);
@@ -297,6 +295,83 @@ test("updates Google consent when Meta Pixel is selected independently", async (
   }).toBe(true);
 });
 
+test("accepts all optional services only after the decision and restores it", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  expect(requests).toEqual([]);
+
+  await page.getByRole("button", { name: "ALLE AKZEPTIEREN" }).click();
+  await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com/gtm.js")))
+    .toBe(true);
+  await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+
+  const accepted = await page.evaluate(() => window.ArtbildConsent?.services);
+  expect(accepted).toEqual({
+    googleTagManager: true,
+    googleAnalytics: true,
+    microsoftClarity: true,
+    metaPixel: true,
+  });
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+  await expect(page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }))
+    .toBeVisible();
+  expect(await page.evaluate(() => window.ArtbildConsent?.services)).toEqual(accepted);
+});
+
+test("stores only necessary on Escape and keeps the dialog closed after reload", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-consent-dialog]")).toBeVisible();
+  await page.keyboard.press("Escape");
+
+  await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+  expect(requests).toEqual([]);
+  expect(await page.evaluate(() => window.ArtbildConsent?.services)).toEqual({
+    googleTagManager: false,
+    googleAnalytics: false,
+    microsoftClarity: false,
+    metaPixel: false,
+  });
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
+  expect(requests).toEqual([]);
+});
+
+test("locks background scrolling, traps focus and restores the settings trigger", async ({ page }) => {
+  await captureProviderRequests(page);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+
+  const dialog = page.locator("[data-consent-dialog]");
+  await expect(dialog).toBeVisible();
+  expect(await page.evaluate(() => document.activeElement?.id)).toBe("consent-title");
+  expect(await page.evaluate(() => getComputedStyle(document.body).overflow)).toBe("hidden");
+
+  await page.keyboard.press("Shift+Tab");
+  for (let index = 0; index < 10; index += 1) {
+    expect(await page.evaluate(() => (
+      document.querySelector("[data-consent-dialog]")?.contains(document.activeElement)
+    ))).toBe(true);
+    await page.keyboard.press("Tab");
+  }
+
+  await page.getByRole("button", { name: "NUR NOTWENDIGE", exact: true }).click();
+  const settings = page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" });
+  await expect(settings).toBeFocused();
+  await settings.click();
+  expect(await page.evaluate(() => document.activeElement?.id)).toBe("consent-details-title");
+
+  await page.getByRole("button", { name: "Nur notwendige auswählen und schließen" }).click();
+  await expect(settings).toBeFocused();
+  expect(await page.evaluate(() => document.body.classList.contains("has-consent-dialog")))
+    .toBe(false);
+});
+
 test("stores and restores an independent Microsoft Clarity choice", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
@@ -311,19 +386,19 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
       testWindow.__clarityConsentCalls?.push(args);
     };
   });
-  await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByRole("tab", { name: "Services" }).click();
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByText("DETAILS ANZEIGEN", { exact: true }).first().click();
   await page.getByLabel("Microsoft Clarity erlauben").check();
 
   const statisticsGroupBeforeSave = await page
-    .getByLabel("Statistik-Services erlauben")
+    .getByLabel("Statistik erlauben")
     .evaluate((input: HTMLInputElement) => ({
       checked: input.checked,
       indeterminate: input.indeterminate,
     }));
   expect(statisticsGroupBeforeSave).toEqual({ checked: false, indeterminate: true });
 
-  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
 
   await expect.poll(() => page.evaluate(() =>
     (window.dataLayer || []).some((entry) =>
@@ -376,48 +451,42 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
 
   await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
-  await page.getByRole("tab", { name: "Services" }).click();
-  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
   await expect(page.getByLabel("Google Analytics erlauben")).not.toBeChecked();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
 
   await page.getByLabel("Microsoft Clarity erlauben").uncheck();
-  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+  await Promise.all([
+    page.waitForEvent("domcontentloaded"),
+    page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click(),
+  ]);
   await expect.poll(() => page.evaluate(() => ({
     clarity: window.ArtbildConsent?.services?.microsoftClarity,
     update: [...(window.dataLayer || [])]
       .reverse()
-      .find((entry) => entry?.event === "artbild_consent_update")
+      .find((entry) => ["artbild_consent_update", "artbild_consent_state"].includes(entry?.event))
       ?.consent_microsoft_clarity,
   }))).toEqual({ clarity: false, update: "denied" });
 });
 
-test("turning off GTM disables every dependent service and reloads without GTM", async ({ page }) => {
+test("revoking all optional services reloads without GTM", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
-  await page.getByRole("button", { name: "Alle akzeptieren" }).click();
+  await page.getByRole("button", { name: "ALLE AKZEPTIEREN" }).click();
   await expect.poll(() => requests.some((url) => url.includes("googletagmanager.com/gtm.js")))
     .toBe(true);
 
   await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
-  await page.getByRole("tab", { name: "Services" }).click();
-  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeChecked();
-  await expect(page.getByLabel("Google Analytics erlauben")).toBeChecked();
-  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
+  await expect(page.getByLabel("Statistik erlauben")).toBeChecked();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeChecked();
 
-  await page.getByLabel("Google Tag Manager erlauben").uncheck();
-  await expect(page.getByLabel("Google Analytics erlauben")).not.toBeChecked();
-  await expect(page.getByLabel("Microsoft Clarity erlauben")).not.toBeChecked();
-  await expect(page.getByLabel("Meta Pixel erlauben")).not.toBeChecked();
-  await expect(page.getByLabel("Statistik-Services erlauben")).not.toBeChecked();
-  await expect(page.getByLabel("Marketing-Services erlauben")).not.toBeChecked();
+  await page.getByLabel("Statistik erlauben").uncheck();
+  await page.getByLabel("Meta Pixel erlauben").uncheck();
 
   await Promise.all([
     page.waitForEvent("domcontentloaded"),
-    page.getByRole("button", { name: "Auswahl speichern" }).click(),
+    page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click(),
   ]);
 
   await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
@@ -453,12 +522,9 @@ test("does not queue behavioral events before statistics consent", async ({ page
   expect(beforeConsent).not.toContain("form_start");
   expect(beforeConsent).not.toContain("artbild_tracking_ready");
 
-  await page.getByRole("button", { name: "Individuell auswählen" }).click();
-  await page.getByLabel("Statistik-Services erlauben").check();
-  await page.getByRole("tab", { name: "Services" }).click();
-  await expect(page.getByLabel("Google Analytics erlauben")).toBeChecked();
-  await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeChecked();
-  await page.getByRole("button", { name: "Auswahl speichern" }).click();
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByLabel("Statistik erlauben").check();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
 
   await expect.poll(async () => page.evaluate(() =>
     (window.dataLayer || []).some((entry) =>
@@ -502,7 +568,7 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
   for (const viewport of [
     { width: 320, height: 844 },
     { width: 390, height: 844 },
-    { width: 1280, height: 900 },
+    { width: 1440, height: 900 },
   ]) {
     await page.setViewportSize(viewport);
     await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
@@ -521,13 +587,30 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     expect(geometry.right).toBeLessThanOrEqual(viewport.width + 1);
     expect(geometry.documentOverflow).toBeLessThanOrEqual(0);
 
-    await expect(page.getByRole("button", { name: "Alle akzeptieren" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Nur notwendige", exact: true }).first()).toBeVisible();
-    await expect(page.getByRole("button", { name: "Individuell auswählen" })).toBeVisible();
+    const acceptAll = page.getByRole("button", { name: "ALLE AKZEPTIEREN" }).first();
+    const necessary = page.getByRole("button", { name: "NUR NOTWENDIGE", exact: true });
+    await expect(acceptAll).toBeVisible();
+    await expect(necessary).toBeVisible();
+    await expect(page.getByRole("button", { name: "EINSTELLUNGEN" })).toBeVisible();
+    await page.mouse.move(0, 0);
 
-    await page.getByRole("button", { name: "Individuell auswählen" }).click();
-    await page.getByRole("tab", { name: "Services" }).click();
-    const servicesPanel = page.getByRole("tabpanel", { name: "Services" });
+    const decisionGeometry = await Promise.all([acceptAll, necessary].map((button) =>
+      button.evaluate((element) => {
+        const rect = element.getBoundingClientRect();
+        const style = getComputedStyle(element);
+        return {
+          width: rect.width,
+          height: rect.height,
+          color: style.color,
+          background: style.backgroundColor,
+          border: style.borderColor,
+        };
+      })));
+    expect(decisionGeometry[0]).toEqual(decisionGeometry[1]);
+
+    await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+    await page.getByText("DETAILS ANZEIGEN", { exact: true }).first().click();
+    const servicesPanel = page.locator("[data-consent-details]");
     const serviceGeometry = await servicesPanel.evaluate((element) => ({
       panelOverflow: element.scrollWidth - element.clientWidth,
       documentOverflow: document.documentElement.scrollWidth - window.innerWidth,
@@ -540,25 +623,25 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     expect(serviceGeometry.documentOverflow).toBeLessThanOrEqual(0);
     expect(serviceGeometry.widestRightEdge).toBeLessThanOrEqual(viewport.width + 1);
     await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
-    await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
     await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
     await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   }
 });
 
-test("shows a clear X when reopened consent settings are closed", async ({ page }) => {
+test("the X is a necessary-only decision and revokes prior consent", async ({ page }) => {
+  await captureProviderRequests(page);
   for (const viewport of [
     { width: 390, height: 844 },
-    { width: 1280, height: 900 },
+    { width: 1440, height: 900 },
   ]) {
     await page.context().clearCookies();
     await page.setViewportSize(viewport);
     await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
-    await page.getByRole("button", { name: "Nur notwendige", exact: true }).first().click();
+    await page.getByRole("button", { name: "ALLE AKZEPTIEREN" }).first().click();
     await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
 
     const closeButton = page.getByRole("button", {
-      name: "Datenschutz-Einstellungen schließen",
+      name: "Nur notwendige auswählen und schließen",
     });
     const closeIcon = closeButton.locator("svg");
     await expect(closeButton).toBeVisible();
@@ -577,60 +660,86 @@ test("shows a clear X when reopened consent settings are closed", async ({ page 
         strokeWidth: path ? Number.parseFloat(getComputedStyle(path).strokeWidth) : 0,
       };
     });
-    expect(geometry.buttonWidth).toBeGreaterThanOrEqual(48);
-    expect(geometry.buttonHeight).toBeGreaterThanOrEqual(48);
-    expect(geometry.iconWidth).toBeGreaterThanOrEqual(22);
-    expect(geometry.iconHeight).toBeGreaterThanOrEqual(22);
-    expect(geometry.strokeWidth).toBeGreaterThanOrEqual(2.4);
+    expect(geometry.buttonWidth).toBeGreaterThanOrEqual(44);
+    expect(geometry.buttonHeight).toBeGreaterThanOrEqual(44);
+    expect(geometry.iconWidth).toBeGreaterThanOrEqual(20);
+    expect(geometry.iconHeight).toBeGreaterThanOrEqual(20);
+    expect(geometry.strokeWidth).toBeGreaterThanOrEqual(1.7);
 
-    await closeButton.click();
+    await Promise.all([
+      page.waitForEvent("domcontentloaded"),
+      closeButton.click(),
+    ]);
     await expect(page.locator("[data-consent-dialog]")).not.toBeVisible();
     await expect(page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }))
       .toBeVisible();
+    expect(await page.evaluate(() => window.ArtbildConsent?.services)).toEqual({
+      googleTagManager: false,
+      googleAnalytics: false,
+      microsoftClarity: false,
+      metaPixel: false,
+    });
   }
 });
 
-test("shows service groups, services and providers without Cloudflare", async ({ page }) => {
+test("shows the compact branded view and three service cards without hosting details", async ({ page }) => {
   await captureProviderRequests(page);
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   const intro = page.locator(".consent-dialog__intro");
-  await expect(intro).toContainText("auch in den USA verarbeitet werden");
-  await expect(intro).toContainText("für die Zukunft widerrufen");
-  await page.getByRole("button", { name: "Individuell auswählen" }).click();
+  await expect(intro).toContainText("Schön, dass Du da bist.");
+  await expect(intro).toContainText("Eure Auswahl könnt ihr jederzeit ändern.");
+  const dialog = page.locator("[data-consent-dialog]");
+  await expect(dialog).toHaveAttribute("aria-labelledby", "consent-title");
+  await expect(page.getByRole("heading", { name: "COOKIE-EINSTELLUNGEN" })).toBeVisible();
 
-  await expect(page.getByRole("tab", { name: "Service-Gruppen" })).toHaveAttribute(
-    "aria-selected",
-    "true",
-  );
-  await expect(page.getByRole("tabpanel", { name: "Service-Gruppen" })).toContainText(
-    "Microsoft Clarity",
-  );
+  const logo = dialog.locator(".consent-dialog__logo");
+  await expect(logo).toHaveAttribute("src", "/images/logo-artbild-black.png");
+  await expect(logo).toHaveAttribute("width", "1200");
+  await expect(logo).toHaveAttribute("height", "480");
+  expect(await logo.evaluate((element) => element.getBoundingClientRect().width)).toBe(160);
 
-  await page.getByRole("tab", { name: "Services" }).click();
-  const servicesPanel = page.getByRole("tabpanel", { name: "Services" });
-  await expect(servicesPanel).toContainText("Google Tag Manager");
-  await expect(servicesPanel).toContainText("Microsoft Clarity");
-  await expect(servicesPanel).toContainText("über Google Tag Manager");
-  await expect(page.getByLabel("Google Tag Manager erlauben")).toBeVisible();
+  const colors = await dialog.evaluate((element) => {
+    const style = getComputedStyle(element);
+    const textElement = element.querySelector("#consent-summary");
+    if (!textElement) throw new Error("Consent summary missing");
+    const text = getComputedStyle(textElement);
+    return {
+      background: style.backgroundColor,
+      color: text.color,
+      font: text.fontFamily,
+    };
+  });
+  expect(colors).toEqual({
+    background: "rgb(255, 255, 255)",
+    color: "rgb(23, 23, 23)",
+    font: expect.stringContaining("Playfair Display"),
+  });
+
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  const detailsPanel = page.locator("[data-consent-details]");
+  await expect(detailsPanel.locator(".consent-card")).toHaveCount(3);
+  await expect(detailsPanel).toContainText("Speichert eure Datenschutz-Auswahl für 180 Tage.");
+  await expect(detailsPanel).toContainText("Google Analytics und Microsoft Clarity");
+  await expect(detailsPanel).toContainText("Meta Pixel");
+  await expect(detailsPanel).not.toContainText("Google Tag Manager");
+  await expect(detailsPanel).not.toContainText("bunny.net");
+  await expect(detailsPanel).not.toContainText("BunnyWay");
+  await expect(detailsPanel).not.toContainText("Dunajska cesta");
+
+  await page.getByText("DETAILS ANZEIGEN", { exact: true }).first().click();
   await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
-  const clarityRecord = servicesPanel.locator("details").filter({
+  const clarityRecord = detailsPanel.locator(".consent-service-choice").filter({
     has: page.getByLabel("Microsoft Clarity erlauben"),
   });
-  await clarityRecord.locator("summary").click();
   for (const cookieName of ["_clck", "_clsk", "CLID", "ANONCHK", "MR", "MUID", "SM"]) {
     await expect(clarityRecord).toContainText(cookieName);
   }
-  await expect(clarityRecord).toContainText("Microsoft nennt in der aktuellen Clarity-Cookie-Liste keine festen Laufzeiten");
-  await expect(servicesPanel).not.toContainText("Turnstile");
-  await expect(servicesPanel).not.toContainText("Pinterest");
-  await expect(servicesPanel).not.toContainText("Google Fonts");
-
-  await page.getByRole("tab", { name: "Provider" }).click();
-  const providersPanel = page.getByRole("tabpanel", { name: "Provider" });
-  await expect(providersPanel).toContainText("BunnyWay d.o.o.");
-  await expect(providersPanel).toContainText("Google Ireland Limited");
-  await expect(providersPanel).toContainText("Microsoft Ireland Operations Limited");
-  await expect(providersPanel).not.toContainText("Cloudflare");
+  const legal = dialog.getByRole("navigation", { name: "Rechtliche Informationen" });
+  await expect(legal.getByRole("link", { name: "Datenschutz" })).toHaveAttribute("href", "/datenschutz/");
+  await expect(legal.getByRole("link", { name: "Impressum" })).toHaveAttribute("href", "/impressum/");
+  await expect(page.getByRole("button", { name: "Zur kompakten Ansicht zurückkehren" }))
+    .toBeVisible();
 });

@@ -106,13 +106,16 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         ) {
           return null;
         }
+        const googleAnalytics = services.googleAnalytics === true;
+        const microsoftClarity = services.microsoftClarity === true;
+        const metaPixel = services.metaPixel === true;
         return {
           ...decision,
           services: {
-            googleTagManager: services.googleTagManager,
-            googleAnalytics: services.googleTagManager && services.googleAnalytics,
-            microsoftClarity: services.googleTagManager && services.microsoftClarity,
-            metaPixel: services.googleTagManager && services.metaPixel,
+            googleTagManager: googleAnalytics || microsoftClarity || metaPixel,
+            googleAnalytics,
+            microsoftClarity,
+            metaPixel,
           },
         };
       } catch (_) {
@@ -158,8 +161,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       metaPixel: storedDecision?.services.metaPixel === true,
     };
 
-    const googleConsentState = (state, includeWait) => {
-      const consent = {
+    const googleConsentState = (state) => ({
         analytics_storage: state.googleAnalytics ? "granted" : "denied",
         ad_storage: state.metaPixel ? "granted" : "denied",
         ad_user_data: state.metaPixel ? "granted" : "denied",
@@ -167,15 +169,16 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         functionality_storage: "denied",
         personalization_storage: "denied",
         security_storage: "granted",
-      };
-      if (includeWait) consent.wait_for_update = 500;
-      return consent;
-    };
+      });
 
     window.gtag(
       "consent",
       "default",
-      googleConsentState(initialState, !storedDecision),
+      googleConsentState({
+        googleAnalytics: false,
+        microsoftClarity: false,
+        metaPixel: false,
+      }),
     );
     window.gtag("set", "ads_data_redaction", true);
     window.gtag("set", "url_passthrough", false);
@@ -317,12 +320,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         return currentValue === true;
       };
       const state = {
-        googleTagManager: requestedValue(
-          requestedServices.googleTagManager,
-          nextState?.googleTagManager,
-          undefined,
-          currentServices.googleTagManager,
-        ),
+        googleTagManager: false,
         googleAnalytics: requestedValue(
           requestedServices.googleAnalytics,
           nextState?.googleAnalytics,
@@ -345,22 +343,13 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       const googleTagManagerExplicitlyDenied = requestedServices.googleTagManager === false
         || nextState?.googleTagManager === false;
       if (googleTagManagerExplicitlyDenied) {
-        state.googleTagManager = false;
         state.googleAnalytics = false;
         state.microsoftClarity = false;
         state.metaPixel = false;
-      } else if (
-        state.googleAnalytics
+      }
+      state.googleTagManager = state.googleAnalytics
         || state.microsoftClarity
-        || state.metaPixel
-      ) {
-        state.googleTagManager = true;
-      }
-      if (!state.googleTagManager) {
-        state.googleAnalytics = false;
-        state.microsoftClarity = false;
-        state.metaPixel = false;
-      }
+        || state.metaPixel;
       const googleTagManagerWasGranted = currentServices.googleTagManager === true;
       const clarityWasGranted = currentServices.microsoftClarity === true;
       const metaWasGranted = currentServices.metaPixel === true;
@@ -376,7 +365,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
       writeDecision(decision);
       publishState(state, true);
-      window.gtag("consent", "update", googleConsentState(state, false));
+      window.gtag("consent", "update", googleConsentState(state));
 
       if (state.microsoftClarity) {
         updateClarityConsent(true);
@@ -459,6 +448,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     };
 
     publishState(initialState, Boolean(storedDecision));
+    if (storedDecision) {
+      window.gtag("consent", "update", googleConsentState(initialState));
+    }
     if (!initialState.googleAnalytics) {
       clearProviderCookies(GOOGLE_ANALYTICS_COOKIE_PREFIXES);
     }
