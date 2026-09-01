@@ -82,3 +82,19 @@ test("extracts the actual page body and drops legacy page chrome", () => {
   assert.match(sanitized, /<h2>Geschichte<\/h2><p>Bleibt erhalten\.<\/p>/);
   assert.doesNotMatch(sanitized, /Altes Menü|Seitentitel-Navigation|attacker\.example|<form|<input/i);
 });
+
+test("removes dead legacy taxonomy links and rewrites surviving gallery routes", () => {
+  const sanitized = sanitizeMigratedHtml(`
+    <p><a href="/tag/photoshop/">Photoshop</a></p>
+    <p><a href="/category/bildbearbeitung/">Bildbearbeitung</a></p>
+    <p><a href="/tfp-shooting-hamburg-2022/"><img src="legacy.jpg" alt="TFP"></a></p>
+    <p><a href="/gallery-category/mallorca/">Mallorca</a></p>
+    <p><a href="/gallery-category/teneriffa/">Teneriffa</a></p>
+  `);
+
+  assert.match(sanitized, /<p>Photoshop<\/p>/);
+  assert.match(sanitized, /<p>Bildbearbeitung<\/p>/);
+  assert.doesNotMatch(sanitized, /tfp-shooting-hamburg-2022|<img/i);
+  assert.match(sanitized, /href="\/gallery\/mallorca\/"/);
+  assert.match(sanitized, /href="\/gallery\/teneriffa\/"/);
+});

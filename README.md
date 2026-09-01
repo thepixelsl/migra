@@ -60,20 +60,25 @@ npm run build
 wrangler dev --config wrangler.worker.toml
 ```
 
-Der Cloudflare-Worker bleibt das bestehende Produktionsziel:
+Die Website wird produktiv über Bunny ausgeliefert. Der frühere Cloudflare-Worker
+bleibt nur als deaktivierter Rückfall im Cloudflare-Konto erhalten; seine
+öffentliche `workers.dev`-Route ist in beiden Wrangler-Konfigurationen mit
+`workers_dev = false` abgeschaltet:
 
 ```text
-https://migra.fancy-wildflower-0608.workers.dev
+https://migra.fancy-wildflower-0608.workers.dev  # deaktiviert
 ```
 
-Worker-Preview-URLs sind deaktiviert. Cloudflare Pages wird für dieses Projekt
-nicht als zusätzliches Deployment-Ziel verwendet.
+Worker-Preview-URLs sind ebenfalls deaktiviert. Cloudflare Pages wird für dieses
+Projekt nicht als zusätzliches Deployment-Ziel verwendet. Eine Reaktivierung des
+Workers muss bewusst durch eine erneute Konfigurationsänderung und einen Deploy
+erfolgen.
 
-Daneben gibt es die getrennte Bunny-Dev-App `artbild-dev`. Sie wird als
-Linux/amd64-Container gebaut und bewusst mit `DEV_NOINDEX=true` betrieben.
-`npm run deploy` veröffentlicht ausschließlich den Cloudflare-Worker und darf
-nicht für den Bunny-Rollout verwendet werden. Der vollständige Bunny-Ablauf
-steht in [`docs/bunny-dev-deploy.md`](docs/bunny-dev-deploy.md).
+Die Bunny-App `artbild-dev` stellt den Container für die Bunny-Auslieferung bereit.
+Entwicklungs-Rollouts werden bewusst mit `DEV_NOINDEX=true` betrieben. `npm run
+deploy` aktualisiert ausschließlich den deaktivierten Cloudflare-Worker und darf
+nicht für den Bunny-Rollout verwendet werden. Der vollständige Bunny-Ablauf steht
+in [`docs/bunny-dev-deploy.md`](docs/bunny-dev-deploy.md).
 
 Lokale Secrets gehören in `.dev.vars`. Eine Vorlage liegt in `.dev.vars.example`. Keine echten Secrets committen.
 

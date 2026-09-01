@@ -80,6 +80,11 @@ const INTERNAL_HOSTS = new Set([
   "www.artbild-fotografie.ch",
 ]);
 
+const MIGRATED_INTERNAL_LINK_REWRITES = new Map([
+  ["/gallery-category/mallorca/", "/gallery/mallorca/"],
+  ["/gallery-category/teneriffa/", "/gallery/teneriffa/"],
+]);
+
 function normalizedHref(value = "") {
   const href = String(value).trim();
   if (!href || /[\u0000-\u001f\u007f]/.test(href)) return "";
@@ -175,6 +180,21 @@ export function sanitizeMigratedHtml(html = "", assetMap = new Map()) {
     }
     sanitizeAllowedAttributes($, element);
   }
+
+  $("a").each((_, element) => {
+    const anchor = $(element);
+    const href = anchor.attr("href") || "";
+    const rewrittenHref = MIGRATED_INTERNAL_LINK_REWRITES.get(href);
+
+    if (rewrittenHref) {
+      anchor.attr("href", rewrittenHref);
+      return;
+    }
+
+    if (/^\/(?:tag|category)\//.test(href) || !anchor.text().trim()) {
+      anchor.replaceWith(anchor.contents());
+    }
+  });
 
   $("p").each((_, element) => {
     if (!$(element).text().trim() && $(element).children().length === 0) {

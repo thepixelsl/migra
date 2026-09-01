@@ -43,3 +43,21 @@ test("ordinary migrated pages retain indexable metadata and a self canonical", a
   );
   await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(1);
 });
+
+test("the wedding photo backup article is indexable", async ({ page }) => {
+  const pagePath = "/wie-sollte-man-hochzeitsfotos-sichern/";
+  const response = await page.goto(`${baseUrl}${pagePath}`, {
+    waitUntil: "domcontentloaded",
+  });
+
+  expect(response?.status()).toBe(200);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://artbild-fotografie.de/wie-sollte-man-hochzeitsfotos-sichern/",
+  );
+  await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(1);
+});

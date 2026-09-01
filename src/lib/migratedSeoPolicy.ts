@@ -71,9 +71,6 @@ export const MIGRATED_NOINDEX_RULES: Readonly<Record<string, NoindexRule>> = {
   "/instagram-landing/": {
     reason: "legacy-instagram-landing-page",
   },
-  "/newsletter/": {
-    reason: "legacy-newsletter-landing-page",
-  },
   "/sonnenzeiten-hamburg/": {
     reason: "unrendered-wordpress-shortcode",
   },
@@ -128,9 +125,6 @@ export const MIGRATED_NOINDEX_RULES: Readonly<Record<string, NoindexRule>> = {
   },
   "/vintage-shooting-valentinstag-hamburg/": {
     reason: "keyword-focused-legacy-copy",
-  },
-  "/wie-sollte-man-hochzeitsfotos-sichern/": {
-    reason: "unverified-technical-guidance",
   },
 };
 

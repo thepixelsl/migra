@@ -170,8 +170,8 @@ const schemaGraph = {
     <meta name="robots" content="index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
     <link rel="canonical" href={pageUrl}>
     <link rel="alternate" type="text/markdown" href={markdownPath} title="Markdown-Fassung für Agenten">
-    <link rel="alternate" type="application/json" href={apiPath} title="JSON-Dokumentation der Terminabfrage">
-    <link rel="service-doc" type="application/json" href={apiPath} title="Schnittstellendokumentation">
+    <link rel="alternate" type="application/json" href={openApiPath} title="JSON-Dokumentation der Terminabfrage">
+    <link rel="service-doc" type="application/json" href={openApiPath} title="Schnittstellendokumentation">
     <link rel="service-desc" type="application/json" href={openApiPath} title="OpenAPI-Beschreibung">
     <meta property="og:locale" content="de_DE">
     <meta property="og:type" content="website">
@@ -267,7 +267,7 @@ const schemaGraph = {
             <span>Dokumentformate:</span>
             <a href={pagePath} aria-current="page">HTML</a>
             <a href={markdownPath} type="text/markdown">Markdown</a>
-            <a href={apiPath} type="application/json">JSON</a>
+            <a href={openApiPath} type="application/json">JSON</a>
             <a href={openApiPath} type="application/json">OpenAPI 3.1</a>
           </nav>
         </div>
@@ -321,7 +321,7 @@ const schemaGraph = {
 
           <dl class="agent-contract">
             <div><dt>Ein Datum per GET</dt><dd><code>GET {singleDateApiPath}?date=YYYY-MM-DD</code></dd></div>
-            <div><dt>Dokumentation</dt><dd><a href={apiPath}><code>GET {apiPath}</code></a></dd></div>
+            <div><dt>Dokumentation</dt><dd><a href={openApiPath}><code>{openApiPath}</code></a></dd></div>
             <div><dt>OpenAPI</dt><dd><a href={openApiPath}><code>{openApiPath}</code></a></dd></div>
             <div><dt>Mehrere Daten per POST</dt><dd><code>POST {apiPath}</code></dd></div>
             <div><dt>Content-Type</dt><dd><code>application/json</code></dd></div>
@@ -412,7 +412,7 @@ const schemaGraph = {
             <div class="agent-check__result" data-agent-availability-result aria-live="polite" hidden></div>
             <noscript>
               JavaScript ist für dieses Formular erforderlich. Nutze alternativ die
-              <a href={apiPath}>JSON-Dokumentation der Termin-Schnittstelle</a>.
+              <a href={openApiPath}>JSON-Dokumentation der Termin-Schnittstelle</a>.
             </noscript>
           </form>
         </section>
