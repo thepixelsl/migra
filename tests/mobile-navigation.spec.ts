@@ -24,7 +24,7 @@ test("mobile navigation is accessible, touch friendly and stable", async ({ page
   await expect(toggleState).toHaveAttribute("aria-expanded", "true");
   await expect(navigation.getByRole("link", { name: "Kontakt", exact: true })).toBeVisible();
   await expect(
-    navigation.getByRole("link", { name: "TFP Shootings", exact: true }),
+    navigation.getByRole("link", { name: /^TFP Shootings/ }),
   ).toHaveAttribute("href", "/newsletter/");
   await expect(
     navigation.getByRole("link", { name: "Standesämter & Trauorte", exact: true }),
@@ -133,6 +133,14 @@ test("desktop navigation remains active", async ({ page }) => {
   await expect(page.locator(".mobile-navigation")).toBeHidden();
   await expect(page.locator(".gallery-search")).toHaveCount(0);
   await expect(page.locator('.gallery-nav a[href="/?s="]')).toHaveCount(0);
+  await expect(page.locator(".gallery-nav__group--home > li > a")).toHaveText([
+    "Start",
+    "Portfolio",
+    "Kontakt",
+    "Blog",
+    "Über mich",
+    "TFP Shootings",
+  ]);
 
   const navigationAlignment = await page.locator(".gallery-nav").evaluate((navigation) => {
     const navigationBounds = navigation.getBoundingClientRect();
@@ -193,17 +201,17 @@ test("desktop navigation remains active", async ({ page }) => {
 
   await page.mouse.move(0, 799);
 
-  const planningItem = page.locator(".gallery-nav__item", {
-    has: page.getByRole("link", { name: "Planung", exact: true }),
+  const blogItem = page.locator(".gallery-nav__item", {
+    has: page.getByRole("link", { name: "Blog", exact: true }),
   }).first();
-  const planningTrigger = planningItem.getByRole("link", { name: "Planung", exact: true });
-  const planningSubmenu = planningItem.locator(".gallery-nav__submenu");
+  const blogTrigger = blogItem.getByRole("link", { name: "Blog", exact: true });
+  const blogSubmenu = blogItem.locator(".gallery-nav__submenu");
 
-  await planningTrigger.focus();
-  await expect(planningSubmenu).toBeVisible();
+  await blogTrigger.focus();
+  await expect(blogSubmenu).toBeVisible();
   await expect(
-    planningSubmenu.getByRole("link", { name: "Standesämter & Trauorte" }),
+    blogSubmenu.getByRole("link", { name: "Standesämter & Trauorte" }),
   ).toHaveAttribute("href", "/standesamt-hamburg/");
   await page.keyboard.press("Tab");
-  await expect(planningSubmenu.getByRole("link", { name: "Planung & Ratgeber" })).toBeFocused();
+  await expect(blogSubmenu.getByRole("link", { name: "Planung", exact: true })).toBeFocused();
 });
