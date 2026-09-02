@@ -1,4 +1,5 @@
 import { load } from "cheerio";
+import { legacyContentRedirect } from "../../src/lib/legacyRedirects.mjs";
 
 const ALLOWED_TAGS = new Set([
   "a",
@@ -78,11 +79,6 @@ const INTERNAL_HOSTS = new Set([
   "www.artbild-fotografie.de",
   "artbild-fotografie.ch",
   "www.artbild-fotografie.ch",
-]);
-
-const MIGRATED_INTERNAL_LINK_REWRITES = new Map([
-  ["/gallery-category/mallorca/", "/gallery/mallorca/"],
-  ["/gallery-category/teneriffa/", "/gallery/teneriffa/"],
 ]);
 
 function normalizedHref(value = "") {
@@ -184,10 +180,12 @@ export function sanitizeMigratedHtml(html = "", assetMap = new Map()) {
   $("a").each((_, element) => {
     const anchor = $(element);
     const href = anchor.attr("href") || "";
-    const rewrittenHref = MIGRATED_INTERNAL_LINK_REWRITES.get(href);
+    const rewrittenUrl = href.startsWith("/")
+      ? legacyContentRedirect(new URL(href, "https://artbild-fotografie.de"))
+      : null;
 
-    if (rewrittenHref) {
-      anchor.attr("href", rewrittenHref);
+    if (rewrittenUrl) {
+      anchor.attr("href", `${rewrittenUrl.pathname}${rewrittenUrl.search}${rewrittenUrl.hash}`);
       return;
     }
 

@@ -4,6 +4,7 @@ import * as adminAvailability from "../functions/api/admin/availability.js";
 import * as adminAgentRequests from "../functions/api/admin/agent-requests.js";
 import * as contact from "../functions/api/contact.js";
 import { assertAdminAccess } from "../functions/_availability.js";
+import { legacyContentRedirect } from "./lib/legacyRedirects.mjs";
 
 export { AgentRateLimiter } from "./AgentRateLimiter.js";
 
@@ -122,6 +123,22 @@ async function handlePagesFunction(module, request, env, ctx) {
 export default {
   async fetch(request, env, ctx) {
     const url = new URL(request.url);
+    const legacyDestination = (request.method === "GET" || request.method === "HEAD")
+      ? legacyContentRedirect(url)
+      : null;
+
+    if (legacyDestination) {
+      // Combine protocol, host, slash and legacy-path changes in one hop.
+      if (isHttpRequest(request, url)) legacyDestination.protocol = "https:";
+      if (["www.artbild-fotografie.de", "www.artbild-fotografie.ch"].includes(legacyDestination.hostname)) {
+        legacyDestination.hostname = legacyDestination.hostname.replace(/^www\./, "");
+      }
+      return withSecurityHeaders(new Response(null, {
+        status: 301,
+        headers: { Location: legacyDestination.toString() },
+      }));
+    }
+
     const normalizedPathname = normalizePathname(url.pathname);
     const collectionRedirectPath = collectionRootRedirect(normalizedPathname);
     const contentRedirectPath = canonicalContentRedirect(normalizedPathname);
