@@ -32,7 +32,7 @@ const schemaGraph = {
       url: pageUrl,
       name: title,
       description,
-      dateModified: "2026-08-16T09:13:00+02:00",
+      dateModified: "2026-09-02",
       isPartOf: {
         "@id": `${siteUrl}/#website`,
       },
@@ -215,6 +215,10 @@ const schemaGraph = {
             <p id="contact-form-intro">
               Kurz reicht: Name, E-Mail, Ort und Wunschdatum. So kann ich zuerst
               prüfen, ob der Termin überhaupt frei ist.
+            </p>
+            <p class="contact-form__draft-note" data-contact-draft-note hidden>
+              Auftragsart, Wunschdatum und Ort wurden aus der vorbereiteten Agenten-Anfrage übernommen.
+              Bitte ergänzt und prüft alle Angaben. Es wurde noch nichts versendet.
             </p>
           </div>
 
@@ -580,28 +584,48 @@ const schemaGraph = {
 
     <script>
       import { contactDateBoundsAt } from "../../../functions/_contact-date-bounds.js";
+      import {
+        BOOKING_INQUIRY_DRAFT_STORAGE_KEY,
+        BOOKING_INQUIRY_SOURCE_PATH,
+        bookingInquiryPackageName,
+        parseBookingInquiryDraft,
+      } from "../../lib/bookingInquiryDraft";
 
       const contactForm = document.querySelector("[data-contact-form]");
 
       if (contactForm instanceof HTMLFormElement) {
         const loadedAt = contactForm.querySelector("[data-contact-loaded-at]");
         const jsEnabled = contactForm.querySelector("[data-contact-js]");
+        const sourcePath = contactForm.querySelector('input[name="source_path"]');
         const requestType = contactForm.querySelector("[data-contact-request-type]");
         const dateField = contactForm.querySelector("[data-contact-date]");
+        const locationField = contactForm.querySelector('input[name="location"]');
+        const messageField = contactForm.querySelector('textarea[name="message"]');
         const dateRequiredMarker = contactForm.querySelector("[data-date-required-marker]");
         const dateHint = contactForm.querySelector("[data-contact-date-hint]");
         const tfpHint = contactForm.querySelector("[data-contact-tfp-hint]");
         const yearField = contactForm.querySelector("[data-current-year]");
         const tfpBlock = contactForm.querySelector("[data-contact-tfp]");
         const tfpImages = contactForm.querySelector("[data-contact-tfp-images]");
+        const draftNote = contactForm.querySelector("[data-contact-draft-note]");
         const status = contactForm.querySelector("[data-contact-status]");
         const submit = contactForm.querySelector("[data-contact-submit]");
+        const dateBounds = contactDateBoundsAt();
+        let bookingInquiryDraft = null;
+
+        try {
+          const rawDraft = sessionStorage.getItem(BOOKING_INQUIRY_DRAFT_STORAGE_KEY);
+          sessionStorage.removeItem(BOOKING_INQUIRY_DRAFT_STORAGE_KEY);
+          bookingInquiryDraft = parseBookingInquiryDraft(rawDraft, dateBounds);
+        } catch {
+          bookingInquiryDraft = null;
+        }
+
         if (loadedAt instanceof HTMLInputElement) loadedAt.value = String(Date.now());
         if (jsEnabled instanceof HTMLInputElement) jsEnabled.value = "1";
         if (dateField instanceof HTMLInputElement) {
-          const { minDate, maxDate } = contactDateBoundsAt();
-          dateField.min = minDate;
-          dateField.max = maxDate;
+          dateField.min = dateBounds.minDate;
+          dateField.max = dateBounds.maxDate;
         }
 
         const syncRequestType = () => {
@@ -653,6 +677,30 @@ const schemaGraph = {
 
         if (requestType instanceof HTMLSelectElement) {
           requestType.addEventListener("change", syncRequestType);
+          syncRequestType();
+        }
+
+        if (bookingInquiryDraft) {
+          if (requestType instanceof HTMLSelectElement) {
+            requestType.value = bookingInquiryDraft.requestType;
+          }
+          if (dateField instanceof HTMLInputElement) {
+            dateField.value = bookingInquiryDraft.date;
+          }
+          if (locationField instanceof HTMLInputElement) {
+            locationField.value = bookingInquiryDraft.location;
+          }
+          if (sourcePath instanceof HTMLInputElement) {
+            sourcePath.value = BOOKING_INQUIRY_SOURCE_PATH;
+          }
+
+          const packageName = bookingInquiryPackageName(bookingInquiryDraft.packageId);
+          if (packageName && messageField instanceof HTMLTextAreaElement && !messageField.value) {
+            messageField.value = `Paketwunsch: ${packageName}`;
+          }
+          if (draftNote instanceof HTMLElement) {
+            draftNote.hidden = false;
+          }
           syncRequestType();
         }
 
@@ -732,6 +780,7 @@ const schemaGraph = {
             contactForm.reset();
             if (loadedAt instanceof HTMLInputElement) loadedAt.value = String(Date.now());
             if (jsEnabled instanceof HTMLInputElement) jsEnabled.value = "1";
+            if (draftNote instanceof HTMLElement) draftNote.hidden = true;
             syncRequestType();
             status.focus();
             window.dispatchEvent(new CustomEvent("artbild:form_success", {

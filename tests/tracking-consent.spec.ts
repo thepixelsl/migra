@@ -245,6 +245,105 @@ test("keeps the multi-date availability form usable without a WebMCP agent", asy
   await expect(page).toHaveURL(`${baseUrl}/fuer-agenten/`);
 });
 
+test("prepares a reviewed contact draft with one complementary imperative WebMCP tool", async ({ page }) => {
+  let contactRequests = 0;
+  page.on("request", (request) => {
+    if (request.url().includes("/api/contact")) contactRequests += 1;
+  });
+
+  await page.addInitScript(() => {
+    const tools: Array<Record<string, any>> = [];
+    Object.defineProperty(window, "__artbildWebMcpTools", {
+      configurable: true,
+      value: tools,
+    });
+    Object.defineProperty(Document.prototype, "modelContext", {
+      configurable: true,
+      get: () => ({
+        registerTool: async (tool: Record<string, any>) => {
+          tools.push(tool);
+        },
+      }),
+    });
+  });
+
+  await page.goto(`${baseUrl}/fuer-agenten/`, { waitUntil: "domcontentloaded" });
+
+  await expect.poll(() => page.evaluate(() =>
+    (window as any).__artbildWebMcpTools?.length ?? 0,
+  )).toBe(1);
+
+  const registeredTool = await page.evaluate(() => {
+    const tool = (window as any).__artbildWebMcpTools[0];
+    return {
+      name: tool.name,
+      title: tool.title,
+      description: tool.description,
+      annotations: tool.annotations,
+      required: tool.inputSchema.required,
+      requestTypes: tool.inputSchema.properties.requestType.enum,
+      packageIds: tool.inputSchema.properties.packageId.enum,
+    };
+  });
+
+  expect(registeredTool).toEqual({
+    name: "start_booking_inquiry",
+    title: "Buchungsanfrage vorbereiten",
+    description: "Öffnet das Kontaktformular mit Auftragsart, Wunschdatum, Ort und optionalem Paket. Es wird keine Anfrage versendet.",
+    annotations: { readOnlyHint: false },
+    required: ["requestType", "date", "location"],
+    requestTypes: ["hochzeit", "standesamtliche-trauung", "portraitshooting"],
+    packageIds: ["pure-moments", "standesamt-paket", "rundum-sorglos-paket"],
+  });
+
+  const invalidResult = await page.evaluate(() => {
+    const tool = (window as any).__artbildWebMcpTools[0];
+    return tool.execute({
+      requestType: "hochzeit",
+      date: "2020-01-01",
+      location: "Hamburg",
+    });
+  });
+  expect(invalidResult).toMatchObject({ ok: false, error: "invalid_date" });
+  await expect(page).toHaveURL(`${baseUrl}/fuer-agenten/`);
+
+  const executionResult = await page.evaluate(() => {
+    const tool = (window as any).__artbildWebMcpTools[0];
+    return tool.execute({
+      requestType: "hochzeit",
+      date: "2027-06-14",
+      location: "Hamburg, Speicherstadt",
+      packageId: "rundum-sorglos-paket",
+    });
+  });
+
+  expect(executionResult).toEqual({
+    ok: true,
+    status: "draft_prepared",
+    destination: "/kontakt/#kontaktformular",
+    submitted: false,
+    message: "Das Kontaktformular wird zur persönlichen Prüfung geöffnet. Es wurde nichts versendet.",
+  });
+  await expect(page).toHaveURL(`${baseUrl}/kontakt/#kontaktformular`);
+
+  await expect(page.locator("[data-contact-draft-note]")).toBeVisible();
+  await expect(page.locator("[data-contact-request-type]")).toHaveValue("hochzeit");
+  await expect(page.locator("[data-contact-date]")).toHaveValue("2027-06-14");
+  await expect(page.locator('input[name="location"]')).toHaveValue("Hamburg, Speicherstadt");
+  await expect(page.locator('textarea[name="message"]')).toHaveValue(
+    "Paketwunsch: Rundum-Sorglos-Paket",
+  );
+  await expect(page.locator('input[name="source_path"]')).toHaveValue("/fuer-agenten/");
+  await expect(page.locator('input[name="name"]')).toHaveValue("");
+  await expect(page.locator('input[name="email"]')).toHaveValue("");
+  await expect(page.locator('input[name="security_year"]')).toHaveValue("");
+  await expect(page.locator('input[name="privacy"]')).not.toBeChecked();
+  expect(await page.evaluate(() =>
+    sessionStorage.getItem("artbild_booking_inquiry_draft_v1"),
+  )).toBeNull();
+  expect(contactRequests).toBe(0);
+});
+
 test("blocks GTM and all providers before a consent decision", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 

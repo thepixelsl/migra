@@ -30,6 +30,7 @@ export function GET() {
     `- [Kurze Markdown-Fassung](${markdownUrl}): lineare Referenz ohne Navigation oder Gestaltung`,
     `- [JSON-Dokumentation](${apiUrl}): Regeln und Vertrag der Terminabfrage`,
     `- [OpenAPI 3.1](${openApiUrl}): formale Beschreibung der Termin-Schnittstelle`,
+    "- WebMCP-Browsertool start_booking_inquiry: bereitet nach persönlicher Auswahl das Kontaktformular vor; es versendet nichts und benötigt eine geöffnete Seite",
     `- [Buchungsanfrage](${siteUrl}${agentBookingPage.contactPath}): Kontakt nach unverbindlicher Terminprüfung`,
     "",
     "## Zentrale Regeln",

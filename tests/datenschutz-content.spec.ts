@@ -58,7 +58,10 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 27. August 2026");
+  expect(mainText).toContain("Stand: 2. September 2026");
+  expect(mainText).toContain("eine Buchungsanfrage über die Agentenseite vorbereiten");
+  expect(mainText).toContain("spätestens nach 30 Minuten verworfen");
+  expect(mainText).toContain("Eine Übermittlung an uns erfolgt erst");
   expect(mainText).toContain("Webhosting bei bunny.net");
   expect(mainText).toContain("BunnyWay d.o.o.");
   expect(mainText).toContain("Dunajska cesta 165");

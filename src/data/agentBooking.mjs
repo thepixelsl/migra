@@ -10,7 +10,7 @@ export const agentBookingPage = {
   headline: "Terminprüfung für KI-Agenten",
   description:
     "Klare Preise, Buchungskonditionen und eine begrenzte Terminabfrage für konkrete Fotoaufträge.",
-  dateModified: "2026-08-31",
+  dateModified: "2026-09-02",
 };
 
 export const singleDateAvailabilityRules = {

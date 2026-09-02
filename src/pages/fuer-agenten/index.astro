@@ -461,6 +461,12 @@ const schemaGraph = {
             {agentInquiryRequirements.map((requirement) => <li>{requirement}</li>)}
           </ul>
           <p>
+            In WebMCP-fähigen Browsern bereitet das Tool <code>start_booking_inquiry</code>
+            das Kontaktformular mit Auftragsart, Wunschdatum, Ort und optionalem Paket vor.
+            Es versendet keine Anfrage und übernimmt weder Name noch E-Mail-Adresse oder
+            Datenschutzbestätigung.
+          </p>
+          <p>
             <a class="agent-primary-link" href={agentBookingPage.contactPath}>Kontaktseite für die Buchungsanfrage öffnen</a>
           </p>
         </section>
@@ -503,6 +509,13 @@ const schemaGraph = {
     </footer>
 
     <script>
+      import {
+        BOOKING_INQUIRY_DRAFT_STORAGE_KEY,
+        bookingInquiryPackageOptions,
+        bookingInquiryRequestTypes,
+        createBookingInquiryDraft,
+      } from "../../lib/bookingInquiryDraft";
+
       const quickForm = document.querySelector<HTMLFormElement>("[data-single-date-form]");
       const quickResult = document.querySelector<HTMLElement>("[data-single-date-result]");
       const quickDateInput = quickForm?.querySelector<HTMLInputElement>('input[name="date"]') || null;
@@ -535,6 +548,93 @@ const schemaGraph = {
           String(Math.min(day, lastDay)).padStart(2, "0"),
         ].join("-");
       })();
+
+      type ImperativeWebMcpTool = {
+        name: string;
+        title: string;
+        description: string;
+        inputSchema: Record<string, unknown>;
+        annotations: { readOnlyHint: boolean };
+        execute: (input: unknown) => unknown;
+      };
+
+      type WebMcpDocument = Document & {
+        modelContext?: {
+          registerTool: (tool: ImperativeWebMcpTool) => Promise<unknown>;
+        };
+      };
+
+      const modelContext = (document as WebMcpDocument).modelContext;
+      if (modelContext) {
+        void modelContext.registerTool({
+          name: "start_booking_inquiry",
+          title: "Buchungsanfrage vorbereiten",
+          description: "Öffnet das Kontaktformular mit Auftragsart, Wunschdatum, Ort und optionalem Paket. Es wird keine Anfrage versendet.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              requestType: {
+                type: "string",
+                enum: bookingInquiryRequestTypes,
+                description: "Art des konkreten Fotoauftrags.",
+              },
+              date: {
+                type: "string",
+                format: "date",
+                description: "Wunschdatum im Format YYYY-MM-DD.",
+              },
+              location: {
+                type: "string",
+                minLength: 2,
+                maxLength: 160,
+                description: "Ort oder Location des Fotoauftrags.",
+              },
+              packageId: {
+                type: "string",
+                enum: bookingInquiryPackageOptions.map(({ id }) => id),
+                description: "Optionales veröffentlichtes Fotopaket.",
+              },
+            },
+            required: ["requestType", "date", "location"],
+            additionalProperties: false,
+          },
+          annotations: {
+            readOnlyHint: false,
+          },
+          execute: (input) => {
+            const result = createBookingInquiryDraft(input, {
+              minDate: berlinToday,
+              maxDate: maximumDate,
+            });
+            if (!result.ok) return result;
+
+            try {
+              sessionStorage.setItem(
+                BOOKING_INQUIRY_DRAFT_STORAGE_KEY,
+                JSON.stringify(result.draft),
+              );
+            } catch {
+              return {
+                ok: false,
+                error: "draft_storage_unavailable",
+                message: "Die Anfrage konnte nicht vorbereitet werden. Bitte öffne das Kontaktformular direkt.",
+              };
+            }
+
+            const destination = "/kontakt/#kontaktformular";
+            window.setTimeout(() => window.location.assign(destination), 0);
+            return {
+              ok: true,
+              status: "draft_prepared",
+              destination,
+              submitted: false,
+              message: "Das Kontaktformular wird zur persönlichen Prüfung geöffnet. Es wurde nichts versendet.",
+            };
+          },
+        }).catch(() => {
+          // Die bestehende HTML- und Formularfunktion bleibt ohne Imperative API erhalten.
+        });
+      }
 
       const allDateInputs = quickDateInput ? [quickDateInput, ...dateInputs] : dateInputs;
 

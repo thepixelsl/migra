@@ -97,7 +97,7 @@ const complaintSection = numberedSection(
 );
 
 const privacyContent = `
-<p><strong>Stand: 27. August 2026</strong></p>
+<p><strong>Stand: 2. September 2026</strong></p>
 <p>Diese Datenschutzerklärung erläutert, welche personenbezogenen Daten beim Besuch dieser Website und bei der Kontaktaufnahme verarbeitet werden.</p>
 
 <h2 id="verantwortlicher">1. Verantwortlicher</h2>
@@ -120,6 +120,7 @@ const privacyContent = `
 
 <h2 id="kontaktformular">3. Kontaktformular</h2>
 <p>Wenn Sie das Kontaktformular verwenden, verarbeiten wir die von Ihnen eingegebenen Angaben. Pflichtangaben sind Anfrageart, Name, E-Mail-Adresse, Veranstaltungsort und die Antwort auf die Sicherheitsfrage. Das Wunschdatum ist außer bei TFP-Anfragen ebenfalls erforderlich. Nachricht und bis zu drei Bilddateien bei einer TFP-Anfrage sind freiwillig. Es besteht keine gesetzliche Pflicht, diese Daten bereitzustellen. Ohne die erforderlichen Angaben kann das Formular nicht versendet und die Anfrage nicht bearbeitet werden.</p>
+<p>Wenn Sie eine Buchungsanfrage über die Agentenseite vorbereiten lassen, werden Anfrageart, Wunschdatum, Veranstaltungsort und ein optionaler Paketwunsch vorübergehend in Ihrem Browser bereitgehalten und beim Öffnen des Kontaktformulars übernommen. Der Entwurf wird nach der Übernahme oder spätestens nach 30 Minuten verworfen. Name, E-Mail-Adresse und Datenschutzbestätigung werden dabei nicht übernommen. Eine Übermittlung an uns erfolgt erst, wenn Sie das Kontaktformular selbst absenden.</p>
 <p>Zusätzlich werden Zeitpunkt und Quellseite der Anfrage, die Antwort auf die Sicherheitsfrage, Anzahl und Dateinamen der Anhänge sowie eine aus der IP-Adresse gebildete pseudonymisierte Kennung verarbeitet. Die Inhalte hochgeladener Dateien werden für den Versand verarbeitet und als E-Mail-Anhang weitergegeben; sie werden nicht zusammen mit dem Formulardatensatz gespeichert.</p>
 <p>Wir verwenden diese Daten, um Ihre Anfrage zu beantworten, ein gewünschtes Vertragsverhältnis vorzubereiten und das Formular gegen automatisierten Missbrauch zu schützen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf einen Vertrag oder vorvertragliche Maßnahmen gerichtet ist. Im Übrigen erfolgt die Verarbeitung nach Art. 6 Abs. 1 lit. f DSGVO aufgrund unseres Interesses an einer zuverlässigen und missbrauchsgeschützten Kommunikation.</p>
 <p>Die Formulardaten werden im Rahmen des Webhostings in Frankfurt am Main vorübergehend gespeichert und an unser E-Mail-Postfach bei STRATO übermittelt. Die pseudonymisierte IP-Kennung dient ausschließlich der Begrenzung wiederholter Einsendungen und wird spätestens nach 30 Minuten entfernt. Sobald die Speicherdauer von 30 Tagen überschritten ist, wird die technische Datenbankkopie der Anfrage in einem regelmäßigen Bereinigungslauf automatisch gelöscht.</p>
