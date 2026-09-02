@@ -9,6 +9,7 @@
     "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run seo:files",
     "social:cards": "node scripts/generate-social-cards.mjs",
     "social:cards:validate": "node scripts/validate-social-cards.mjs",
+    "test:seo": "node --test tests/home-serp-metadata.test.mjs tests/page-serp-metadata.test.mjs",
     "images:webp": "node scripts/convert-delivered-jpegs-to-webp.mjs",
     "seo:files": "node scripts/generate-production-seo-files.mjs",
     "tracking:audit": "node scripts/audit-tracking-coverage.mjs",

@@ -3,6 +3,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { load } from "cheerio";
 import sharp from "sharp";
+import { createHash } from "node:crypto";
+import { preparePageSeo } from "./lib/page-serp.mjs";
 import {
   socialCardDefaults,
   socialCardOverrides,
@@ -94,24 +96,25 @@ async function processPage(htmlFile, route, fonts) {
 
   if (shouldSkipPage($, route)) return null;
 
+  const seo = await preparePageSeo($, route, { projectRoot, distDir, siteOrigin });
   const override = socialCardOverrides[route] || {};
   const structured = readStructuredData($);
   const title = cleanTitle(
-    override.title ||
+    (seo.image ? $("title").text() : override.title) ||
       $("main h1").first().text() ||
       $("h1").first().text() ||
       readMeta($, "property", "og:title") ||
       $("title").text(),
   );
   const description = cleanText(
-    override.subtitle ||
-      readMeta($, "property", "og:description") ||
+    seo.description ||
+      override.subtitle ||
       readMeta($, "name", "description") ||
       "Fotografie von Artbild-Fotografie.",
   );
   const year = resolveYear(override.year);
   const displayTitle = appendYear(title, year);
-  const image = await selectImage($, route, override.image);
+  const image = seo.image || await selectImage($, route, override.image);
   const label = cleanText(override.label || inferLabel(route, structured));
   const location = cleanText(override.location || structured.location || "");
   const venue = cleanText(override.venue || "");
@@ -119,9 +122,9 @@ async function processPage(htmlFile, route, fonts) {
   const updated = override.updated || structured.dateModified || "";
   const published = override.datePublished || structured.datePublished || "";
   const pageType = override.pageType || inferPageType(route);
-  const focalPoint = override.focalPoint || socialCardDefaults.focalPoint;
-  const cardPath = cardPathForRoute(route);
-  const outputPath = path.join(distDir, cardPath.replace(/^\//, ""));
+  const focalPoint = seo.focalPoint || override.focalPoint || socialCardDefaults.focalPoint;
+  let cardPath = cardPathForRoute(route);
+  let outputPath = path.join(distDir, cardPath.replace(/^\//, ""));
 
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   await renderCard({
@@ -135,15 +138,26 @@ async function processPage(htmlFile, route, fonts) {
     couple,
     updated: override.updated ? updated : "",
     focalPoint,
-    layout: override.layout || socialCardDefaults.layout,
+    layout: seo.image ? "photo" : override.layout || socialCardDefaults.layout,
+    fit: seo.fit,
     fonts,
   });
+  // Immutable preview URLs prevent a later photo selection from retaining an old card in cache.
+  // Keep the explicitly verified homepage URL unchanged.
+  if (seo.image) {
+    const hash = createHash("sha256").update(await fs.readFile(outputPath)).digest("hex").slice(0, 12);
+    const hashedPath = cardPath.replace(/\.webp$/, `-${hash}.webp`);
+    const hashedOutput = path.join(distDir, hashedPath);
+    await fs.rename(outputPath, hashedOutput);
+    cardPath = hashedPath;
+    outputPath = hashedOutput;
+  }
 
   const declaredCanonical = cleanText($("link[rel='canonical']").first().attr("href"));
   const canonicalUrl = declaredCanonical || `${siteOrigin}${route}`;
   const canonicalOrigin = new URL(canonicalUrl, siteOrigin).origin;
   const socialImageUrl = `${canonicalOrigin}${cardPath}`;
-  const imageAlt = override.imageAlt || socialImageAlt({ title: displayTitle, location, venue, label });
+  const imageAlt = seo.alt || override.imageAlt || socialImageAlt({ title: displayTitle, location, venue, label });
 
   writeSocialMeta($, {
     title: displayTitle,
@@ -161,6 +175,8 @@ async function processPage(htmlFile, route, fonts) {
     description,
     image: cardPath,
     sourceImage: image.publicPath,
+    primaryImageUrl: seo.primaryImageUrl,
+    keyword: seo.keyword,
     pageType,
     label,
     location: location || undefined,
@@ -192,14 +208,17 @@ async function renderCard({
   updated,
   focalPoint,
   layout,
+  fit = "cover",
   fonts,
 }) {
   if (layout === "photo") {
     await sharp(imagePath)
       .rotate()
       .resize(1200, 630, {
-        fit: "cover",
+        fit,
         position: focalPositions[focalPoint] || "centre",
+        background: "#f7f4ef",
+        withoutEnlargement: true,
       })
       .webp({ quality: 90, effort: 4, smartSubsample: true })
       .toFile(outputPath);

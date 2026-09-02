@@ -26,6 +26,7 @@ function xmlEscape(value) {
 }
 
 const canonicalUrls = new Set();
+const preferredImages = new Map();
 for (const file of await htmlFiles(DIST_DIRECTORY)) {
   const html = await readFile(file, "utf8");
   const $ = load(html);
@@ -40,6 +41,16 @@ for (const file of await htmlFiles(DIST_DIRECTORY)) {
   canonicalUrl.hash = "";
   canonicalUrl.search = "";
   canonicalUrls.add(canonicalUrl.href);
+  for (const element of $("script[type='application/ld+json']").toArray()) {
+    const json = JSON.parse($(element).text());
+    const nodes = json["@graph"] || (Array.isArray(json) ? json : [json]);
+    for (const node of nodes) {
+      if (node["@id"] === `${canonicalUrl.href}#primaryimage`) {
+        const image = node.contentUrl || node.url;
+        if (image) preferredImages.set(canonicalUrl.href, image);
+      }
+    }
+  }
 }
 
 const urls = [...canonicalUrls].sort((left, right) => {
@@ -53,8 +64,8 @@ const urls = [...canonicalUrls].sort((left, right) => {
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>',
-  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  ...urls.map((url) => `  <url><loc>${xmlEscape(url)}</loc></url>`),
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">',
+  ...urls.map((url) => `  <url><loc>${xmlEscape(url)}</loc>${preferredImages.has(url) ? `<image:image><image:loc>${xmlEscape(preferredImages.get(url))}</image:loc></image:image>` : ""}</url>`),
   "</urlset>",
   "",
 ].join("\n");
