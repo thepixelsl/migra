@@ -1,3 +1,5 @@
+import { homepageSeo } from "./homepageSeo.mjs";
+
 /**
  * Central social-card metadata.
  *
@@ -23,12 +25,15 @@ export const socialCardDefaults = {
 
 export const socialCardOverrides = {
   "/": {
-    title: "Hochzeitsfotograf Hamburg",
-    subtitle: "Natürliche Hochzeitsreportagen und echte Momente.",
-    image: "/images/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg",
+    title: homepageSeo.title,
+    subtitle: homepageSeo.description,
+    // The page's og:image supplies the same photo as primaryImageOfPage.
+    layout: "photo",
+    imageAlt: homepageSeo.imageAlt,
+    cropAnchorY: 0.2,
     location: "Hamburg",
     label: "Hochzeitsfotografie",
-    focalPoint: "center",
+    focalPoint: "attention",
   },
   "/trautermin-hamburg-online-reservieren/": {
     title: "Traukalender der Stadt Hamburg",

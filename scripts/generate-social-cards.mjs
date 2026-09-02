@@ -135,6 +135,8 @@ async function processPage(htmlFile, route, fonts) {
     couple,
     updated: override.updated ? updated : "",
     focalPoint,
+    layout: override.layout || socialCardDefaults.layout,
+    cropAnchorY: override.cropAnchorY,
     fonts,
   });
 
@@ -142,7 +144,7 @@ async function processPage(htmlFile, route, fonts) {
   const canonicalUrl = declaredCanonical || `${siteOrigin}${route}`;
   const canonicalOrigin = new URL(canonicalUrl, siteOrigin).origin;
   const socialImageUrl = `${canonicalOrigin}${cardPath}`;
-  const imageAlt = socialImageAlt({ title: displayTitle, location, venue, label });
+  const imageAlt = override.imageAlt || socialImageAlt({ title: displayTitle, location, venue, label });
 
   writeSocialMeta($, {
     title: displayTitle,
@@ -190,8 +192,33 @@ async function renderCard({
   couple,
   updated,
   focalPoint,
+  layout,
+  cropAnchorY,
   fonts,
 }) {
+  if (layout === "photo") {
+    const photo = sharp(imagePath).rotate();
+    if (typeof cropAnchorY === "number") {
+      const { width, height } = await photo.metadata();
+      const cropWidth = Math.min(width, Math.round(height * 1200 / 630));
+      const cropHeight = Math.min(height, Math.round(width * 630 / 1200));
+      photo.extract({
+        left: Math.round((width - cropWidth) / 2),
+        top: Math.round((height - cropHeight) * Math.max(0, Math.min(1, cropAnchorY))),
+        width: cropWidth,
+        height: cropHeight,
+      });
+    }
+    await photo
+      .resize(1200, 630, {
+        fit: "cover",
+        position: focalPositions[focalPoint] || "centre",
+      })
+      .webp({ quality: 90, effort: 4, smartSubsample: true })
+      .toFile(outputPath);
+    return;
+  }
+
   const colors = socialCardDefaults.colors;
   const titleLayout = fitText(title, {
     maxWidth: 488,

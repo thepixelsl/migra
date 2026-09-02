@@ -1,6 +1,7 @@
 ---
 import FaviconHead from "../components/FaviconHead.astro";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
+import { homepageSeo } from "../data/homepageSeo.mjs";
 import "../styles/global.css";
 import FeaturedPortfolioLinks from "../components/FeaturedPortfolioLinks.astro";
 import HomeAboutYork from "../components/HomeAboutYork.astro";
@@ -345,16 +346,47 @@ const vendors = [
 ];
 
 const homepageSiteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+// Use a real, already published wedding photo, not the logo or a text card.
+const homepagePhoto = await getImage({
+  src: valerieTimHomepageImage,
+  width: 1600,
+  format: "webp",
+  quality: 85,
+});
+const homepagePhotoUrl = new URL(homepagePhoto.src, homepageSiteUrl).href;
 
 const homepageSchema = {
   "@context": "https://schema.org",
   "@graph": [
     {
+      "@type": "WebPage",
+      "@id": `${homepageSiteUrl}/#webpage`,
+      url: `${homepageSiteUrl}/`,
+      name: homepageSeo.title,
+      description: homepageSeo.description,
+      inLanguage: "de-DE",
+      about: { "@id": `${homepageSiteUrl}/#organization` },
+      primaryImageOfPage: { "@id": `${homepageSiteUrl}/#primaryimage` },
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${homepageSiteUrl}/#primaryimage`,
+      url: homepagePhotoUrl,
+      contentUrl: homepagePhotoUrl,
+      width: homepagePhoto.attributes.width,
+      height: homepagePhoto.attributes.height,
+      caption: homepageSeo.imageAlt,
+      representativeOfPage: true,
+      creator: { "@type": "Person", name: "York Augustin" },
+    },
+    {
       "@type": "ProfessionalService",
       "@id": `${homepageSiteUrl}/#organization`,
       name: "Artbild-Fotografie",
       url: `${homepageSiteUrl}/`,
-      image: `${homepageSiteUrl}/images/logo-artbild-black.png`,
+      description: homepageSeo.description,
+      image: { "@id": `${homepageSiteUrl}/#primaryimage` },
+      logo: `${homepageSiteUrl}/images/logo-artbild-black.png`,
       email: "info@artbild-fotografie.de",
       address: {
         "@type": "PostalAddress",
@@ -448,10 +480,12 @@ const homepageSchema = {
   <FaviconHead />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Hochzeitsfotograf York Augustin aus Hamburg: Reportagegalerien, standesamtliche Trauungen, Preise und Kontakt zu Artbild-Fotografie.">
+  <meta name="description" content={homepageSeo.description}>
   <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
   <link rel="canonical" href={`${homepageSiteUrl}/`}>
-  <title>Hochzeitsfotograf Hamburg</title>
+  <title>{homepageSeo.title}</title>
+  <meta property="og:image" content={homepagePhotoUrl}>
+  <meta property="og:image:alt" content={homepageSeo.imageAlt}>
   <script type="application/ld+json" set:html={JSON.stringify(homepageSchema)}></script>
   <script is:inline src={heroSliderScript} defer></script>
   <script is:inline src={homeRevealScript} defer></script>
@@ -1274,6 +1308,8 @@ const homepageSchema = {
     </svg>
   </a>
 
+  <!-- Keep contact/navigation available to visitors, but out of search snippets. -->
+  <div data-nosnippet>
   <footer class="site-footer">
     <div>
       <h2>Artbild-Fotografie</h2>
@@ -1307,6 +1343,7 @@ const homepageSchema = {
     </nav>
     <p>Copyright York Augustin. Alle Rechte vorbehalten.</p>
   </footer>
+  </div>
 
 </body>
 </html>
