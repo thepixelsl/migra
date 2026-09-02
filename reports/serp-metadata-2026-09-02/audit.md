@@ -1,6 +1,22 @@
 # SERP-Metadaten und Bildauswahl – Artbild-Fotografie
 
-Stand: 2. September 2026. Diese Datei dokumentiert den geprüften Build, nicht die von Google tatsächlich ausgewählten Suchergebnisse.
+Stand: 2. September 2026. Diese Datei dokumentiert den geprüften Build und seine öffentliche Auslieferung, nicht die von Google tatsächlich ausgewählten Suchergebnisse.
+
+## Veröffentlichung und Live-Nachweis
+
+- Veröffentlichtes Website-Commit: `1f1864135bccaf152d9e3c9d11d8ec658589ae3a`.
+- Erfolgreicher [Produktionsbuild 33671346902](https://github.com/thepixelsl/migra/actions/runs/33671346902).
+- Bunny `artbild-dev/web`: `prod-sha-1f18641`, Digest `sha256:8f2586b3de2e49a16cba33215a1ffc9128c85a644ff62f8bc714c9221406af74`.
+- Status Active; ein bereiter Frankfurt-Pod `BhdzqVGPIuxXv7`. Der vorherige Pod wurde entfernt.
+- Öffentlicher Abgleich ohne Cache-Busting: 56 Seiten mit passenden Metadaten, 102 erreichbare WebP-Bilddateien, 56 korrekte Bildzuordnungen in der Sitemap, keine Fehler. Alle Seiten auch als Cache-HIT aktuell. Keine Cache-Löschung erforderlich.
+- 84 Bilddateien byteidentisch zum Mac-Build; 18 Linux-/Mac-Encoder-Varianten zusätzlich anhand von Bildmaßen, Bildinhalt und tatsächlichem Dateihash geprüft. Größte mittlere Pixelabweichung unter 0,88 von 255; keine anderen Motive oder falschen Zuschnitte. Der Prüfcode berücksichtigt diese Plattformunterschiede ausdrücklich.
+- `/readyz` und `/healthz`: 200. Geschützte `/api/admin/availability`: 401. Unbekannte Route: 404. Die öffentliche Admin-Anmeldeseite selbst antwortet bestimmungsgemäß mit 200.
+- Kostenloser ND-Filter-PDF-Download: 200, `application/pdf`, 23.429 Bytes.
+- Zehn SEO-Tests, 34 Bunny-/Redirect-Tests und vier Sanitizer-Tests bestanden. Lokale Sicht-/Geometrieprüfung bei 390, 768 und 1440 Pixeln; nach Veröffentlichung zusätzlich About, ND-Filter und Preise in allen drei Breiten geprüft, ohne horizontalen Überlauf.
+- Google Search Console: Aktualisierte `/sitemap.xml` erfolgreich eingereicht; Anträge zur erneuten Indexierung von `/hochzeitsfotograf-preise/` und `/nd-filter-tabelle/` bestätigt und in die bevorzugte Crawling-Warteschlange aufgenommen. Das ist keine Bestätigung einer bereits erneuerten SERP-Darstellung.
+- Maschineller Nachweis: [live.json](live.json). Vorher-/Nachher-Rohdaten liegen lokal daneben; die vorhandenen sichtbaren Texte und Galerien wurden nicht verändert (abgesehen vom bereits vorher dynamischen API-Beispielzeitstempel).
+
+## Ergebnis des Audits
 
 - 56 indexierbare Seiten geprüft; 23 Meta-Descriptions verbessert, 33 passende Beschreibungen beibehalten.
 - 7 Seitentitel präzisiert, 56 bevorzugte Hauptbilder ausgezeichnet. Die Startseite behält das ausdrücklich gewählte Mallorca-Kussbild.
