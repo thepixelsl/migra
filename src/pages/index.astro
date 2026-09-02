@@ -22,7 +22,7 @@ import gettingReadyPlanningImage from "../assets/home/getting-ready-braut-schlei
 import portfolioParisImage from "../assets/traumhochzeit-paris-2019/ART_6078-Bearbeitet_web.jpg";
 import portfolioAtlanticImage from "../assets/traumhochzeit-hamburg/ART_9474-Bearbeitet_web_1-768x1151.jpg";
 import portfolioLovebirdsImage from "../assets/portfolio/lovebirds-elbstrand.jpg";
-import portfolioMallorcaImage from "../assets/portfolio/paarshooting-mallorca.jpg";
+import portfolioMallorcaImage from "../assets/paarshooting-mallorca/ART0783-1.jpg";
 import portfolioGettingReadyImage from "../assets/braut-fotoshooting-hamburg/ART_8427-Bearbeitet-2-1024x683.jpg";
 import portfolioBarberhouseImage from "../assets/portfolio/barberhouse-hamburg.jpg";
 import portfolioFloralImage from "../assets/portfolio/floral-art.jpg";
@@ -91,7 +91,7 @@ const storyCards: StoryCard[] = [
     imageAsset: portfolioMallorcaImage,
     width: portfolioMallorcaImage.width,
     height: portfolioMallorcaImage.height,
-    alt: "Paar bei einem Paarshooting auf einer Dachterrasse auf Mallorca",
+    alt: homepageSeo.imageAlt,
   },
   {
     title: "Hochzeit von Steffi & Dominik",
@@ -346,10 +346,10 @@ const vendors = [
 ];
 
 const homepageSiteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
-// Use a real, already published wedding photo, not the logo or a text card.
+// The user selected this original Mallorca photograph, also shown in its teaser.
 const homepagePhoto = await getImage({
-  src: valerieTimHomepageImage,
-  width: 1600,
+  src: portfolioMallorcaImage,
+  width: portfolioMallorcaImage.width,
   format: "webp",
   quality: 85,
 });

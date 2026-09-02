@@ -136,7 +136,6 @@ async function processPage(htmlFile, route, fonts) {
     updated: override.updated ? updated : "",
     focalPoint,
     layout: override.layout || socialCardDefaults.layout,
-    cropAnchorY: override.cropAnchorY,
     fonts,
   });
 
@@ -193,23 +192,11 @@ async function renderCard({
   updated,
   focalPoint,
   layout,
-  cropAnchorY,
   fonts,
 }) {
   if (layout === "photo") {
-    const photo = sharp(imagePath).rotate();
-    if (typeof cropAnchorY === "number") {
-      const { width, height } = await photo.metadata();
-      const cropWidth = Math.min(width, Math.round(height * 1200 / 630));
-      const cropHeight = Math.min(height, Math.round(width * 630 / 1200));
-      photo.extract({
-        left: Math.round((width - cropWidth) / 2),
-        top: Math.round((height - cropHeight) * Math.max(0, Math.min(1, cropAnchorY))),
-        width: cropWidth,
-        height: cropHeight,
-      });
-    }
-    await photo
+    await sharp(imagePath)
+      .rotate()
       .resize(1200, 630, {
         fit: "cover",
         position: focalPositions[focalPoint] || "centre",

@@ -27,13 +27,12 @@ export const socialCardOverrides = {
   "/": {
     title: homepageSeo.title,
     subtitle: homepageSeo.description,
-    // The page's og:image supplies the same photo as primaryImageOfPage.
+    // Use the user-selected Mallorca photo from the page's og:image.
     layout: "photo",
     imageAlt: homepageSeo.imageAlt,
-    cropAnchorY: 0.2,
     location: "Hamburg",
     label: "Hochzeitsfotografie",
-    focalPoint: "attention",
+    focalPoint: "top",
   },
   "/trautermin-hamburg-online-reservieren/": {
     title: "Traukalender der Stadt Hamburg",

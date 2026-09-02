@@ -49,30 +49,31 @@ test("footer stays accessible but cannot supply snippets", () => {
   assert.equal($("main [data-nosnippet]").length, 0);
 });
 
-test("primary image is a real, high-resolution, published wedding photograph", async () => {
+test("primary image is the user-selected original Mallorca photograph", async () => {
   assert.equal(photo["@type"], "ImageObject");
   assert.equal(photo.url, photo.contentUrl);
-  assert.match(photo.url, /ART_4449/);
+  assert.match(photo.url, /ART0783-1/);
   assert.doesNotMatch(photo.url, /logo|social-cards/);
   const metadata = await sharp(localAsset(photo.url)).metadata();
   assert.equal(metadata.format, "webp");
   assert.equal(photo.width, metadata.width);
   assert.equal(photo.height, metadata.height);
   assert.ok(metadata.width >= 1200);
-  assert.ok($("main img[src*='ART_4449']").length > 0);
+  assert.equal(metadata.width, 1384);
+  assert.equal(metadata.height, 924);
+  assert.ok($("main img[src*='ART0783-1']").length > 0);
   const business = graph.find((node) => node["@type"] === "ProfessionalService");
   assert.equal(business.image["@id"], photo["@id"]);
   assert.match(business.logo, /logo-artbild/);
 });
 
-test("homepage preview contains only the photo, without a text overlay", async () => {
+test("homepage preview uses the Mallorca photo without Instagram UI or text overlays", async () => {
   const card = $("meta[property='og:image']").attr("content");
   assert.equal($("meta[name='twitter:image']").attr("content"), card);
   const actual = await readFile(localAsset(card));
   const expected = await sharp(localAsset(photo.url))
     .rotate()
-    .extract({ left: 0, top: 312, width: 1600, height: 840 })
-    .resize(1200, 630, { fit: "cover", position: "attention" })
+    .resize(1200, 630, { fit: "cover", position: "north" })
     .webp({ quality: 90, effort: 4, smartSubsample: true })
     .toBuffer();
   assert.deepEqual(actual, expected);
