@@ -1,4 +1,6 @@
 ---
+import androidChromeBackdropScript from "../scripts/fab-android-chrome.js?url&no-inline";
+
 const whatsappText = encodeURIComponent("Hallo York!\nBist Du noch buchbar am:");
 const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 ---
@@ -786,6 +788,8 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
     }, true);
   });
 </script>
+
+<script is:inline src={androidChromeBackdropScript} defer></script>
 
 <style>
   .floating-action {
