@@ -10,8 +10,10 @@ Stand: 3. September 2026. Produktionsziel: https://artbild-fotografie.de/.
 - Offizielle Social-Profile stammen aus den bereits veröffentlichten Unternehmens-/Personendaten. Das Pinterest-Profil `artbildf` wurde zusätzlich live geprüft: Profilname Artbild-Fotografie, Beschreibung Hochzeitsfotograf aus Hamburg.
 - Die Telefonnummer bleibt absichtlich aus JSON-LD heraus: die Website bietet dafür eine geschützte Anzeigenfunktion. Der Schutz wird nicht durch Klartext-Metadaten unterlaufen.
 - Verzeichnis-Öffnungszeiten weichen vom Google-Profil ab. Es werden keine ungeprüften Öffnungszeiten hinzugefügt und keine Profile extern bearbeitet.
-- Bei den eigenen Portfolio-/Reportage-Hauptbildern werden York Augustin als Urheber, Bildnachweis und die bestehende Rechteklausel `/impressum/#copyright-title` verknüpft. `/kontakt/` dient als Anlaufstelle für Rechteanfragen. Das erteilt keine neue Lizenz, insbesondere keine Creative-Commons-Freigabe.
-- Beim Bild `portrait-riverside.jpg` ist der Fotograf nicht belegt. Die fünf Seiten mit diesem Hauptbild erhalten nur den Bildnachweis Artbild-Fotografie; keine erfundene Urheberangabe und keine Lizenzbehauptung.
+- Bei den eigenen Portfolio-/Reportage-Hauptbildern sowie den Bildobjekten in den geprüften Artbild-Galerien werden York Augustin als Urheber, Bildnachweis und die bestehende Rechteklausel `/impressum/#copyright-title` verknüpft. `/kontakt/` dient als Anlaufstelle für Rechteanfragen. Das erteilt keine neue Lizenz, insbesondere keine Creative-Commons-Freigabe.
+- York hat am 03.09.2026 ausdrücklich bestätigt, auch beim Porträt Fotograf und Rechteinhaber zu sein. Die bisherige Ausnahme für `portrait-riverside.jpg` entfällt deshalb auf den fünf Seiten mit diesem Hauptbild.
+- Galerie-Ergänzungen gelten nur für lokale Foto-Dateien in den geprüften Galerie-Auszeichnungen. Externe Bilder, andere Urheber/Lizenzen, beliebige Bildobjekte und nicht geprüfte Galerie-URLs bleiben unberührt. Tests prüfen alle verschachtelten Bildobjekte, nicht nur die Hauptbilder.
+- Bei `Lovebirds am Elbstrand` fehlten zudem die Bild-URLs in 18 vorhandenen Galerie-Bildobjekten. `contentUrl`, Breite und Höhe werden jetzt aus denselben Bildimporten wie die sichtbare Galerie erzeugt; Bildauswahl und Darstellung bleiben gleich.
 - Keine Bewertungssterne, erfundenen Auszeichnungen, neuen Öffnungszeiten oder künstlich aktualisierten Publikationsdaten.
 
 ## Implementierung

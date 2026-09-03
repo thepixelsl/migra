@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { load } from "cheerio";
-import { businessIdentity, entityIds } from "../src/data/businessSeo.mjs";
+import { businessIdentity, entityIds, photoCredits } from "../src/data/businessSeo.mjs";
 import { packagePriceSchema } from "../src/data/packagePriceSchema.mjs";
 import { normalizeStructuredData, readSchemaGraph, schemaNodes, serializeSchema } from "../scripts/lib/structured-data.mjs";
 
@@ -62,22 +62,56 @@ test("primary photos have truthful attribution, existing rights terms and unchan
   for (const page of pages) {
     const photo = page.graph.find((node) => node["@id"] === `${page.card.canonicalUrl}#primaryimage`);
     assert.ok(photo.creditText, page.card.route);
-    if (["/about/", "/datenschutz/", "/impressum/", "/kontakt/", "/sicherer-kontakt/"].includes(page.card.route)
-      && photo.contentUrl.includes("portrait-riverside")) {
-      assert.equal(photo.creator, undefined, "Unknown portrait photographer must not become York");
-      assert.equal(photo.license, undefined);
-    } else {
-      assert.equal(photo.creator["@id"], ids.person, page.card.route);
-      assert.equal(photo.license, `${origin}/impressum/#copyright-title`);
-      assert.equal(photo.acquireLicensePage, `${origin}/kontakt/`);
-      assert.match(photo.copyrightNotice, /York Augustin/);
-    }
+    assert.equal(photo.creator["@id"], ids.person, page.card.route);
+    assert.equal(photo.license, `${origin}/impressum/#copyright-title`);
+    assert.equal(photo.acquireLicensePage, `${origin}/kontakt/`);
+    assert.match(photo.copyrightNotice, /York Augustin/);
     const business = page.graph.find((node) => node["@id"] === ids.business);
     assert.equal(business.image["@id"], homePhoto["@id"]);
     assert.equal(page.graph.find((node) => node["@id"] === business.image["@id"]).contentUrl, homePhoto.contentUrl);
   }
   const legal = load(await fs.readFile(path.join(dist, "impressum/index.html"), "utf8"));
   assert.match(legal("#copyright-title").parent().text(), /vorherigen schriftlichen Zustimmung/);
+});
+
+test("all reviewed image occurrences, including galleries and the confirmed self-portrait, have complete credits", async () => {
+  let count = 0;
+  const imageUrls = new Set();
+  for (const page of pages) {
+    for (const photo of page.nodes.filter((node) => [].concat(node["@type"]).includes("ImageObject"))) {
+      count++;
+      assert.ok(photo.contentUrl, `${page.card.route}: missing image URL`);
+      assert.equal(new URL(photo.contentUrl).origin, origin);
+      imageUrls.add(photo.contentUrl);
+      for (const [key, value] of Object.entries(photoCredits(origin))) {
+        assert.deepEqual(photo[key], value, `${page.card.route}: ${photo.contentUrl || photo.url}: ${key}`);
+      }
+    }
+  }
+  assert.ok(count >= 1074, "Regression: check nested images, not only primary photos");
+  await Promise.all([...imageUrls].map((url) => fs.access(path.join(dist, new URL(url).pathname))));
+});
+
+test("gallery credits preserve foreign rights and do not claim arbitrary images or unreviewed galleries", () => {
+  const own = { "@type": "ImageObject", contentUrl: `${origin}/_astro/own-photo.webp`, caption: "Unchanged caption", width: 1200 };
+  const external = { ...own, contentUrl: "https://example.com/photo.webp" };
+  const otherCreator = { ...own, creator: { "@type": "Person", name: "Another photographer" } };
+  const otherLicense = { ...own, license: "https://example.com/license" };
+  const logo = { ...own, contentUrl: `${origin}/images/partner-logo.png` };
+  const fixture = [structuredClone(homePhoto), {
+    "@type": "ImageGallery", "@id": `${origin}/gallery/paarshooting-mallorca/#test-gallery`,
+    image: [own, external, otherCreator, otherLicense, logo],
+  }, {
+    "@type": "ImageGallery", url: `${origin}/unreviewed-gallery/`, image: structuredClone(own),
+  }, {
+    "@type": "ImageGallery", url: `${origin}/gallery/paarshooting-mallorca/`,
+    author: { "@type": "Person", name: "Another photographer" }, image: structuredClone(own),
+  }, { "@type": "Organization", name: "Partner", logo: structuredClone(own) }];
+  const $ = load(`<html><head><link rel="canonical" href="${origin}/"><script type="application/ld+json">${serializeSchema(fixture)}</script></head><body></body></html>`);
+  const result = normalizeStructuredData($, "/", { origin, homepageImage: homePhoto, portraitImage: `${origin}/images/portrait-riverside.webp` });
+  assert.deepEqual(result[1].image[0], { ...own, ...photoCredits(origin) });
+  assert.deepEqual(result[1].image.slice(1), [external, otherCreator, otherLicense, logo]);
+  assert.deepEqual(result.slice(2, 5), fixture.slice(2, 5));
 });
 
 test("both price and agent pages model hourly prices and minimum duration, not a false total", () => {

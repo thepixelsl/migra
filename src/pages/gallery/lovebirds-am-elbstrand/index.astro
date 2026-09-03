@@ -101,7 +101,10 @@ const schemaGraph = {
       "image": galleryImages.map((item, index) => ({
         "@type": "ImageObject",
         "position": index + 1,
-        "caption": item.alt
+        "caption": item.alt,
+        "contentUrl": new URL(item.image.src, siteUrl).href,
+        "width": item.image.width,
+        "height": item.image.height
       }))
     },
     {

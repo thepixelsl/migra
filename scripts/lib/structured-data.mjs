@@ -1,4 +1,4 @@
-import { createIdentityGraph, entityIds, primaryPhotoCredits } from "../../src/data/businessSeo.mjs";
+import { createIdentityGraph, entityIds, photoCredits } from "../../src/data/businessSeo.mjs";
 import { pageSeo } from "../../src/data/pageSeo.mjs";
 import { isDeepStrictEqual } from "node:util";
 
@@ -31,11 +31,31 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
   const ids = entityIds(origin);
   const ownIds = new Set(Object.values(ids));
   const oldGraph = readSchemaGraph($);
+  const credits = photoCredits(origin);
   const ref = (id) => ({ "@id": id });
   const ownIdentity = (node) => {
     if (ownIds.has(node["@id"])) return node["@id"];
     if (types(node).includes("Person") && node.name === "York Augustin") return ids.person;
     return null;
+  };
+  const isReviewedGallery = (node) => {
+    try {
+      const url = new URL(node.url || node["@id"]);
+      return url.origin === origin && Object.hasOwn(pageSeo, url.pathname)
+        && [node.creator, node.author, node.publisher, node.provider].every((value) =>
+          !value || [].concat(value).every((identity) => ownIds.has(identity["@id"])));
+    } catch { return false; }
+  };
+  const creditGalleryPhoto = (photo) => {
+    if (!types(photo).includes("ImageObject")) return photo;
+    try {
+      const url = new URL(photo.contentUrl || photo.url);
+      // Reviewed Artbild gallery photos only, never arbitrary same-origin
+      // images, logos, external images or a conflicting existing attribution.
+      if (url.origin !== origin || !/^\/(?:_astro|gallery|migrated-assets)\/.*\.(?:webp|jpe?g|png|avif)$/i.test(url.pathname)) return photo;
+      if (Object.entries(credits).some(([key, value]) => photo[key] !== undefined && !isDeepStrictEqual(photo[key], value))) return photo;
+      return { ...photo, ...photoCredits(origin) };
+    } catch { return photo; }
   };
   function rewrite(value) {
     if (Array.isArray(value)) return value.map(rewrite);
@@ -53,18 +73,20 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     // Offer ordering is already determined by itemListElement. `position` is
     // not an Offer property (it belongs on ListItem/CreativeWork).
     if (types(node).includes("Offer")) delete node.position;
+    if (types(node).includes("ImageGallery") && isReviewedGallery(node) && node.image) {
+      node.image = Array.isArray(node.image) ? node.image.map(creditGalleryPhoto) : creditGalleryPhoto(node.image);
+    }
     return node;
   }
   let graph = oldGraph.filter((node) => !ownIdentity(node)
     && !(route !== "/" && node["@id"] === homepageImage["@id"])).map(rewrite);
   const primary = graph.find((node) => node["@id"] === `${canonical}#primaryimage`);
   if (!primary?.contentUrl) throw new Error(`Primary photo missing: ${route}`);
-  const portrait = pageSeo[route].image === "public/images/portrait-riverside.jpg";
-  Object.assign(primary, primaryPhotoCredits(origin, { portrait }));
+  Object.assign(primary, photoCredits(origin));
 
   // All pages refer to the same business image, never to an unrelated venue,
   // legal-page portrait or article illustration as the identity's main photo.
-  if (route !== "/") graph.push({ ...homepageImage, ...primaryPhotoCredits(origin) });
+  if (route !== "/") graph.push({ ...homepageImage, ...photoCredits(origin) });
   graph.push(...createIdentityGraph(origin, { homepageImage, portraitImage }));
   const seen = new Map();
   graph = graph.filter((node) => {

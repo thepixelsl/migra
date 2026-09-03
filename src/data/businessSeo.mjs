@@ -82,10 +82,9 @@ export function createIdentityGraph(origin, { homepageImage, portraitImage }) {
   ];
 }
 
-export function primaryPhotoCredits(origin, { portrait = false } = {}) {
-  // The photographer of York's portrait is not established. Credit the source
-  // without inventing a self-portrait attribution or offering third-party rights.
-  if (portrait) return { creditText: businessIdentity.name };
+export function photoCredits(origin) {
+  // York confirmed on 2026-09-03 that he is also the photographer and rights
+  // holder of his portrait. These links describe reserved rights, not a grant.
   return {
     creator: { "@id": entityIds(origin).person },
     creditText: `${businessIdentity.personName} / ${businessIdentity.name}`,
