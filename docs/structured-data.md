@@ -46,3 +46,23 @@ Stand: 3. September 2026. Produktionsziel: https://artbild-fotografie.de/.
 - https://www.hamburg.de/branchenbuch/hamburg/eintrag/10732809/
 
 Strukturierte Daten schaffen keine Ranking- oder Darstellungs-Garantie. Standort-/Namensdaten ersetzen nicht die Pflege des Google-Unternehmensprofils.
+
+## Produktionsnachweis
+
+- Code-Commit: `76406da7e77d383e08a85c96a2e8f665b97021d4`.
+- Erfolgreicher Produktionsworkflow: https://github.com/thepixelsl/migra/actions/runs/33702225270.
+- Image: `ghcr.io/thepixelsl/migra-bunny-dev:prod-sha-76406da`, Digest `sha256:bc086e3699d2f9381e435da6971b25dd1295118ad29aed2b59ebdb827cfc5c1a`.
+- Bunny `artbild-dev` / `web`: Active, genau ein bereiter Frankfurt-Pod `BhLRmPO920O2fb`. Vorheriger Pod `BhdzqVGPIuxXv7` entfernt.
+- 55 Tests bestanden: 34 Bunny, 4 Sanitizer, 7 strukturierte Daten und 10 SEO. Vollständiger Produktionsbuild erfolgreich, auch auf Linux in GitHub Actions.
+- 56 öffentliche Seiten: Status 200, vollständiger Schema-Graph und vorhandene Inhalte entsprechen dem geprüften Build. Kein Cache-Purge erforderlich. Siehe `reports/structured-data-2026-09-03/live.json`.
+- 102 unterschiedliche Haupt-/Vorschaubilder: Status 200 und Bild-MIME-Typ. Siehe `reports/structured-data-2026-09-03/images-live.json`.
+- Nach Containerwechsel: `/readyz` und `/healthz` 200; `/api/admin/availability` 401 mit `noindex, nofollow, noarchive`; unbekannter Prüfpfad 404.
+- Google Rich Results Test, Smartphone, 03.09.2026 03:19:37: Bild-Metadaten, LocalBusiness und Organization jeweils gültig. LocalBusiness hat nur die optionalen Hinweise `telephone` und `priceRange`; keine ungeprüften Werte ergänzt.
+- Google-Test: https://search.google.com/test/rich-results/result?id=l97H7nxJ9j0cmJz4SUW8UA.
+- Schema.org-Livetest der Preisseite: 0 Fehler, 0 Warnungen: https://validator.schema.org/#url=https%3A%2F%2Fartbild-fotografie.de%2Fhochzeitsfotograf-preise%2F.
+
+### Separater Bestandsbefund: Galerie-Listen sind keine Google-Karussells
+
+Der Google-Test meldet zusätzlich zwei nicht qualifizierte Karussell-Elemente für die bestehenden IDs `/#home-lower-sections` und `/#portfolio-featured`: mehrere ItemLists, wiederholte Ziel-URLs sowie die gleichzeitige Verwendung von URL und eingebettetem Item. Beide Listen stammen unverändert aus `src/pages/index.astro` beziehungsweise `src/components/FeaturedPortfolioLinks.astro` (bereits vor diesem Release vorhanden).
+
+Dieser Befund ist von der gültigen Standort-/Bildauszeichnung zu trennen. Googles Host-Karussell unterstützt spezielle Inhaltstypen, keine allgemeinen Fotogalerien: https://developers.google.com/search/docs/appearance/structured-data/carousel. Es wurden keine falschen Rezept-, Film- oder Produkt-Typen ergänzt und keine Galerie-Inhalte entfernt, nur um den Rich-Results-Test grün zu färben. Die Galerie-Listen bleiben außerhalb der hier beauftragten hoch/mittel priorisierten Standort-, Identitäts-, Autoren-, Bildrechte- und Preisänderungen unverändert. Der Bericht behauptet deshalb ausdrücklich nicht, dass sämtliche Google-Rich-Results-Prüfungen fehlerfrei sind.

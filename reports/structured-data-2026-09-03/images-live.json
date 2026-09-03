@@ -1,0 +1,619 @@
+{
+  "checkedAt": "2026-09-03T01:22:32.383Z",
+  "imageCount": 102,
+  "errors": [],
+  "images": [
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_7349-scaled-3e4ae0dba255bd5b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/blog-1af1e365f828.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/portrait-riverside-1aec55f0f4167c9c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/about-f42e8765808a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/_astro/ART0783-1.CZnlWDcD_Z1xqtTc.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/home.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/555b999643b90697-e28e86c68faeb0d3.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/braut-fotoshooting-fraser-suites-hamburg-969e15c18e33.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/brautpaar-in-zuerich-f58def405745.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_8515-Bearbeitet-scaled-bcec13cf0b1be139.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/getting_ready_hochzeitsfotograf_hamburg2385-768x513-393c90aa3fd26095.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/brautstyling-hamburg-6bb4652eea2b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/5e02af00ed8dc76f-69024ee43c884d2a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg-a1c6327041ad.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/datenschutz-f42e8765808a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_7479-Verbessert-RR-051f6258cd4e1380.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/die-perfekte-hotelsuite-am-hochzeitsmorgen-e9b0d4fd391d.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART9896-1-1-200d86f8d191e6f1.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/fuer-agenten-57da88d21969.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_4449-1c6a808277428359.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_4908-Bearbeitet-699060a33f0f6718.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery-category/hochzeit-b0d528f3770a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery-category/travel-c9e15fe3d7b6.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_5120-Bearbeitet-f6d94f3ba5aa204c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_4765-42bd718c0e24f8b2.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/brautkleid-editorial-paris-9cc88c464b65.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/braeutigam-im-barberhouse-hamburg-a648869a8541.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/K1024_poel-2-642afc3f697eaa1c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_7899-Bearbeitet-95273ae7987c3ba9.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/der-norden-und-die-kueste-2380a23fa3bb.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/editorial-london-6232f868b04d.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_9706-Bearbeitet-Bearbeitet-f7cebcf6968eb134.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/editorial-bfde289797a1.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/ella-deck-couture-11c205d7c6eb.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ella_deck_couture-scaled-ae395f719fb9e135.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/blumenkopf_1-1_thumb-3280ef0d886ef7a8.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/getting_ready_hochzeitsfotograf_hamburg3444-683x1024-0c1de8b031db6935.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/floral-art-6c76ee5887c4.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/getting-ready-hamburg-3518c00d4dee.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_3528-HDR_print-04048d4fd36a81cf.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hannover-3cf2bb004ba2.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hamburg-c9e15fe3d7b6.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_8686-Bearbeitet-2-scaled-a6aa738ab0f1ffb8.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-braut-fotoshooting-hamburg-c65030c146af.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_1916-Bearbeitet-6ca25c66d4912407.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-valerie-und-tim-b0d528f3770a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-jahrhunderhalle-bochum-cdc4fb8a40a2.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/Hochzeit_Lauenbrueck_4794-1-1024x684-74da9b682eb9ad73.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ff9af8435a08e944-11aff5406b1463bc.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotograf-niedersachsen-48caf67a1215.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotos-hamburg-bc330b827476.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_1881-HDR-Bearbeitet-6584da2b57031966.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/lovebirds-am-elbstrand-9097a36b168b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/art-8413-a0b5b74eb51d4e4b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/mallorca-b55034f21f81.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART0783-1-5eb5a2ec650a254c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/paarshooting-mallorca-f0cff329fe7b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/DSC_4967-1fa350b5d1e1a7ea.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/paris-cea00801de14.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/trauung_standesamt_altona_hamburg0746-1024x684-f268856f31464863.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg-6db3c5b32563.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/K1024_Unbenannt-28-1162b29f8aca69b6.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/teneriffa-8634a9c3e994.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART3557-Bearbeitet-2-1024x684-18b43fed27c3768c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/steffi-dominik-40d64bd6318f.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/traumhochzeit-hamburg-506fb6a2757ea480.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-hamburg-9b1eac96b1ff.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_5851_web-316cc39480f64838.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/venedig-303adca28fbf.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-paris-86038dd984f5.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_8436-HDR-c28a8a164c58f3a0.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/manija-biebow-brautstyling-hamburg-a2376a2b44aa827c.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/visagistin-manja-biebow-c4704cde99b4.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/gallery/yildiz-duman-werner-f2815dcc31c2.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/brautfrisur-offenes-haar-1e5f43d3baccb610.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/getting-ready-brautstyling-hamburg-b46cf634b2c268bc.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden-4db44f45c0b7.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-preise-fde366e4c0aa.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/hochzeitsfotograf-hamburg-ratgeber-art9666-7fea1df0d83c66e9.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-ratgeber-8a79aafbd3ef.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/rathaus-altona-fa743e35c229bce9.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-standesamt-hamburg-altona-d53a93440288.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/impressum-f42e8765808a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/kontakt-f42e8765808a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_0342-Bearbeitet-Bearbeitet-scaled-234ba7e38e2fdca6.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/location-scouting-in-paris-77f33f41526f.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ND-Filter-Tabelle-e1566288047251-46fabbd32e96ea8f.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/nd-filter-tabelle-cc818abf261e.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_6856-Bearbeitet-27c0fc93bfb05daa.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/portfolio-b0d528f3770a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/newsletter-eda2967aed24.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/sicherer-kontakt-f42e8765808a.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/standesamt-hamburg-d53a93440288.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/trautermin-hamburg-rathaus-titel-4ad47d265105ff31.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/traum-hochzeit-location-hamburg-1af1e365f828.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/trautermin-hamburg-online-reservieren-a429878bae7e.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_0632-Bearbeitet-9aedefa070ddf75b.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/unterwegs-in-baden-wuerttemberg-2b03beda2d47.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART_9955-Bearbeitet-Bearbeitet-Bearbeitet-scaled-6c7a8120b5f89529.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/unterwegs-in-strasbourg-38dabc1dbfa4.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/serp-images/ART3557-Bearbeitet-2-191acd8af38b4aae.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    },
+    {
+      "url": "https://artbild-fotografie.de/social-cards/wie-sollte-man-hochzeitsfotos-sichern-10a56fc99c95.webp",
+      "status": 200,
+      "type": "image/webp",
+      "ok": true
+    }
+  ]
+}

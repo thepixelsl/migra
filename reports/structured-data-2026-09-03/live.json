@@ -1,0 +1,342 @@
+{
+  "checkedAt": "2026-09-03T01:23:17.913Z",
+  "pages": [
+    {
+      "route": "/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/about/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/blog/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/braut-fotoshooting-fraser-suites-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/brautpaar-in-zuerich/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/brautstyling-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/datenschutz/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/die-perfekte-hotelsuite-am-hochzeitsmorgen/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/fuer-agenten/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery-category/hochzeit/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery-category/travel/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/braeutigam-im-barberhouse-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/brautkleid-editorial-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/der-norden-und-die-kueste/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/editorial-london/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/editorial/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/ella-deck-couture/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/floral-art/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/getting-ready-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hannover/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hochzeit-braut-fotoshooting-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hochzeit-jahrhunderhalle-bochum/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hochzeit-valerie-und-tim/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hochzeitsfotograf-niedersachsen/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/hochzeitsfotos-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/lovebirds-am-elbstrand/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/mallorca/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/paarshooting-mallorca/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/paris/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/steffi-dominik/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/teneriffa/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/traumhochzeit-in-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/traumhochzeit-in-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/venedig/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/visagistin-manja-biebow/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/gallery/yildiz-duman-werner/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/hochzeitsfotograf-preise/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/hochzeitsfotograf-ratgeber/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/hochzeitsfotograf-standesamt-hamburg-altona/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/impressum/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/kontakt/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/location-scouting-in-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/nd-filter-tabelle/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/newsletter/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/portfolio/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/sicherer-kontakt/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/standesamt-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/traum-hochzeit-location-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/trautermin-hamburg-online-reservieren/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/unterwegs-in-baden-wuerttemberg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/unterwegs-in-strasbourg/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    },
+    {
+      "route": "/wie-sollte-man-hochzeitsfotos-sichern/",
+      "status": 200,
+      "cache": "HIT",
+      "matches": true
+    }
+  ],
+  "errors": []
+}
