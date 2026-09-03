@@ -62,7 +62,7 @@ test("primary image is the user-selected original Mallorca photograph", async ()
   assert.equal(metadata.width, 1384);
   assert.equal(metadata.height, 924);
   assert.ok($("main img[src*='ART0783-1']").length > 0);
-  const business = graph.find((node) => node["@type"] === "ProfessionalService");
+  const business = graph.find((node) => node["@type"] === "LocalBusiness");
   assert.equal(business.image["@id"], photo["@id"]);
   assert.match(business.logo, /logo-artbild/);
 });

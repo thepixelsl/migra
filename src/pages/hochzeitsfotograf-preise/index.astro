@@ -8,6 +8,7 @@ import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
 import { googleReviews } from "../../data/reviews";
 import { weddingPackages } from "../../data/weddingPackages";
+import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
@@ -44,23 +45,15 @@ const packages = weddingPackages.map((item) => ({
   ...packageMedia[item.id],
 }));
 
-const packageOffers = packages.map((item, index) => ({
+const packageOffers = packages.map((item) => ({
   "@type": "Offer",
   "@id": `${pageUrl}#angebot-${item.id}`,
   name: item.name,
   description: item.intro,
   url: `${pageUrl}#paket-${item.id}`,
-  priceCurrency: "EUR",
-  price: item.priceValue,
+  ...packagePriceSchema(item),
   category: "Hochzeitsfotografie",
-  position: index + 1,
   image: new URL(item.image.src, siteUrl).href,
-  priceSpecification: {
-    "@type": "PriceSpecification",
-    priceCurrency: "EUR",
-    price: item.priceValue,
-    description: item.priceNote,
-  },
   itemOffered: {
     "@type": "Service",
     "@id": `${pageUrl}#leistung-${item.id}`,
@@ -232,7 +225,7 @@ const schemaGraph = {
         { "@type": "City", name: "Hamburg" },
         { "@type": "AdministrativeArea", name: "Norddeutschland" },
       ],
-      offers: {
+      hasOfferCatalog: {
         "@type": "OfferCatalog",
         "@id": `${pageUrl}#pakete`,
         name: "Pakete für Hochzeitsfotografie in Hamburg",

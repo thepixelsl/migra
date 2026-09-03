@@ -4,6 +4,7 @@ import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import { weddingPackages } from "../../data/weddingPackages";
+import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
 import {
   agentAdvertisingPolicy,
   agentAvailabilityExample,
@@ -46,24 +47,17 @@ const requestExample = JSON.stringify({
 
 const responseExample = JSON.stringify(agentAvailabilityExample.response, null, 2);
 
-const offers = weddingPackages.map((item, index) => ({
+const offers = weddingPackages.map((item) => ({
   "@type": "Offer",
-  position: index + 1,
   name: item.name,
   url: `${pageUrl}#paket-${item.id}`,
-  priceCurrency: "EUR",
-  price: item.priceValue,
+  ...packagePriceSchema(item),
   description: `${item.priceLabel}. ${item.intro} Dauer: ${item.duration}.`,
-  priceSpecification: {
-    "@type": "PriceSpecification",
-    priceCurrency: "EUR",
-    price: item.priceValue,
-    description: item.priceNote,
-  },
   itemOffered: {
     "@type": "Service",
     name: item.name,
     serviceType: item.serviceType,
+    provider: { "@id": `${siteUrl}/#organization` },
     description: `${item.intro} Enthalten sind: ${item.features.join(", ")}.`,
   },
 }));
@@ -99,7 +93,7 @@ const schemaGraph = {
         { "@type": "AdministrativeArea", name: "Norddeutschland" },
         { "@type": "Place", name: "Mallorca" },
       ],
-      offers: {
+      hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: "Pakete für Hochzeitsfotografie",
         itemListElement: offers,
