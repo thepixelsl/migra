@@ -49,7 +49,7 @@ Stand: 3. September 2026. Produktionsziel: https://artbild-fotografie.de/.
 
 Strukturierte Daten schaffen keine Ranking- oder Darstellungs-Garantie. Standort-/Namensdaten ersetzen nicht die Pflege des Google-Unternehmensprofils.
 
-## Produktionsnachweis
+## Produktionsnachweis des ersten Releases
 
 - Code-Commit: `76406da7e77d383e08a85c96a2e8f665b97021d4`.
 - Erfolgreicher Produktionsworkflow: https://github.com/thepixelsl/migra/actions/runs/33702225270.
@@ -62,6 +62,19 @@ Strukturierte Daten schaffen keine Ranking- oder Darstellungs-Garantie. Standort
 - Google Rich Results Test, Smartphone, 03.09.2026 03:19:37: Bild-Metadaten, LocalBusiness und Organization jeweils gültig. LocalBusiness hat nur die optionalen Hinweise `telephone` und `priceRange`; keine ungeprüften Werte ergänzt.
 - Google-Test: https://search.google.com/test/rich-results/result?id=l97H7nxJ9j0cmJz4SUW8UA.
 - Schema.org-Livetest der Preisseite: 0 Fehler, 0 Warnungen: https://validator.schema.org/#url=https%3A%2F%2Fartbild-fotografie.de%2Fhochzeitsfotograf-preise%2F.
+
+### Bildrechte-Nachtrag vom 03.09.2026
+
+- Anlass: Die Search Console meldete vier optionale Felder beim Mallorca-Hauptbild auf der Startseite, Crawl vom 02.09.2026. Diese konkrete Meldung bezog sich auf den Stand vor dem ersten Release. Ein frischer Google-Test vom 03.09.2026, 12:02:28 bestätigte das vollständige Hauptbild: https://search.google.com/test/rich-results/result?id=GhzludN8uxDOzZgv3_yGwA.
+- Die zusätzliche Bestandsprüfung fand fehlende Rechteangaben in Galerie-Bildobjekten. Nach Yorks ausdrücklicher Bestätigung als Fotograf und Rechteinhaber gilt die Ergänzung auch für sein Porträt.
+- Code-Commit `00bb0ae2b5d5de89cd2529676d8e29fed1ca2723`, Produktionsworkflow erfolgreich: https://github.com/thepixelsl/migra/actions/runs/33741729820.
+- Image `ghcr.io/thepixelsl/migra-bunny-dev:prod-sha-00bb0ae`, Digest `sha256:dc9913ca54c63878605b7b3a2b00110583be6456f9d95d9d1635b3d90483cd8a`.
+- Bunny `artbild-dev` / `web`: Active, ein bereiter Frankfurt-Pod `OmV2fxh0Ycn2D9`, alter Pod `BhLRmPO920O2fb` entfernt.
+- 57 Tests bestanden: 34 Bunny, 4 Sanitizer, 9 strukturierte Daten und 10 SEO. Texte, sichtbare Bilder, Links und vorhandene Seitenmetadaten auf 56 Seiten unverändert.
+- Zwei vollständige öffentliche Abgleiche: 56/56 Seiten stimmen mit dem Build überein; zuerst 56 Cache-Status EXPIRED, danach 56 HIT. Kein Cache-Purge nötig. Alle 1.074 ImageObject-Vorkommen tragen vollständige Bildrechte; alle 918 unterschiedlichen referenzierten Bilddateien antworten mit HTTP 200 und Bild-MIME-Typ.
+- Google-Livetest der Elbstrand-Galerie, 03.09.2026 12:12:41: 20 gültige Bild-Metadaten-Elemente ohne Bild-Metadaten-Warnungen: https://search.google.com/test/rich-results/result?id=Vk1Z5r1ulf0J-FcvwzE8HQ.
+- Search Console: Nachprüfungen der vier ursprünglichen Warnungen gestartet; die endgültige Google-Validierung ist noch offen. Kein Versprechen einer SERP-Bildanzeige oder eines Rankinggewinns.
+- Maschinenlesbare Nachweise: `reports/structured-data-2026-09-03/image-rights-followup.json`.
 
 ### Separater Bestandsbefund: Galerie-Listen sind keine Google-Karussells
 
