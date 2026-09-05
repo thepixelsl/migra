@@ -351,6 +351,7 @@ test("blocks GTM and all providers before a consent decision", async ({ page }) 
   await expect(page.locator("[data-consent-dialog]")).toBeVisible();
 
   expect(requests.some((url) => url.includes("googletagmanager.com/gtm.js"))).toBe(false);
+  expect(requests.some((url) => url.includes("googletagmanager.com/gtag/js"))).toBe(false);
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
   expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
   await expect(page.locator('script[data-artbild-provider="google-tag-manager"]')).toHaveCount(0);
@@ -367,6 +368,72 @@ test("blocks GTM and all providers before a consent decision", async ({ page }) 
   });
 });
 
+test("starts direct GA4 once after statistics consent and restores it on the next page", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  expect(requests).toEqual([]);
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByLabel("Statistik erlauben").check();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
+  await expect.poll(() => requests.filter((url) => url.includes("/gtag/js?")).length).toBe(1);
+  const commands = await readGtagCommands(page);
+  const consentIndex = commands.findIndex((entry) => entry[0] === "consent" && entry[1] === "update");
+  const configIndex = commands.findIndex((entry) => entry[0] === "config");
+  expect(consentIndex).toBeGreaterThanOrEqual(0);
+  expect(configIndex).toBeGreaterThan(consentIndex);
+  expect(commands[consentIndex][2]).toMatchObject({
+    analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
+  });
+  expect(await page.evaluate(() => window.dataLayer.find((entry) => entry?.event === "artbild_tracking_config")?.google_analytics_delivery)).toBe("direct");
+  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
+  expect((await readGtagCommands(page)).filter((entry) => entry[0] === "config")).toHaveLength(1);
+  expect(requests.filter((url) => url.includes("/gtag/js?"))).toHaveLength(1);
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await expect.poll(() => requests.filter((url) => url.includes("/gtag/js?")).length).toBe(2);
+  expect((await readGtagCommands(page)).filter((entry) => entry[0] === "config")).toHaveLength(1);
+});
+
+test("retries a failed direct GA4 download once without duplicating configuration", async ({ page }) => {
+  await captureProviderRequests(page);
+  let attempts = 0;
+  await page.route("https://www.googletagmanager.com/gtag/js?**", async (route) => {
+    attempts += 1;
+    if (attempts === 1) await route.abort("failed");
+    else await route.fulfill({ status: 200, contentType: "application/javascript", body: "" });
+  });
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByLabel("Statistik erlauben").check();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
+  await expect.poll(() => attempts).toBe(2);
+  await expect.poll(() => page.evaluate(() => window.__artbildGoogleAnalyticsLoaded)).toBe(true);
+  expect((await readGtagCommands(page)).filter((entry) => entry[0] === "config")).toHaveLength(1);
+  await expect(page.locator('script[data-artbild-provider="google-analytics"]')).toHaveCount(1);
+});
+
+test("revoking only Analytics removes the direct tag while preserving Clarity consent", async ({ page }) => {
+  const requests = await captureProviderRequests(page);
+  await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
+  await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByLabel("Statistik erlauben").check();
+  await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
+  await expect.poll(() => requests.filter((url) => url.includes("/gtag/js?")).length).toBe(1);
+  await page.getByRole("button", { name: "Datenschutz-Einstellungen öffnen" }).click();
+  await page.getByText("DETAILS ANZEIGEN", { exact: true }).first().click();
+  await page.getByLabel("Google Analytics erlauben", { exact: true }).uncheck();
+  await Promise.all([
+    page.waitForEvent("domcontentloaded"),
+    page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click(),
+  ]);
+  await expect(page.locator('script[data-artbild-provider="google-analytics"]')).toHaveCount(0);
+  expect(requests.filter((url) => url.includes("/gtag/js?"))).toHaveLength(1);
+  expect(await page.evaluate(() => window.ArtbildConsent.services)).toMatchObject({
+    googleAnalytics: false, microsoftClarity: true, googleTagManager: true,
+  });
+  expect((await readGtagCommands(page)).filter((entry) => entry[0] === "config")).toHaveLength(0);
+});
+
 test("updates Google consent when Meta Pixel is selected independently", async ({ page }) => {
   const requests = await captureProviderRequests(page);
 
@@ -380,6 +447,8 @@ test("updates Google consent when Meta Pixel is selected independently", async (
     .toBe(true);
   expect(requests.some((url) => url.includes("clarity.ms"))).toBe(false);
   expect(requests.some((url) => url.includes("connect.facebook.net"))).toBe(false);
+
+  expect(requests.some((url) => url.includes("/gtag/js?"))).toBe(false);
 
   await expect.poll(async () => {
     const commands = await readGtagCommands(page);

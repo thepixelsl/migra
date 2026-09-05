@@ -79,6 +79,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const hostAllowed = Array.isArray(config.allowedHosts)
       && config.allowedHosts.some((rule) => hostMatches(hostname, String(rule).toLowerCase()));
     const providersEnabled = config.environment !== "disabled" && hostAllowed;
+    const directGoogleAnalytics = config.googleAnalyticsDelivery === "direct";
 
     const readCookie = (name) => {
       const prefix = `${name}=`;
@@ -187,6 +188,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       event: "artbild_tracking_config",
       tracking_environment: config.environment,
       google_analytics_id: config.googleAnalyticsId || undefined,
+      google_analytics_delivery: directGoogleAnalytics ? "direct" : "tag_manager",
       meta_delivery: "google_tag_manager",
       clarity_delivery: "google_tag_manager",
       ga4_data_retention_months: config.ga4DataRetentionMonths,
@@ -227,6 +229,51 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         ? "granted"
         : "denied";
       return publicState;
+    };
+
+    let googleAnalyticsLoading = false;
+    let googleAnalyticsAttempts = 0;
+    let googleAnalyticsRetry;
+
+    const loadGoogleAnalytics = () => {
+      if (
+        !directGoogleAnalytics
+        || !providersEnabled
+        || config.googleTrackingConfigured !== true
+        || window.ArtbildConsent?.services?.googleAnalytics !== true
+        || !/^G-[A-Z0-9]{6,}$/i.test(config.googleAnalyticsId || "")
+        || googleAnalyticsLoading
+        || window.__artbildGoogleAnalyticsLoaded
+        || googleAnalyticsAttempts >= 2
+      ) return;
+
+      // Queue one configuration per document, including when a failed download is retried.
+      if (!window.__artbildGoogleAnalyticsConfigured) {
+        window.__artbildGoogleAnalyticsConfigured = true;
+        window.gtag("js", new Date());
+        window.gtag("config", config.googleAnalyticsId);
+      }
+
+      window.clearTimeout(googleAnalyticsRetry);
+      googleAnalyticsLoading = true;
+      googleAnalyticsAttempts += 1;
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(config.googleAnalyticsId)}`;
+      script.dataset.artbildProvider = "google-analytics";
+      script.onload = () => {
+        googleAnalyticsLoading = false;
+        window.__artbildGoogleAnalyticsLoaded = true;
+      };
+      script.onerror = () => {
+        googleAnalyticsLoading = false;
+        script.remove();
+        // Retry a definitive load failure once; never retry a still-pending script.
+        if (googleAnalyticsAttempts < 2) {
+          googleAnalyticsRetry = window.setTimeout(loadGoogleAnalytics, 1500);
+        }
+      };
+      document.head.appendChild(script);
     };
 
     const loadGoogleTagManager = () => {
@@ -351,6 +398,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         || state.microsoftClarity
         || state.metaPixel;
       const googleTagManagerWasGranted = currentServices.googleTagManager === true;
+      const googleAnalyticsWasGranted = currentServices.googleAnalytics === true;
       const clarityWasGranted = currentServices.microsoftClarity === true;
       const metaWasGranted = currentServices.metaPixel === true;
       const decision = {
@@ -366,6 +414,11 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       writeDecision(decision);
       publishState(state, true);
       window.gtag("consent", "update", googleConsentState(state));
+      if (state.googleAnalytics) {
+        loadGoogleAnalytics();
+      } else {
+        window.clearTimeout(googleAnalyticsRetry);
+      }
 
       if (state.microsoftClarity) {
         updateClarityConsent(true);
@@ -425,6 +478,12 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
       if (
         (
+          googleAnalyticsWasGranted
+          && !state.googleAnalytics
+          && window.__artbildGoogleAnalyticsConfigured === true
+        )
+        ||
+        (
           googleTagManagerWasGranted
           && !state.googleTagManager
           && window.__artbildGoogleTagManagerLoaded === true
@@ -483,6 +542,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     });
 
     if (initialState.googleTagManager) {
+      loadGoogleAnalytics();
       loadGoogleTagManager();
     }
     window.setTimeout(() => {

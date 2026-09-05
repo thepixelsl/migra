@@ -12,9 +12,11 @@ Die Website trennt Einwilligung, Ereignisse und Anbieter:
    `marketing`.
 3. `TrackingDataLayer.astro` erzeugt ausschließlich strukturierte Ereignisse
    ohne Formularinhalte oder angefragte Termine.
-4. Google Analytics wird über den Google Tag Manager konfiguriert. Vor einer
-   Einwilligung werden weder GTM noch das Google-Tag geladen; dadurch entstehen
-   auch keine cookielosen Google-Signale.
+4. Google Analytics wird nach Statistik-Einwilligung direkt über `gtag.js`
+   konfiguriert. Consent Mode v2 bleibt im Basic Mode: Vor einer Einwilligung
+   werden weder GTM noch das Google-Tag geladen. `google_analytics_delivery`
+   wird vor dem GTM-Start auf `direct` gesetzt; eine GTM-Ausnahme verhindert
+   auf diesen Seiten die zweite GA4-Initialisierung durch den Container.
 5. Microsoft Clarity liegt im GTM und benötigt zusätzlich
    `analytics_storage=granted` sowie ein freigegebenes Statistikereignis.
 6. Das Meta Pixel liegt im GTM und benötigt zusätzlich `ad_storage=granted`
@@ -117,14 +119,19 @@ item_index
 faq_id
 ```
 
-Empfohlene Tags:
+Tags und direkter GA4-Start:
 
-1. Google Tag mit `{{google_analytics_id}}`.
-2. Auslösung auf allen öffentlichen Seiten.
+1. Das Google-Tag im GTM bleibt für ältere Seitenstände verfügbar.
+2. Ausnahme ausschließlich für dieses Google-Tag:
+   benutzerdefiniertes Ereignis `.*` (Regex) und
+   `{{google_analytics_delivery}}` gleich `direct`.
+   Alte Seiten ohne diesen Wert starten GA4 weiterhin über den Container.
 3. Keine zusätzlichen Consent-Checks für Google Tags, da deren eingebaute
    Consent-Prüfungen verwendet werden.
-4. Die lokalen Ereignisse werden nach Statistik-Einwilligung über
-   `gtag("event", …)` an das im Container konfigurierte Google-Tag übergeben.
+4. `TrackingHead.astro` stellt nach dem Consent-Update genau einmal pro
+   Dokument `gtag("js", …)` und `gtag("config", measurementId)` in die Queue
+   und lädt das Google-Tag asynchron. Die lokalen Ereignisse werden danach
+   über `gtag("event", …)` an dieses Tag übergeben.
 5. Meta-Basistags benötigen `ad_storage` als zusätzlichen Consent-Check und den
    Trigger `Marketing-Einwilligung erteilt`.
 6. Clarity benötigt `analytics_storage` als zusätzlichen Consent-Check und den
@@ -134,6 +141,16 @@ Empfohlene Tags:
 
 Vor Veröffentlichung muss der Container im Preview-Modus und anschließend mit
 Tag Assistant geprüft werden.
+
+Der direkte Loader wiederholt einen eindeutig fehlgeschlagenen Download
+höchstens einmal nach 1,5 Sekunden und nur bei weiter bestehender Zustimmung.
+Die Konfiguration wird dabei nicht erneut eingereiht. Ein noch laufender
+Download wird nicht wegen eines Zeitlimits doppelt gestartet. Bei einem
+Analytics-Widerruf werden Consent und Cookie-Auswahl zuerst aktualisiert;
+anschließend entfernt ein Reload auch den bereits initialisierten Google-Code,
+selbst wenn Clarity oder Meta weiterhin erlaubt sind.
+
+Release und Rückweg: [GA4-Direktstart und Rollback](ga4-direct-rollback.md).
 
 ## Ereignisvertrag
 

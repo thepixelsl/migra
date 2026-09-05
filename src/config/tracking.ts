@@ -54,6 +54,7 @@ export const trackingConfig = {
   allowedHosts: configuredHosts.length ? configuredHosts : defaultAllowedHosts,
   gtmContainerId,
   googleAnalyticsId,
+  googleAnalyticsDelivery: "direct",
   ga4DataRetentionMonths,
   googleTrackingConfigured,
   metaViaTagManager: true,
