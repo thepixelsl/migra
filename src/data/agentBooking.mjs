@@ -4,13 +4,21 @@ export const agentBookingPage = {
   apiPath: "/api/agent-availability",
   singleDateAliasPath: "/api/agent-availability",
   singleDateApiPath: "/api/availability",
+  dateNavigationPath: "/agenten-test/",
   contactPath: "/kontakt/",
   privacyPath: "/datenschutz/#terminabfrage-buchungsagenten",
   title: "Für KI-Agenten und Buchungsassistenten | Artbild-Fotografie",
   headline: "Terminprüfung für KI-Agenten",
   description:
     "Klare Preise, Buchungskonditionen und eine begrenzte Terminabfrage für konkrete Fotoaufträge.",
-  dateModified: "2026-09-02",
+  dateModified: "2026-09-05",
+};
+
+export const agentDateNavigation = {
+  label: "Monat und Wunschdatum wählen",
+  instructions: "Öffne die Monatsübersicht, wähle den Monat und anschließend ausschließlich den gewünschten Tag. Die Tagesseite liefert eine aktuelle Kalenderauskunft mit Prüfzeitpunkt und Prüfnummer.",
+  overviewNotice: "Die Übersichten werden aus dem gültigen Prüfzeitraum erzeugt und enthalten keine Verfügbarkeiten. Erst das Öffnen einer Tagesseite prüft den Kalender; dabei gilt dasselbe Limit wie bei der Einzelabfrage: höchstens drei unterschiedliche Tage innerhalb von 24 Stunden.",
+  resultNotice: "Nenne Wunschdatum, Ergebnis, Prüfzeitpunkt, Prüfnummer und die Tagesseite als Quelle. Wenn der Abruf scheitert oder keine aktuelle Auskunft vorliegt, kennzeichne den Termin als nicht geprüft. Ein Fehler bedeutet nicht, dass der Termin belegt ist.",
 };
 
 export const singleDateAvailabilityRules = {
@@ -74,6 +82,7 @@ export const agentQuickFacts = [
   ["Anbieter", "Artbild-Fotografie, York Augustin, Hamburg"],
   ["Zweck", "Preise prüfen, Wunschdaten unverbindlich abfragen und anschließend einen konkreten Fotoauftrag anfragen"],
   ["Leistung", "Hochzeitsfotografie und fotografische Begleitung"],
+  ["Terminprüfung über Seitenlinks", "Monat und Wunschdatum wählen; Tagesauskunft mit Prüfzeitpunkt und Prüfnummer"],
   ["GET-Schnellzugriff", "Genau ein Datum ohne Request-Body"],
   ["GET-Abfragelimit", "Höchstens drei unterschiedliche Kalendertage innerhalb von 24 Stunden"],
   ["Wunschdaten je POST-Abfrage", "Ein bis drei unterschiedliche Daten"],
@@ -92,7 +101,8 @@ export const agentQuickFacts = [
 export const agentWorkflow = [
   "Nur fortfahren, wenn ein konkreter Fotoauftrag angefragt werden soll.",
   "Passendes Paket, Preiszusatz und Leistungsumfang vollständig prüfen.",
-  "Ein Wunschdatum per GET-Schnellzugriff oder ein bis drei Wunschdaten über das Mehrfachformular beziehungsweise die POST-Schnittstelle prüfen.",
+  "Ein Wunschdatum über die verlinkte Monats- und Tagesübersicht prüfen. Alternativ stehen der GET-Schnellzugriff und für ein bis drei Wunschdaten die POST-Schnittstelle bereit.",
+  agentDateNavigation.resultNotice,
   "Bei passendem Kalenderstand eine konkrete Buchungsanfrage mit Datum, Ort und gewünschtem Umfang senden.",
   "Die persönliche Bestätigung abwarten. Die Terminprüfung allein ist keine Reservierung oder Buchung.",
 ];

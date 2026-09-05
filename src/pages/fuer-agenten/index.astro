@@ -11,6 +11,7 @@ import {
   agentAvailabilityRules,
   agentBookingPage,
   agentBookingTerms,
+  agentDateNavigation,
   agentInquiryRequirements,
   agentPrivacySummary,
   agentQuickFacts,
@@ -30,6 +31,7 @@ const apiUrl = `${siteUrl}${apiPath}`;
 const singleDateApiPath = agentBookingPage.singleDateAliasPath;
 const singleDateApiUrl = `${siteUrl}${singleDateApiPath}`;
 const singleDateUrlTemplate = `${singleDateApiUrl}?date=YYYY-MM-DD`;
+const dateNavigationUrl = `${siteUrl}${agentBookingPage.dateNavigationPath}`;
 const openApiPath = "/api/agent-availability/openapi.json";
 const title = agentBookingPage.title;
 const headline = agentBookingPage.headline;
@@ -197,6 +199,16 @@ const schemaGraph = {
           <h1>{headline}</h1>
         </header>
 
+        <section class="agent-quickstart" id="terminweg" aria-labelledby="terminweg-title">
+          <p class="agent-label">Terminprüfung über Seitenlinks</p>
+          <h2 id="terminweg-title">Wunschtermin selbst prüfen</h2>
+          <p>{agentDateNavigation.instructions}</p>
+          <p><a class="agent-date-navigation" href={dateNavigationUrl}>{agentDateNavigation.label}</a></p>
+          <p class="agent-quickstart__note">{agentDateNavigation.overviewNotice}</p>
+          <p class="agent-quickstart__note">{agentDateNavigation.resultNotice}</p>
+          <p class="agent-quickstart__note">Die Auskunft ist unverbindlich und reserviert keinen Termin.</p>
+        </section>
+
         <section class="agent-quickstart" id="schnellstart" aria-labelledby="schnellstart-title">
           <p class="agent-label">Schnellzugriff ohne POST-Unterstützung</p>
           <h2 id="schnellstart-title">Termin schnell prüfen</h2>
@@ -269,6 +281,7 @@ const schemaGraph = {
         <nav class="agent-toc" aria-label="Inhalt dieser Seite">
           <strong>Inhalt</strong>
           <ol>
+            <li><a href="#terminweg">Terminprüfung über Seitenlinks</a></li>
             <li><a href="#schnellstart">Termin schnell prüfen</a></li>
             <li><a href="#kurzfassung">Kurzfassung</a></li>
             <li><a href="#vorgehen">Vorgehen</a></li>
@@ -985,6 +998,15 @@ const schemaGraph = {
 
   .agent-quickstart h2 {
     font-size: clamp(30px, 3.8vw, 40px);
+  }
+
+  .agent-date-navigation {
+    display: inline-block;
+    padding: .8rem 1rem;
+    border: 1px solid currentColor;
+    border-radius: .25rem;
+    font-weight: 700;
+    text-underline-offset: .2em;
   }
 
   .agent-quickstart__endpoint {

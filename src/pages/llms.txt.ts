@@ -1,6 +1,7 @@
 import {
   agentAvailabilityRules,
   agentBookingPage,
+  agentDateNavigation,
   agentUsagePolicy,
   singleDateAvailabilityRules,
 } from "../data/agentBooking.mjs";
@@ -22,6 +23,9 @@ export function GET() {
     "",
     "## Buchungsinformationen für Agenten",
     "",
+    `- [${agentDateNavigation.label}](${siteUrl}${agentBookingPage.dateNavigationPath}): ${agentDateNavigation.instructions}`,
+    `- ${agentDateNavigation.overviewNotice}`,
+    `- ${agentDateNavigation.resultNotice}`,
     `- Ein Datum ohne POST-Unterstützung: GET ${singleDateApiUrl}?date=YYYY-MM-DD`,
     `- GET-Abfragelimit: höchstens ${singleDateAvailabilityRules.maximumUniqueDatesPerWindow} unterschiedliche Kalendertage innerhalb von ${singleDateAvailabilityRules.windowHours} Stunden`,
     `- Gemeinsames GET-Limit: ${agentBookingPage.singleDateAliasPath} und ${agentBookingPage.singleDateApiPath} verwenden denselben Zähler`,
