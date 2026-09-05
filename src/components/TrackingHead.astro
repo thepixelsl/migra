@@ -153,6 +153,9 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     window.gtag = window.gtag || function gtag() {
       window.dataLayer.push(arguments);
     };
+    const googleCookieFlags = window.location.protocol === "https:"
+      ? "SameSite=Lax;Secure"
+      : "SameSite=Lax";
 
     const storedDecision = readDecision();
     const initialState = {
@@ -183,6 +186,8 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     );
     window.gtag("set", "ads_data_redaction", true);
     window.gtag("set", "url_passthrough", false);
+    // Apply before either loader, including Google tags configured through GTM.
+    window.gtag("set", "cookie_flags", googleCookieFlags);
 
     window.dataLayer.push({
       event: "artbild_tracking_config",
@@ -251,7 +256,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       if (!window.__artbildGoogleAnalyticsConfigured) {
         window.__artbildGoogleAnalyticsConfigured = true;
         window.gtag("js", new Date());
-        window.gtag("config", config.googleAnalyticsId);
+        window.gtag("config", config.googleAnalyticsId, { cookie_flags: googleCookieFlags });
       }
 
       window.clearTimeout(googleAnalyticsRetry);

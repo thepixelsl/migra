@@ -379,8 +379,14 @@ test("starts direct GA4 once after statistics consent and restores it on the nex
   const commands = await readGtagCommands(page);
   const consentIndex = commands.findIndex((entry) => entry[0] === "consent" && entry[1] === "update");
   const configIndex = commands.findIndex((entry) => entry[0] === "config");
+  const cookieFlagsIndex = commands.findIndex((entry) => entry[0] === "set" && entry[1] === "cookie_flags");
+  const expectedCookieFlags = new URL(baseUrl).protocol === "https:" ? "SameSite=Lax;Secure" : "SameSite=Lax";
   expect(consentIndex).toBeGreaterThanOrEqual(0);
   expect(configIndex).toBeGreaterThan(consentIndex);
+  expect(cookieFlagsIndex).toBeGreaterThanOrEqual(0);
+  expect(cookieFlagsIndex).toBeLessThan(configIndex);
+  expect(commands[cookieFlagsIndex][2]).toBe(expectedCookieFlags);
+  expect(commands[configIndex][2]).toMatchObject({ cookie_flags: expectedCookieFlags });
   expect(commands[consentIndex][2]).toMatchObject({
     analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied",
   });
