@@ -1,0 +1,2767 @@
+{
+  "comparisonNotes": [
+    "Existing public OpenGraph URLs are compared to the pre-release public snapshot; 13 generated card hashes differ between local and production builds but are unchanged publicly.",
+    "Only the build-generated resetAt timestamp in the agent-page code example is normalized; other visible text is compared."
+  ],
+  "at": "2026-09-05T10:45:15.872Z",
+  "base": "https://artbild-fotografie.de",
+  "commit": "ce84a62dc28111091d98deeaf71c7b8c35bdf2ab",
+  "workflow": "https://github.com/thepixelsl/migra/actions/runs/33960622094",
+  "image": "ghcr.io/thepixelsl/migra-bunny-dev:prod-sha-ce84a62",
+  "imageDigest": "sha256:685a2963f14c2335d9cadd823a4e75e347aaf18acbf50e1ae54acaa199773ac4",
+  "summary": {
+    "pages": 56,
+    "imageSitemapPages": 51,
+    "imageReferences": 1128,
+    "uniqueImages": 970,
+    "failures": 1
+  },
+  "endpoints": [
+    {
+      "route": "/image-sitemap.xml",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "application/xml; charset=utf-8",
+      "cache": "MISS",
+      "age": null,
+      "robots": null,
+      "matchesBuild": true
+    },
+    {
+      "route": "/sitemap.xml",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "application/xml; charset=utf-8",
+      "cache": "MISS",
+      "age": null,
+      "robots": null
+    },
+    {
+      "route": "/robots.txt",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "text/plain; charset=utf-8",
+      "cache": "HIT",
+      "age": null,
+      "robots": null,
+      "matchesBuild": false
+    },
+    {
+      "route": "/readyz",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "application/json; charset=utf-8",
+      "cache": "BYPASS",
+      "age": null,
+      "robots": null
+    },
+    {
+      "route": "/healthz",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "application/json; charset=utf-8",
+      "cache": "BYPASS",
+      "age": null,
+      "robots": null
+    },
+    {
+      "route": "/api/admin/availability",
+      "status": 401,
+      "expectedStatus": 401,
+      "type": "text/plain; charset=utf-8",
+      "cache": "BYPASS",
+      "age": null,
+      "robots": "noindex, nofollow, noarchive"
+    },
+    {
+      "route": "/image-seo-release-check-not-found/",
+      "status": 404,
+      "expectedStatus": 404,
+      "type": "text/html; charset=utf-8",
+      "cache": "HIT",
+      "age": null,
+      "robots": null
+    }
+  ],
+  "homepageImage": {
+    "url": "https://artbild-fotografie.de/social-cards/home.webp",
+    "status": 200,
+    "bytes": 41364,
+    "sha256": "37028b346ec6ba27b6ed62d3f2ea859804769f1bca9996669fd3b35a78575535",
+    "matchesBuild": true,
+    "unchangedUrl": true
+  },
+  "pages": [
+    {
+      "route": "/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Hamburg | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf Hamburg: Natürliche Hochzeitsreportagen mit York Augustin – vom Standesamt bis zur Feier. Jetzt Bilder ansehen und Euren Termin anfragen.",
+        "canonical": "https://artbild-fotografie.de/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/home.webp",
+        "ogAlt": "Schwarzweiß-Portrait eines küssenden Paares im Gegenlicht auf Mallorca",
+        "textHash": "1666f94e185e0a014548b616d3c3cf216617ced707c30d72d1f5d33d6a0df95a",
+        "imagesHash": "bd4b4263ebe3e2360c1dc684e3f5edbfdf3060f456f98c9ef1ac273768cc6917",
+        "imageCount": 52,
+        "primaryImages": [
+          "https://artbild-fotografie.de/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.SXjABRAs.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Hamburg | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf Hamburg: Natürliche Hochzeitsreportagen mit York Augustin – vom Standesamt bis zur Feier. Jetzt Bilder ansehen und Euren Termin anfragen.",
+        "canonical": "https://artbild-fotografie.de/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/home.webp",
+        "ogAlt": "Schwarzweiß-Portrait eines küssenden Paares im Gegenlicht auf Mallorca",
+        "textHash": "1666f94e185e0a014548b616d3c3cf216617ced707c30d72d1f5d33d6a0df95a",
+        "imagesHash": "bd4b4263ebe3e2360c1dc684e3f5edbfdf3060f456f98c9ef1ac273768cc6917",
+        "imageCount": 52,
+        "primaryImages": [
+          "https://artbild-fotografie.de/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.SXjABRAs.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/about/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "York Augustin – Hochzeitsfotograf in Hamburg | Artbild-Fotografie",
+        "description": "York Augustin ist Hochzeitsfotograf aus Hamburg. Er begleitet Hochzeiten, standesamtliche Trauungen und Destination Weddings ruhig, nahbar und reportageorientiert.",
+        "canonical": "https://artbild-fotografie.de/about/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/about-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Fotograf von Artbild-Fotografie, am Wasser",
+        "textHash": "617da6d973f678259b88b60a4b90ebdce3c0acdd7436ceeffe2dead443b94a61",
+        "imagesHash": "8c433b37fd9dd9843adbdc6ed755ee0a626e86b6cec1899755345582a59059f6",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/about/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DpECXNQm.css"
+        ]
+      },
+      "observed": {
+        "title": "York Augustin – Hochzeitsfotograf in Hamburg | Artbild-Fotografie",
+        "description": "York Augustin ist Hochzeitsfotograf aus Hamburg. Er begleitet Hochzeiten, standesamtliche Trauungen und Destination Weddings ruhig, nahbar und reportageorientiert.",
+        "canonical": "https://artbild-fotografie.de/about/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/about-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Fotograf von Artbild-Fotografie, am Wasser",
+        "textHash": "617da6d973f678259b88b60a4b90ebdce3c0acdd7436ceeffe2dead443b94a61",
+        "imagesHash": "8c433b37fd9dd9843adbdc6ed755ee0a626e86b6cec1899755345582a59059f6",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/about/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DpECXNQm.css"
+        ]
+      }
+    },
+    {
+      "route": "/blog/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Blog | Artbild-Fotografie",
+        "description": "Hochzeit in Hamburg planen: Tipps zu Getting Ready, Locations und Trauterminen, dazu Hochzeitsreportagen und Fotowissen im Blog von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/blog/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/blog-1af1e365f828.webp",
+        "ogAlt": "Braut im Fensterlicht einer Hamburger Hotelsuite",
+        "textHash": "c246fc961b9639dc3749555702bebdf35cbd67102ef69b6c8d4da1aa0990b41b",
+        "imagesHash": "cb7059db73c9a3f253920c87956b59817138de94af1befd58ad909d0a73ee781",
+        "imageCount": 6,
+        "primaryImages": [
+          "https://artbild-fotografie.de/blog/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Di07HYpN.css"
+        ]
+      },
+      "observed": {
+        "title": "Blog | Artbild-Fotografie",
+        "description": "Hochzeit in Hamburg planen: Tipps zu Getting Ready, Locations und Trauterminen, dazu Hochzeitsreportagen und Fotowissen im Blog von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/blog/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/blog-1af1e365f828.webp",
+        "ogAlt": "Braut im Fensterlicht einer Hamburger Hotelsuite",
+        "textHash": "c246fc961b9639dc3749555702bebdf35cbd67102ef69b6c8d4da1aa0990b41b",
+        "imagesHash": "cb7059db73c9a3f253920c87956b59817138de94af1befd58ad909d0a73ee781",
+        "imageCount": 6,
+        "primaryImages": [
+          "https://artbild-fotografie.de/blog/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Di07HYpN.css"
+        ]
+      }
+    },
+    {
+      "route": "/braut-fotoshooting-fraser-suites-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Braut Fotoshooting Fraser Suites Hamburg | Artbild-Fotografie",
+        "description": "Inszeniertes Braut-Editorial in den Fraser Suites Hamburg mit Model, Brautkleid, Styling und Aufnahmen im Hotelzimmer sowie im Treppenhaus.",
+        "canonical": "https://artbild-fotografie.de/braut-fotoshooting-fraser-suites-hamburg/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/braut-fotoshooting-fraser-suites-hamburg-969e15c18e33.webp",
+        "ogAlt": "Braut mit Blumenstrauß auf der Treppe der Fraser Suites Hamburg",
+        "textHash": "688041075e0a1d8fab82e36a1bc81dee8b9e2efb0a8984eeef39eb1eaff2d6b2",
+        "imagesHash": "d89011a994ebed51b39fc17b44922db7286c39bd290e7a7bc15f7bc906abc06f",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/braut-fotoshooting-fraser-suites-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Braut Fotoshooting Fraser Suites Hamburg | Artbild-Fotografie",
+        "description": "Inszeniertes Braut-Editorial in den Fraser Suites Hamburg mit Model, Brautkleid, Styling und Aufnahmen im Hotelzimmer sowie im Treppenhaus.",
+        "canonical": "https://artbild-fotografie.de/braut-fotoshooting-fraser-suites-hamburg/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/braut-fotoshooting-fraser-suites-hamburg-969e15c18e33.webp",
+        "ogAlt": "Braut mit Blumenstrauß auf der Treppe der Fraser Suites Hamburg",
+        "textHash": "688041075e0a1d8fab82e36a1bc81dee8b9e2efb0a8984eeef39eb1eaff2d6b2",
+        "imagesHash": "d89011a994ebed51b39fc17b44922db7286c39bd290e7a7bc15f7bc906abc06f",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/braut-fotoshooting-fraser-suites-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/brautpaar-in-zuerich/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Styled Editorial mit Stephanie und Laurin in Zürich",
+        "description": "Brautpaarshooting in Zürich: Editorial mit Stephanie und Laurin an der Limmat und in der Stadt. Entdeckt natürliche Paarportraits und urbane Hochzeitsinspiration.",
+        "canonical": "https://artbild-fotografie.de/brautpaar-in-zuerich/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/brautpaar-in-zuerich-f58def405745.webp",
+        "ogAlt": "Stephanie und Laurin beim Brautpaar-Editorial in Zürich",
+        "textHash": "fa0fdcb2f76398c5cc90361a0bddf5538e55237236e024ad2b183ec893d07c98",
+        "imagesHash": "bce250c5f5e3d659a29a78fc07b38f1ef32bab6c56540fe16a1bf7299d25f589",
+        "imageCount": 50,
+        "primaryImages": [
+          "https://artbild-fotografie.de/brautpaar-in-zuerich/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.B2WsBhRu.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Styled Editorial mit Stephanie und Laurin in Zürich",
+        "description": "Brautpaarshooting in Zürich: Editorial mit Stephanie und Laurin an der Limmat und in der Stadt. Entdeckt natürliche Paarportraits und urbane Hochzeitsinspiration.",
+        "canonical": "https://artbild-fotografie.de/brautpaar-in-zuerich/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/brautpaar-in-zuerich-f58def405745.webp",
+        "ogAlt": "Stephanie und Laurin beim Brautpaar-Editorial in Zürich",
+        "textHash": "fa0fdcb2f76398c5cc90361a0bddf5538e55237236e024ad2b183ec893d07c98",
+        "imagesHash": "bce250c5f5e3d659a29a78fc07b38f1ef32bab6c56540fe16a1bf7299d25f589",
+        "imageCount": 50,
+        "primaryImages": [
+          "https://artbild-fotografie.de/brautpaar-in-zuerich/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.B2WsBhRu.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/brautstyling-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Brautstyling Hamburg | Dienstleister für Hochzeiten",
+        "description": "Empfehlungen für Brautstyling in Hamburg: Manija Biebow, Yildiz Duman-Werner, Ella Deck Couture und Tipps für ein ruhiges Getting Ready.",
+        "canonical": "https://artbild-fotografie.de/brautstyling-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/brautstyling-hamburg-6bb4652eea2b.webp",
+        "ogAlt": "Braut beim Styling im Fensterlicht in Hamburg",
+        "textHash": "32ade576cff355e5a47e06e9701c9ca2e469b4601e53cb471be1e22d1a0bd276",
+        "imagesHash": "1bbf760d9fd83d77abf44acfcd2075db96134a2b7708d54eee95fec19c471ef2",
+        "imageCount": 4,
+        "primaryImages": [
+          "https://artbild-fotografie.de/brautstyling-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.pQyNfT6n.css"
+        ]
+      },
+      "observed": {
+        "title": "Brautstyling Hamburg | Dienstleister für Hochzeiten",
+        "description": "Empfehlungen für Brautstyling in Hamburg: Manija Biebow, Yildiz Duman-Werner, Ella Deck Couture und Tipps für ein ruhiges Getting Ready.",
+        "canonical": "https://artbild-fotografie.de/brautstyling-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/brautstyling-hamburg-6bb4652eea2b.webp",
+        "ogAlt": "Braut beim Styling im Fensterlicht in Hamburg",
+        "textHash": "32ade576cff355e5a47e06e9701c9ca2e469b4601e53cb471be1e22d1a0bd276",
+        "imagesHash": "1bbf760d9fd83d77abf44acfcd2075db96134a2b7708d54eee95fec19c471ef2",
+        "imageCount": 4,
+        "primaryImages": [
+          "https://artbild-fotografie.de/brautstyling-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.pQyNfT6n.css"
+        ]
+      }
+    },
+    {
+      "route": "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Das perfekte Getting Ready für deine Hochzeit in Hamburg",
+        "description": "Getting Ready Hamburg: Tipps zu Location, Timing, Outfit und Begleitung am Hochzeitsmorgen, damit natürliche Hochzeitsfotos beim Brautstyling entstehen.",
+        "canonical": "https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg-a1c6327041ad.webp",
+        "ogAlt": "Visagistin schminkt eine Braut beim Getting Ready im Hotel",
+        "textHash": "f88057208d40e3ff1e193f8b318186b34cac5f08d7028382273d647f679181a5",
+        "imagesHash": "aac5d7271e0d73daaf59716d4d036306435fe5df120cb98d5675287c65241b50",
+        "imageCount": 90,
+        "primaryImages": [
+          "https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg.B53DtiDf.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Das perfekte Getting Ready für deine Hochzeit in Hamburg",
+        "description": "Getting Ready Hamburg: Tipps zu Location, Timing, Outfit und Begleitung am Hochzeitsmorgen, damit natürliche Hochzeitsfotos beim Brautstyling entstehen.",
+        "canonical": "https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg-a1c6327041ad.webp",
+        "ogAlt": "Visagistin schminkt eine Braut beim Getting Ready im Hotel",
+        "textHash": "f88057208d40e3ff1e193f8b318186b34cac5f08d7028382273d647f679181a5",
+        "imagesHash": "aac5d7271e0d73daaf59716d4d036306435fe5df120cb98d5675287c65241b50",
+        "imageCount": 90,
+        "primaryImages": [
+          "https://artbild-fotografie.de/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg.B53DtiDf.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/datenschutz/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Datenschutz | Artbild-Fotografie",
+        "description": "Datenschutzerklärung von Artbild-Fotografie mit Informationen zur Verarbeitung personenbezogener Daten und zu eingesetzten Diensten.",
+        "canonical": "https://artbild-fotografie.de/datenschutz/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/datenschutz-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Ansprechpartner bei Artbild-Fotografie",
+        "textHash": "81af23533f33f6939fad26df5a8ca3e24c4bf7bf92716d1e6b6de81d75f75978",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/datenschutz/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Datenschutz | Artbild-Fotografie",
+        "description": "Datenschutzerklärung von Artbild-Fotografie mit Informationen zur Verarbeitung personenbezogener Daten und zu eingesetzten Diensten.",
+        "canonical": "https://artbild-fotografie.de/datenschutz/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/datenschutz-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Ansprechpartner bei Artbild-Fotografie",
+        "textHash": "81af23533f33f6939fad26df5a8ca3e24c4bf7bf92716d1e6b6de81d75f75978",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/datenschutz/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/die-perfekte-hotelsuite-am-hochzeitsmorgen/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Getting Ready: Die passende Hotelsuite in Hamburg",
+        "description": "Ratgeber für Hochzeitspaare in Hamburg: So findet ihr eine helle Hotelsuite für den Hochzeitsmorgen, Getting Ready, Brautkleid, Styling und hochwertige Hochzeitsfotos.",
+        "canonical": "https://artbild-fotografie.de/die-perfekte-hotelsuite-am-hochzeitsmorgen/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/die-perfekte-hotelsuite-am-hochzeitsmorgen-e9b0d4fd391d.webp",
+        "ogAlt": "Brautkleid-Editorial in einer hellen Hotelsuite mit großen Fenstern",
+        "textHash": "3790a8abb3536d0b133b10b28351b46cdebc5eed162b2fa76b78e58a4cadba1c",
+        "imagesHash": "174195d93d437b41b9cf1aa562c1739798cc76b444ddd575238d26ad0727726c",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/die-perfekte-hotelsuite-am-hochzeitsmorgen/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.DXvkE2GI.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Getting Ready: Die passende Hotelsuite in Hamburg",
+        "description": "Ratgeber für Hochzeitspaare in Hamburg: So findet ihr eine helle Hotelsuite für den Hochzeitsmorgen, Getting Ready, Brautkleid, Styling und hochwertige Hochzeitsfotos.",
+        "canonical": "https://artbild-fotografie.de/die-perfekte-hotelsuite-am-hochzeitsmorgen/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/die-perfekte-hotelsuite-am-hochzeitsmorgen-e9b0d4fd391d.webp",
+        "ogAlt": "Brautkleid-Editorial in einer hellen Hotelsuite mit großen Fenstern",
+        "textHash": "3790a8abb3536d0b133b10b28351b46cdebc5eed162b2fa76b78e58a4cadba1c",
+        "imagesHash": "174195d93d437b41b9cf1aa562c1739798cc76b444ddd575238d26ad0727726c",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/die-perfekte-hotelsuite-am-hochzeitsmorgen/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.DXvkE2GI.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/fuer-agenten/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Für KI-Agenten und Buchungsassistenten | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf Hamburg für Buchungsagenten und KI-Assistenten: Pakete, Leistungen und Konditionen prüfen, konkrete Termine abfragen und Anfragen vorbereiten.",
+        "canonical": "https://artbild-fotografie.de/fuer-agenten/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/fuer-agenten-57da88d21969.webp",
+        "ogAlt": "Lachendes Paar bei einem Fotoshooting von Artbild-Fotografie",
+        "textHash": "cb0ccd4e03f1cf82a67e16658a131746e817c505b055891a3b28be3ba91ca21f",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/fuer-agenten/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CmfQAe0B.css"
+        ]
+      },
+      "observed": {
+        "title": "Für KI-Agenten und Buchungsassistenten | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf Hamburg für Buchungsagenten und KI-Assistenten: Pakete, Leistungen und Konditionen prüfen, konkrete Termine abfragen und Anfragen vorbereiten.",
+        "canonical": "https://artbild-fotografie.de/fuer-agenten/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/fuer-agenten-57da88d21969.webp",
+        "ogAlt": "Lachendes Paar bei einem Fotoshooting von Artbild-Fotografie",
+        "textHash": "cb0ccd4e03f1cf82a67e16658a131746e817c505b055891a3b28be3ba91ca21f",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/fuer-agenten/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CmfQAe0B.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery-category/hochzeit/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsgalerien | Artbild-Fotografie",
+        "description": "Hochzeitsgalerien von Artbild-Fotografie: Reportagen, Standesamt, Getting Ready, Elopements und Paarshootings in Hamburg, Norddeutschland und Europa.",
+        "canonical": "https://artbild-fotografie.de/gallery-category/hochzeit/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery-category/hochzeit-b0d528f3770a.webp",
+        "ogAlt": "Valerie und Tim mit Brautstrauß bei ihrer Hochzeit im Grünen",
+        "textHash": "12c444d5bb953edaff7dbe2c06b8f214015508cb34747eabdebc1c52f298655c",
+        "imagesHash": "0e9fc51a774b776e5d93c4b03672448260b8ee38273f85e8ae4755d189d40ac2",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery-category/hochzeit/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsgalerien | Artbild-Fotografie",
+        "description": "Hochzeitsgalerien von Artbild-Fotografie: Reportagen, Standesamt, Getting Ready, Elopements und Paarshootings in Hamburg, Norddeutschland und Europa.",
+        "canonical": "https://artbild-fotografie.de/gallery-category/hochzeit/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery-category/hochzeit-b0d528f3770a.webp",
+        "ogAlt": "Valerie und Tim mit Brautstrauß bei ihrer Hochzeit im Grünen",
+        "textHash": "12c444d5bb953edaff7dbe2c06b8f214015508cb34747eabdebc1c52f298655c",
+        "imagesHash": "0e9fc51a774b776e5d93c4b03672448260b8ee38273f85e8ae4755d189d40ac2",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery-category/hochzeit/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery-category/travel/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Travel Fotografie | Artbild-Fotografie",
+        "description": "Travel-Galerien von Artbild-Fotografie aus Hamburg, Norddeutschland, Hannover, Mallorca, Teneriffa, Paris und Venedig - mit Landschaften, Städten und Lichtstimmungen.",
+        "canonical": "https://artbild-fotografie.de/gallery-category/travel/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery-category/travel-c9e15fe3d7b6.webp",
+        "ogAlt": "Hamburger Architektur und Spiegelungen im Wasser zur blauen Stunde",
+        "textHash": "76642e1bbc69d31df9ed6cfba39fa06424a6ad482cabca56a48ea8dd5d03cf03",
+        "imagesHash": "bdb0aa8613b4a2409e382bb7a31d8681ab4bd7fcc546806d303ce06b144b9b60",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery-category/travel/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Travel Fotografie | Artbild-Fotografie",
+        "description": "Travel-Galerien von Artbild-Fotografie aus Hamburg, Norddeutschland, Hannover, Mallorca, Teneriffa, Paris und Venedig - mit Landschaften, Städten und Lichtstimmungen.",
+        "canonical": "https://artbild-fotografie.de/gallery-category/travel/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery-category/travel-c9e15fe3d7b6.webp",
+        "ogAlt": "Hamburger Architektur und Spiegelungen im Wasser zur blauen Stunde",
+        "textHash": "76642e1bbc69d31df9ed6cfba39fa06424a6ad482cabca56a48ea8dd5d03cf03",
+        "imagesHash": "bdb0aa8613b4a2409e382bb7a31d8681ab4bd7fcc546806d303ce06b144b9b60",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery-category/travel/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/braeutigam-im-barberhouse-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Bräutigam im Barberhouse Hamburg | Getting Ready",
+        "description": "Wie trägt man seinen Bart zur Hochzeit? Groom Getting Ready beim Barbier im Barberhouse Hamburg mit stilvollen Herrenportraits von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/braeutigam-im-barberhouse-hamburg-a648869a8541.webp",
+        "ogAlt": "Lachender Bräutigam und Barbier im Barberhouse Hamburg",
+        "textHash": "5dc8bc2439c19e20bc1b40e2f9d6a289a74b84bf6dda937e9cb898a0b2c06a8f",
+        "imagesHash": "bf6086b0cb97e4a15f34b8d3177d3eeb9020d75fda5dd8b4f1636228a3b9e138",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Pc1LrTed.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Bräutigam im Barberhouse Hamburg | Getting Ready",
+        "description": "Wie trägt man seinen Bart zur Hochzeit? Groom Getting Ready beim Barbier im Barberhouse Hamburg mit stilvollen Herrenportraits von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/braeutigam-im-barberhouse-hamburg-a648869a8541.webp",
+        "ogAlt": "Lachender Bräutigam und Barbier im Barberhouse Hamburg",
+        "textHash": "5dc8bc2439c19e20bc1b40e2f9d6a289a74b84bf6dda937e9cb898a0b2c06a8f",
+        "imagesHash": "bf6086b0cb97e4a15f34b8d3177d3eeb9020d75fda5dd8b4f1636228a3b9e138",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/braeutigam-im-barberhouse-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Pc1LrTed.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/brautkleid-editorial-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Brautkleid Shooting Paris | Bridal Editorial Artbild-Fotografie",
+        "description": "Brautkleid Editorial in Paris mit modernen Bridal Looks am Louvre, an der Seine und vor dem Eiffelturm, fotografiert von Artbild-Fotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/brautkleid-editorial-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/brautkleid-editorial-paris-9cc88c464b65.webp",
+        "ogAlt": "Brautkleid-Editorial mit Eiffelturm in Paris",
+        "textHash": "415c7c075f1e81cf0db0836807ff9bb3a68796e724c726daa2c43544686ea4f7",
+        "imagesHash": "1e09443a57d8559eab3c1c93eef06a06b51f57b26f2eba95ff115ddd079830f3",
+        "imageCount": 56,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/brautkleid-editorial-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/editorial-destination.d07dg4hR.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Brautkleid Shooting Paris | Bridal Editorial Artbild-Fotografie",
+        "description": "Brautkleid Editorial in Paris mit modernen Bridal Looks am Louvre, an der Seine und vor dem Eiffelturm, fotografiert von Artbild-Fotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/brautkleid-editorial-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/brautkleid-editorial-paris-9cc88c464b65.webp",
+        "ogAlt": "Brautkleid-Editorial mit Eiffelturm in Paris",
+        "textHash": "415c7c075f1e81cf0db0836807ff9bb3a68796e724c726daa2c43544686ea4f7",
+        "imagesHash": "1e09443a57d8559eab3c1c93eef06a06b51f57b26f2eba95ff115ddd079830f3",
+        "imageCount": 56,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/brautkleid-editorial-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/editorial-destination.d07dg4hR.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/der-norden-und-die-kueste/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Norden & Küste Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie aus Norddeutschland: Küste, Wasser und weite Horizonte im wechselnden Licht. Entdeckt die Bildergalerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/der-norden-und-die-kueste/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/der-norden-und-die-kueste-2380a23fa3bb.webp",
+        "ogAlt": "Sonnenuntergang über dem Meer an der norddeutschen Küste",
+        "textHash": "bf06c16b899bb9db6c107b638eb6a3e9b53a4c38e8ff85ece98d981cf9ed9d51",
+        "imagesHash": "bbd85ca5d04f843d86e52fb58515514dcd09ba0f3265936f9cbe53223a6bc0b1",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/der-norden-und-die-kueste/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Norden & Küste Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie aus Norddeutschland: Küste, Wasser und weite Horizonte im wechselnden Licht. Entdeckt die Bildergalerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/der-norden-und-die-kueste/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/der-norden-und-die-kueste-2380a23fa3bb.webp",
+        "ogAlt": "Sonnenuntergang über dem Meer an der norddeutschen Küste",
+        "textHash": "bf06c16b899bb9db6c107b638eb6a3e9b53a4c38e8ff85ece98d981cf9ed9d51",
+        "imagesHash": "bbd85ca5d04f843d86e52fb58515514dcd09ba0f3265936f9cbe53223a6bc0b1",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/der-norden-und-die-kueste/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/editorial-london/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Editorial Fotoshooting London mit Mariam | Artbild-Fotografie",
+        "description": "Editoriales Fotoshooting mit Mariam in London: Portraits an der Themse, in Westminster und South Kensington, fotografiert von Artbild-Fotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/editorial-london/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/editorial-london-6232f868b04d.webp",
+        "ogAlt": "Mariam beim Editorial-Shooting vor dem Palace of Westminster in London",
+        "textHash": "ddfa2fb67b07ed863d0fe6233199035863b993d586fc1cb4223c08e51fc0a11e",
+        "imagesHash": "14a6cb0b09cf7c7ddf4a0c2d4eca823f86bf6e6874f0dcadd57e98984553ec5b",
+        "imageCount": 24,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/editorial-london/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CffWC9Dy.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Editorial Fotoshooting London mit Mariam | Artbild-Fotografie",
+        "description": "Editoriales Fotoshooting mit Mariam in London: Portraits an der Themse, in Westminster und South Kensington, fotografiert von Artbild-Fotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/editorial-london/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/editorial-london-6232f868b04d.webp",
+        "ogAlt": "Mariam beim Editorial-Shooting vor dem Palace of Westminster in London",
+        "textHash": "ddfa2fb67b07ed863d0fe6233199035863b993d586fc1cb4223c08e51fc0a11e",
+        "imagesHash": "14a6cb0b09cf7c7ddf4a0c2d4eca823f86bf6e6874f0dcadd57e98984553ec5b",
+        "imageCount": 24,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/editorial-london/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CffWC9Dy.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/editorial/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Editorial Portraits Hamburg | Artbild-Fotografie",
+        "description": "Portraitfotografie Hamburg: Natürliche, magazinartige Portraits von Hamburgerinnen und Hamburgern – auch ohne Kameraerfahrung. Editorial-Galerie ansehen.",
+        "canonical": "https://artbild-fotografie.de/gallery/editorial/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/editorial-bfde289797a1.webp",
+        "ogAlt": "Editorial-Portrait einer Frau auf einer Hamburger Straße",
+        "textHash": "909cbb5126f05e1dcba6a70b853ebf349f7a84459c396c299a5d20123944064e",
+        "imagesHash": "cf9983df8a25c206f51b7748bc7deeeedddd237ceac043ad8276c71d9db90d23",
+        "imageCount": 93,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/editorial/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.C-g0p3yt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Editorial Portraits Hamburg | Artbild-Fotografie",
+        "description": "Portraitfotografie Hamburg: Natürliche, magazinartige Portraits von Hamburgerinnen und Hamburgern – auch ohne Kameraerfahrung. Editorial-Galerie ansehen.",
+        "canonical": "https://artbild-fotografie.de/gallery/editorial/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/editorial-bfde289797a1.webp",
+        "ogAlt": "Editorial-Portrait einer Frau auf einer Hamburger Straße",
+        "textHash": "909cbb5126f05e1dcba6a70b853ebf349f7a84459c396c299a5d20123944064e",
+        "imagesHash": "cf9983df8a25c206f51b7748bc7deeeedddd237ceac043ad8276c71d9db90d23",
+        "imageCount": 93,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/editorial/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.C-g0p3yt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/ella-deck-couture/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Ella Deck Couture Hamburg: Brautmode & Einblicke",
+        "description": "Warum ich Ella Deck Couture aus Hamburg-Eppendorf für Brautkleider empfehle: Portraits, Ladenimpressionen und Hochzeitsinspiration für Bräute in Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/ella-deck-couture/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/ella-deck-couture-11c205d7c6eb.webp",
+        "ogAlt": "Portrait von Ella Deck in ihrer Boutique in Hamburg-Eppendorf",
+        "textHash": "48f5dddaa2e030fb04873f80eb1f760b522e13d7d456115cc048e4626c89595d",
+        "imagesHash": "a5e55bf7d894d86999611bc042d2da1e377d23e6e7a54e091c0c7db8ae0ea988",
+        "imageCount": 9,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/ella-deck-couture/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DSiGJpxJ.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Ella Deck Couture Hamburg: Brautmode & Einblicke",
+        "description": "Warum ich Ella Deck Couture aus Hamburg-Eppendorf für Brautkleider empfehle: Portraits, Ladenimpressionen und Hochzeitsinspiration für Bräute in Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/ella-deck-couture/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/ella-deck-couture-11c205d7c6eb.webp",
+        "ogAlt": "Portrait von Ella Deck in ihrer Boutique in Hamburg-Eppendorf",
+        "textHash": "48f5dddaa2e030fb04873f80eb1f760b522e13d7d456115cc048e4626c89595d",
+        "imagesHash": "a5e55bf7d894d86999611bc042d2da1e377d23e6e7a54e091c0c7db8ae0ea988",
+        "imageCount": 9,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/ella-deck-couture/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DSiGJpxJ.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/floral-art/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Botanical Art - Florale Kunst | Artbild-Fotografie",
+        "description": "Floral Art: Kreative Portraits mit Blüten, Blumen und ungewöhnlichen Bildideen von Artbild-Fotografie. Galerie entdecken und eigenes florales Shooting anfragen.",
+        "canonical": "https://artbild-fotografie.de/gallery/floral-art/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/floral-art-6c76ee5887c4.webp",
+        "ogAlt": "Künstlerisches Schwarzweiß-Portrait mit einem großen floralen Kopfschmuck",
+        "textHash": "b242126a085c4b74596f4a07e0cb7e2c9d76487db707b86ff9526d45c270e39c",
+        "imagesHash": "5bb3d2265702cebcedf18b493f157d26bc338fc0865155b854c49c2cc3c4f61a",
+        "imageCount": 20,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/floral-art/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Botanical Art - Florale Kunst | Artbild-Fotografie",
+        "description": "Floral Art: Kreative Portraits mit Blüten, Blumen und ungewöhnlichen Bildideen von Artbild-Fotografie. Galerie entdecken und eigenes florales Shooting anfragen.",
+        "canonical": "https://artbild-fotografie.de/gallery/floral-art/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/floral-art-6c76ee5887c4.webp",
+        "ogAlt": "Künstlerisches Schwarzweiß-Portrait mit einem großen floralen Kopfschmuck",
+        "textHash": "b242126a085c4b74596f4a07e0cb7e2c9d76487db707b86ff9526d45c270e39c",
+        "imagesHash": "5bb3d2265702cebcedf18b493f157d26bc338fc0865155b854c49c2cc3c4f61a",
+        "imageCount": 20,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/floral-art/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/getting-ready-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Getting Ready Hamburg – Brautstyling | Artbild-Fotografie",
+        "description": "Getting-Ready-Fotografie in Hamburg mit Leoni Mecklenburg, Ella Deck Couture und Manija Biebow: natürliche Portraits vom Brautstyling am Hochzeitsmorgen.",
+        "canonical": "https://artbild-fotografie.de/gallery/getting-ready-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/getting-ready-hamburg-3518c00d4dee.webp",
+        "ogAlt": "Lachende Braut mit Schleier beim Getting Ready in Hamburg",
+        "textHash": "459490438d87f7721da7c26181c173aedf3987bdabac72b0af854be945d5803e",
+        "imagesHash": "f7a6009b0c6749f7ff40dc1808e8940e29753d449a41d981645b900567c9b5b5",
+        "imageCount": 86,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/getting-ready-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.POEnjnZ3.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Getting Ready Hamburg – Brautstyling | Artbild-Fotografie",
+        "description": "Getting-Ready-Fotografie in Hamburg mit Leoni Mecklenburg, Ella Deck Couture und Manija Biebow: natürliche Portraits vom Brautstyling am Hochzeitsmorgen.",
+        "canonical": "https://artbild-fotografie.de/gallery/getting-ready-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/getting-ready-hamburg-3518c00d4dee.webp",
+        "ogAlt": "Lachende Braut mit Schleier beim Getting Ready in Hamburg",
+        "textHash": "459490438d87f7721da7c26181c173aedf3987bdabac72b0af854be945d5803e",
+        "imagesHash": "f7a6009b0c6749f7ff40dc1808e8940e29753d449a41d981645b900567c9b5b5",
+        "imageCount": 86,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/getting-ready-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.POEnjnZ3.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hamburg Travel Fotografie | Artbild-Fotografie",
+        "description": "Hamburg in Bildern: Architektur, Wasser und Nachtlicht, fotografiert mit Langzeitbelichtung und ND-Filter. Entdeckt Stadtansichten und ruhige Lichtstimmungen.",
+        "canonical": "https://artbild-fotografie.de/gallery/hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hamburg-c9e15fe3d7b6.webp",
+        "ogAlt": "Hamburger Stadtansicht mit beleuchteten Gebäuden und Spiegelungen im Wasser",
+        "textHash": "48ce78321703de4f51f1f3f40a75ee24933070da717f598766e655dbfe4b60fb",
+        "imagesHash": "64bafe9dd8b81d71e09021a506e9697ba81b60cb23f684210f2e087f241162a6",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hamburg Travel Fotografie | Artbild-Fotografie",
+        "description": "Hamburg in Bildern: Architektur, Wasser und Nachtlicht, fotografiert mit Langzeitbelichtung und ND-Filter. Entdeckt Stadtansichten und ruhige Lichtstimmungen.",
+        "canonical": "https://artbild-fotografie.de/gallery/hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hamburg-c9e15fe3d7b6.webp",
+        "ogAlt": "Hamburger Stadtansicht mit beleuchteten Gebäuden und Spiegelungen im Wasser",
+        "textHash": "48ce78321703de4f51f1f3f40a75ee24933070da717f598766e655dbfe4b60fb",
+        "imagesHash": "64bafe9dd8b81d71e09021a506e9697ba81b60cb23f684210f2e087f241162a6",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hannover/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hannover Travel Fotografie | Artbild-Fotografie",
+        "description": "Hannover in Bildern: Ruhige Stadtansichten, Architektur und herbstliche Landschaften. Entdeckt die Reisefotografie-Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/hannover/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hannover-3cf2bb004ba2.webp",
+        "ogAlt": "Neues Rathaus Hannover mit Spiegelung im Wasser und Herbstlaub",
+        "textHash": "4c3b96cc04f3987102a705afac4d80f86808191073df2b9d6124246ebf771680",
+        "imagesHash": "e61b28096591689403463080f48717bc3aaf12267f2600e3674057b53eeaa1be",
+        "imageCount": 6,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hannover/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hannover Travel Fotografie | Artbild-Fotografie",
+        "description": "Hannover in Bildern: Ruhige Stadtansichten, Architektur und herbstliche Landschaften. Entdeckt die Reisefotografie-Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/hannover/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hannover-3cf2bb004ba2.webp",
+        "ogAlt": "Neues Rathaus Hannover mit Spiegelung im Wasser und Herbstlaub",
+        "textHash": "4c3b96cc04f3987102a705afac4d80f86808191073df2b9d6124246ebf771680",
+        "imagesHash": "e61b28096591689403463080f48717bc3aaf12267f2600e3674057b53eeaa1be",
+        "imageCount": 6,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hannover/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hochzeit-braut-fotoshooting-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Braut Fotoshooting Hamburg im Hotel Atlantic | Artbild-Fotografie",
+        "description": "Editoriales Braut Fotoshooting und Getting Ready im Hotel Atlantic Hamburg: Brautkleider, Styling und zeitlose Hochzeitsfotografie an der Alster.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-braut-fotoshooting-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-braut-fotoshooting-hamburg-c65030c146af.webp",
+        "ogAlt": "Nahes Brautportrait mit Schleier im Hotel Atlantic Hamburg",
+        "textHash": "7d0a490ec5b3f3124dffd17bdfddc1f72e571381357b32fdb18801772b8ae701",
+        "imagesHash": "280b2de5a33401bc6610fc598f8eb1534ef03f9ad5f43739ea0a993b6ad7b5fe",
+        "imageCount": 53,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-braut-fotoshooting-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DDRc0dg0.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Braut Fotoshooting Hamburg im Hotel Atlantic | Artbild-Fotografie",
+        "description": "Editoriales Braut Fotoshooting und Getting Ready im Hotel Atlantic Hamburg: Brautkleider, Styling und zeitlose Hochzeitsfotografie an der Alster.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-braut-fotoshooting-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-braut-fotoshooting-hamburg-c65030c146af.webp",
+        "ogAlt": "Nahes Brautportrait mit Schleier im Hotel Atlantic Hamburg",
+        "textHash": "7d0a490ec5b3f3124dffd17bdfddc1f72e571381357b32fdb18801772b8ae701",
+        "imagesHash": "280b2de5a33401bc6610fc598f8eb1534ef03f9ad5f43739ea0a993b6ad7b5fe",
+        "imageCount": 53,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-braut-fotoshooting-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DDRc0dg0.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hochzeit-jahrhunderhalle-bochum/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeit Jahrhunderthalle Bochum | Artbild-Fotografie",
+        "description": "Hochzeitsreportage an der Jahrhunderthalle Bochum und im Dampfgebläsehaus: Industriearchitektur, Getting Ready, Brautpaarshooting und Feierdetails im Ruhrgebiet.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-jahrhunderhalle-bochum/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-jahrhunderhalle-bochum-cdc4fb8a40a2.webp",
+        "ogAlt": "Hochzeitspaar und Begleitung vor der Industriearchitektur der Jahrhunderthalle Bochum",
+        "textHash": "3b2d77a2df4d0b4b0a4452d17740d1e8091f0f99db3342ce774c6aa33b9eb334",
+        "imagesHash": "20bfab06ab8f94dc86622754e6a92dedd9600c703232040f6e856cc7c1b6d5e7",
+        "imageCount": 80,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-jahrhunderhalle-bochum/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.gDxPEhhL.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeit Jahrhunderthalle Bochum | Artbild-Fotografie",
+        "description": "Hochzeitsreportage an der Jahrhunderthalle Bochum und im Dampfgebläsehaus: Industriearchitektur, Getting Ready, Brautpaarshooting und Feierdetails im Ruhrgebiet.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-jahrhunderhalle-bochum/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-jahrhunderhalle-bochum-cdc4fb8a40a2.webp",
+        "ogAlt": "Hochzeitspaar und Begleitung vor der Industriearchitektur der Jahrhunderthalle Bochum",
+        "textHash": "3b2d77a2df4d0b4b0a4452d17740d1e8091f0f99db3342ce774c6aa33b9eb334",
+        "imagesHash": "20bfab06ab8f94dc86622754e6a92dedd9600c703232040f6e856cc7c1b6d5e7",
+        "imageCount": 80,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-jahrhunderhalle-bochum/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.gDxPEhhL.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hochzeit-valerie-und-tim/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeit Valerie und Tim | Hochzeitsreportage Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Valerie und Tim mit Brautpaarshooting im Frühlingspark, Schleierportraits, Ringdetail und Bildern von der Abendfeier.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-valerie-und-tim/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-valerie-und-tim-b0d528f3770a.webp",
+        "ogAlt": "Tim küsst Valerie bei einem ruhigen Brautpaarportrait im Park",
+        "textHash": "6a73f64abef1110161e4eab38a1b029351b8474e367c76dd1a4b56eebf526dee",
+        "imagesHash": "4c31170aa35f883ef28ed10647389e3af25df6fc907961ffe8c99ed5ace3351a",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-valerie-und-tim/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/editorial-destination.d07dg4hR.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeit Valerie und Tim | Hochzeitsreportage Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Valerie und Tim mit Brautpaarshooting im Frühlingspark, Schleierportraits, Ringdetail und Bildern von der Abendfeier.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeit-valerie-und-tim/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeit-valerie-und-tim-b0d528f3770a.webp",
+        "ogAlt": "Tim küsst Valerie bei einem ruhigen Brautpaarportrait im Park",
+        "textHash": "6a73f64abef1110161e4eab38a1b029351b8474e367c76dd1a4b56eebf526dee",
+        "imagesHash": "4c31170aa35f883ef28ed10647389e3af25df6fc907961ffe8c99ed5ace3351a",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeit-valerie-und-tim/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/editorial-destination.d07dg4hR.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hochzeitsfotograf-niedersachsen/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Niedersachsen | Hochzeit in Scheeßel",
+        "description": "Hochzeitsreportage von Kathrin und Sven in Scheeßel und Lauenbrück: Getting Ready, standesamtliche Trauung und natürliches Brautpaarshooting in Niedersachsen.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeitsfotograf-niedersachsen/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotograf-niedersachsen-48caf67a1215.webp",
+        "ogAlt": "Kathrin und Sven küssen sich bei ihrer Hochzeit in Niedersachsen",
+        "textHash": "10512950e2f6a3252567d61f1ccde9c77b9ccb040f745db76c3feaaf68e5d870",
+        "imagesHash": "16b9f4b0c89f6093d5933e2a7149cd3e54adf7031a44ec7c702e16a7e4617deb",
+        "imageCount": 27,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeitsfotograf-niedersachsen/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.TxoU2TVo.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Niedersachsen | Hochzeit in Scheeßel",
+        "description": "Hochzeitsreportage von Kathrin und Sven in Scheeßel und Lauenbrück: Getting Ready, standesamtliche Trauung und natürliches Brautpaarshooting in Niedersachsen.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeitsfotograf-niedersachsen/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotograf-niedersachsen-48caf67a1215.webp",
+        "ogAlt": "Kathrin und Sven küssen sich bei ihrer Hochzeit in Niedersachsen",
+        "textHash": "10512950e2f6a3252567d61f1ccde9c77b9ccb040f745db76c3feaaf68e5d870",
+        "imagesHash": "16b9f4b0c89f6093d5933e2a7149cd3e54adf7031a44ec7c702e16a7e4617deb",
+        "imageCount": 27,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeitsfotograf-niedersachsen/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.TxoU2TVo.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/hochzeitsfotos-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotos Hamburg - Artbild-Fotografie",
+        "description": "Hochzeitsfotos Hamburg als Inspiration: Brautkleid-Editorial in den Fraser Suites mit elegantem Treppenhaus, Fensterlicht und Getting-Ready-Momenten.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeitsfotos-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotos-hamburg-bc330b827476.webp",
+        "ogAlt": "Braut hält ihren Schleier vor einer Holztür der Fraser Suites Hamburg",
+        "textHash": "97c51646af1c8e513f3bcf8d8d226a93d77e13f7813b6279016a63baf1275c4f",
+        "imagesHash": "ac08be7417e53ad58d27d53d0cc4a8c2ede51cb82af54dc5a51f2811df043546",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeitsfotos-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.qRp9OZ0a.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotos Hamburg - Artbild-Fotografie",
+        "description": "Hochzeitsfotos Hamburg als Inspiration: Brautkleid-Editorial in den Fraser Suites mit elegantem Treppenhaus, Fensterlicht und Getting-Ready-Momenten.",
+        "canonical": "https://artbild-fotografie.de/gallery/hochzeitsfotos-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/hochzeitsfotos-hamburg-bc330b827476.webp",
+        "ogAlt": "Braut hält ihren Schleier vor einer Holztür der Fraser Suites Hamburg",
+        "textHash": "97c51646af1c8e513f3bcf8d8d226a93d77e13f7813b6279016a63baf1275c4f",
+        "imagesHash": "ac08be7417e53ad58d27d53d0cc4a8c2ede51cb82af54dc5a51f2811df043546",
+        "imageCount": 30,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/hochzeitsfotos-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.qRp9OZ0a.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/lovebirds-am-elbstrand/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Verlobungsshooting Hamburg am Elbstrand",
+        "description": "Verlobungsshooting am Hamburger Elbstrand: Natürliche Paarbilder und gute Gründe, Euren Hochzeitsfotografen schon vor dem großen Tag kennenzulernen.",
+        "canonical": "https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/lovebirds-am-elbstrand-9097a36b168b.webp",
+        "ogAlt": "Nahes Paarportrait beim Verlobungsshooting am Hamburger Elbstrand",
+        "textHash": "395f335c49430e0d1fbff2c21a7ca5e2f82f77f0efd4c40589b54683c4eebab9",
+        "imagesHash": "0d2fa2cc0101eae2dc4eced90f612af000c41c38943ff5ba7d13c4732c0ababe",
+        "imageCount": 19,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.CH4ywCm4.css"
+        ]
+      },
+      "observed": {
+        "title": "Verlobungsshooting Hamburg am Elbstrand",
+        "description": "Verlobungsshooting am Hamburger Elbstrand: Natürliche Paarbilder und gute Gründe, Euren Hochzeitsfotografen schon vor dem großen Tag kennenzulernen.",
+        "canonical": "https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/lovebirds-am-elbstrand-9097a36b168b.webp",
+        "ogAlt": "Nahes Paarportrait beim Verlobungsshooting am Hamburger Elbstrand",
+        "textHash": "395f335c49430e0d1fbff2c21a7ca5e2f82f77f0efd4c40589b54683c4eebab9",
+        "imagesHash": "0d2fa2cc0101eae2dc4eced90f612af000c41c38943ff5ba7d13c4732c0ababe",
+        "imageCount": 19,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/lovebirds-am-elbstrand/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.CH4ywCm4.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/mallorca/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Mallorca Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie von Mallorca zur blauen Stunde und am Tag mit ND-Filter, Küsten, Bergen und mediterranem Licht.",
+        "canonical": "https://artbild-fotografie.de/gallery/mallorca/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/mallorca-b55034f21f81.webp",
+        "ogAlt": "Kathedrale von Palma auf Mallorca mit Spiegelung im Wasser",
+        "textHash": "c2e46b03970ca7a05217761c3f139d0e19f78957bce3ee3a50c2f7817a3fb17e",
+        "imagesHash": "555bd891bc5d31b14abb9c693926c3207af49a2bd619a3da345fc0f5c1fb77c5",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/mallorca/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Mallorca Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie von Mallorca zur blauen Stunde und am Tag mit ND-Filter, Küsten, Bergen und mediterranem Licht.",
+        "canonical": "https://artbild-fotografie.de/gallery/mallorca/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/mallorca-b55034f21f81.webp",
+        "ogAlt": "Kathedrale von Palma auf Mallorca mit Spiegelung im Wasser",
+        "textHash": "c2e46b03970ca7a05217761c3f139d0e19f78957bce3ee3a50c2f7817a3fb17e",
+        "imagesHash": "555bd891bc5d31b14abb9c693926c3207af49a2bd619a3da345fc0f5c1fb77c5",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/mallorca/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/paarshooting-mallorca/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Paarshooting Mallorca | Artbild-Fotografie",
+        "description": "Paarshooting auf Mallorca mit natürlichen Paarportraits, mediterranem Licht sowie Stadt- und Meerblick. Fotografiert von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/paarshooting-mallorca/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/paarshooting-mallorca-f0cff329fe7b.webp",
+        "ogAlt": "Schwarzweiß-Portrait eines küssenden Paares im Gegenlicht auf Mallorca",
+        "textHash": "e5f9bf9dff13196df3bf3a0115ea4d220989647e9834bbfbc517f193e67d8d8e",
+        "imagesHash": "85d4328c451b943d68489ec105a0df1e4f9d66c23ef38fc72c65855f2a4c0c6b",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/paarshooting-mallorca/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Paarshooting Mallorca | Artbild-Fotografie",
+        "description": "Paarshooting auf Mallorca mit natürlichen Paarportraits, mediterranem Licht sowie Stadt- und Meerblick. Fotografiert von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/paarshooting-mallorca/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/paarshooting-mallorca-f0cff329fe7b.webp",
+        "ogAlt": "Schwarzweiß-Portrait eines küssenden Paares im Gegenlicht auf Mallorca",
+        "textHash": "e5f9bf9dff13196df3bf3a0115ea4d220989647e9834bbfbc517f193e67d8d8e",
+        "imagesHash": "85d4328c451b943d68489ec105a0df1e4f9d66c23ef38fc72c65855f2a4c0c6b",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/paarshooting-mallorca/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/paris/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Paris Travel Fotografie | Artbild-Fotografie",
+        "description": "Eindrücke aus Paris bei Tag und Nacht: Architektur, Straßen, Lichtstimmungen und Stadtansichten von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/paris-cea00801de14.webp",
+        "ogAlt": "Pariser Häuser und Brücke über die Seine",
+        "textHash": "bf46d839d6b734e319b7d58ceb4f3e5638d31cd28d50996acb3b35e3a709e61a",
+        "imagesHash": "92ba3c079414e40eb7c6f56b2a11ff9b4a302db705e6571fa71bd8682993db2b",
+        "imageCount": 24,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Paris Travel Fotografie | Artbild-Fotografie",
+        "description": "Eindrücke aus Paris bei Tag und Nacht: Architektur, Straßen, Lichtstimmungen und Stadtansichten von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/paris-cea00801de14.webp",
+        "ogAlt": "Pariser Häuser und Brücke über die Seine",
+        "textHash": "bf46d839d6b734e319b7d58ceb4f3e5638d31cd28d50996acb3b35e3a709e61a",
+        "imagesHash": "92ba3c079414e40eb7c6f56b2a11ff9b4a302db705e6571fa71bd8682993db2b",
+        "imageCount": 24,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Standesamtliche Trauung im Standesamt Altona | Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Roberta und Daniel im Standesamt Altona, am Altonaer Balkon und bei ihrer Feier in Ottensen. Hochzeitsfotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg-6db3c5b32563.webp",
+        "ogAlt": "Roberta und Daniel küssen sich nach ihrer standesamtlichen Trauung in Hamburg-Altona",
+        "textHash": "5ac5e806e1bc856561d59c6ca6e28ac49a10ef44b70723943d7a08ac3dce7880",
+        "imagesHash": "01f2f8f7e7979514dca9e01c8834175258d52436b1abdd81391ce968bbbbcff3",
+        "imageCount": 43,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.44Tj7BtQ.css"
+        ]
+      },
+      "observed": {
+        "title": "Standesamtliche Trauung im Standesamt Altona | Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Roberta und Daniel im Standesamt Altona, am Altonaer Balkon und bei ihrer Feier in Ottensen. Hochzeitsfotografie aus Hamburg.",
+        "canonical": "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg-6db3c5b32563.webp",
+        "ogAlt": "Roberta und Daniel küssen sich nach ihrer standesamtlichen Trauung in Hamburg-Altona",
+        "textHash": "5ac5e806e1bc856561d59c6ca6e28ac49a10ef44b70723943d7a08ac3dce7880",
+        "imagesHash": "01f2f8f7e7979514dca9e01c8834175258d52436b1abdd81391ce968bbbbcff3",
+        "imageCount": 43,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.44Tj7BtQ.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/steffi-dominik/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeit von Steffi & Dominik in der Nordheide | Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Steffi und Dominik in Buchholz in der Nordheide: Trauung, Oldtimer, Hofscheune und natürliches Brautpaarshooting.",
+        "canonical": "https://artbild-fotografie.de/gallery/steffi-dominik/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/steffi-dominik-40d64bd6318f.webp",
+        "ogAlt": "Inniges Schwarzweiß-Portrait von Steffi und Dominik vor einer Holzfassade",
+        "textHash": "ebe8ba91c5962f82be78b8775ad3cf9361032fa9f4148bf75ef703140ec152be",
+        "imagesHash": "d9cb26313666bda16e4514929383da61a081e10d30d57eb7c8a52bc22dbc4b9b",
+        "imageCount": 25,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/steffi-dominik/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.t4o2zALV.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeit von Steffi & Dominik in der Nordheide | Artbild-Fotografie",
+        "description": "Hochzeitsreportage von Steffi und Dominik in Buchholz in der Nordheide: Trauung, Oldtimer, Hofscheune und natürliches Brautpaarshooting.",
+        "canonical": "https://artbild-fotografie.de/gallery/steffi-dominik/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/steffi-dominik-40d64bd6318f.webp",
+        "ogAlt": "Inniges Schwarzweiß-Portrait von Steffi und Dominik vor einer Holzfassade",
+        "textHash": "ebe8ba91c5962f82be78b8775ad3cf9361032fa9f4148bf75ef703140ec152be",
+        "imagesHash": "d9cb26313666bda16e4514929383da61a081e10d30d57eb7c8a52bc22dbc4b9b",
+        "imageCount": 25,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/steffi-dominik/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.t4o2zALV.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/teneriffa/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Teneriffa Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie auf Teneriffa: Entdeckt Inselansichten, besondere Lichtstimmungen und weite Landschaften in der Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/teneriffa/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/teneriffa-8634a9c3e994.webp",
+        "ogAlt": "Berglandschaft auf Teneriffa mit Spiegelung im Wasser",
+        "textHash": "df0fa6066817dc98946eb689289558caa40f2df330509b354109f68cde45f913",
+        "imagesHash": "1b8352d0a5ca51edd2f1414a8abe3bf508f4e6b5bf5d09dffa5d38e57fcf8919",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/teneriffa/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Teneriffa Travel Fotografie | Artbild-Fotografie",
+        "description": "Landschaftsfotografie auf Teneriffa: Entdeckt Inselansichten, besondere Lichtstimmungen und weite Landschaften in der Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/teneriffa/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/teneriffa-8634a9c3e994.webp",
+        "ogAlt": "Berglandschaft auf Teneriffa mit Spiegelung im Wasser",
+        "textHash": "df0fa6066817dc98946eb689289558caa40f2df330509b354109f68cde45f913",
+        "imagesHash": "1b8352d0a5ca51edd2f1414a8abe3bf508f4e6b5bf5d09dffa5d38e57fcf8919",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/teneriffa/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/traumhochzeit-in-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Traumhochzeit im Hotel Atlantic Hamburg | Artbild-Fotografie",
+        "description": "Hochzeitsreportage im Hotel Atlantic Hamburg: Getting Ready, Brautpaarshooting an der Alster und Hochzeitstorte mit zeitloser Hochzeitsfotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/traumhochzeit-in-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-hamburg-9b1eac96b1ff.webp",
+        "ogAlt": "Brautpaar bei einem innigen Portrait an der Hamburger Alster",
+        "textHash": "556425bbe0ff77ed896be61f4a101c55a570d88402091e0034e5c04937413f7d",
+        "imagesHash": "6468e95f3395ca7856dc5c7aa8abd6718cf73dd3555cee6d3c8cbc6eaca67d38",
+        "imageCount": 29,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/traumhochzeit-in-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.2DPcwH8X.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Traumhochzeit im Hotel Atlantic Hamburg | Artbild-Fotografie",
+        "description": "Hochzeitsreportage im Hotel Atlantic Hamburg: Getting Ready, Brautpaarshooting an der Alster und Hochzeitstorte mit zeitloser Hochzeitsfotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/traumhochzeit-in-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-hamburg-9b1eac96b1ff.webp",
+        "ogAlt": "Brautpaar bei einem innigen Portrait an der Hamburger Alster",
+        "textHash": "556425bbe0ff77ed896be61f4a101c55a570d88402091e0034e5c04937413f7d",
+        "imagesHash": "6468e95f3395ca7856dc5c7aa8abd6718cf73dd3555cee6d3c8cbc6eaca67d38",
+        "imageCount": 29,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/traumhochzeit-in-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.2DPcwH8X.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/traumhochzeit-in-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Traumhochzeit in Paris | Hochzeitsfotografie Artbild-Fotografie",
+        "description": "Editoriale Hochzeitsfotografie in Paris: Brautportrait, Destination Wedding Inspiration und moderne Hochzeitsbilder mit französischem Stadtgefühl.",
+        "canonical": "https://artbild-fotografie.de/gallery/traumhochzeit-in-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-paris-86038dd984f5.webp",
+        "ogAlt": "Braut-Editorial unter den historischen Arkaden in Paris",
+        "textHash": "d888e5d91dfc21473ed4d853cfc2ad1c89d7ba50dcb7bd7ee76be802a14a0c71",
+        "imagesHash": "2980cd4fe17d507904d019f0d277707eec25a612c7d821d39f21414c7ffc837f",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/traumhochzeit-in-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.Cttc_Wh3.css"
+        ]
+      },
+      "observed": {
+        "title": "Traumhochzeit in Paris | Hochzeitsfotografie Artbild-Fotografie",
+        "description": "Editoriale Hochzeitsfotografie in Paris: Brautportrait, Destination Wedding Inspiration und moderne Hochzeitsbilder mit französischem Stadtgefühl.",
+        "canonical": "https://artbild-fotografie.de/gallery/traumhochzeit-in-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/traumhochzeit-in-paris-86038dd984f5.webp",
+        "ogAlt": "Braut-Editorial unter den historischen Arkaden in Paris",
+        "textHash": "d888e5d91dfc21473ed4d853cfc2ad1c89d7ba50dcb7bd7ee76be802a14a0c71",
+        "imagesHash": "2980cd4fe17d507904d019f0d277707eec25a612c7d821d39f21414c7ffc837f",
+        "imageCount": 21,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/traumhochzeit-in-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.Cttc_Wh3.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/venedig/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Venedig Travel Fotografie | Artbild-Fotografie",
+        "description": "Venedig und Murano in Bildern: Kanäle, Architektur und italienische Stadtlandschaften. Entdeckt die Reisefotografie-Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/venedig/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/venedig-303adca28fbf.webp",
+        "ogAlt": "Beleuchtete Häuser und Boote am Canal Grande in Venedig",
+        "textHash": "c4fe87ff7fe3bcdd4be0e98029e30ec4b9aae4c030af8a2454e2ec21ee2a5f2d",
+        "imagesHash": "58ec22cfdd335bd66c977eb05a149c6761b939337db0ef3d3b61e7a3392999d9",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/venedig/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Venedig Travel Fotografie | Artbild-Fotografie",
+        "description": "Venedig und Murano in Bildern: Kanäle, Architektur und italienische Stadtlandschaften. Entdeckt die Reisefotografie-Galerie von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/gallery/venedig/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/venedig-303adca28fbf.webp",
+        "ogAlt": "Beleuchtete Häuser und Boote am Canal Grande in Venedig",
+        "textHash": "c4fe87ff7fe3bcdd4be0e98029e30ec4b9aae4c030af8a2454e2ec21ee2a5f2d",
+        "imagesHash": "58ec22cfdd335bd66c977eb05a149c6761b939337db0ef3d3b61e7a3392999d9",
+        "imageCount": 22,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/venedig/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/visagistin-manja-biebow/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Visagistin Manija Biebow Hamburg | Brautstyling",
+        "description": "Visagistin Manija Biebow in Hamburg: Brautstyling, Make-up und Frisur für ein ruhiges Getting Ready am Hochzeitsmorgen.",
+        "canonical": "https://artbild-fotografie.de/gallery/visagistin-manja-biebow/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/visagistin-manja-biebow-c4704cde99b4.webp",
+        "ogAlt": "Portrait der Hamburger Visagistin Manija Biebow in ihrem Salon",
+        "textHash": "a1359f50ade7c19f8cab2363a79faa9528d7b451ff0702124a67b2c07e1accf7",
+        "imagesHash": "60a1eafce7e1f3edd66d6089c75d561411f431ca7e82a507bda00f21fb36a991",
+        "imageCount": 9,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/visagistin-manja-biebow/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.1be4saZp.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Visagistin Manija Biebow Hamburg | Brautstyling",
+        "description": "Visagistin Manija Biebow in Hamburg: Brautstyling, Make-up und Frisur für ein ruhiges Getting Ready am Hochzeitsmorgen.",
+        "canonical": "https://artbild-fotografie.de/gallery/visagistin-manja-biebow/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/visagistin-manja-biebow-c4704cde99b4.webp",
+        "ogAlt": "Portrait der Hamburger Visagistin Manija Biebow in ihrem Salon",
+        "textHash": "a1359f50ade7c19f8cab2363a79faa9528d7b451ff0702124a67b2c07e1accf7",
+        "imagesHash": "60a1eafce7e1f3edd66d6089c75d561411f431ca7e82a507bda00f21fb36a991",
+        "imageCount": 9,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/visagistin-manja-biebow/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.1be4saZp.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/gallery/yildiz-duman-werner/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Yildiz Duman-Werner | Brautstyling Hamburg",
+        "description": "Brautstyling Hamburg mit Yildiz Duman-Werner von Dizzy Dee Styles: Hair & Make-up in gemeinsamen Bridal-Editorials von Artbild-Fotografie entdecken.",
+        "canonical": "https://artbild-fotografie.de/gallery/yildiz-duman-werner/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/yildiz-duman-werner-f2815dcc31c2.webp",
+        "ogAlt": "Brautportrait mit offenem Haar und Make-up von Yildiz Duman-Werner",
+        "textHash": "cb5d23847fccbcd8fc1d9adbfaccf5ef97465dadea887a504af8e1b1b575236f",
+        "imagesHash": "aecb6357294bc35632aeaed773282c3b531fecfb6e56b57673bfd93d71a7644a",
+        "imageCount": 7,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/yildiz-duman-werner/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DSNM2yq0.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Yildiz Duman-Werner | Brautstyling Hamburg",
+        "description": "Brautstyling Hamburg mit Yildiz Duman-Werner von Dizzy Dee Styles: Hair & Make-up in gemeinsamen Bridal-Editorials von Artbild-Fotografie entdecken.",
+        "canonical": "https://artbild-fotografie.de/gallery/yildiz-duman-werner/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/gallery/yildiz-duman-werner-f2815dcc31c2.webp",
+        "ogAlt": "Brautportrait mit offenem Haar und Make-up von Yildiz Duman-Werner",
+        "textHash": "cb5d23847fccbcd8fc1d9adbfaccf5ef97465dadea887a504af8e1b1b575236f",
+        "imagesHash": "aecb6357294bc35632aeaed773282c3b531fecfb6e56b57673bfd93d71a7644a",
+        "imageCount": 7,
+        "primaryImages": [
+          "https://artbild-fotografie.de/gallery/yildiz-duman-werner/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.DSNM2yq0.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Getting Ready: Diese Fehler solltest du vermeiden",
+        "description": "Getting Ready planen: 3 häufige Fehler bei Hochzeitsfotos vermeiden. Tipps zu aufgeräumten Räumen, Zeitpuffer und Kennenlernshooting vor Eurer Hochzeit.",
+        "canonical": "https://artbild-fotografie.de/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden-4db44f45c0b7.webp",
+        "ogAlt": "Aufgeräumtes Hotelzimmer mit hellem Bett als Raum für den Hochzeitsmorgen",
+        "textHash": "08fec2a72fec018dda7c7f4fcbfbb970eb080b4923eeff443a838f8bcf9cd1ee",
+        "imagesHash": "e16ff18104d22a9fc9ab40bc01b1055d38ed5eeba26ea87a05cea74720dbf6a4",
+        "imageCount": 4,
+        "primaryImages": [
+          "https://artbild-fotografie.de/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CnA51b7D.css"
+        ]
+      },
+      "observed": {
+        "title": "Getting Ready: Diese Fehler solltest du vermeiden",
+        "description": "Getting Ready planen: 3 häufige Fehler bei Hochzeitsfotos vermeiden. Tipps zu aufgeräumten Räumen, Zeitpuffer und Kennenlernshooting vor Eurer Hochzeit.",
+        "canonical": "https://artbild-fotografie.de/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden-4db44f45c0b7.webp",
+        "ogAlt": "Aufgeräumtes Hotelzimmer mit hellem Bett als Raum für den Hochzeitsmorgen",
+        "textHash": "08fec2a72fec018dda7c7f4fcbfbb970eb080b4923eeff443a838f8bcf9cd1ee",
+        "imagesHash": "e16ff18104d22a9fc9ab40bc01b1055d38ed5eeba26ea87a05cea74720dbf6a4",
+        "imageCount": 4,
+        "primaryImages": [
+          "https://artbild-fotografie.de/getting-ready-diese-fehler-solltest-du-unbedingt-vermeiden/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.CnA51b7D.css"
+        ]
+      }
+    },
+    {
+      "route": "/hochzeitsfotograf-preise/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Hamburg Preise",
+        "description": "Hochzeitsfotograf Hamburg: 3 Pakete ab 299 € für 1 Stunde. Bildbearbeitung inklusive, klare Leistungen für Standesamt und Reportage. Preise vergleichen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-preise-fde366e4c0aa.webp",
+        "ogAlt": "Lachendes Paar im Gegenlicht bei einem Fotoshooting von Artbild-Fotografie",
+        "textHash": "c67ea620d3659a9761efc5dc6b44753813168707b5c84c2ae99fcca79874b3a1",
+        "imagesHash": "8a72a5945c97367a736cb724559ae4367af979224da80fd48759232af3f64288",
+        "imageCount": 5,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-preise/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.RqDJDOu1.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Hamburg Preise",
+        "description": "Hochzeitsfotograf Hamburg: 3 Pakete ab 299 € für 1 Stunde. Bildbearbeitung inklusive, klare Leistungen für Standesamt und Reportage. Preise vergleichen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-preise-fde366e4c0aa.webp",
+        "ogAlt": "Lachendes Paar im Gegenlicht bei einem Fotoshooting von Artbild-Fotografie",
+        "textHash": "c67ea620d3659a9761efc5dc6b44753813168707b5c84c2ae99fcca79874b3a1",
+        "imagesHash": "8a72a5945c97367a736cb724559ae4367af979224da80fd48759232af3f64288",
+        "imageCount": 5,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-preise/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.RqDJDOu1.css"
+        ]
+      }
+    },
+    {
+      "route": "/hochzeitsfotograf-ratgeber/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Kosten: Pakete & Budget vergleichen",
+        "description": "Was kostet ein Hochzeitsfotograf? So vergleicht Ihr Stundenpreise, Bildbearbeitung, Fahrtkosten und Pakete für Eure Hochzeit in Hamburg ohne Kostenfallen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-ratgeber/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-ratgeber-8a79aafbd3ef.webp",
+        "ogAlt": "Paar lacht bei einem entspannten Kennenlernshooting",
+        "textHash": "b42733982b3386829df330c7157a4d73d683eae20684b8b199982f2375a2789a",
+        "imagesHash": "95dbfd7be35041444a1c98e9710b4232ece4e1e4ac24ad65e4bd26bd4cc1f791",
+        "imageCount": 3,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-ratgeber/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.BY6JYgry.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Kosten: Pakete & Budget vergleichen",
+        "description": "Was kostet ein Hochzeitsfotograf? So vergleicht Ihr Stundenpreise, Bildbearbeitung, Fahrtkosten und Pakete für Eure Hochzeit in Hamburg ohne Kostenfallen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-ratgeber/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-ratgeber-8a79aafbd3ef.webp",
+        "ogAlt": "Paar lacht bei einem entspannten Kennenlernshooting",
+        "textHash": "b42733982b3386829df330c7157a4d73d683eae20684b8b199982f2375a2789a",
+        "imagesHash": "95dbfd7be35041444a1c98e9710b4232ece4e1e4ac24ad65e4bd26bd4cc1f791",
+        "imageCount": 3,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-ratgeber/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.BY6JYgry.css"
+        ]
+      }
+    },
+    {
+      "route": "/hochzeitsfotograf-standesamt-hamburg-altona/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Standesamt Hamburg Altona | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf für das Standesamt Hamburg-Altona: Eure Trauung, Paarbilder am Altonaer Balkon und an der Elbe. Persönliches Festpreisangebot anfragen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-standesamt-hamburg-altona-d53a93440288.webp",
+        "ogAlt": "Rathaus Altona mit Reiterdenkmal und Säulenfassade",
+        "textHash": "97275dd1d2b77a5f30a9a6e8f5871b059d3ec41a76f357b124e63142cc5ca7d4",
+        "imagesHash": "e4cbbeadead66d6f90b1d723eb8c084153f600483f37764aa39528e294a92f92",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Standesamt Hamburg Altona | Artbild-Fotografie",
+        "description": "Hochzeitsfotograf für das Standesamt Hamburg-Altona: Eure Trauung, Paarbilder am Altonaer Balkon und an der Elbe. Persönliches Festpreisangebot anfragen.",
+        "canonical": "https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/hochzeitsfotograf-standesamt-hamburg-altona-d53a93440288.webp",
+        "ogAlt": "Rathaus Altona mit Reiterdenkmal und Säulenfassade",
+        "textHash": "97275dd1d2b77a5f30a9a6e8f5871b059d3ec41a76f357b124e63142cc5ca7d4",
+        "imagesHash": "e4cbbeadead66d6f90b1d723eb8c084153f600483f37764aa39528e294a92f92",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/hochzeitsfotograf-standesamt-hamburg-altona/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/impressum/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Impressum | Artbild-Fotografie Hamburg",
+        "description": "Impressum und Anbieterkennzeichnung von Artbild-Fotografie, York Augustin, Hochzeitsfotograf in Hamburg.",
+        "canonical": "https://artbild-fotografie.de/impressum/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/impressum-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Inhaber von Artbild-Fotografie",
+        "textHash": "bfd465e4ba2ec28089628a443100140260755402b15250ac35b4c4bbd7f2ef5d",
+        "imagesHash": "1aa129febb6ce25d2370df55c73dac33f2421c25bfbc23b81c3f8ff4fc89c2f2",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/impressum/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.Ds50_ivg.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Impressum | Artbild-Fotografie Hamburg",
+        "description": "Impressum und Anbieterkennzeichnung von Artbild-Fotografie, York Augustin, Hochzeitsfotograf in Hamburg.",
+        "canonical": "https://artbild-fotografie.de/impressum/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/impressum-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Inhaber von Artbild-Fotografie",
+        "textHash": "bfd465e4ba2ec28089628a443100140260755402b15250ac35b4c4bbd7f2ef5d",
+        "imagesHash": "1aa129febb6ce25d2370df55c73dac33f2421c25bfbc23b81c3f8ff4fc89c2f2",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/impressum/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.Ds50_ivg.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/kontakt/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotograf Hamburg anfragen | Artbild-Fotografie",
+        "description": "Kontaktformular für Hochzeitsfotografie in Hamburg: freie Termine, Hochzeitsreportagen, Standesamt, Getting Ready und Paarshootings bei Artbild-Fotografie anfragen.",
+        "canonical": "https://artbild-fotografie.de/kontakt/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/kontakt-f42e8765808a.webp",
+        "ogAlt": "Euer Ansprechpartner York Augustin von Artbild-Fotografie",
+        "textHash": "5ec12b0f020653f6ef19ff2a0beb796029512156c08e80f4c4f1bba1565ae865",
+        "imagesHash": "05f532ea4fbffc296cc6efbc17e9a549ba1f1a4e173f632d063c07222ed143a2",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/kontakt/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Cz6CfK8J.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotograf Hamburg anfragen | Artbild-Fotografie",
+        "description": "Kontaktformular für Hochzeitsfotografie in Hamburg: freie Termine, Hochzeitsreportagen, Standesamt, Getting Ready und Paarshootings bei Artbild-Fotografie anfragen.",
+        "canonical": "https://artbild-fotografie.de/kontakt/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/kontakt-f42e8765808a.webp",
+        "ogAlt": "Euer Ansprechpartner York Augustin von Artbild-Fotografie",
+        "textHash": "5ec12b0f020653f6ef19ff2a0beb796029512156c08e80f4c4f1bba1565ae865",
+        "imagesHash": "05f532ea4fbffc296cc6efbc17e9a549ba1f1a4e173f632d063c07222ed143a2",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/kontakt/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Cz6CfK8J.css"
+        ]
+      }
+    },
+    {
+      "route": "/location-scouting-in-paris/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Location Scouting in Paris | Artbild-Fotografie",
+        "description": "Location Scouting in Paris für ein Braut-Editorial: Fotospots, Vorbereitung und Planung bei wechselndem Wetter. Einblicke und Bilder von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/location-scouting-in-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/location-scouting-in-paris-77f33f41526f.webp",
+        "ogAlt": "Louvre und gläserne Pyramide beim Location Scouting in Paris",
+        "textHash": "a7f152c341574f3e76a057e76996f2f2fcd228e9bc462797af3e5009f87258d2",
+        "imagesHash": "b13707f17932b975e91f216cf647b7d5a72c48de31fce0e598009aa3db07f8d7",
+        "imageCount": 10,
+        "primaryImages": [
+          "https://artbild-fotografie.de/location-scouting-in-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Location Scouting in Paris | Artbild-Fotografie",
+        "description": "Location Scouting in Paris für ein Braut-Editorial: Fotospots, Vorbereitung und Planung bei wechselndem Wetter. Einblicke und Bilder von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/location-scouting-in-paris/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/location-scouting-in-paris-77f33f41526f.webp",
+        "ogAlt": "Louvre und gläserne Pyramide beim Location Scouting in Paris",
+        "textHash": "a7f152c341574f3e76a057e76996f2f2fcd228e9bc462797af3e5009f87258d2",
+        "imagesHash": "b13707f17932b975e91f216cf647b7d5a72c48de31fce0e598009aa3db07f8d7",
+        "imageCount": 10,
+        "primaryImages": [
+          "https://artbild-fotografie.de/location-scouting-in-paris/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/nd-filter-tabelle/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "ND-Filter Tabelle als PDF: Belichtungszeiten ablesen",
+        "description": "ND-Filter Tabelle als kostenloses PDF zum Ausdrucken: Belichtungszeiten für Graufilter von ND 0.3 bis ND 3.0 ablesen. Mit Anleitung für Langzeitbelichtungen.",
+        "canonical": "https://artbild-fotografie.de/nd-filter-tabelle/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/nd-filter-tabelle-cc818abf261e.webp",
+        "ogAlt": "ND-Filter-Tabelle mit Belichtungszeiten und Verlängerungsfaktoren",
+        "textHash": "f5c3f7c5c6fcaf8cb1dfa3ebb7feaaae648e14b0fc63aa5f5a8252f76f33705a",
+        "imagesHash": "3c069752209fb0f325e296ba71b85b9f7260af31e2ee23b6ffd7e5168e521d12",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/nd-filter-tabelle/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "ND-Filter Tabelle als PDF: Belichtungszeiten ablesen",
+        "description": "ND-Filter Tabelle als kostenloses PDF zum Ausdrucken: Belichtungszeiten für Graufilter von ND 0.3 bis ND 3.0 ablesen. Mit Anleitung für Langzeitbelichtungen.",
+        "canonical": "https://artbild-fotografie.de/nd-filter-tabelle/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/nd-filter-tabelle-cc818abf261e.webp",
+        "ogAlt": "ND-Filter-Tabelle mit Belichtungszeiten und Verlängerungsfaktoren",
+        "textHash": "f5c3f7c5c6fcaf8cb1dfa3ebb7feaaae648e14b0fc63aa5f5a8252f76f33705a",
+        "imagesHash": "3c069752209fb0f325e296ba71b85b9f7260af31e2ee23b6ffd7e5168e521d12",
+        "imageCount": 1,
+        "primaryImages": [
+          "https://artbild-fotografie.de/nd-filter-tabelle/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/newsletter/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "TFP Shootings Hamburg: aktuelle Ausschreibungen | Artbild-Fotografie",
+        "description": "Aktuelle TFP-Ausschreibungen von Artbild-Fotografie für Models, Schauspieler und Paare in Hamburg auf tfp.hamburg ansehen.",
+        "canonical": "https://artbild-fotografie.de/newsletter/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/newsletter-eda2967aed24.webp",
+        "ogAlt": "Editorial-Portrait einer Frau auf einer Stadtstraße",
+        "textHash": "6770331e3119a596eb9d7b4e9b6f96ea227f96007974069f1bdb1334c714b936",
+        "imagesHash": "220b9f17668db4dd5c839c45d560d3cded884e63395e3153adb99518bfc849c1",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/newsletter/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Dl7zsIyb.css"
+        ]
+      },
+      "observed": {
+        "title": "TFP Shootings Hamburg: aktuelle Ausschreibungen | Artbild-Fotografie",
+        "description": "Aktuelle TFP-Ausschreibungen von Artbild-Fotografie für Models, Schauspieler und Paare in Hamburg auf tfp.hamburg ansehen.",
+        "canonical": "https://artbild-fotografie.de/newsletter/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/newsletter-eda2967aed24.webp",
+        "ogAlt": "Editorial-Portrait einer Frau auf einer Stadtstraße",
+        "textHash": "6770331e3119a596eb9d7b4e9b6f96ea227f96007974069f1bdb1334c714b936",
+        "imagesHash": "220b9f17668db4dd5c839c45d560d3cded884e63395e3153adb99518bfc849c1",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/newsletter/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Dl7zsIyb.css"
+        ]
+      }
+    },
+    {
+      "route": "/portfolio/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitsfotografie Hamburg – Portfolio | Artbild-Fotografie",
+        "description": "Hochzeitsfotografie aus Hamburg: echte Hochzeiten, standesamtliche Trauungen, Brautpaarshootings und Editorials im Portfolio von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/portfolio/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/portfolio-b0d528f3770a.webp",
+        "ogAlt": "Natürliche Hochzeitsfotografie: Valerie und Tim im Park",
+        "textHash": "023ff6e51d5dbc24be07ae8e1d62cc1840ab7bbfa770e5cf28320e0f6815808e",
+        "imagesHash": "c37081ede134da1089420cf7e917551ddde8959c6a3b7fb3d4eb38ff0c6cab84",
+        "imageCount": 27,
+        "primaryImages": [
+          "https://artbild-fotografie.de/portfolio/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.V1o-ejNz.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitsfotografie Hamburg – Portfolio | Artbild-Fotografie",
+        "description": "Hochzeitsfotografie aus Hamburg: echte Hochzeiten, standesamtliche Trauungen, Brautpaarshootings und Editorials im Portfolio von Artbild-Fotografie.",
+        "canonical": "https://artbild-fotografie.de/portfolio/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/portfolio-b0d528f3770a.webp",
+        "ogAlt": "Natürliche Hochzeitsfotografie: Valerie und Tim im Park",
+        "textHash": "023ff6e51d5dbc24be07ae8e1d62cc1840ab7bbfa770e5cf28320e0f6815808e",
+        "imagesHash": "c37081ede134da1089420cf7e917551ddde8959c6a3b7fb3d4eb38ff0c6cab84",
+        "imageCount": 27,
+        "primaryImages": [
+          "https://artbild-fotografie.de/portfolio/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.V1o-ejNz.css"
+        ]
+      }
+    },
+    {
+      "route": "/sicherer-kontakt/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Kontakt und öffentlicher PGP-Schlüssel | Artbild-Fotografie",
+        "description": "Datensparsamer Erstkontakt mit Artbild-Fotografie und öffentlicher PGP-Schlüssel für technisch geeignete verschlüsselte Nachrichten.",
+        "canonical": "https://artbild-fotografie.de/sicherer-kontakt/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/sicherer-kontakt-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Ansprechpartner von Artbild-Fotografie",
+        "textHash": "9fe9fe0fcdd04c1b1020da8da7bae4da7dc379d1fa4e507386ccaa8323175838",
+        "imagesHash": "75e5a0720afc3b243925562ddb1f48aac4ce26b9464efcfd038484fe6b3c14aa",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/sicherer-kontakt/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Bh4RD7VL.css"
+        ]
+      },
+      "observed": {
+        "title": "Kontakt und öffentlicher PGP-Schlüssel | Artbild-Fotografie",
+        "description": "Datensparsamer Erstkontakt mit Artbild-Fotografie und öffentlicher PGP-Schlüssel für technisch geeignete verschlüsselte Nachrichten.",
+        "canonical": "https://artbild-fotografie.de/sicherer-kontakt/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/sicherer-kontakt-f42e8765808a.webp",
+        "ogAlt": "York Augustin, Ansprechpartner von Artbild-Fotografie",
+        "textHash": "9fe9fe0fcdd04c1b1020da8da7bae4da7dc379d1fa4e507386ccaa8323175838",
+        "imagesHash": "75e5a0720afc3b243925562ddb1f48aac4ce26b9464efcfd038484fe6b3c14aa",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/sicherer-kontakt/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.Bh4RD7VL.css"
+        ]
+      }
+    },
+    {
+      "route": "/standesamt-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Standesamtfinder Hamburg: Adressen & Kontakt",
+        "description": "Standesamtfinder Hamburg: Wohnsitzstandesamt finden und besondere Trauorte in Hamburg und Umgebung mit Buchungsweg, Adresse und offiziellen Links vergleichen.",
+        "canonical": "https://artbild-fotografie.de/standesamt-hamburg/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/standesamt-hamburg-d53a93440288.webp",
+        "ogAlt": "Rathaus Altona als einer der Hamburger Trauorte",
+        "textHash": "2d8ad95e370aac1fa401e7312aa6ca4f1b66236fd142f8b37cdbe04b773ae6ea",
+        "imagesHash": "56b8c365ceaaa5b8b733b964dc27bdb9ab69160843462bc40208a84e3262d1ac",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/standesamt-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.e-VJyNvz.css"
+        ]
+      },
+      "observed": {
+        "title": "Standesamtfinder Hamburg: Adressen & Kontakt",
+        "description": "Standesamtfinder Hamburg: Wohnsitzstandesamt finden und besondere Trauorte in Hamburg und Umgebung mit Buchungsweg, Adresse und offiziellen Links vergleichen.",
+        "canonical": "https://artbild-fotografie.de/standesamt-hamburg/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/standesamt-hamburg-d53a93440288.webp",
+        "ogAlt": "Rathaus Altona als einer der Hamburger Trauorte",
+        "textHash": "2d8ad95e370aac1fa401e7312aa6ca4f1b66236fd142f8b37cdbe04b773ae6ea",
+        "imagesHash": "56b8c365ceaaa5b8b733b964dc27bdb9ab69160843462bc40208a84e3262d1ac",
+        "imageCount": 2,
+        "primaryImages": [
+          "https://artbild-fotografie.de/standesamt-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/index.e-VJyNvz.css"
+        ]
+      }
+    },
+    {
+      "route": "/traum-hochzeit-location-hamburg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Hochzeitslocations Hamburg: Ideen für Euren Hochzeitsmorgen",
+        "description": "Hochzeitslocations in Hamburg für schöne Fotos: Inspiration zu The George, Hotelsuiten und Getting Ready zu Hause. Tipps und Bilder vom Hochzeitsfotografen.",
+        "canonical": "https://artbild-fotografie.de/traum-hochzeit-location-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/traum-hochzeit-location-hamburg-1af1e365f828.webp",
+        "ogAlt": "Braut im Tageslicht einer Hotelsuite in Hamburg",
+        "textHash": "7d564e350a455dc74b1592f3b14f067ae2de78c5b217f7ad80c8051ac236d3a9",
+        "imagesHash": "f8efdc1963f04aa593a4ea9f4475ed312fb179e06cebbce2e1c797c1657f1c6a",
+        "imageCount": 7,
+        "primaryImages": [
+          "https://artbild-fotografie.de/traum-hochzeit-location-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Hochzeitslocations Hamburg: Ideen für Euren Hochzeitsmorgen",
+        "description": "Hochzeitslocations in Hamburg für schöne Fotos: Inspiration zu The George, Hotelsuiten und Getting Ready zu Hause. Tipps und Bilder vom Hochzeitsfotografen.",
+        "canonical": "https://artbild-fotografie.de/traum-hochzeit-location-hamburg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/traum-hochzeit-location-hamburg-1af1e365f828.webp",
+        "ogAlt": "Braut im Tageslicht einer Hotelsuite in Hamburg",
+        "textHash": "7d564e350a455dc74b1592f3b14f067ae2de78c5b217f7ad80c8051ac236d3a9",
+        "imagesHash": "f8efdc1963f04aa593a4ea9f4475ed312fb179e06cebbce2e1c797c1657f1c6a",
+        "imageCount": 7,
+        "primaryImages": [
+          "https://artbild-fotografie.de/traum-hochzeit-location-hamburg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/trautermin-hamburg-online-reservieren/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Trautermin Hamburg online reservieren: Traukalender",
+        "description": "Trautermin Hamburg online reservieren: Hier findet Ihr den Link zum offiziellen Traukalender der Stadt und Hinweise zu Reservierung und Anmeldung der Trauung.",
+        "canonical": "https://artbild-fotografie.de/trautermin-hamburg-online-reservieren/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/trautermin-hamburg-online-reservieren-a429878bae7e.webp",
+        "ogAlt": "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt",
+        "textHash": "e2648511615fd22d85acb6d67706bed76142d513d4d07073c31ddbf93e644e47",
+        "imagesHash": "06fd81494330df48bf15a2becaf60b2f6667bb817cbad1826abca825943b1311",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/trautermin-hamburg-online-reservieren/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.ZfYKz2WN.css"
+        ]
+      },
+      "observed": {
+        "title": "Trautermin Hamburg online reservieren: Traukalender",
+        "description": "Trautermin Hamburg online reservieren: Hier findet Ihr den Link zum offiziellen Traukalender der Stadt und Hinweise zu Reservierung und Anmeldung der Trauung.",
+        "canonical": "https://artbild-fotografie.de/trautermin-hamburg-online-reservieren/",
+        "robots": "index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/trautermin-hamburg-online-reservieren-a429878bae7e.webp",
+        "ogAlt": "Blick aus einem Fenster auf das Hamburger Rathaus und den Rathausmarkt",
+        "textHash": "e2648511615fd22d85acb6d67706bed76142d513d4d07073c31ddbf93e644e47",
+        "imagesHash": "06fd81494330df48bf15a2becaf60b2f6667bb817cbad1826abca825943b1311",
+        "imageCount": 8,
+        "primaryImages": [
+          "https://artbild-fotografie.de/trautermin-hamburg-online-reservieren/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css",
+          "/_astro/index.ZfYKz2WN.css"
+        ]
+      }
+    },
+    {
+      "route": "/unterwegs-in-baden-wuerttemberg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Unterwegs in Baden-Württemberg | Artbild-Fotografie",
+        "description": "Portraitshooting bei Schloss Lichtenstein in Baden-Württemberg: Julika mit Blumenkranz im weichen Abendlicht. Entdeckt die natürliche Outdoor-Bildstrecke.",
+        "canonical": "https://artbild-fotografie.de/unterwegs-in-baden-wuerttemberg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/unterwegs-in-baden-wuerttemberg-2b03beda2d47.webp",
+        "ogAlt": "Julika mit Blumenkranz blickt auf Schloss Lichtenstein und die Landschaft",
+        "textHash": "3d98be189ec6ccfd170b416fc960623e209eb2e84469b9dd950ac3f721bf4143",
+        "imagesHash": "1981608f104c94ca895cdd3f5923581294c6d79d30a75cc33f5a45bdaecc59ee",
+        "imageCount": 13,
+        "primaryImages": [
+          "https://artbild-fotografie.de/unterwegs-in-baden-wuerttemberg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Unterwegs in Baden-Württemberg | Artbild-Fotografie",
+        "description": "Portraitshooting bei Schloss Lichtenstein in Baden-Württemberg: Julika mit Blumenkranz im weichen Abendlicht. Entdeckt die natürliche Outdoor-Bildstrecke.",
+        "canonical": "https://artbild-fotografie.de/unterwegs-in-baden-wuerttemberg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/unterwegs-in-baden-wuerttemberg-2b03beda2d47.webp",
+        "ogAlt": "Julika mit Blumenkranz blickt auf Schloss Lichtenstein und die Landschaft",
+        "textHash": "3d98be189ec6ccfd170b416fc960623e209eb2e84469b9dd950ac3f721bf4143",
+        "imagesHash": "1981608f104c94ca895cdd3f5923581294c6d79d30a75cc33f5a45bdaecc59ee",
+        "imageCount": 13,
+        "primaryImages": [
+          "https://artbild-fotografie.de/unterwegs-in-baden-wuerttemberg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    },
+    {
+      "route": "/unterwegs-in-strasbourg/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Unterwegs in Strasbourg | Reisefotografie von Artbild-Fotografie",
+        "description": "Reisefotografie aus Strasbourg: ein grauer Februartag zwischen Kehl, Paulskirche, Ponts Couverts, Kanälen und stillen Details der elsässischen Altstadt.",
+        "canonical": "https://artbild-fotografie.de/unterwegs-in-strasbourg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/unterwegs-in-strasbourg-38dabc1dbfa4.webp",
+        "ogAlt": "Paulskirche in Strasbourg mit Spiegelung im Wasser an einem grauen Tag",
+        "textHash": "f12d1dd438cdb57a9682d8f5ce3b886c1569d0a2de55f266464ffc98f567db95",
+        "imagesHash": "e355a7a15edb311cf78e48adf6ffd1e242d0671b1fed976a6b251505d2a66ba5",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/unterwegs-in-strasbourg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.B0ED52NG.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      },
+      "observed": {
+        "title": "Unterwegs in Strasbourg | Reisefotografie von Artbild-Fotografie",
+        "description": "Reisefotografie aus Strasbourg: ein grauer Februartag zwischen Kehl, Paulskirche, Ponts Couverts, Kanälen und stillen Details der elsässischen Altstadt.",
+        "canonical": "https://artbild-fotografie.de/unterwegs-in-strasbourg/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/unterwegs-in-strasbourg-38dabc1dbfa4.webp",
+        "ogAlt": "Paulskirche in Strasbourg mit Spiegelung im Wasser an einem grauen Tag",
+        "textHash": "f12d1dd438cdb57a9682d8f5ce3b886c1569d0a2de55f266464ffc98f567db95",
+        "imagesHash": "e355a7a15edb311cf78e48adf6ffd1e242d0671b1fed976a6b251505d2a66ba5",
+        "imageCount": 15,
+        "primaryImages": [
+          "https://artbild-fotografie.de/unterwegs-in-strasbourg/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/index.B0ED52NG.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css",
+          "/_astro/GalleryImageGrid.NkOtcgQk.css"
+        ]
+      }
+    },
+    {
+      "route": "/wie-sollte-man-hochzeitsfotos-sichern/",
+      "status": 200,
+      "cache": "HIT",
+      "age": null,
+      "robotsHeader": null,
+      "mismatches": [],
+      "expected": {
+        "title": "Wie sollte man Hochzeitsfotos sichern? | Artbild-Fotografie",
+        "description": "Hochzeitsfotos sichern: Tipps zu Festplatte, Cloud und zusätzlicher Offline-Kopie. So plant Ihr Backups und prüft, ob Eure Erinnerungen noch lesbar sind.",
+        "canonical": "https://artbild-fotografie.de/wie-sollte-man-hochzeitsfotos-sichern/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/wie-sollte-man-hochzeitsfotos-sichern-10a56fc99c95.webp",
+        "ogAlt": "Schwarzweiß-Hochzeitsfoto als bleibende Erinnerung an den Hochzeitstag",
+        "textHash": "53541123e8a6b8207b3c3b88c9662ee8eae18dc4d1e457d0c23b721b8bb08b8c",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/wie-sollte-man-hochzeitsfotos-sichern/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      },
+      "observed": {
+        "title": "Wie sollte man Hochzeitsfotos sichern? | Artbild-Fotografie",
+        "description": "Hochzeitsfotos sichern: Tipps zu Festplatte, Cloud und zusätzlicher Offline-Kopie. So plant Ihr Backups und prüft, ob Eure Erinnerungen noch lesbar sind.",
+        "canonical": "https://artbild-fotografie.de/wie-sollte-man-hochzeitsfotos-sichern/",
+        "robots": "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+        "og": "https://artbild-fotografie.de/social-cards/wie-sollte-man-hochzeitsfotos-sichern-10a56fc99c95.webp",
+        "ogAlt": "Schwarzweiß-Hochzeitsfoto als bleibende Erinnerung an den Hochzeitstag",
+        "textHash": "53541123e8a6b8207b3c3b88c9662ee8eae18dc4d1e457d0c23b721b8bb08b8c",
+        "imagesHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+        "imageCount": 0,
+        "primaryImages": [
+          "https://artbild-fotografie.de/wie-sollte-man-hochzeitsfotos-sichern/#primaryimage"
+        ],
+        "styles": [
+          "/_astro/_..DHbtaxwK.css",
+          "/_astro/global.CP8OTvtd.css",
+          "/_astro/DesktopNavigation.BQ7hITRt.css"
+        ]
+      }
+    }
+  ],
+  "failures": [
+    {
+      "route": "/robots.txt",
+      "status": 200,
+      "expectedStatus": 200,
+      "type": "text/plain; charset=utf-8",
+      "cache": "HIT",
+      "age": null,
+      "robots": null,
+      "matchesBuild": false
+    }
+  ],
+  "bunny": {
+    "application": "artbild-dev",
+    "container": "web",
+    "status": "Active",
+    "region": "Frankfurt",
+    "pod": "Ki33kUs20mBIbx",
+    "readyPods": 1,
+    "previousPodRemoved": true
+  },
+  "browserChecks": [
+    {
+      "page": "/",
+      "width": 1440,
+      "height": 900,
+      "documentWidth": 1440,
+      "overflow": false,
+      "mainImages": 52,
+      "brokenVisibleImages": []
+    },
+    {
+      "page": "/",
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "overflow": false,
+      "mainImages": 52,
+      "brokenVisibleImages": []
+    },
+    {
+      "page": "/portfolio/",
+      "width": 390,
+      "height": 844,
+      "documentWidth": 390,
+      "overflow": false
+    }
+  ],
+  "cache": {
+    "pendingApprovalFor": "https://artbild-fotografie.de/robots.txt",
+    "purged": false,
+    "diagnostic": "Both ordinary public and direct Bunny robots.txt responses are cached without the new sitemap entry. A release query on either hostname returns the new robots.txt with the image-sitemap entry."
+  }
+}
