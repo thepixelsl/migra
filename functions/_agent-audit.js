@@ -124,6 +124,7 @@ function normalizeResults(results) {
 }
 
 export async function writeAgentAvailabilityAudit({
+  id = crypto.randomUUID(),
   env,
   request,
   dates,
@@ -152,7 +153,7 @@ export async function writeAgentAvailabilityAudit({
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .bind(
-      crypto.randomUUID(),
+      id,
       requestedAt,
       identity.clientLabel,
       identity.identitySource,

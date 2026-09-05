@@ -20,7 +20,7 @@
     "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",
     "start:bunny": "node server/bunny-server.mjs",
-    "test:bunny": "node --test tests/bunny-runtime.test.mjs tests/wordpress-redirects.test.mjs",
+    "test:bunny": "node --test tests/bunny-runtime.test.mjs tests/wordpress-redirects.test.mjs tests/agent-availability-trial.test.mjs",
     "test:migration-sanitizer": "node --test tests/migrated-html-sanitizer.test.mjs",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",

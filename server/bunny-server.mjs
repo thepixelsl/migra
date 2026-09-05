@@ -15,6 +15,7 @@ import {
 import { createAssetBinding } from "./bunny-assets.mjs";
 import { createBunnyDatabase } from "./bunny-database.mjs";
 import { createContactMailer } from "./bunny-mailer.mjs";
+import { handleAgentAvailabilityTrial, isAgentAvailabilityTrialPath } from "./agent-availability-trial.mjs";
 
 const MODULE_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ASSET_DIRECTORY = path.resolve(MODULE_DIRECTORY, "../dist");
@@ -578,6 +579,12 @@ export async function createBunnyRuntime(options = {}) {
           },
         });
         await writeNodeResponse(nodeResponse, withBunnyHeaders(health, env, url));
+        return;
+      }
+
+      if (isAgentAvailabilityTrialPath(url.pathname)) {
+        const response = await handleAgentAvailabilityTrial({ request, env: workerEnv });
+        await writeNodeResponse(nodeResponse, withBunnyHeaders(response, env, url));
         return;
       }
 
