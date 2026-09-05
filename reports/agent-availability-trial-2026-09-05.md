@@ -24,3 +24,18 @@ Public HEAD requests still produced a receipt through the CDN, despite the origi
 Fresh free web chats received only the trial entry URL, the desired date and the task. Gemini completed an autonomous current-date check; its returned receipt, result and timestamp matched the database. Claude read the entry but failed to fetch the month, reporting a 404-type tool error despite independent HTTP 200 checks. One short follow-up diagnostic did not trigger a new Claude fetch. This is not a successful joint acceptance or a general reliability measurement.
 
 The detailed German report, chat references and read-only audit evidence remain in the local task artifacts outside this repository. Before integrating the trial into the regular agent page, investigate Claude's failing month request using actual request evidence; also assess URL normalization and the observed CDN handling of HEAD.
+
+## Claude compatibility follow-up
+
+CDN request logs correlated the initial failed month fetch with a slashless path that the server returned as 404. Valid month/day trial URLs now accept either trailing-slash spelling directly. Invalid dates and malformed double-slash paths remain rejected; both aliases share the existing calendar, date budget and receipt audit.
+
+- Source commit: `a90b309987bc4b21990644cc215725af49f35a6f`; 41 Bunny tests and production build passed.
+- Workflow https://github.com/thepixelsl/migra/actions/runs/33968413873 succeeded for that exact commit.
+- Image `ghcr.io/thepixelsl/migra-bunny-dev:prod-sha-a90b309`, digest `sha256:9e4b528f1e7c5b00d432ed49ae96753b7ed0b824fc342970acbb5c5cc458b7b3`.
+- Only `artbild-dev` / `web` switched. Final state Active, one ready Frankfurt pod `A7scFIqCHM7fLQ`, old pod absent.
+- Public month and day URLs with/without slash: 200, no redirect, BYPASS/no-store; two date responses have fresh distinct receipts and identical shared remaining quota. Health/readiness 200, protected admin 401, missing route 404.
+- No additional CDN rule change or cache purge.
+
+Four additional short free Claude prompts were used: two direct diagnostics, then two independent autonomous tasks. The previously failing month still produced a Claude tool error after the public correction. A different month succeeded autonomously from the entry URL, including a live unavailable result whose unique receipt and millisecond timestamp matched the database. No subordinate URL was supplied in that successful prompt. The client identity remains unverified.
+
+This establishes that free Claude can traverse the linked route; it does not establish a general reliability rate, the exact cause of its persistent error, or freshness after a future calendar change behind any provider-side fetch cache. It also does not isolate whether slash tolerance caused the successful different-month test. The regular agent page remains unchanged. Full diagnostic evidence stays in the local German follow-up report.
