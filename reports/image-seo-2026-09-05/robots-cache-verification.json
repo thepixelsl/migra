@@ -1,0 +1,23 @@
+[
+  {
+    "url": "https://artbild-fotografie.de/robots.txt",
+    "at": "2026-09-05T10:50:27.821Z",
+    "status": 200,
+    "cache": "MISS",
+    "type": "text/plain; charset=utf-8",
+    "robotsHeader": null,
+    "matchesBuild": true,
+    "hasImageSitemap": true,
+    "sha256": "926ccdffff8d6d6610a41208a87b4bf9357b1652b0aeed26713af968152c4cc2"
+  },
+  {
+    "url": "https://artbild-fotografie.de/image-sitemap.xml",
+    "at": "2026-09-05T10:50:27.970Z",
+    "status": 200,
+    "cache": "MISS",
+    "type": "application/xml; charset=utf-8",
+    "robotsHeader": null,
+    "matchesBuild": true,
+    "sha256": "ed0d442840fe88d4b350a6d36b9d9bf6249f6d7a778e3d6a7e302110283eae5b"
+  }
+]

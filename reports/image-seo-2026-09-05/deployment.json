@@ -14,7 +14,7 @@
     "imageSitemapPages": 51,
     "imageReferences": 1128,
     "uniqueImages": 970,
-    "failures": 1
+    "failures": 0
   },
   "endpoints": [
     {
@@ -25,7 +25,8 @@
       "cache": "MISS",
       "age": null,
       "robots": null,
-      "matchesBuild": true
+      "matchesBuild": true,
+      "verifiedAt": "2026-09-05T10:50:27.970Z"
     },
     {
       "route": "/sitemap.xml",
@@ -41,10 +42,11 @@
       "status": 200,
       "expectedStatus": 200,
       "type": "text/plain; charset=utf-8",
-      "cache": "HIT",
+      "cache": "MISS",
       "age": null,
       "robots": null,
-      "matchesBuild": false
+      "matchesBuild": true,
+      "verifiedAt": "2026-09-05T10:50:27.821Z"
     },
     {
       "route": "/readyz",
@@ -2711,18 +2713,7 @@
       }
     }
   ],
-  "failures": [
-    {
-      "route": "/robots.txt",
-      "status": 200,
-      "expectedStatus": 200,
-      "type": "text/plain; charset=utf-8",
-      "cache": "HIT",
-      "age": null,
-      "robots": null,
-      "matchesBuild": false
-    }
-  ],
+  "failures": [],
   "bunny": {
     "application": "artbild-dev",
     "container": "web",
@@ -2760,8 +2751,23 @@
     }
   ],
   "cache": {
-    "pendingApprovalFor": "https://artbild-fotografie.de/robots.txt",
-    "purged": false,
-    "diagnostic": "Both ordinary public and direct Bunny robots.txt responses are cached without the new sitemap entry. A release query on either hostname returns the new robots.txt with the image-sitemap entry."
+    "approvedUrl": "https://artbild-fotografie.de/robots.txt",
+    "purged": true,
+    "verifiedAt": "2026-09-05T10:50:27.821Z",
+    "ordinaryPublicResponseMatchesBuild": true,
+    "imageSitemapReferencePresent": true,
+    "resolvedPreviousFailures": [
+      {
+        "route": "/robots.txt",
+        "status": 200,
+        "expectedStatus": 200,
+        "type": "text/plain; charset=utf-8",
+        "cache": "HIT",
+        "age": null,
+        "robots": null,
+        "matchesBuild": false
+      }
+    ],
+    "diagnostic": "The authorized single-URL purge completed. The ordinary public robots.txt response is now fresh (CDN MISS), byte-identical to the final build, and contains the image-sitemap reference."
   }
 }

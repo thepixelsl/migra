@@ -2,7 +2,7 @@
 
 Stand: 5. September 2026. Ausgangsrevision: `ad5fc6c`.
 
-Die gezielten Änderungen wurden auf Bunny veröffentlicht; die neue Bild-Sitemap und die geänderten Seiten sind öffentlich geprüft. **Ein Restpunkt ist noch offen: Der Cache von `robots.txt` liefert den neuen Sitemap-Verweis noch nicht aus; die gezielte Freigabe zur Leerung genau dieser URL wurde angefragt.** Das geschützte Mallorca-Vorschaubild der Homepage ist einschließlich URL, Dateiinhalt, Zuschnitt und Alt-Text unverändert. Es gibt keine neue Homepage-Galerie, keine zusätzlichen Homepage-Texte und keine neuen Bilddateien.
+Die gezielten Änderungen wurden auf Bunny veröffentlicht; die neue Bild-Sitemap und die geänderten Seiten sind öffentlich geprüft. **Deployment und öffentliche Prüfung sind abgeschlossen. Nach ausdrücklicher Freigabe wurde ausschließlich der Cache für `https://artbild-fotografie.de/robots.txt` geleert; auch der neue Sitemap-Verweis ist jetzt öffentlich vorhanden.** Das geschützte Mallorca-Vorschaubild der Homepage ist einschließlich URL, Dateiinhalt, Zuschnitt und Alt-Text unverändert. Es gibt keine neue Homepage-Galerie, keine zusätzlichen Homepage-Texte und keine neuen Bilddateien.
 
 ## A. Vorheriger Zustand
 
@@ -76,7 +76,7 @@ Generierung: `npm run build` → Astro → vorhandene Social-/WebP-Nachverarbeit
 
 Die Auswahl berücksichtigt `src`, `srcset`, `data-src` und `data-srcset` im Hauptinhalt. Sie nimmt die größte vorhandene Variante bis zur im HTML angegebenen intrinsischen Breite, ohne neue Größen zu erzeugen. Logos, Icons, Social-Cards, Dialog-Platzhalter, Navigation, Formulare, explizit versteckte Inhalte und sehr kleine Ressourcen werden ausgeschlossen. Vorhandene responsive oder bei Interaktion sichtbare Carousel-Bilder bleiben berücksichtigungsfähig. Keine Verzeichnisse werden pauschal als Asset-Dump veröffentlicht.
 
-XML-Namespace, XML-Syntax und Google-Grenzen werden geprüft. Der neue `Sitemap:`-Eintrag ist im veröffentlichten Container vorhanden und macht die Datei nach Ablauf oder gezielter Leerung des noch alten `robots.txt`-Caches auch ohne manuelle Search-Console-Einreichung auffindbar. Grundlage: [Google-Dokumentation zu Bild-Sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps).
+XML-Namespace, XML-Syntax und Google-Grenzen werden geprüft. Der neue `Sitemap:`-Eintrag ist in der öffentlich ausgelieferten `robots.txt` vorhanden und macht die Datei auch ohne manuelle Search-Console-Einreichung auffindbar. Grundlage: [Google-Dokumentation zu Bild-Sitemaps](https://developers.google.com/search/docs/crawling-indexing/sitemaps/image-sitemaps).
 
 ## E. Structured Data
 
@@ -130,11 +130,10 @@ Nachweise: [Build](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/
 
 ## H. Offene Punkte und Grenzen
 
-1. **Cache-Restpunkt:** `https://artbild-fotografie.de/robots.txt` wird noch aus dem alten CDN-Cache ausgeliefert. Nur dafür wurde eine konkrete Freigabe zur Cache-Leerung angefragt. Die neue Bild-Sitemap selbst ist bereits öffentlich mit HTTP 200 erreichbar und bytegleich zum geprüften Build. Die geänderten Seiten sind aktuell.
-2. **Search Console:** Es kann zusätzlich `https://artbild-fotografie.de/image-sitemap.xml` eingereicht werden. Es wurden keine Zugangsdaten gesucht und keine Einreichung behauptet. Tatsächliche Bildindexierung und visuelle Google-Suchergebnisse bleiben dort beziehungsweise in der Suche zu beobachten.
-3. **Bunny:** Die öffentlichen Tests zeigen keine Bildblockade. Interne Hotlink-/Security-Einstellungen des Kontos wurden nicht geprüft oder geändert. Es wurde kein Cache gelöscht.
-4. **Bestehendes Tablet-Layout:** Bei 768 px werden längere Texte im Homepage-Portfolio-Linkblock abgeschnitten. Der Vorher-/Nachher-Vergleich zeigt denselben bereits bestehenden Zustand. Die Korrektur wäre eine separate Layoutänderung und wurde angesichts des ausdrücklichen Designschutzes nicht in diese SEO-Aufgabe aufgenommen. [Vorher](/Volumes/Cache/migra/migra-repo/output/playwright/image-seo/tablet-detail-before.png), [Nachher](/Volumes/Cache/migra/migra-repo/output/playwright/image-seo/tablet-detail-after.png).
-5. **Keine SERP-Garantie:** Die Maßnahmen verbessern Auffindbarkeit, Seitenzuordnung und Bildbeschreibungen. Ob Google eine Bildreihe zeigt, entscheidet Google algorithmisch.
+1. **Search Console:** Es kann zusätzlich `https://artbild-fotografie.de/image-sitemap.xml` eingereicht werden. Es wurden keine Zugangsdaten gesucht und keine Einreichung behauptet. Tatsächliche Bildindexierung und visuelle Google-Suchergebnisse bleiben dort beziehungsweise in der Suche zu beobachten.
+2. **Bunny:** Die öffentlichen Tests zeigen keine Bildblockade. Interne Hotlink-/Security-Einstellungen des Kontos wurden nicht geprüft oder geändert. Nach ausdrücklicher Freigabe wurde ausschließlich der Cache der einzelnen `robots.txt`-URL geleert; keine Cache-Regel wurde verändert.
+3. **Bestehendes Tablet-Layout:** Bei 768 px werden längere Texte im Homepage-Portfolio-Linkblock abgeschnitten. Der Vorher-/Nachher-Vergleich zeigt denselben bereits bestehenden Zustand. Die Korrektur wäre eine separate Layoutänderung und wurde angesichts des ausdrücklichen Designschutzes nicht in diese SEO-Aufgabe aufgenommen. [Vorher](/Volumes/Cache/migra/migra-repo/output/playwright/image-seo/tablet-detail-before.png), [Nachher](/Volumes/Cache/migra/migra-repo/output/playwright/image-seo/tablet-detail-after.png).
+4. **Keine SERP-Garantie:** Die Maßnahmen verbessern Auffindbarkeit, Seitenzuordnung und Bildbeschreibungen. Ob Google eine Bildreihe zeigt, entscheidet Google algorithmisch.
 
 Der vollständige Diff einschließlich der neuen Hilfs- und Prüfdateien wurde kontrolliert. Bereits vorher vorhandene fremde/unzugeordnete Arbeitsdateien wurden nicht bearbeitet.
 
@@ -146,11 +145,11 @@ Der vollständige Diff einschließlich der neuen Hilfs- und Prüfdateien wurde k
 - Bunny: `artbild-dev` / `web`, **Active**, ein bereiter Frankfurt-Pod `Ki33kUs20mBIbx`; der vorherige Pod wurde entfernt.
 - Öffentliche Bild-Sitemap: HTTP 200, korrekter XML-MIME-Typ, kein blockierender Robots-Header, bytegleich zum lokalen finalen XML.
 - Alle 56 Seiten: HTTP 200; aktuelle Titles, Descriptions, Canonicals, Hauptbildreferenzen, Alt-Texte und Bildquellen geprüft. Sichtbare Texte und Stylesheets stimmen mit dem freigegebenen Stand überein.
-- Die 13 schon vor dem Release abweichenden Hashnamen erzeugter Social-Cards zwischen lokalem Build und öffentlicher Produktion wurden gegen den öffentlichen Vorher-Snapshot geprüft: Alle öffentlichen OpenGraph-URLs sind unverändert. Ausschließlich der beim Build erzeugte `resetAt`-Zeitstempel im bestehenden JSON-Beispiel der Agentenseite wurde beim Textvergleich normalisiert.
+- Die 13 zwischen lokalem Build und öffentlicher Produktion abweichenden Hashnamen erzeugter Social-Cards wurden gegen den öffentlichen Vorher-Snapshot geprüft: Alle öffentlichen OpenGraph-URLs sind unverändert. Ausschließlich der beim Build erzeugte `resetAt`-Zeitstempel im bestehenden JSON-Beispiel der Agentenseite wurde beim Textvergleich normalisiert.
 - Alle **970 Sitemap-Bilder plus 56 unterschiedliche OpenGraph-Bilder** erneut öffentlich mit `Googlebot-Image/1.0` geprüft: 1.026 erfolgreiche Antworten mit HTTP 200 und Bild-MIME-Typ; keine Redirects oder blockierenden Robots-Header.
 - Homepage-Vorschaubild: gleiche URL `/social-cards/home.webp`, unverändert 41.364 Bytes; SHA-256 `37028b346ec6ba27b6ed62d3f2ea859804769f1bca9996669fd3b35a78575535`.
 - `/readyz` und `/healthz`: 200; geschütztes `/api/admin/availability`: 401 mit `noindex`; unbekannte Prüfrouten: 404.
 - Öffentliche Homepage bei 1440 × 900 und 390 × 844 px visuell und anhand der tatsächlichen Geometrie geprüft: 52 Bilder, kein horizontaler Seitenüberlauf, keine defekten sichtbaren Bilder. Öffentliches Portfolio bei 390 px ebenfalls ohne Seitenüberlauf und mit dem neuen Einstieg. Die temporäre Browsergröße wurde anschließend zurückgesetzt.
-- Keine neuen Cloudflare-, Sicherheits-, Skalierungs- oder Netzwerkänderungen. Der einzige noch offene technische Punkt ist die freizugebende Cache-Leerung von `robots.txt`; ein Abruf mit Release-Query zeigt bereits die korrekte neue Datei auf Hauptdomain und direktem Bunny-Endpunkt.
+- Keine neuen Cloudflare-, Sicherheits-, Skalierungs- oder Netzwerkänderungen. Die nach ausdrücklicher Freigabe auf `https://artbild-fotografie.de/robots.txt` begrenzte Cache-Leerung ist abgeschlossen. Der normale öffentliche Abruf liefert nun HTTP 200, `CDN-Cache: MISS`, keinen blockierenden Robots-Header und die bytegleiche aktuelle Datei mit dem neuen Bild-Sitemap-Verweis. Die Bild-Sitemap wurde erneut erfolgreich und bytegleich geprüft; es verbleibt kein technischer Release-Restpunkt.
 
-Nachweise: [Öffentliche Release-Prüfung](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/deployment.json), [Öffentliche Bildprüfung nach Deployment](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/deployed-image-resources.json).
+Nachweise: [Öffentliche Release-Prüfung](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/deployment.json), [Öffentliche Bildprüfung nach Deployment](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/deployed-image-resources.json), [Abschließende Cache- und Sitemap-Prüfung](/Volumes/Cache/migra/migra-repo/reports/image-seo-2026-09-05/robots-cache-verification.json).
