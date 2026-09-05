@@ -276,7 +276,8 @@
       if (image.dataset.srcset) {
         image.srcset = image.dataset.srcset;
         image.removeAttribute("data-srcset");
-      } else if (image.dataset.src) {
+      }
+      if (image.dataset.src) {
         image.src = image.dataset.src;
         image.removeAttribute("data-src");
       }

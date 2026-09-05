@@ -53,7 +53,7 @@ const links: FeaturedPortfolioLink[] = [
     href: "/gallery/traumhochzeit-in-hamburg/",
     location: "Hamburg",
     image: traumhochzeitHamburg,
-    alt: "Hochzeitsportrait einer Braut im Hotel Atlantic Hamburg",
+    alt: "Brautpaar bei einem innigen Portrait an der Hamburger Alster",
     imagePosition: "center center",
     serviceType: "Hochzeitsreportage",
   },
@@ -217,7 +217,7 @@ const schema = {
                 data-src={index === 0 ? undefined : entry.imageFallback}
                 data-srcset={index === 0 ? undefined : entry.imageSrcset}
                 sizes="50vw"
-                alt=""
+                alt={entry.alt}
                 width={entry.image.width}
                 height={entry.image.height}
                 loading={index === 0 ? "eager" : "lazy"}

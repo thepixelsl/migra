@@ -1,0 +1,11 @@
+
+Running 4 tests using 1 worker
+
+(node:59234) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 tests/home-content-quality.spec.ts:5:1 › homepage uses concrete copy and matching structured data (432ms)
+  ✓  2 tests/home-hero-performance.spec.ts:15:1 › mobile hero requests responsive modern images and only its immediate set (304ms)
+  ✓  3 tests/home-hero-performance.spec.ts:75:1 › percentage-based positioning keeps the hero centered and navigable (423ms)
+  ✓  4 tests/home-mobile-hero.spec.ts:7:1 › mobile homepage uses the editorial header and larger image slider (231ms)
+
+  4 passed (2.2s)

@@ -1,0 +1,46 @@
+
+> artbild-migration@0.1.0 test:bunny
+> node --test tests/bunny-runtime.test.mjs tests/wordpress-redirects.test.mjs
+
+✔ health and readiness endpoints report a ready persistent database (32.950333ms)
+✔ indexes only the configured production host (4.999542ms)
+✔ serves static pages, redirects directories, and preserves a real 404 (3.861125ms)
+✔ uses immutable caching for built Astro assets (1.15525ms)
+✔ serves the agent Markdown, llms.txt and OpenAPI files with readable types (3.688667ms)
+✔ protects admin routes with an iPhone-compatible login session (12.547542ms)
+✔ atomically rate-limits form and Basic admin authentication in one persistent budget (22.154333ms)
+✔ blocks a date through admin and exposes it through the public API (8.755916ms)
+✔ limits public availability checks to three unique calendar dates per 24 hours (6.16925ms)
+✔ shares the single-date rate limit across the agent GET alias and the legacy route (5.687333ms)
+✔ documents the agent availability API for machine clients (1.220875ms)
+✔ checks up to three agent dates without exposing the blocked-date list (9.040834ms)
+✔ shows exact agent requests in the protected audit without raw identifiers (3.446083ms)
+✔ rejects malformed agent requests without consuming the two successful checks (11.186875ms)
+✔ stops streamed agent bodies after 512 bytes while retaining the general Bunny limit (2.093417ms)
+✔ keeps the two-request limit atomic under parallel agent checks (3.884416ms)
+✔ fails closed without a trusted client IP and removes expired rate-limit rows (1.807625ms)
+✔ removes agent audit entries after 30 days (0.711167ms)
+✔ uses one EU Durable Object per HMAC identity when Bunny D1 is absent (0.690334ms)
+✔ uses a separate EU Durable Object identity for public availability limits (0.413542ms)
+✔ keeps Durable Object reservations atomic and alarms away expired timestamps (0.716333ms)
+✔ keeps public date reservations atomic in the Durable Object (0.611417ms)
+✔ accepts a valid contact request through the injected Node mailer (4.196958ms)
+✔ rejects malformed, past, and overly distant contact dates with 4xx responses (2.694333ms)
+✔ keeps the contact endpoint POST-only and ignores query-string dates (0.608292ms)
+✔ removes short-lived security data and expires database copies (1.52775ms)
+✔ rejects a valid request when direct STRATO SMTP is not configured (0.712042ms)
+✔ all 16 approved legacy URLs redirect once to working canonical destinations (68.994041ms)
+✔ approved path aliases handle missing and repeated slashes plus www/http in one hop (1.032083ms)
+✔ query cleanup is limited to matched aliases and preserves other parameters and fragments (0.141542ms)
+✔ unknown or conflicting IDs and existing query functions do not become redirects (2.626375ms)
+✔ retired taxonomies, feeds, unapproved archives and downloads remain genuine 404s (5.440916ms)
+✔ legacy redirects do not change POST or API request routing (0.429875ms)
+✔ migrated internal links use the same reviewed targets without changing external links or copy (7.661042ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3303.307541

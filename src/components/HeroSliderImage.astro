@@ -37,6 +37,9 @@ const webp = await getImage({
 });
 
 const aspect = src.width / src.height;
+// Reuse the largest existing responsive variant as the standard img fallback.
+// Its activation remains controlled by the existing slider loading queue.
+const fallback = webp.srcSet.values.at(-1)?.url ?? webp.src;
 
 const responsiveSizes = (
   minimumWidth: number,
@@ -85,6 +88,8 @@ const sizes = [
 
 <picture class="hero-slider__picture">
   <img
+    src={deferred ? undefined : fallback}
+    data-src={deferred ? fallback : undefined}
     srcset={deferred ? undefined : webp.srcSet.attribute}
     data-srcset={deferred ? webp.srcSet.attribute : undefined}
     sizes={sizes}

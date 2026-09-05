@@ -1,0 +1,238 @@
+[
+  {
+    "name": "mobile",
+    "trial": 1,
+    "phase": "before",
+    "shifts": [],
+    "width": 390,
+    "cls": 0,
+    "lcp": 96,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  },
+  {
+    "name": "mobile",
+    "trial": 1,
+    "phase": "after",
+    "shifts": [],
+    "width": 390,
+    "cls": 0,
+    "lcp": 88,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  },
+  {
+    "name": "mobile",
+    "trial": 2,
+    "phase": "before",
+    "shifts": [],
+    "width": 390,
+    "cls": 0,
+    "lcp": 96,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  },
+  {
+    "name": "mobile",
+    "trial": 2,
+    "phase": "after",
+    "shifts": [],
+    "width": 390,
+    "cls": 0,
+    "lcp": 96,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  },
+  {
+    "name": "mobile",
+    "trial": 3,
+    "phase": "before",
+    "shifts": [],
+    "width": 390,
+    "cls": 0,
+    "lcp": 88,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  },
+  {
+    "name": "mobile",
+    "trial": 3,
+    "phase": "after",
+    "shifts": [
+      {
+        "value": 0.0039347563365372375,
+        "sources": [
+          {
+            "before": {
+              "x": 83.015625,
+              "y": 566.34375,
+              "width": 223.96875,
+              "height": 84,
+              "top": 566.34375,
+              "right": 306.984375,
+              "bottom": 650.34375,
+              "left": 83.015625
+            },
+            "after": {
+              "x": 111.421875,
+              "y": 554.34375,
+              "width": 173,
+              "height": 84,
+              "top": 554.34375,
+              "right": 284.421875,
+              "bottom": 638.34375,
+              "left": 111.421875
+            }
+          },
+          {
+            "node": "P",
+            "classes": "intro-script",
+            "before": {
+              "x": 83.015625,
+              "y": 566.34375,
+              "width": 223.96875,
+              "height": 60,
+              "top": 566.34375,
+              "right": 306.984375,
+              "bottom": 626.34375,
+              "left": 83.015625
+            },
+            "after": {
+              "x": 111.421875,
+              "y": 553.34375,
+              "width": 173,
+              "height": 85,
+              "top": 553.34375,
+              "right": 284.421875,
+              "bottom": 638.34375,
+              "left": 111.421875
+            }
+          },
+          {
+            "before": {
+              "x": 33.46875,
+              "y": 484.890625,
+              "width": 323.0625,
+              "height": 33.5,
+              "top": 484.890625,
+              "right": 356.53125,
+              "bottom": 518.390625,
+              "left": 33.46875
+            },
+            "after": {
+              "x": 38.625,
+              "y": 482.390625,
+              "width": 312.75,
+              "height": 33.5,
+              "top": 482.390625,
+              "right": 351.375,
+              "bottom": 515.890625,
+              "left": 38.625
+            }
+          },
+          {
+            "node": "P",
+            "classes": "eyebrow",
+            "before": {
+              "x": 77.8984375,
+              "y": 442.796875,
+              "width": 234,
+              "height": 22.09375,
+              "top": 442.796875,
+              "right": 311.8984375,
+              "bottom": 464.890625,
+              "left": 77.8984375
+            },
+            "after": {
+              "x": 84.96875,
+              "y": 442.796875,
+              "width": 220,
+              "height": 22.09375,
+              "top": 442.796875,
+              "right": 304.96875,
+              "bottom": 464.890625,
+              "left": 84.96875
+            }
+          }
+        ]
+      }
+    ],
+    "width": 390,
+    "cls": 0.0039347563365372375,
+    "lcp": 116,
+    "overflow": 0,
+    "height": 12796,
+    "imageRequests": 8,
+    "imageTransfer": 125966,
+    "imagePaths": [
+      "/_astro/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.DnOIaXCl_Z7p3Ly.webp",
+      "/_astro/paarshooting-mallorca.DjtKP9dm_ZQId2r.webp",
+      "/_astro/paris_braut_fotoshooting-17.CalH26ad_5Pc0I.webp",
+      "/_astro/paris_braut_fotoshooting-25.CK-NykKC_Zlxw3u.webp",
+      "/images/fab/kontakt-icon-128.png",
+      "/images/fab/whatsapp-chat.png",
+      "/images/logo-artbild-black.png",
+      "/images/portrait-riverside.webp"
+    ]
+  }
+]

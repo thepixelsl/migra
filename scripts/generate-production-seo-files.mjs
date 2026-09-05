@@ -2,6 +2,7 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { load } from "cheerio";
+import { collectPageImages, renderImageSitemap } from "./lib/image-sitemap.mjs";
 
 const DIST_DIRECTORY = path.resolve("dist");
 const PRODUCTION_ORIGIN = "https://artbild-fotografie.de";
@@ -27,11 +28,13 @@ function xmlEscape(value) {
 
 const canonicalUrls = new Set();
 const preferredImages = new Map();
+const contentImages = new Map();
+const imageMetadataCache = new Map();
 for (const file of await htmlFiles(DIST_DIRECTORY)) {
   const html = await readFile(file, "utf8");
   const $ = load(html);
   const robots = String($("meta[name='robots']").attr("content") || "").toLowerCase();
-  if (robots.split(",").some((directive) => directive.trim() === "noindex")) continue;
+  if (robots.split(",").some((directive) => /^(?:noindex|none)$/.test(directive.trim()))) continue;
 
   const canonical = $("link[rel='canonical']").attr("href");
   if (!canonical) continue;
@@ -41,6 +44,12 @@ for (const file of await htmlFiles(DIST_DIRECTORY)) {
   canonicalUrl.hash = "";
   canonicalUrl.search = "";
   canonicalUrls.add(canonicalUrl.href);
+  const route = `/${path.relative(DIST_DIRECTORY, file).split(path.sep).join("/").replace(/index\.html$/, "")}`;
+  if (canonicalUrl.pathname === route && !/\b(?:noimageindex|none)\b/.test(robots)) {
+    contentImages.set(canonicalUrl.href, await collectPageImages($, canonicalUrl.href, {
+      distDirectory: DIST_DIRECTORY, metadataCache: imageMetadataCache,
+    }));
+  }
   for (const element of $("script[type='application/ld+json']").toArray()) {
     const json = JSON.parse($(element).text());
     const nodes = json["@graph"] || (Array.isArray(json) ? json : [json]);
@@ -69,6 +78,9 @@ const sitemap = [
   "</urlset>",
   "",
 ].join("\n");
+
+const imagePages = urls.map((url) => ({ url, images: contentImages.get(url) || [] }));
+const imageSitemap = renderImageSitemap(imagePages);
 
 const sitemapStylesheet = `<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
@@ -288,13 +300,16 @@ const robots = [
   "Allow: /",
   ...privateRobotPaths.map((pathname) => `Disallow: ${pathname}`),
   `Sitemap: ${PRODUCTION_ORIGIN}/sitemap.xml`,
+  `Sitemap: ${PRODUCTION_ORIGIN}/image-sitemap.xml`,
   "",
 ].join("\n");
 
 await Promise.all([
   writeFile(path.join(DIST_DIRECTORY, "robots.txt"), robots),
   writeFile(path.join(DIST_DIRECTORY, "sitemap.xml"), sitemap),
+  writeFile(path.join(DIST_DIRECTORY, "image-sitemap.xml"), imageSitemap),
   writeFile(path.join(DIST_DIRECTORY, "sitemap.xsl"), sitemapStylesheet),
 ]);
 
 console.log(`Production SEO files: ${urls.length} indexable canonical URLs.`);
+console.log(`Image sitemap: ${imagePages.filter((page) => page.images.length).length} pages, ${imagePages.reduce((sum, page) => sum + page.images.length, 0)} content image references.`);
