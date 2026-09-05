@@ -83,7 +83,8 @@ export async function handleAgentAvailabilityTrial({ request, env }) {
 <p>Die Prüfung protokolliert Datum, Ergebnis, Zeitpunkt und eine grobe Bot-Kategorie für höchstens 30 Tage. Sie ist ausschließlich für konkrete Fotoanfragen vorgesehen.</p>`);
   }
 
-  const monthMatch = url.pathname.match(/^\/agenten-test\/(\d{4}-\d{2})\/$/);
+  // Fetch services can remove a trailing slash; serve either spelling without a redirect loop.
+  const monthMatch = url.pathname.match(/^\/agenten-test\/(\d{4}-\d{2})\/?$/);
   if (monthMatch && months.includes(monthMatch[1])) {
     const month = monthMatch[1];
     const cursor = new Date(`${month}-01T00:00:00Z`);
@@ -101,7 +102,7 @@ export async function handleAgentAvailabilityTrial({ request, env }) {
 <p>${link(new URL(ROOT, url), "Anderen Monat wählen")}</p>`);
   }
 
-  const dayMatch = url.pathname.match(/^\/agenten-test\/(\d{4}-\d{2}-\d{2})\/$/);
+  const dayMatch = url.pathname.match(/^\/agenten-test\/(\d{4}-\d{2}-\d{2})\/?$/);
   const date = dayMatch && parseDateValue(dayMatch[1]);
   if (!date || date < bounds.minDate || date > bounds.maxDate) {
     return html(request, "Termin nicht geprüft", `<p>Diese Seite liegt außerhalb des gültigen Prüfwegs. ${link(new URL(ROOT, url), "Zur Monatsübersicht")}</p>`, 404);

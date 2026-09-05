@@ -101,6 +101,33 @@ test("rereads the same date and issues a new receipt when the calendar changes",
   assert.equal((await audit()).length, 2);
 });
 
+test("serves month and day links when a fetch service removes the trailing slash", async (t) => {
+  const { get, runtime, audit } = await fixture(t);
+  const date = shiftedDate(43);
+  const monthPath = `/agenten-test/${date.slice(0, 7)}`;
+  const month = await get(monthPath, { redirect: "manual" });
+  assert.equal(month.status, 200);
+  assert.equal(month.headers.has("location"), false);
+  assert.equal(await month.text(), await (await get(`${monthPath}/`)).text());
+  assert.deepEqual(await audit(), []);
+
+  const first = await get(`/agenten-test/${date}`, { redirect: "manual" });
+  assert.equal(first.status, 200);
+  assert.equal(first.headers.has("location"), false);
+  assert.match(first.headers.get("cache-control"), /no-store/);
+  assert.match(await first.text(), /available: true/);
+  await runtime.database.kv.put("blockedDates", JSON.stringify([date]));
+  const second = await get(`/agenten-test/${date}/`);
+  assert.match(await second.text(), /available: false/);
+  assert.notEqual(first.headers.get("x-artbild-check-id"), second.headers.get("x-artbild-check-id"));
+  assert.equal(second.headers.get("x-ratelimit-remaining"), "2");
+  assert.equal((await audit()).length, 2);
+
+  for (const suffix of ["2027-02-30", "2999-01", "2027-06//"]) {
+    assert.equal((await get(`/agenten-test/${suffix}`)).status, 404);
+  }
+});
+
 test("shares the three-date limit with both existing JSON endpoints", async (t) => {
   const { get, audit } = await fixture(t);
   for (const [index, endpoint] of ["/api/availability", "/api/agent-availability"].entries()) {
