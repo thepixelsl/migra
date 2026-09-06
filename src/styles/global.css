@@ -1718,6 +1718,22 @@ footer nav[aria-label="Footer"]::before,
   font-size: 13px;
 }
 
+/* The footer navigation must not squeeze the contact column to one letter. */
+@media (min-width: 621px) and (max-width: 1180px) {
+  .site-footer {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .site-footer nav {
+    justify-content: flex-start;
+  }
+
+  .site-footer nav a {
+    flex: 0 1 auto;
+    white-space: normal;
+  }
+}
+
 .home-lower-section {
   width: min(var(--max), calc(100% - 44px));
   margin: 0 auto;
