@@ -721,6 +721,49 @@ h3 {
   background: #4c535f;
 }
 
+/* Keep the featured titles readable between the phone and desktop layouts. */
+@media (min-width: 621px) and (max-width: 1180px) {
+  .flo-block {
+    width: calc(100vw - 64px);
+  }
+
+  .flo-featured-links-1__links-wrap {
+    grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+  }
+
+  .flo-featured-links-1__links-title-wrap {
+    min-width: 0;
+    padding: 48px 32px 48px 52px;
+  }
+
+  .flo-featured-links-1__links-title-wrap::after {
+    right: 20px;
+  }
+
+  .flo-featured-links-1__title {
+    letter-spacing: .42em;
+  }
+
+  .flo-featured-links-1__link {
+    font-size: clamp(22px, 2.5vw, 30px);
+    overflow-wrap: anywhere;
+  }
+
+  .flo-featured-links-1__link.hovered::before,
+  .flo-featured-links-1__link:hover::before,
+  .flo-featured-links-1__link:focus::before {
+    right: calc(100% + 12px);
+    width: 24px;
+  }
+
+  .flo-featured-links-1__image--portrait img {
+    top: 0;
+    height: 100%;
+    max-width: 100%;
+    transform: none;
+  }
+}
+
 .article-page {
   width: 100%;
 }
