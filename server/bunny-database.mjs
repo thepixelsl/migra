@@ -65,6 +65,25 @@ const SCHEMA_STATEMENTS = [
     ON admin_auth_attempts (bucket_hash, attempted_at)`,
   `CREATE INDEX IF NOT EXISTS idx_admin_auth_attempts_time
     ON admin_auth_attempts (attempted_at)`,
+  `CREATE TABLE IF NOT EXISTS admin_mfa_accounts (
+    account_id TEXT PRIMARY KEY,
+    secret_cipher TEXT NOT NULL,
+    last_counter INTEGER NOT NULL,
+    recovery_hashes TEXT NOT NULL,
+    created_at INTEGER NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS admin_login_sessions (
+    token_hash TEXT PRIMARY KEY,
+    account_id TEXT NOT NULL,
+    auth_binding TEXT NOT NULL,
+    kind TEXT NOT NULL,
+    csrf TEXT NOT NULL,
+    payload_cipher TEXT,
+    expires_at INTEGER NOT NULL,
+    last_seen INTEGER NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_admin_login_sessions_expiry
+    ON admin_login_sessions (expires_at)`,
   `CREATE TABLE IF NOT EXISTS agent_availability_audit (
     id TEXT PRIMARY KEY,
     requested_at INTEGER NOT NULL,
@@ -136,6 +155,10 @@ async function pruneStoredData(client) {
   await pruneAgentAvailabilityRequests(client);
   await prunePublicAvailabilityRequests(client);
   await pruneAdminAuthenticationAttempts(client);
+  await client.execute({
+    sql: "DELETE FROM admin_login_sessions WHERE expires_at <= ? OR (kind = 'full' AND last_seen <= ?)",
+    args: [Date.now(), Date.now() - 30 * 60 * 1000],
+  });
   await pruneAgentAvailabilityAudit(client);
 }
 

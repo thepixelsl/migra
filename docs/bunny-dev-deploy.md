@@ -52,24 +52,28 @@ Do not create a separate Pull Zone. The CDN endpoint creates the Bunny dev URL.
 ## 4. Environment variables
 
 Copy the names from `bunny.env.example`. Replace every placeholder. Store the
-database token, admin password, SMTP password, hash salt, and—when configured—
-the admin session secret as secrets. Keep `DEV_NOINDEX=true` for the development
+database token, admin password, SMTP password, hash salt, admin session secret,
+and initial MFA setup token as secrets. Keep `DEV_NOINDEX=true` for the development
 URL.
 
-`/admin-termine/` redirects unauthenticated browsers to `/admin-login/`. The
-form creates a signed, `HttpOnly`, `Secure`, `SameSite=Lax` session cookie that
-expires after twelve hours. `ADMIN_SESSION_SECRET` is optional but recommended
-as an independent long random secret; when it is omitted, the runtime signs
-sessions with `ADMIN_PASSWORD`. Preemptive HTTP Basic authorization remains a
-fallback for command-line clients, but the server no longer sends a Basic-Auth
-browser challenge.
+`/admin-termine/` redirects unauthenticated browsers to `/admin-login/`.
+Password plus local TOTP is mandatory. HTTP Basic and old v1 session cookies
+are no longer accepted. Follow [the 2FA setup and recovery guide](admin-two-factor.md)
+before switching the production image: a missing independent encryption key
+fails closed. The public website remains available.
 
-Form login and HTTP Basic share one persistent account-wide attempt budget in
-Bunny Database. After five credential attempts within fifteen minutes, new
-credential logins return `429 Too Many Requests` with `Retry-After` until the
-window expires. A successful credential login clears the budget; an already
-valid signed session does not consume it. This account-wide boundary is
-intentional so changing forwarded IP headers cannot bypass the protection.
+`ADMIN_PUBLIC_ORIGIN` must match the actual HTTPS browser origin. For a dev
+deployment use its HTTPS URL; the production value is `https://artbild-fotografie.de`.
+The `__Host-` cookie is `HttpOnly`, `Secure`, `SameSite=Strict`; only hashes of
+opaque session tokens are stored. Sessions expire after 30 minutes of
+inactivity and at most four hours. `/admin-security/` provides server-side
+logout and logout-all. Changing the admin password invalidates sessions.
+
+Password attempts and second-factor attempts have separate persistent
+account-wide budgets (five per fifteen minutes each). A correct password
+clears only the password budget; it cannot reset OTP attempts. Successful
+MFA clears the second-factor budget. Existing full sessions do not consume
+these budgets. Both boundaries remain independent of attacker-supplied IP headers.
 
 `AGENT_API_CLIENTS_JSON` is optional. It maps a readable client label to a
 Bearer token, for example

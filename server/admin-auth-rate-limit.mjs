@@ -58,29 +58,29 @@ async function reserveBucket(database, { bucket, limit, now, scope }) {
   };
 }
 
-function authenticationBucket(secret) {
-  return bucketHash(secret, "account", "configured-admin");
+function authenticationBucket(secret, scope) {
+  return bucketHash(secret, scope, "configured-admin");
 }
 
 export async function reserveAdminAuthenticationAttempt(
   database,
-  { secret, now = Date.now() },
+  { secret, scope = "account", now = Date.now() },
 ) {
   if (!database || typeof database.prepare !== "function") {
     throw new Error("missing_admin_auth_rate_limit_database");
   }
 
   return reserveBucket(database, {
-    bucket: authenticationBucket(secret),
+    bucket: authenticationBucket(secret, scope),
     limit: ADMIN_AUTH_MAX_ATTEMPTS,
     now,
-    scope: "account",
+    scope,
   });
 }
 
 export async function clearAdminAuthenticationAttempts(
   database,
-  { secret },
+  { secret, scope = "account" },
 ) {
   if (!database || typeof database.prepare !== "function") {
     throw new Error("missing_admin_auth_rate_limit_database");
@@ -90,7 +90,7 @@ export async function clearAdminAuthenticationAttempts(
       DELETE FROM admin_auth_attempts
       WHERE bucket_hash = ?
     `)
-    .bind(authenticationBucket(secret))
+    .bind(authenticationBucket(secret, scope))
     .run();
 }
 

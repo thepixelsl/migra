@@ -97,23 +97,20 @@ GET  /api/admin/availability
 POST /api/admin/availability
 ```
 
-Cloudflare Access muss diese Pfade schützen:
+Der aktuelle Bunny-Betrieb schützt alle `/api/admin/*`-Pfade und die
+Terminverwaltung durch Passwort plus lokale TOTP-Zwei-Faktor-Anmeldung.
+Es wird kein zusätzlicher Authentifizierungsdienst benötigt. HTTP Basic und
+frühere Sitzungen ohne zweiten Faktor werden nicht akzeptiert.
 
-```text
-/admin-termine
-/admin-termine/*
-/api/admin/*
-```
+Die erstmalige Einrichtung und Wiederherstellung sind in
+[docs/admin-two-factor.md](docs/admin-two-factor.md) beschrieben. Vor dem
+Containerwechsel müssen ein unabhängiges `ADMIN_SESSION_SECRET`, ein separates
+`ADMIN_MFA_SETUP_TOKEN` und der genaue `ADMIN_PUBLIC_ORIGIN` eingerichtet sein.
+Unter `/admin-security/` lassen sich einzelne oder alle Sitzungen abmelden.
 
-Empfohlene Access-Konfiguration:
-
-1. In Cloudflare Zero Trust eine Self-hosted Application für `artbild-fotografie.ch` anlegen.
-2. Die oben genannten Pfade zur Application hinzufügen.
-3. Eine Allow-Policy nur für `info@artbild-fotografie.de` setzen.
-4. MFA/2FA für den Identity Provider erzwingen.
-5. Optional zusätzlich `ADMIN_EMAIL=info@artbild-fotografie.de` als Worker/Pages-Variable setzen.
-
-Die API prüft zusätzlich den Cloudflare-Access-Header `Cf-Access-Authenticated-User-Email`. Ohne passenden Access-Login werden keine Admin-Daten ausgegeben und keine Termine geändert.
+Die frühere Cloudflare-Worker-Konfiguration ist ein separater Laufzeitpfad;
+sie ist kein Nachweis einer vorgeschalteten Access-Kontrolle für die aktuelle
+Bunny-Website.
 
 ### Datenmodell
 
