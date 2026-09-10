@@ -400,11 +400,36 @@ const schemaGraph = {
   }
 
   @media (max-width: 680px) {
+    .wedding-category-page main {
+      overflow-wrap: anywhere;
+    }
+
     .wedding-category-hero,
     .wedding-category-intro,
     .wedding-overview-grid,
     .wedding-category-cta {
       width: min(100% - 40px, 520px);
+    }
+
+    .wedding-category-hero h1 {
+      font-size: clamp(30px, 9vw, 52px);
+      line-height: 1.15;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+
+    .wedding-category-page :global(.site-breadcrumb li) {
+      min-width: 0;
+      max-width: 100%;
+    }
+
+    .wedding-overview-grid :global(.portfolio-overview-card__meta) {
+      flex-wrap: wrap;
+      row-gap: 4px;
+    }
+
+    .wedding-category-cta a {
+      max-width: 100%;
     }
 
     .wedding-overview-grid {

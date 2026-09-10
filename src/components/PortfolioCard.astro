@@ -134,10 +134,12 @@ const imageAspect =
     line-height: 1.2;
   }
 
-  .portfolio-overview-card__link:hover .portfolio-overview-card__figure :global(img),
-  .portfolio-overview-card__link:focus-visible .portfolio-overview-card__figure :global(img) {
-    filter: brightness(.92);
-    transform: scale(1.018);
+  @media (hover: hover) and (pointer: fine) {
+    .portfolio-overview-card__link:hover .portfolio-overview-card__figure :global(img),
+    .portfolio-overview-card__link:focus-visible .portfolio-overview-card__figure :global(img) {
+      filter: brightness(.92);
+      transform: scale(1.018);
+    }
   }
 
   .portfolio-overview-card__link:focus-visible {
