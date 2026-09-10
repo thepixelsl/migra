@@ -7,6 +7,7 @@ import lovebirdsElbstrand from "../assets/portfolio/lovebirds-elbstrand.jpg";
 import paarshootingMallorca from "../assets/portfolio/paarshooting-mallorca.jpg";
 import standesamtAltona from "../assets/portfolio/standesamt-altona.jpg";
 import traumhochzeitHamburg from "../assets/portfolio/traumhochzeit-hamburg.jpg";
+import hochzeitsgalerien from "../assets/valerie-und-tim/ART_4632.jpg";
 
 type FeaturedPortfolioLink = {
   title: string;
@@ -21,6 +22,15 @@ type FeaturedPortfolioLink = {
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 
 const links: FeaturedPortfolioLink[] = [
+  {
+    title: "Hochzeitsgalerien",
+    href: "/gallery-category/hochzeit/",
+    location: "",
+    image: hochzeitsgalerien,
+    alt: "Brautpaar von hinten mit langem Schleier im Frühlingspark",
+    imagePosition: "center center",
+    serviceType: "Hochzeitsreportagen",
+  },
   {
     title: "Paarshooting Mallorca",
     href: "/gallery/paarshooting-mallorca/",
@@ -161,14 +171,14 @@ const schema = {
     "name": entry.title,
     "url": entry.absoluteHref,
     "item": {
-      "@type": "ImageGallery",
+      "@type": entry.href.startsWith("/gallery-category/") ? "CollectionPage" : "ImageGallery",
       "name": entry.title,
       "url": entry.absoluteHref,
-      "description": `${entry.serviceType} von Artbild-Fotografie in ${entry.location}.`,
+      "description": `${entry.serviceType} von Artbild-Fotografie${entry.location ? ` in ${entry.location}` : ""}.`,
       "provider": {
         "@id": `${siteUrl}/#organization`,
       },
-      "contentLocation": placeSchema(entry),
+      "contentLocation": entry.location ? placeSchema(entry) : undefined,
       "image": {
         "@type": "ImageObject",
         "contentUrl": `${siteUrl}${entry.image.src}`,
