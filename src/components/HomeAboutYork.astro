@@ -221,4 +221,41 @@
       font-size: 2.35rem;
     }
   }
+
+  @media (min-width: 621px) and (max-width: 1180px),
+    (min-width: 621px) and (max-width: 1366px) and (any-pointer: coarse) {
+    .home-about-york__inner {
+      width: var(--home-tablet-width);
+      max-width: 920px;
+      grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+      gap: clamp(32px, 5vw, 64px);
+      padding: 72px 0;
+    }
+
+    .home-about-york__portrait-link {
+      width: 100%;
+      max-width: 360px;
+      justify-self: center;
+    }
+
+    .home-about-york__copy {
+      margin-inline: auto;
+    }
+
+    .home-about-york h2 {
+      margin-bottom: 24px;
+      font-size: clamp(30px, 3.7vw, 40px);
+      line-height: 1.12;
+    }
+
+    .home-about-york__text {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .home-about-york__signature {
+      margin-top: 24px;
+      font-size: 40px;
+    }
+  }
 </style>

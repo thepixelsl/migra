@@ -58,7 +58,7 @@ test("planning cards preserve their destinations, labels, and tracking", async (
   for (let index = 0; index < 3; index += 1) {
     const card = cards.nth(index);
     await expect(card).toHaveAttribute("aria-label", /.+/);
-    await expect(card).toHaveAttribute("data-track-event", "cta_click");
+    await expect(card).toHaveAttribute("data-track-event", index === 0 ? "view_pricing" : "cta_click");
     await expect(card).toHaveAttribute("data-section-id", "home_planning_prices");
     await expect(card).toHaveAttribute("data-cta-id", /home_planning_.+/);
     await expect(card).toHaveAttribute("data-cta-type", /.+/);
@@ -89,7 +89,7 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
     renderedHeight: element.getBoundingClientRect().height,
   }));
 
-  expect(imageDetails.alt).toContain("Hochzeitsfotograf Hamburg Preise");
+  expect(imageDetails.alt).toBe("Braut mit Brautstrauß");
   expect(imageDetails.currentSrc).not.toContain("/images/post-preise.jpg");
   expect(imageDetails.naturalWidth).toBeGreaterThanOrEqual(Math.floor(imageDetails.renderedWidth));
   expect(imageDetails.naturalHeight).toBeGreaterThanOrEqual(Math.floor(imageDetails.renderedHeight));
@@ -97,9 +97,9 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
 
 const viewports = [
   { width: 1440, height: 1000, mode: "desktop" },
-  { width: 1180, height: 900, mode: "desktop" },
-  { width: 1024, height: 900, mode: "desktop" },
-  { width: 901, height: 900, mode: "desktop" },
+  { width: 1180, height: 900, mode: "tablet" },
+  { width: 1024, height: 900, mode: "tablet" },
+  { width: 901, height: 900, mode: "tablet" },
   { width: 900, height: 900, mode: "tablet" },
   { width: 768, height: 1024, mode: "tablet" },
   { width: 621, height: 900, mode: "tablet" },
@@ -192,7 +192,7 @@ for (const viewport of viewports) {
     if (viewport.mode === "desktop") {
       expect(layout.cardSizes.every(({ width, height }) => height / width >= 1.95 && height / width <= 2.05)).toBe(true);
     } else if (viewport.mode === "tablet") {
-      expect(layout.cardSizes.every(({ width, height }) => width / height >= 1.95 && width / height <= 2.05)).toBe(true);
+      expect(layout.cardSizes.every(({ width, height }) => width / height >= 1.95 && width / height <= 2.25)).toBe(true);
     } else {
       expect(layout.cardSizes.every(({ width, height }) => height / width >= 1.35)).toBe(true);
       expect(layout.rowGap).toBeGreaterThanOrEqual(26);

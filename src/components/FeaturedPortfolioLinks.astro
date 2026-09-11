@@ -226,7 +226,7 @@ const schema = {
                 srcset={index === 0 ? entry.imageSrcset : undefined}
                 data-src={index === 0 ? undefined : entry.imageFallback}
                 data-srcset={index === 0 ? undefined : entry.imageSrcset}
-                sizes="50vw"
+                  sizes="(min-width: 621px) and (max-width: 1180px) 41vw, (min-width: 621px) and (max-width: 1366px) and (any-pointer: coarse) 41vw, 50vw"
                 alt={entry.alt}
                 width={entry.image.width}
                 height={entry.image.height}

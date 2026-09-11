@@ -1,0 +1,256 @@
+/* Tablets retain Léon's paired photographs and quiet typography, with room for
+   hands at both edges. Include large touch tablets in landscape orientation. */
+@media (min-width: 621px) and (max-width: 1180px),
+  (min-width: 621px) and (max-width: 1366px) and (any-pointer: coarse) {
+  body {
+    --home-tablet-gutter: clamp(40px, 6vw, 72px);
+    --home-tablet-width: min(1040px, calc(100% - 2 * var(--home-tablet-gutter)));
+  }
+
+  .intro.section-narrow,
+  .home-lower-section,
+  .site-footer {
+    width: var(--home-tablet-width);
+    margin-inline: auto;
+  }
+
+  .intro.section-narrow {
+    max-width: 1040px;
+    padding-bottom: 80px;
+  }
+
+  .intro .intro-title {
+    min-height: 0;
+    padding: 72px 0 64px;
+  }
+
+  .intro .intro-script {
+    transform: none;
+    margin: 22px 0 0;
+    font-size: clamp(62px, 8vw, 88px);
+  }
+
+  .intro .flo-block {
+    left: auto;
+    width: 100%;
+    margin-inline: auto;
+    padding: 32px 0 0;
+    transform: none;
+    contain-intrinsic-size: auto 620px;
+  }
+
+  .flo-featured-links-1__links-wrap {
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+    min-height: 0;
+  }
+
+  .flo-featured-links-1__image-wrap {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+  }
+
+  .flo-featured-links-1__image {
+    transition: none;
+  }
+
+  .flo-featured-links-1__image img {
+    position: static;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+    transform: none;
+  }
+
+  .flo-featured-links-1__links-title-wrap {
+    min-height: 0;
+    margin: 0;
+    padding: 44px clamp(22px, 3vw, 40px);
+  }
+
+  .flo-featured-links-1__links-title-wrap::after,
+  .flo-featured-links-1__link::before {
+    display: none;
+  }
+
+  .flo-featured-links-1__title {
+    margin: 0 0 28px;
+    font-size: 11px;
+    letter-spacing: .48em;
+  }
+
+  .flo-featured-links-1__link,
+  .flo-featured-links-1__link.hovered {
+    min-height: 48px;
+    justify-content: center;
+    padding: 13px 0;
+    color: #4c535f;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(22px, 2.65vw, 29px);
+    line-height: 1.2;
+    overflow-wrap: normal;
+    text-wrap: balance;
+  }
+
+  .flo-featured-links-1__link small {
+    font-size: 9px;
+    line-height: 1.6;
+    letter-spacing: .14em;
+  }
+
+  .home-lower-section {
+    padding-block: 76px;
+  }
+
+  .planning-section__intro h2,
+  .services-compass__content > h2,
+  .home-editorial__copy h2,
+  .contact-note h2,
+  .vendor-section .section-heading h2,
+  .social-section .section-heading h2,
+  .story-section .section-heading h2 {
+    font-size: clamp(34px, 4.5vw, 46px);
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+
+  .planning-section {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .planning-section__intro {
+    max-width: 640px;
+    margin-inline: auto;
+  }
+
+  .planning-grid {
+    width: min(100%, 680px);
+    margin-inline: auto;
+    grid-template-columns: 1fr;
+    gap: 26px;
+  }
+
+  .planning-card a {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: 1fr;
+    aspect-ratio: 2.2 / 1;
+  }
+
+  .planning-card img {
+    height: 100%;
+    aspect-ratio: auto;
+  }
+
+  .planning-card a > div {
+    padding: 24px;
+  }
+
+  .planning-card h3 {
+    font-size: 44px;
+  }
+
+  .planning-card--getting-ready h3 {
+    font-size: 34px;
+  }
+
+  .planning-card__summary {
+    font-size: 15px;
+  }
+
+  .services-compass-section {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .services-compass__content {
+    grid-area: auto;
+    width: min(100%, 740px);
+    margin-inline: auto;
+  }
+
+  .services-compass__content > .eyebrow,
+  .services-compass__content > h2,
+  .services-compass__content > p {
+    text-align: center;
+    margin-inline: auto;
+  }
+
+  .services-compass__content > p:not(.eyebrow) {
+    max-width: 60ch;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .services-compass__item summary {
+    grid-template-columns: 30px minmax(0, 1fr) 36px;
+    gap: 16px;
+    min-height: 82px;
+    padding-block: 20px;
+  }
+
+  .services-compass__item h3 {
+    font-size: clamp(24px, 3vw, 30px);
+    line-height: 1.25;
+  }
+
+  .services-compass__panel {
+    margin-left: 46px;
+  }
+
+  .services-compass__media {
+    grid-row: 2;
+    grid-column: 1;
+    width: min(82%, 500px);
+    margin: 0 auto;
+    justify-self: center;
+  }
+
+  .story-section .section-heading,
+  .portfolio-showcase__heading {
+    margin-bottom: 48px;
+  }
+
+  .story-carousel__toolbar {
+    margin-top: 40px;
+  }
+
+  .home-editorial {
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .home-editorial__copy {
+    width: min(100%, 680px);
+    margin-inline: auto;
+  }
+
+  .home-editorial__media {
+    width: min(100%, 820px);
+    margin-inline: auto;
+  }
+
+  .social-section .social-links {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    gap: 14px;
+  }
+
+  .contact-note {
+    grid-template-columns: 1fr;
+    gap: 34px;
+    text-align: center;
+  }
+
+  .contact-note > div:first-child {
+    max-width: 740px;
+    margin-inline: auto;
+  }
+
+  .contact-note__actions {
+    width: min(100%, 560px);
+    justify-self: center;
+  }
+}

@@ -4,9 +4,9 @@ const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
 const viewports = [
   { width: 1440, height: 1000, columns: 3 },
-  { width: 1024, height: 900, columns: 3 },
-  { width: 820, height: 1080, columns: 3 },
-  { width: 681, height: 900, columns: 3 },
+  { width: 1024, height: 900, columns: 1 },
+  { width: 820, height: 1080, columns: 1 },
+  { width: 681, height: 900, columns: 1 },
   { width: 680, height: 900, columns: 1 },
   { width: 620, height: 900, columns: 1 },
   { width: 390, height: 844, columns: 1 },

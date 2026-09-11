@@ -312,4 +312,52 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
       transform: none;
     }
   }
+
+  @media (min-width: 621px) and (max-width: 1180px),
+    (min-width: 621px) and (max-width: 1366px) and (any-pointer: coarse) {
+    .home-standesamt-feature__card {
+      max-width: 760px;
+    }
+
+    .home-standesamt-feature__link {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .home-standesamt-feature__copy {
+      width: 100%;
+      min-height: 0;
+      margin: 0;
+      padding: 44px clamp(32px, 6vw, 64px);
+      align-items: center;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    .home-standesamt-feature h2 {
+      max-width: 22ch;
+      font-size: clamp(34px, 4.5vw, 44px);
+    }
+
+    .home-standesamt-feature__text {
+      max-width: 48ch;
+    }
+
+    .home-standesamt-feature__media {
+      width: 82%;
+      max-width: 560px;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      margin: 0 auto;
+      box-shadow: none;
+    }
+
+    .home-standesamt-feature__media figcaption {
+      right: 0;
+      bottom: 0;
+      left: 0;
+      font-size: 9px;
+    }
+  }
 </style>

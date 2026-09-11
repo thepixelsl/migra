@@ -3,6 +3,9 @@
     "(orientation: landscape) and (max-width: 900px), (orientation: portrait) and (max-width: 700px)"
   );
   const featuredHoverQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const featuredTabletQuery = window.matchMedia(
+    "(min-width: 621px) and (max-width: 1180px), (min-width: 621px) and (max-width: 1366px) and (any-pointer: coarse)"
+  );
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const instances = new Map();
 
@@ -404,8 +407,6 @@
       if (!image || !links.length) return;
 
       const previewIndex = new URLSearchParams(window.location.search).get("featured");
-      const shouldUseDesktopPreview = featuredHoverQuery.matches || Boolean(previewIndex);
-      if (!shouldUseDesktopPreview) return;
 
       const loadFeaturedMedia = (index) => {
         const figure = media.find((item) => item.dataset.featuredMedia === index);
@@ -422,6 +423,11 @@
       };
 
       const activate = (link) => {
+        // Keep one photograph on tablets, including after rotation or when a
+        // trackpad is attached. Gallery links still navigate on the first tap.
+        if (featuredTabletQuery.matches || (!featuredHoverQuery.matches && !previewIndex)) {
+          link = links[0];
+        }
         const index = link.dataset.featuredIndex;
         const nextImage = link.dataset.image;
         links.forEach((item) => item.classList.toggle("hovered", item === link));
@@ -449,6 +455,8 @@
         : null;
 
       activate(previewLink || links.find((link) => link.classList.contains("hovered")) || links[0]);
+      listenToMediaQuery(featuredTabletQuery, () => activate(links[0]));
+      listenToMediaQuery(featuredHoverQuery, () => activate(links[0]));
     });
   };
 
