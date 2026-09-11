@@ -74,6 +74,9 @@ test("price card uses the optimized high resolution image", async ({ page }) => 
   await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
 
   const image = page.locator(".planning-card--prices img");
+  // WebKit first needs to render the content-visibility section before it can
+  // scroll to a lazily loaded descendant reliably.
+  await page.locator(".planning-section").scrollIntoViewIfNeeded();
   await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
   await expect
@@ -117,6 +120,13 @@ for (const viewport of viewports) {
     const links = section.locator(".planning-card > a");
     await section.scrollIntoViewIfNeeded();
     await expect(links).toHaveCount(3);
+    for (const image of await section.locator(".planning-card img").all()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((element: HTMLImageElement) =>
+        element.complete && element.naturalWidth > 0
+      )).toBe(true);
+    }
+    await section.scrollIntoViewIfNeeded();
     await expect.poll(async () =>
       section.locator(".planning-card img").evaluateAll((images) =>
         images.every((image) => image.complete && image.naturalWidth > 0)
