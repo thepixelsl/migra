@@ -185,7 +185,7 @@ const isCurrent = (item: NavigationItem) => {
 
     if (!(toggle instanceof HTMLButtonElement) || !(panel instanceof HTMLElement)) return;
 
-    const focusableSelector = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])';
+    const focusableSelector = 'a[href]:not([tabindex="-1"]), button:not([disabled]):not([tabindex="-1"]), [tabindex]:not([tabindex="-1"])';
 
     const closeMenu = () => {
       panel.classList.remove("is-open");
@@ -207,8 +207,11 @@ const isCurrent = (item: NavigationItem) => {
 
       window.requestAnimationFrame(() => {
         panel.classList.add("is-open");
-        const firstFocusable = panel.querySelector(focusableSelector);
-        if (firstFocusable instanceof HTMLElement) firstFocusable.focus();
+        window.requestAnimationFrame(() => {
+          if (!panel.classList.contains("is-open")) return;
+          const firstFocusable = panel.querySelector(focusableSelector);
+          if (firstFocusable instanceof HTMLElement) firstFocusable.focus();
+        });
       });
     };
 
