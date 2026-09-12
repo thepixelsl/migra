@@ -3474,8 +3474,8 @@ footer nav[aria-label="Footer"]::before,
     --mobile-glass-bd: rgba(255, 255, 255, .48);
     --mobile-glass-sep: rgba(0, 0, 0, .07);
     --mobile-glass-hover: rgba(255, 255, 255, .38);
-    --mobile-glass-fill-top: rgba(255, 255, 255, .58);
-    --mobile-glass-fill-bottom: rgba(255, 255, 255, .34);
+    --mobile-glass-fill-top: rgba(255, 255, 255, .98);
+    --mobile-glass-fill-bottom: rgba(248, 246, 242, .96);
     --mobile-glass-rim-light: rgba(255, 255, 255, .92);
     --mobile-glass-rim-soft: rgba(255, 255, 255, .34);
     --mobile-glass-rim-dark: rgba(30, 26, 22, .2);
@@ -3870,8 +3870,8 @@ footer nav[aria-label="Footer"]::before,
       --mobile-glass-bd: rgba(255, 255, 255, .16);
       --mobile-glass-sep: rgba(255, 255, 255, .1);
       --mobile-glass-hover: rgba(255, 255, 255, .12);
-      --mobile-glass-fill-top: rgba(34, 34, 38, .68);
-      --mobile-glass-fill-bottom: rgba(18, 18, 20, .52);
+      --mobile-glass-fill-top: rgba(34, 34, 38, .98);
+      --mobile-glass-fill-bottom: rgba(18, 18, 20, .96);
       --mobile-glass-rim-light: rgba(255, 255, 255, .26);
       --mobile-glass-rim-soft: rgba(255, 255, 255, .13);
       --mobile-glass-rim-dark: rgba(0, 0, 0, .54);
