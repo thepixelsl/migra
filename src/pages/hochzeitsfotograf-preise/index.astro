@@ -81,7 +81,7 @@ const packageMedia = {
   },
   "standesamt-paket": {
     image: standesamtImage,
-    alt: "Brautportrait als Beispiel für das Standesamt Paket in Hamburg",
+    alt: "Brautpaar in einer Umarmung beim Hochzeitsshooting",
     imageOrientation: "portrait",
   },
   "rundum-sorglos-paket": {
@@ -135,7 +135,7 @@ const faqItems = [
   {
     id: "preise_faq_19",
     question: "Wie wird der Preis berechnet, wenn wir an zwei Tagen heiraten?",
-    answer: `Es zählen eure gesamten Begleitungsstunden, unabhängig von der Anzahl der Tage. Für diese Stundenzahl wird automatisch das günstigste passende Paket gewählt. Zum Beispiel ergeben eine Stunde Standesamt und sechs Stunden freie Trauung zusammen sieben Stunden: ${formatPrice(7 * reportagePackage.priceValue)} im Rundum-Sorglos-Paket. Pakete sind nicht miteinander kombinierbar. Reisekosten außerhalb Hamburgs stimmen wir vorab ab.`,
+    answer: `Es zählen eure gesamten Begleitungsstunden, unabhängig von der Anzahl der Tage. Für diese Stundenzahl wird automatisch das günstigste passende Paket gewählt. Zum Beispiel ergeben eine Stunde Standesamt und sechs Stunden freie Trauung zusammen sieben Stunden: ${formatPrice(7 * reportagePackage.priceValue)} im Rundum-Sorglos-Paket. Pakete sind nicht miteinander kombinierbar. Reisekosten außerhalb Norddeutschlands stimmen wir vorab ab.`,
   },
   {
     id: "preise_faq_18",
@@ -145,7 +145,7 @@ const faqItems = [
   {
     id: "preise_faq_4",
     question: "Ist die Bearbeitung unserer Bilder im Preis enthalten?",
-    answer: "Ja. Die Bildbearbeitung ist im Paketpreis enthalten: Ich stimme Farben, Helligkeit und Kontraste aufeinander ab und korrigiere kleine störende Details. Retusche einzelner ausgewählter Bilder besprechen wir gemeinsam. Für die im Paket enthaltene Bearbeitung entstehen euch keine zusätzlichen Kosten.",
+    answer: "Ja. Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet. Dazu gehören Weißabgleich, Helligkeit, Farben und Kontraste. Ihr müsst später keine einzelnen Fotos zur Bearbeitung auswählen oder dafür extra bezahlen. Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im Preis enthalten. Welche Bilder und Details euch dabei wichtig sind, besprechen wir gemeinsam.",
   },
   {
     id: "preise_faq_16",
@@ -155,7 +155,7 @@ const faqItems = [
   {
     id: "preise_faq_1",
     question: "Welche Fahrtkosten kommen hinzu?",
-    answer: "Innerhalb Hamburgs ist die Anfahrt bei allen Paketen enthalten. Außerhalb Hamburgs berechne ich die tatsächlich anfallenden Reisekosten, keine pauschale Fahrtgebühr. Die Fahrzeit stelle ich nicht als Arbeitszeit in Rechnung. Die Reisekosten stimmen wir vor der Buchung ab.",
+    answer: "In Norddeutschland ist die Anfahrt bei allen Paketen enthalten. Außerhalb Norddeutschlands berechne ich die tatsächlich anfallenden Reisekosten, keine pauschale Fahrtgebühr. Die Fahrzeit stelle ich nicht als Arbeitszeit in Rechnung. Die Reisekosten stimmen wir vor der Buchung ab.",
   },
   {
     id: "preise_faq_15",
@@ -327,9 +327,9 @@ const schemaGraph = {
             <p class="pricing-kicker">Hochzeitsfotograf Hamburg · Preise & Pakete</p>
             <h1>Hochzeitsfotograf <span>Hamburg Preise</span></h1>
             <p>
-              Ob standesamtliche Trauung oder längere Hochzeitsreportage: Gemeinsam
-              planen wir, welche Momente ich für euch festhalte. Hier seht ihr die
-              Preise, die enthaltenen Leistungen und Beispiele für euren Tag.
+              Hier findet ihr die passende Begleitung für eure Hochzeit. Alle
+              Bilder erhaltet ihr grundlegend RAW-bearbeitet. Hochwertige Retusche
+              ausgewählter Bilder und die Anfahrt in Norddeutschland sind inklusive.
             </p>
             <p class="pricing-hero__prices">
               1 Stunde: {formatPrice(pureMoments.priceValue)} · 2 Stunden: {formatPrice(standesamtPackage.priceValue)}<br />
@@ -396,6 +396,7 @@ const schemaGraph = {
           <a href="#pakete" data-track-event="cta_click" data-cta-id="pricing_toc_packages" data-cta-type="anchor_navigation">Pakete</a>
           <a href="#preisbeispiele" data-track-event="cta_click" data-cta-id="pricing_toc_examples" data-cta-type="anchor_navigation">Preisrechner & Beispiele</a>
           <a href="#enthalten" data-track-event="cta_click" data-cta-id="pricing_toc_included" data-cta-type="anchor_navigation">Enthaltene Leistungen</a>
+          <a href="#druckvorbereitung" data-track-event="cta_click" data-cta-id="pricing_toc_print" data-cta-type="anchor_navigation">Druckvorbereitung</a>
           <a href="#faq" data-track-event="cta_click" data-cta-id="pricing_toc_faq" data-cta-type="anchor_navigation">FAQ</a>
           <a href="#anfrage" data-track-event="contact_click" data-cta-id="pricing_toc_contact" data-cta-type="anchor_navigation">Anfrage</a>
         </nav>
@@ -412,10 +413,12 @@ const schemaGraph = {
               sich die passende Begleitung mit einem vereinbarten Gesamtpreis.
             </p>
             <p>
-              Die Bildbearbeitung, die Anfahrt innerhalb Hamburgs und eure
+              Die grundlegende RAW-Bearbeitung aller gelieferten Bilder,
+              hochwertige Retusche ausgewählter Bilder, Color-Proofing für den
+              Druck, die Anfahrt in Norddeutschland und eure
               passwortgeschützte Onlinegalerie für {weddingGalleryMonths} Monate
               sind in jedem Paket enthalten. Die Galerie ist in dieser Zeit
-              kostenlos verfügbar. Bei Hochzeiten außerhalb Hamburgs stimmen wir
+              kostenlos verfügbar. Bei Hochzeiten außerhalb Norddeutschlands stimmen wir
               die Reisekosten vor der Buchung ab.
             </p>
             <a class="pricing-text-link" href="/about/">Mehr über mich und meine Arbeitsweise</a>
@@ -508,15 +511,15 @@ const schemaGraph = {
             </div>
             <div class="pricing-calculator__result">
               <output for="pricing-duration" aria-live="polite" aria-atomic="true">
-                <span class="pricing-calculator__label">Gesamtpreis in Hamburg</span>
+                <span class="pricing-calculator__label">Euer Gesamtpreis</span>
                 <strong data-calculator-total>{formatPrice(6 * reportagePackage.priceValue)}</strong>
                 <span data-calculator-package>{reportagePackage.name}</span>
                 <span data-calculator-calculation>{`6 Stunden × ${formatPrice(reportagePackage.priceValue)}`}</span>
               </output>
-              <p>Bildbearbeitung, Anfahrt in Hamburg und Onlinegalerie für {weddingGalleryMonths} Monate inklusive.</p>
+              <p>Alle Bilder RAW-bearbeitet, hochwertige Retusche ausgewählter Bilder, Color-Proofing und Anfahrt in Norddeutschland inklusive. Eure Onlinegalerie ist {weddingGalleryMonths} Monate kostenlos verfügbar.</p>
               <a data-calculator-package-link href={`#paket-${reportagePackage.id}`}>Alle Leistungen dieses Pakets ansehen</a>
             </div>
-            <p class="pricing-calculator__note">Es zählt die Gesamtstundenzahl, nicht die Anzahl der Tage. Pakete sind nicht miteinander kombinierbar. Außerhalb Hamburgs kommen die vorab vereinbarten Reisekosten hinzu. Termine und Ablauf stimmen wir persönlich ab.</p>
+            <p class="pricing-calculator__note">Es zählt die Gesamtstundenzahl, nicht die Anzahl der Tage. Pakete sind nicht miteinander kombinierbar. Außerhalb Norddeutschlands kommen die vorab vereinbarten Reisekosten hinzu. Termine und Ablauf stimmen wir persönlich ab.</p>
           </div>
           <div class="pricing-example-grid">
             {pricingExamples.map((example) => (
@@ -541,7 +544,7 @@ const schemaGraph = {
             kosten im Rundum-Sorglos-Paket {formatPrice(8 * reportagePackage.priceValue)}
             {` (8 × ${formatPrice(reportagePackage.priceValue)})`}. Welche Momente in
             diesen Zeitraum fallen, richtet sich nach eurem Tagesablauf. Die
-            Anfahrt innerhalb Hamburgs, die Bildbearbeitung und die Onlinegalerie
+            Anfahrt in Norddeutschland, die Bildbearbeitung und die Onlinegalerie
             für {weddingGalleryMonths} Monate sind bei allen Beispielen enthalten.
           </p>
         </section>
@@ -555,17 +558,40 @@ const schemaGraph = {
           </div>
           <div class="pricing-copy">
             <p>
-              Eure Bilder erhalten eine aufeinander abgestimmte Bearbeitung von
-              Farben, Helligkeit und Kontrasten. Kleine störende Details wie ein
-              Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit korrigiere
-              ich dabei mit. Diese Arbeit ist im Preis enthalten.
+              Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet.
+              Dabei stimme ich Weißabgleich, Helligkeit, Farben und Kontraste
+              aufeinander ab. Ihr müsst später keine einzelnen Bilder für die
+              Bearbeitung auswählen oder dafür extra bezahlen.
             </p>
             <p>
-              Wünsche zur Retusche einzelner Bilder besprechen wir gemeinsam.
-              Ich arbeite dabei überwiegend manuell und bei Bedarf mit
-              KI-Unterstützung; auf Wunsch auch vollständig ohne KI. Wenn ihr
-              Bilder drucken lassen möchtet, berate ich euch zur Druckvorbereitung.
-              Auch dieser Service ist enthalten.
+              Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im
+              Preis enthalten. Dabei kümmere ich mich gezielt um störende Details,
+              etwa einen Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit.
+              Welche Bilder und Wünsche euch wichtig sind, besprechen wir gemeinsam.
+              Ich retuschiere überwiegend manuell und bei Bedarf mit KI-Unterstützung;
+              auf Wunsch auch vollständig ohne KI.
+            </p>
+          </div>
+        </section>
+
+        <section class="pricing-split" id="druckvorbereitung" aria-labelledby="print-title">
+          <div>
+            <p class="pricing-kicker">Für eure gedruckten Bilder</p>
+            <h2 id="print-title">Color-Proofing für den Druck inklusive</h2>
+          </div>
+          <div class="pricing-copy">
+            <p>
+              Wenn ihr eure Bilder drucken lassen möchtet, unterstütze ich euch
+              mit Color-Proofing: Ich prüfe die zu erwartende Farbwiedergabe auf
+              dem vorgesehenen Material und bereite die Druckdaten passend vor.
+              Das gilt für Drucke auf hochwertigen und langlebigen Materialien,
+              für Fotobücher und für Hintergründe.
+            </p>
+            <p>
+              Die Farbprüfung und Druckvorbereitung sind bei allen Paketen
+              kostenlos enthalten. So könnt ihr eure Bilder auch für den Druck
+              sorgfältig abstimmen lassen. Die Kosten für die Druckprodukte und
+              Materialien kommen hinzu.
             </p>
           </div>
         </section>

@@ -24,7 +24,7 @@ export async function preparePageSeo($, route, { projectRoot, distDir, siteOrigi
     if (!/^\d+(?:[.,]\d+)?\s*€$/.test(price) || !count || !/1 Stunde/.test(packageNode.text())) {
       throw new Error("Pricing SEO requires the displayed one-hour fixed-price package; review changed pricing first.");
     }
-    description = `Hochzeitsfotograf Hamburg: ${count} Pakete ab ${price} für 1 Stunde. Bildbearbeitung inklusive, klare Leistungen für Standesamt und Reportage. Preise vergleichen.`;
+    description = `Hochzeitsfotograf Hamburg ab ${price} für 1 Stunde. Alle Bilder RAW-bearbeitet, ausgewählte Fotos retuschiert. Anfahrt in Norddeutschland inklusive.`;
   }
   if (!description) throw new Error(`Missing page description: ${route}`);
   $("meta[name=description]").remove();

@@ -11,7 +11,7 @@ export const agentBookingPage = {
   headline: "Terminprüfung für KI-Agenten",
   description:
     "Klare Preise, Buchungskonditionen und eine begrenzte Terminabfrage für konkrete Fotoaufträge.",
-  dateModified: "2026-09-05",
+  dateModified: "2026-09-12",
 };
 
 export const agentDateNavigation = {
@@ -112,7 +112,7 @@ export const agentBookingTerms = [
   "Für Hochzeiten wird eine Anfrage mindestens sechs Monate vor dem ersten Wunschdatum empfohlen.",
   "Eine angezeigte Verfügbarkeit ist unverbindlich, keine Reservierung und keine Annahme eines Auftrags.",
   "Maßgeblich sind die Leistungen, die beim gewählten Paket aufgeführt und im individuellen Angebot bestätigt werden.",
-  "Zusätzliche Zeiten, besondere Retuschen sowie Reise- oder Übernachtungskosten werden vor der Buchung geklärt und gegebenenfalls im Angebot ergänzt.",
+  "Die Anfahrt in Norddeutschland, grundlegende RAW-Bearbeitung aller gelieferten Bilder, hochwertige Retusche ausgewählter Bilder und Color-Proofing für den Druck sind im Paketpreis enthalten. Zusätzliche Begleitungsstunden und Reisen außerhalb Norddeutschlands werden vor der Buchung geklärt und gegebenenfalls im Angebot ergänzt.",
   "Nur ausdrücklich im jeweiligen Paket genannte Fahrtkosten sind enthalten.",
   "Die Abfragegrenzen dürfen nicht durch wechselnde Kennungen, parallele Aufrufe oder andere technische Maßnahmen umgangen werden.",
 ];

@@ -2,6 +2,10 @@ export const weddingGalleryMonths = 3;
 export const weddingBookingHoursRule = "Es zählen die Gesamtstunden, unabhängig von der Anzahl der Tage. Dafür gilt das günstigste passende Paket. Pakete sind nicht miteinander kombinierbar.";
 
 const galleryFeature = `Passwortgeschützte Onlinegalerie für ${weddingGalleryMonths} Monate kostenlos`;
+const rawFeature = "Grundlegende RAW-Bearbeitung aller gelieferten Bilder";
+const retouchFeature = "Hochwertige Retusche ausgewählter Bilder inklusive";
+const proofFeature = "Color-Proofing für den Druck inklusive";
+const travelFeature = "Anfahrt in Norddeutschland inklusive";
 
 const reportageFeatures = (duration: string) => [
   duration,
@@ -12,8 +16,10 @@ const reportageFeatures = (duration: string) => [
   "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
   galleryFeature,
   "Mindestens 300 bearbeitete Bilder",
-  "Retusche einzelner Bilder nach Absprache",
-  "Fahrtkosten innerhalb Hamburgs inklusive",
+  rawFeature,
+  retouchFeature,
+  proofFeature,
+  travelFeature,
   "Pakete sind nicht miteinander kombinierbar",
 ];
 
@@ -41,10 +47,11 @@ export const weddingPackages = [
       "Trauung, Brautpaarshooting, Gruppenfotos",
       galleryFeature,
       "mindestens 30 Bilder",
-      "inklusive RAW-Bearbeitung für alle Bilder",
-      "Retusche für ausgewählte Bilder",
+      rawFeature,
+      retouchFeature,
+      proofFeature,
       "keine Extra- oder versteckten Kosten (Festpreis)",
-      "keine Fahrtkosten innerhalb Hamburgs",
+      travelFeature,
       "nicht mit anderen Paketen kombinierbar",
     ],
   },
@@ -69,7 +76,10 @@ export const weddingPackages = [
       "Trauung, Brautpaarshooting und Gruppenfotos",
       galleryFeature,
       "Mindestens 100 bearbeitete Bilder",
-      "Retusche einzelner Bilder nach Absprache",
+      rawFeature,
+      retouchFeature,
+      proofFeature,
+      travelFeature,
       "Keine Extra- oder versteckten Kosten",
       "Pakete sind nicht miteinander kombinierbar",
     ],

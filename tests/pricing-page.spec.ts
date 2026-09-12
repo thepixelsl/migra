@@ -10,7 +10,7 @@ test("pricing content and structured offers describe the same booking terms", as
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator(".pricing-hero h1")).toHaveText("Hochzeitsfotograf Hamburg Preise");
   await expect(page).toHaveTitle("Hochzeitsfotograf Hamburg Preise");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /3 Pakete ab 299.*1 Stunde/);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /ab 299.*1 Stunde.*RAW-bearbeitet.*Norddeutschland inklusive/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /\bindex\b/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://artbild-fotografie.de/hochzeitsfotograf-preise/");
   await expect(page.getByRole("heading", { level: 2, name: "Pakete und Leistungen im Überblick" })).toBeVisible();
@@ -22,6 +22,10 @@ test("pricing content and structured offers describe the same booking terms", as
   await expect(packages.locator(".pricing-package__price")).toHaveText(["299 €", "649 € Festpreis", "249 € pro Stunde"]);
   for (const item of await packages.all()) {
     await expect(item).toContainText("Passwortgeschützte Onlinegalerie für 3 Monate kostenlos");
+    await expect(item).toContainText("Grundlegende RAW-Bearbeitung aller gelieferten Bilder");
+    await expect(item).toContainText("Hochwertige Retusche ausgewählter Bilder inklusive");
+    await expect(item).toContainText("Color-Proofing für den Druck inklusive");
+    await expect(item).toContainText("Anfahrt in Norddeutschland inklusive");
     await expect(item.getByRole("link", { name: /unverbindlich anfragen/ })).toHaveAttribute("href", "/kontakt/");
   }
   await expect(page.locator("#paket-pure-moments")).not.toContainText("Kennenlernshooting");
@@ -30,6 +34,9 @@ test("pricing content and structured offers describe the same booking terms", as
   await expect(page.locator("#preisbeispiele")).toContainText("1.494");
   await expect(page.locator("#preisbeispiele")).toContainText("1.992");
   await expect(page.locator('#preisbeispiele a[href^="/gallery/"]')).toHaveCount(2);
+  await expect(page.locator("#druckvorbereitung")).toContainText("Fotobücher");
+  await expect(page.locator("#druckvorbereitung")).toContainText("kostenlos enthalten");
+  await expect(page.locator(".pricing")).not.toContainText("außerhalb Hamburgs");
 
   const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
   const graph = blocks.map(block => JSON.parse(block)).find(block => Array.isArray(block["@graph"]))?.["@graph"];
