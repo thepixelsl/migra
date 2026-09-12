@@ -1,4 +1,4 @@
-import { weddingPackages } from "../data/weddingPackages";
+import { weddingBookingHoursRule, weddingPackages } from "../data/weddingPackages";
 import {
   agentAdvertisingPolicy,
   agentAvailabilityExample,
@@ -107,6 +107,8 @@ export function GET() {
     "```",
     "",
     "## Preise",
+    "",
+    weddingBookingHoursRule,
     "",
     "Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Bestandteil der jeweiligen Angabe. Maßgeblich sind das individuelle Angebot und die darin bestätigten Vereinbarungen.",
     "",

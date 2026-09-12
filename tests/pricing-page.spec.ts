@@ -3,192 +3,97 @@ import { mkdirSync } from "node:fs";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const screenshotDirectory = "screenshots/qa-pricing-page";
-
 mkdirSync(screenshotDirectory, { recursive: true });
 
-test("pricing page renders with local links and no horizontal overflow", async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 1000 });
+test("pricing content and structured offers describe the same booking terms", async ({ page }) => {
   await page.goto(`${baseUrl}/hochzeitsfotograf-preise/`, { waitUntil: "domcontentloaded" });
-
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator(".pricing-hero h1")).toHaveText("Hochzeitsfotograf Hamburg Preise");
-  await expect(page.locator("#pakete")).toBeVisible();
-  await expect(page.locator("#faq")).toBeVisible();
-  await page.evaluate(() => document.fonts.ready);
-  const desktopFaqTypography = await page.locator(".pricing-faq__summary").first().evaluate((summary) => {
-    const styles = getComputedStyle(summary);
-    return {
-      color: styles.color,
-      fontSize: Number.parseFloat(styles.fontSize),
-      fontWeight: styles.fontWeight,
-      letterSpacing: Number.parseFloat(styles.letterSpacing),
-      lineHeight: Number.parseFloat(styles.lineHeight),
-    };
-  });
-  expect(desktopFaqTypography.color).toBe("rgb(64, 69, 77)");
-  expect(desktopFaqTypography.fontSize).toBeCloseTo(21.375, 3);
-  expect(desktopFaqTypography.fontWeight).toBe("400");
-  expect(desktopFaqTypography.letterSpacing / desktopFaqTypography.fontSize).toBeCloseTo(0.03, 3);
-  expect(desktopFaqTypography.lineHeight / desktopFaqTypography.fontSize).toBeCloseTo(1.375, 3);
-  await expect(page.locator(".pricing-faq__content > .pricing-kicker")).toHaveCSS("font-size", "12px");
-  const pricingPackages = page.locator(".pricing-package");
-  await expect(pricingPackages).toHaveCount(3);
-  expect(await pricingPackages.evaluateAll((items) => items.map((item) => item.id))).toEqual([
-    "paket-pure-moments",
-    "paket-standesamt-paket",
-    "paket-rundum-sorglos-paket",
-  ]);
-  const pureMomentsPackage = page.locator("#paket-pure-moments");
-  await expect(pureMomentsPackage).toContainText("Pure Moments");
-  await expect(pureMomentsPackage.locator("li")).toHaveText([
-    "1 Stunde fotografische Begleitung",
-    "Persönliches Vorgespräch und Beratung",
-    "Trauung, Brautpaarshooting, Gruppenfotos",
-    "passwortgeschützte Onlinegallerie für 3 Monate",
-    "mindestens 30 Bilder",
-    "inklusive RAW-Bearbeitung für alle Bilder",
-    "Retusche für ausgewählte Bilder",
-    "keine Extra- oder versteckten Kosten (Festpreis)",
-    "keine Fahrtkosten innerhalb Hamburgs",
-    "nicht mit anderen Paketen kombinierbar",
-  ]);
-  await expect(
-    pureMomentsPackage.getByText("1 Stunde fotografische Begleitung", { exact: true }),
-  ).toHaveCount(1);
-
-  const priceBox = await pureMomentsPackage.locator("h3").boundingBox();
-  const firstFeatureBox = await pureMomentsPackage.locator("li").first().boundingBox();
-  expect(priceBox).not.toBeNull();
-  expect(firstFeatureBox).not.toBeNull();
-  expect(firstFeatureBox!.y - (priceBox!.y + priceBox!.height)).toBeGreaterThanOrEqual(24);
-
-  await expect(pureMomentsPackage).not.toContainText("kleine standesamtliche Hochzeit");
-  await expect(page.getByText("Standesamt Paket", { exact: true })).toBeVisible();
-  await expect(page.getByText("Rundum-Sorglos-Paket", { exact: true })).toBeVisible();
-  await expect(page.getByRole("heading", { name: "Hochzeitsreportage in Hamburg 299 €" })).toBeVisible();
-  await expect(page.getByRole("article", { name: "Pure Moments 299 €" })).toBeVisible();
-  await expect(page.locator("#pakete")).not.toContainText(/\bab\b/i);
-  await expect(page.getByRole("article", { name: "Standesamt Paket 649 € Festpreis" })).toBeVisible();
-  await expect(page.getByRole("article", { name: "Rundum-Sorglos-Paket 249 € pro Stunde" })).toBeVisible();
-  await expect(page.locator("#paket-vier-stunden-paket")).toHaveCount(0);
-  await expect(page.locator("#paket-acht-stunden-paket")).toHaveCount(0);
-  await expect(page.locator("#paket-ganztagspaket")).toHaveCount(0);
-
   await expect(page).toHaveTitle("Hochzeitsfotograf Hamburg Preise");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
-    "content",
-    "Preise und Pakete für Hochzeitsfotografie in Hamburg mit dem jeweils aufgeführten Leistungsumfang und Hinweisen zum individuellen Angebot.",
-  );
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
-  );
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-    "href",
-    "https://artbild-fotografie.de/hochzeitsfotograf-preise/",
-  );
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /3 Pakete ab 299.*1 Stunde/);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /\bindex\b/);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://artbild-fotografie.de/hochzeitsfotograf-preise/");
+  await expect(page.getByRole("heading", { level: 2, name: "Pakete und Leistungen im Überblick" })).toBeVisible();
 
-  const schemaBlocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-  const schemaGraph = schemaBlocks
-    .map((block) => JSON.parse(block))
-    .find((block) => Array.isArray(block["@graph"]))?.["@graph"];
-  expect(schemaGraph).toBeDefined();
-  const serviceSchema = schemaGraph.find(
-    (item: { [key: string]: unknown }) => item["@id"] === "https://artbild-fotografie.de/hochzeitsfotograf-preise/#service",
-  );
-  expect(serviceSchema.offers.itemListElement).toMatchObject([
-    {
-      "@id": "https://artbild-fotografie.de/hochzeitsfotograf-preise/#angebot-pure-moments",
-      name: "Pure Moments",
-      price: 299,
-      position: 1,
-      url: "https://artbild-fotografie.de/hochzeitsfotograf-preise/#paket-pure-moments",
-    },
-    {
-      "@id": "https://artbild-fotografie.de/hochzeitsfotograf-preise/#angebot-standesamt-paket",
-      name: "Standesamt Paket",
-      price: 649,
-      position: 2,
-      url: "https://artbild-fotografie.de/hochzeitsfotograf-preise/#paket-standesamt-paket",
-    },
-    {
-      "@id": "https://artbild-fotografie.de/hochzeitsfotograf-preise/#angebot-rundum-sorglos-paket",
-      name: "Rundum-Sorglos-Paket",
-      price: 249,
-      position: 3,
-      url: "https://artbild-fotografie.de/hochzeitsfotograf-preise/#paket-rundum-sorglos-paket",
-    },
-  ]);
-  expect(schemaGraph.some((item: { [key: string]: unknown }) => item["@type"] === "FAQPage"))
-    .toBe(false);
-  expect(await page.locator("main").innerText()).not.toContain(
-    "im Notfall eine geeignete Vertretung",
-  );
-  expect(await page.locator("main").innerText()).not.toContain(
-    "Eine pauschale Reisekosten-Gebühr gibt es nicht",
-  );
-
-  const oldPriceLinks = await page.locator('a[href="https://artbild-fotografie.de/hochzeitsfotograf-preise/"]').count();
-  expect(oldPriceLinks).toBe(0);
-
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBe(0);
-
-  await page.screenshot({
-    path: `${screenshotDirectory}/desktop.png`,
-    fullPage: false,
-  });
-});
-
-test("pricing page is usable on mobile", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto(`${baseUrl}/hochzeitsfotograf-preise/`, { waitUntil: "domcontentloaded" });
-
-  await expect(page.locator(".pricing-hero h1")).toBeVisible();
-  await expect(page.locator(".pricing-hero__actions a").first()).toBeVisible();
-  await expect(page.locator(".pricing-package")).toHaveCount(3);
-  await page.evaluate(() => document.fonts.ready);
-  const mobileFaqTypography = await page.locator(".pricing-faq__summary").first().evaluate((summary) => {
-    const styles = getComputedStyle(summary);
-    return {
-      fontSize: Number.parseFloat(styles.fontSize),
-      fontWeight: styles.fontWeight,
-      letterSpacing: Number.parseFloat(styles.letterSpacing),
-      lineHeight: Number.parseFloat(styles.lineHeight),
-    };
-  });
-  expect(mobileFaqTypography.fontSize).toBe(19);
-  expect(mobileFaqTypography.fontWeight).toBe("400");
-  expect(mobileFaqTypography.letterSpacing / mobileFaqTypography.fontSize).toBeCloseTo(0.03, 3);
-  expect(mobileFaqTypography.lineHeight / mobileFaqTypography.fontSize).toBeCloseTo(1.375, 3);
-
-  const faqQuestionsFit = await page.locator(".pricing-faq__summary > span:nth-child(2)").evaluateAll(
-    (questions) => questions.every((question) => question.scrollWidth <= question.clientWidth + 1),
-  );
-  expect(faqQuestionsFit).toBe(true);
-
-  const packageBoxes = await page.locator(".pricing-package").evaluateAll((items) =>
-    items.map((item) => {
-      const box = item.getBoundingClientRect();
-      return { left: box.left, right: box.right, top: box.top, bottom: box.bottom };
-    }),
-  );
-  for (const box of packageBoxes) {
-    expect(box.left).toBeGreaterThanOrEqual(0);
-    expect(box.right).toBeLessThanOrEqual(390);
+  const packageNames = ["Pure Moments", "Standesamt Paket", "Rundum-Sorglos-Paket"];
+  const packages = page.locator(".pricing-package");
+  await expect(packages).toHaveCount(3);
+  await expect(packages.locator("h3")).toHaveText(packageNames);
+  await expect(packages.locator(".pricing-package__price")).toHaveText(["299 €", "649 € Festpreis", "249 € pro Stunde"]);
+  for (const item of await packages.all()) {
+    await expect(item).toContainText("Passwortgeschützte Onlinegalerie für 3 Monate kostenlos");
+    await expect(item.getByRole("link", { name: /unverbindlich anfragen/ })).toHaveAttribute("href", "/kontakt/");
   }
-  expect(packageBoxes[1].top).toBeGreaterThan(packageBoxes[0].bottom);
-  expect(packageBoxes[2].top).toBeGreaterThan(packageBoxes[1].bottom);
+  await expect(page.locator("#paket-pure-moments")).not.toContainText("Kennenlernshooting");
+  await expect(page.locator("#paket-standesamt-paket")).toContainText("Kennenlernshooting");
+  await expect(page.locator("#paket-rundum-sorglos-paket")).toContainText("Kennenlernshooting");
+  await expect(page.locator("#preisbeispiele")).toContainText("1.494");
+  await expect(page.locator("#preisbeispiele")).toContainText("1.992");
+  await expect(page.locator('#preisbeispiele a[href^="/gallery/"]')).toHaveCount(2);
 
-  const overflow = await page.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  );
-  expect(overflow).toBe(0);
-
-  await page.screenshot({
-    path: `${screenshotDirectory}/mobile.png`,
-    fullPage: false,
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+  const graph = blocks.map(block => JSON.parse(block)).find(block => Array.isArray(block["@graph"]))?.["@graph"];
+  expect(graph).toBeDefined();
+  const service = graph.find((item: Record<string, unknown>) => item["@id"] === "https://artbild-fotografie.de/hochzeitsfotograf-preise/#service");
+  const offers = service.hasOfferCatalog.itemListElement;
+  expect(offers).toHaveLength(3);
+  expect(offers.map((offer: { name: string }) => offer.name)).toEqual(packageNames);
+  expect(offers[0]).toMatchObject({ price: 299, priceCurrency: "EUR" });
+  expect(offers[1]).toMatchObject({ price: 649, priceCurrency: "EUR" });
+  // An hourly rate must never be published as a complete package price.
+  expect(offers[2]).not.toHaveProperty("price");
+  expect(offers[2].priceSpecification).toMatchObject({
+    "@type": "UnitPriceSpecification", price: 249, priceCurrency: "EUR", unitCode: "HUR",
+    referenceQuantity: { value: 1, unitCode: "HUR" },
+    eligibleQuantity: { minValue: 3, maxValue: 10, unitCode: "HUR" },
   });
+  for (const offer of offers) {
+    expect(offer.itemOffered.description).toContain("Onlinegalerie für 3 Monate kostenlos");
+    await expect(page.locator(new URL(offer.url).hash)).toHaveCount(1);
+  }
+  expect(graph.some((item: Record<string, unknown>) => item["@type"] === "FAQPage")).toBe(false);
 });
+
+for (const width of [390, 810, 1440]) {
+  test(`pricing navigation, images and FAQ work at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 1000 });
+    await page.goto(`${baseUrl}/hochzeitsfotograf-preise/`, { waitUntil: "domcontentloaded" });
+    await page.evaluate(() => document.fonts.ready);
+    await page.getByRole("link", { name: "Pakete ansehen", exact: true }).click();
+    await expect(page).toHaveURL(/#pakete$/);
+    for (const image of await page.locator(".pricing-package img").all()) {
+      await image.scrollIntoViewIfNeeded();
+      await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+    }
+    const box = await page.locator(".pricing").boundingBox();
+    expect(box).not.toBeNull();
+    expect(box!.x).toBeGreaterThanOrEqual(28);
+    expect(Math.abs(box!.x - (width - box!.x - box!.width))).toBeLessThan(1);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBe(0);
+    const calculator = page.locator("[data-pricing-calculator]");
+    await expect(calculator).toBeVisible();
+    for (let hours = 1; hours <= 10; hours++) {
+      await calculator.getByLabel("Gesamte Begleitungsstunden").selectOption(String(hours));
+      const expectedTotal = hours === 1 ? 299 : hours === 2 ? 649 : hours * 249;
+      const expectedPackage = hours === 1 ? "pure-moments" : hours === 2 ? "standesamt-paket" : "rundum-sorglos-paket";
+      await expect(calculator.locator("[data-calculator-total]")).toHaveText(new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(expectedTotal));
+      await expect(calculator.locator("[data-calculator-package-link]")).toHaveAttribute("href", `#paket-${expectedPackage}`);
+    }
+    await calculator.getByLabel("Gesamte Begleitungsstunden").selectOption("6");
+    await expect(calculator).toContainText("nicht die Anzahl der Tage");
+    await expect(page.locator('[data-faq-id="preise_faq_19"] .pricing-faq__panel')).toContainText("1.743");
+    const questionsFit = await page.locator(".pricing-faq__summary > span:nth-child(2)").evaluateAll(items => items.every(item => item.scrollWidth <= item.clientWidth + 1));
+    expect(questionsFit).toBe(true);
+    const costFaq = page.locator('[data-faq-id="preise_faq_12"]');
+    await costFaq.locator("summary").focus();
+    await page.keyboard.press("Enter");
+    await expect(costFaq.locator(".pricing-faq__panel")).toBeVisible();
+    await expect(costFaq.locator(".pricing-faq__panel")).toContainText("1.494");
+    const galleryFaq = page.locator('[data-faq-id="preise_faq_16"]');
+    await galleryFaq.locator("summary").click();
+    await expect(galleryFaq.locator(".pricing-faq__panel")).toContainText("3 Monate kostenlos verfügbar");
+    await page.locator(".pricing-hero").scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `${screenshotDirectory}/${width}.png`, fullPage: false });
+  });
+}

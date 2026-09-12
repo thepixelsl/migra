@@ -7,7 +7,7 @@ import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
 import { googleReviews } from "../../data/reviews";
-import { weddingPackages } from "../../data/weddingPackages";
+import { weddingBookingHoursRule, weddingGalleryMonths, weddingPackages } from "../../data/weddingPackages";
 import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
@@ -21,6 +21,57 @@ const title = "Hochzeitsfotograf Hamburg Preise";
 const description =
   "Preise und Pakete für Hochzeitsfotografie in Hamburg mit dem jeweils aufgeführten Leistungsumfang und Hinweisen zum individuellen Angebot.";
 const primaryImage = new URL(heroImage.src, siteUrl).href;
+const [pureMoments, standesamtPackage, reportagePackage] = weddingPackages;
+const formatPrice = (value: number) =>
+  new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
+const calculatorOptions = Array.from({ length: 10 }, (_, index) => {
+  const hours = index + 1;
+  const item = weddingPackages
+    .filter((item) => hours >= item.minimumHours && hours <= item.maximumHours)
+    .sort((a, b) => (a.billingUnit === "hour" ? hours * a.priceValue : a.priceValue)
+      - (b.billingUnit === "hour" ? hours * b.priceValue : b.priceValue))[0];
+  return {
+    hours,
+    package: item,
+    total: item.billingUnit === "hour" ? hours * item.priceValue : item.priceValue,
+    calculation: item.billingUnit === "hour"
+      ? `${hours} Stunden × ${formatPrice(item.priceValue)}`
+      : `Festpreis für ${hours === 1 ? "1 Stunde" : `${hours} Stunden`}`,
+  };
+});
+
+const pricingExamples = [
+  {
+    id: "standesamt",
+    title: "Standesamt und Paarbilder",
+    hours: standesamtPackage.minimumHours,
+    package: standesamtPackage,
+    total: standesamtPackage.priceValue,
+    calculation: "Festpreis für das Standesamt Paket",
+    steps: [
+      "Ankommen, Trauung und Gratulationen",
+      "Gemeinsame Bilder mit Familie und Gästen",
+      "Paarshooting in der Nähe des Trauorts",
+    ],
+    galleryHref: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+    galleryLabel: "Hochzeitsreportage aus Altona ansehen",
+  },
+  {
+    id: "reportage",
+    title: "Vom Getting Ready bis zum Empfang",
+    hours: 6,
+    package: reportagePackage,
+    total: 6 * reportagePackage.priceValue,
+    calculation: `6 Stunden × ${formatPrice(reportagePackage.priceValue)}`,
+    steps: [
+      "Vorbereitungen und erste Portraits",
+      "Trauung, Gratulationen und Empfang",
+      "Paarshooting und Gruppenbilder",
+    ],
+    galleryHref: "/gallery/traumhochzeit-in-hamburg/",
+    galleryLabel: "Hochzeitsreportage im Hotel Atlantic ansehen",
+  },
+];
 
 const packageMedia = {
   "pure-moments": {
@@ -35,7 +86,7 @@ const packageMedia = {
   },
   "rundum-sorglos-paket": {
     image: reportageImage,
-    alt: "Brautpaarshooting als Beispiel für eine längere Hochzeitsreportage",
+    alt: "Braut mit Blumenstrauß vor dem Eiffelturm in Paris",
     imageOrientation: "portrait",
   },
 } as const;
@@ -59,7 +110,7 @@ const packageOffers = packages.map((item) => ({
     "@id": `${pageUrl}#leistung-${item.id}`,
     name: item.name,
     serviceType: item.serviceType,
-    description: `${item.intro} Dauer: ${item.duration}. Enthalten sind: ${item.features.join(", ")}.`,
+    description: `${item.intro} Dauer: ${item.duration}. ${weddingBookingHoursRule} Enthalten sind: ${item.features.join(", ")}.`,
     provider: {
       "@id": `${siteUrl}/#organization`,
     },
@@ -72,92 +123,64 @@ const packageOffers = packages.map((item) => ({
 
 const faqItems = [
   {
-    question: "Was berechnest Du für die Anfahrt in Hamburg?",
-    answer:
-      "Innerhalb Hamburgs ist die Anfahrt kostenlos.",
+    id: "preise_faq_12",
+    question: "Was kostet ein Hochzeitsfotograf in Hamburg bei Artbild?",
+    answer: `Pure Moments umfasst 1 Stunde Begleitung für ${formatPrice(pureMoments.priceValue)}. Das Standesamt Paket kostet ${formatPrice(standesamtPackage.priceValue)} für 2 Stunden. Längere Reportagen von ${reportagePackage.minimumHours} bis ${reportagePackage.maximumHours} Stunden berechne ich mit ${formatPrice(reportagePackage.priceValue)} pro Stunde. Sechs Stunden kosten damit ${formatPrice(6 * reportagePackage.priceValue)}, acht Stunden ${formatPrice(8 * reportagePackage.priceValue)}. Die enthaltenen Leistungen findet ihr direkt beim jeweiligen Paket.`,
   },
   {
-    question: "Welche Fahrtkosten berechnest Du für die Anfahrt?",
-    answer:
-      "Ich berechne die tatsächlich angefallenen Kosten. Ein Pauschale rechne ich nicht ab.",
+    id: "preise_faq_17",
+    question: "Wie viele Stunden passen zu unserer Hochzeit?",
+    answer: "Für eine kurze Begleitung kommt Pure Moments mit einer Stunde infrage. Zwei Stunden geben euch mehr Zeit für die Trauung, Gratulationen und Paarbilder. Wenn ihr auch Vorbereitungen, Empfang oder Feier festhalten möchtet, planen wir eine längere Reportage. Entscheidend sind eure gewünschten Momente und die Wege zwischen den Orten. Das besprechen wir vor der Buchung gemeinsam.",
   },
   {
-    question: "Berechnest Du die Fahrzeit als Arbeitszeit?",
-    answer:
-      "Nein, die Fahrzeit berechne ich nicht als Arbeitszeit. Hierfür entstehen keine zusätzlichen Kosten.",
+    id: "preise_faq_19",
+    question: "Wie wird der Preis berechnet, wenn wir an zwei Tagen heiraten?",
+    answer: `Es zählen eure gesamten Begleitungsstunden, unabhängig von der Anzahl der Tage. Für diese Stundenzahl wird automatisch das günstigste passende Paket gewählt. Zum Beispiel ergeben eine Stunde Standesamt und sechs Stunden freie Trauung zusammen sieben Stunden: ${formatPrice(7 * reportagePackage.priceValue)} im Rundum-Sorglos-Paket. Pakete sind nicht miteinander kombinierbar. Reisekosten außerhalb Hamburgs stimmen wir vorab ab.`,
   },
   {
-    question:
-      "Bearbeitest Du wirklich sämtliche Bilder ohne Extrakosten, auch wenn zum Beispiel AI Credits genutzt werden müssten?",
-    answer:
-      "Ja alle Bilder erhalten eine dezente Bearbeitung, sowie die Korrektur kleinerer Schönheitsfehler, wie zum Beispiel ein Fussel auf dem Anzug oder plötzlich aufgetretene Hautunreinheiten. Auch AI Credits sind bereits eingepreist.",
+    id: "preise_faq_18",
+    question: "Ist ein Kennenlernshooting enthalten?",
+    answer: "Im Standesamt Paket und im Rundum-Sorglos-Paket ist ein Kennenlernshooting enthalten. Dabei erlebt ihr, wie ich arbeite, und könnt euch vor der Hochzeit mit dem Fotografiertwerden vertraut machen. Pure Moments enthält ein persönliches Vorgespräch, aber kein Kennenlernshooting.",
   },
   {
-    question:
-      "Wir möchten Verona, Italien heiraten und die Kosten pro Flug betragen 179,89€. Das Shooting dauert 4 Stunden und der Rückflug ist am selben Tag möglich. Benötigst Du dann noch eine Übernachtung?",
-    answer:
-      "Nein, für ein 4 Stunden Paket mit An- und Abreise am selben Tag wird keine Übernachtung benötigt. Die Reisekosten sind immer die tatsächlich entstandenen Kosten.",
+    id: "preise_faq_4",
+    question: "Ist die Bearbeitung unserer Bilder im Preis enthalten?",
+    answer: "Ja. Die Bildbearbeitung ist im Paketpreis enthalten: Ich stimme Farben, Helligkeit und Kontraste aufeinander ab und korrigiere kleine störende Details. Retusche einzelner ausgewählter Bilder besprechen wir gemeinsam. Für die im Paket enthaltene Bearbeitung entstehen euch keine zusätzlichen Kosten.",
   },
   {
-    question:
-      "Manchmal kommt das Leben oder auch ein Wirbelsturm dazwischen, der das Dach abgedeckt hat. Können wir Dein Honorar auch in Raten zahlen?",
-    answer:
-      "Ja auch Ratenzahlung mit Paypal Plus ist möglich.",
+    id: "preise_faq_16",
+    question: "Wie bekommen wir unsere Bilder und wie lange bleibt die Galerie verfügbar?",
+    answer: `Ihr erhaltet eure Bilder in einer passwortgeschützten Onlinegalerie bei PicDrop. Die Galerie ist bei allen Paketen ${weddingGalleryMonths} Monate kostenlos verfügbar. Ladet eure Bilder innerhalb dieser Zeit herunter und sichert sie für euch.`,
   },
   {
-    question: "Was passiert wenn Du erkrankst und unsere Hochzeit nicht fotografieren kannst?",
-    answer:
-      "Ich bin gut vernetzt und werde einen zuverlässigen Ersatzfotografen für Eure Hochzeit finden.",
+    id: "preise_faq_1",
+    question: "Welche Fahrtkosten kommen hinzu?",
+    answer: "Innerhalb Hamburgs ist die Anfahrt bei allen Paketen enthalten. Außerhalb Hamburgs berechne ich die tatsächlich anfallenden Reisekosten, keine pauschale Fahrtgebühr. Die Fahrzeit stelle ich nicht als Arbeitszeit in Rechnung. Die Reisekosten stimmen wir vor der Buchung ab.",
   },
   {
-    question:
-      "Wir möchten auch ein professionelles Video von unserer Hochzeit haben, kennst Du gute Videografen?",
-    answer:
-      "Ja, ich habe sehr zuverlässige und qualitativ gute Videografen in meinem Netzwerk.",
+    id: "preise_faq_15",
+    question: "Können wir die Begleitung spontan verlängern?",
+    answer: "Sprecht mich gerne darauf an. Wenn es keine Folgebuchung gibt, können wir die Begleitung verlängern. Den zusätzlichen Zeitraum und den Preis vereinbaren wir miteinander. Für wichtige Programmpunkte planen wir am besten schon im Vorgespräch genügend Zeit ein.",
   },
   {
-    question:
-      "Was passiert wenn unsere Hochzeit nicht stattfinden kann, obwohl wir Dich schon per Vertrag gebucht haben. Müssen wir dann den vollen Preis zahlen?",
-    answer:
-      "Nein, findet die Hochzeit nicht statt, müsst Ihr nicht den vollen Preis zahlen. Nur bereits entstandene Kosten,  z. B. Flugbuchungen, nicht stornierbare Übernachtungen, Anzahlungen müssen getragen werden)",
+    id: "preise_faq_7",
+    question: "Was passiert, wenn du krank wirst?",
+    answer: "Ich bin gut vernetzt und werde einen zuverlässigen Ersatzfotografen für eure Hochzeit finden.",
   },
   {
-    question:
-      "Wir möchten schöne Bilder, in der Dämmerung mit Lichterketten von unserer Hochzeitsfeier.",
-    answer:
-      "Ich kann Sonnenrichtung, Zeiten für Sonnenauf- und Untergang für jedes Datum und jeden beliebigen Ort entsprechend vorhersagen. Wenn Ihr oder die Hochzeitsplanung mich in die Lichtplanung mit einbezieht,  könnt Ihr richtig tolle Bilder im Sonnenuntergang mit toller Stimmung erhalten.",
+    id: "preise_faq_9",
+    question: "Was passiert, wenn unsere Hochzeit nicht stattfinden kann?",
+    answer: "Wenn eure Hochzeit nicht stattfindet, müsst ihr nicht das volle Honorar bezahlen. Bereits entstandene Kosten, etwa für gebuchte Flüge, nicht stornierbare Übernachtungen oder Anzahlungen, müssen übernommen werden.",
   },
   {
-    question: "Was kostet eine Hochzeit?",
-    answer:
-      "Entscheidend ist die Anzahl der Gäste. Kostenfaktoren sind das Catering (Buffet mit Selbstbedienung oder Service am Sitzplatz), die Location (evtl. noch die Reisekosten bis zur Location), die Dekoration und Papeterie sowie die Kosten für Dienstleister Kleider und Anzug und für eine Hochzeitsreise. Schnell übersteigen die Kosten 10.000€. Vorabzahlungen können den Betrag erträglicher splitten, so dass die Kostenlast nicht auf einmal anfällt.",
+    id: "preise_faq_13",
+    question: "Welche Zahlungsarten sind möglich?",
+    answer: "Ihr könnt per Überweisung, bar oder mit PayPal Plus bezahlen. Über PayPal Plus ist auch Ratenzahlung möglich.",
   },
   {
-    question: "Was kostet ein Hochzeitsfotograf?",
-    answer:
-      "Es ist bei uns üblich, dass das Brautpaar lediglich die fotografische Arbeit vor Ort bezahlt. Die Bildbearbeitung, das Bereitstellen der Bilder und die ganze nachträgliche Arbeit, die anfällt um die Hochzeitsbilder entsprechend bereitzustellen sind dort bereits eingepreist. Die Kosten steigen jedoch momentan schnell, in der Regel durch EU-Verordnungen im Datenschutz sowie mit der geplanten Rentenversicherungspflicht aller Einkünfte.",
-  },
-  {
-    question: "Welche Zahlungsarten akzeptierst Du?",
-    answer:
-      "Barzahlung, Überweisung, PayPal Plus werden akzeptiert.",
-  },
-  {
-    question:
-      "Was passiert wenn wir Dich den ganzen Tag bis 22:00Uhr gebucht haben und die Torte verzögert sich um über 1 Stunde durch Verzögerungen, auf die wir keinen Einfluss hatten?",
-    answer:
-      "Niemals würde ich einfach abhauen und Euch im Regen stehen lassen, egal aus welchem Grund. Es ist eine Frage von Vertrauen und hanseatischer Redlichkeit einen so wichtigen Moment festzuhalten und nicht einfach die Hochzeit zu verlassen weil die Zeit abgelaufen war.",
-  },
-  {
-    question:
-      "Was passiert wenn wir ein 2 Stunden Paket gebucht haben aber nun 4 Stunden vor Ort möchten?",
-    answer:
-      "Fragt mich einfach vor Ort. Wenn es keine Folgebuchung gibt, können wir ganz unkompliziert die Zeit erweitern.",
-  },
-  {
-    question: "Wie übergibst Du uns die Bilder?",
-    answer:
-      "Ihr erhaltet die Bilder in einer für Euch drei Monate lang kostenlosen, passwortgeschützten Online Galerie der Firma Picdrop aus Berlin.",
+    id: "preise_faq_8",
+    question: "Kannst du uns auch einen Videografen empfehlen?",
+    answer: "Ja, ich arbeite mit zuverlässigen Videografen zusammen und empfehle euch gerne einen passenden Kontakt. Eine Videobegleitung ist in den Fotopaketen nicht enthalten.",
   },
 ];
 
@@ -199,7 +222,7 @@ const schemaGraph = {
         "@id": `${pageUrl}#service`,
       },
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-08-18T00:00:00+02:00",
+      dateModified: "2026-09-12T00:00:00+02:00",
       inLanguage: "de",
       primaryImageOfPage: {
         "@type": "ImageObject",
@@ -302,11 +325,15 @@ const schemaGraph = {
         <header class="pricing-hero">
           <div class="pricing-hero__copy">
             <p class="pricing-kicker">Hochzeitsfotograf Hamburg · Preise & Pakete</p>
-            <h1>{title}</h1>
+            <h1>Hochzeitsfotograf <span>Hamburg Preise</span></h1>
             <p>
-              Hier findet ihr drei Pakete mit dem jeweils aufgeführten Preis und
-              Leistungsumfang. Für einen abweichenden Ablauf erhaltet ihr ein
-              individuelles Angebot vor der Buchung.
+              Ob standesamtliche Trauung oder längere Hochzeitsreportage: Gemeinsam
+              planen wir, welche Momente ich für euch festhalte. Hier seht ihr die
+              Preise, die enthaltenen Leistungen und Beispiele für euren Tag.
+            </p>
+            <p class="pricing-hero__prices">
+              1 Stunde: {formatPrice(pureMoments.priceValue)} · 2 Stunden: {formatPrice(standesamtPackage.priceValue)}<br />
+              3–10 Stunden: {formatPrice(reportagePackage.priceValue)} pro Stunde
             </p>
             <div
               class="pricing-hero__actions"
@@ -346,12 +373,12 @@ const schemaGraph = {
             <Image
               src={heroImage}
               widths={[520, 760, 1040, 1384]}
-              sizes="(max-width: 760px) 100vw, 48vw"
+              sizes="(max-width: 620px) calc(100vw - 56px), (max-width: 1099px) 400px, 460px"
               format="webp"
               quality={88}
               loading="eager"
               fetchpriority="high"
-              alt="Braut bei einer Hochzeitsreportage in Hamburg"
+              alt="Brautpaar im Gegenlicht bei einer Hochzeitsreportage"
             />
           </figure>
         </header>
@@ -367,37 +394,42 @@ const schemaGraph = {
           data-position="after_hero"
         >
           <a href="#pakete" data-track-event="cta_click" data-cta-id="pricing_toc_packages" data-cta-type="anchor_navigation">Pakete</a>
+          <a href="#preisbeispiele" data-track-event="cta_click" data-cta-id="pricing_toc_examples" data-cta-type="anchor_navigation">Preisrechner & Beispiele</a>
           <a href="#enthalten" data-track-event="cta_click" data-cta-id="pricing_toc_included" data-cta-type="anchor_navigation">Enthaltene Leistungen</a>
           <a href="#faq" data-track-event="cta_click" data-cta-id="pricing_toc_faq" data-cta-type="anchor_navigation">FAQ</a>
           <a href="#anfrage" data-track-event="contact_click" data-cta-id="pricing_toc_contact" data-cta-type="anchor_navigation">Anfrage</a>
         </nav>
 
         <section class="pricing-intro" aria-labelledby="pricing-intro-title">
-          <p class="pricing-kicker">Planbare Hochzeitsfotografie</p>
-          <h2 id="pricing-intro-title">Was ist im Preis enthalten?</h2>
+          <div>
+            <p class="pricing-kicker">Persönlich begleitet</p>
+            <h2 id="pricing-intro-title">Ihr wisst vorab, was euch erwartet.</h2>
+          </div>
           <div class="pricing-copy">
             <p>
-              Es gibt keine versteckten Kosten. Für sämtliche Bilder, ist die
-              RAW-Bearbeitung aller Bilder bereits im Preis enthalten. Ihr müsst
-              Euch also später nicht für oder gegen ein Bild entscheiden und die
-              Bearbeitung der Bilder ändert auch nicht den vereinbarten Festpreis.
+              Ich bin York. Im persönlichen Vorgespräch erzählt ihr mir von eurer
+              Hochzeit und davon, welche Bilder euch wichtig sind. Daraus ergibt
+              sich die passende Begleitung mit einem vereinbarten Gesamtpreis.
             </p>
             <p>
-              Wenn Bilder gedruckt werden sollen so berate ich Euch gerne und führe
-              auch wenn benötigt, die Farbkalibrierung (Colorproof) für die
-              Druckvorbereitung für die zu druckenden Bilder durch. Für Euch ist
-              dieser Extraservice im Preis mit inbegriffen.
+              Die Bildbearbeitung, die Anfahrt innerhalb Hamburgs und eure
+              passwortgeschützte Onlinegalerie für {weddingGalleryMonths} Monate
+              sind in jedem Paket enthalten. Die Galerie ist in dieser Zeit
+              kostenlos verfügbar. Bei Hochzeiten außerhalb Hamburgs stimmen wir
+              die Reisekosten vor der Buchung ab.
             </p>
+            <a class="pricing-text-link" href="/about/">Mehr über mich und meine Arbeitsweise</a>
           </div>
         </section>
 
         <section class="pricing-packages" id="pakete" aria-labelledby="packages-title">
           <div class="pricing-section-heading">
             <p class="pricing-kicker">Pakete</p>
-            <h2 id="packages-title">Hochzeitsreportage in Hamburg 299 €</h2>
+            <h2 id="packages-title">Pakete und Leistungen im Überblick</h2>
+            <p>{weddingBookingHoursRule}</p>
           </div>
           <div class="pricing-package-grid">
-            {packages.map((item, index) => (
+            {packages.map((item) => (
               <article
                 class={`pricing-package is-${item.imageOrientation}`}
                 id={`paket-${item.id}`}
@@ -409,21 +441,21 @@ const schemaGraph = {
                   <Image
                     src={item.image}
                     widths={[360, 520, 760]}
-                    sizes="(max-width: 760px) 100vw, 31vw"
+                    sizes="(max-width: 620px) calc(100vw - 64px), (max-width: 1099px) 34vw, 340px"
                     format="webp"
                     quality={88}
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : "auto"}
+                    loading="lazy"
                     alt={item.alt}
                   />
                 </figure>
                 <div class="pricing-package__body">
-                  <p id={`paket-${item.id}-name`}>{item.name}</p>
-                  <h3 id={`paket-${item.id}-title`}>{item.priceLabel}</h3>
+                  <h3 id={`paket-${item.id}-name`}>{item.name}</h3>
+                  <p class="pricing-package__price" id={`paket-${item.id}-title`}>{item.priceLabel}</p>
                   {item.showIntro !== false && <p id={`paket-${item.id}-intro`}>{item.intro}</p>}
                   <ul aria-label={`Enthaltene Leistungen: ${item.name}`}>
                     {item.features.map((feature) => <li>{feature}</li>)}
                   </ul>
+                  <a class="pricing-package__contact" href="/kontakt/" aria-label={`${item.name} unverbindlich anfragen`}>Unverbindlich anfragen <span aria-hidden="true">→</span></a>
                 </div>
               </article>
             ))}
@@ -437,12 +469,84 @@ const schemaGraph = {
             googleReviews.freddyNa,
           ]}
           sectionId="preise_review_manuel_r"
-          heading="Sicher vor der Kamera und gut vorbereitet"
+          heading="Wie Paare die Begleitung erlebt haben"
           contentTopic="hochzeitspakete"
           userIntent="leistung_einschaetzen"
           journeyStage="vergleich"
           position="after_pricing_packages"
         />
+
+        <section class="pricing-examples" id="preisbeispiele" aria-labelledby="examples-title">
+          <div class="pricing-section-heading">
+            <p class="pricing-kicker">Euer Ablauf, euer Gesamtpreis</p>
+            <h2 id="examples-title">Was kostet eure fotografische Begleitung?</h2>
+            <p>
+              Diese Beispiele helfen euch bei der Planung einer Hochzeit in Hamburg.
+              Wie viel Zeit ihr für einzelne Momente und Wege braucht, stimmen wir
+              gemeinsam ab. Die verlinkten Reportagen zeigen meine Arbeit; die
+              Beispielpreise beziehen sich auf die hier beschriebenen Abläufe.
+            </p>
+          </div>
+          <div class="pricing-calculator" data-pricing-calculator hidden>
+            <div class="pricing-calculator__input">
+              <p class="pricing-kicker">Preisrechner</p>
+              <h3>Wie lange darf ich euch begleiten?</h3>
+              <label for="pricing-duration">Gesamte Begleitungsstunden</label>
+              <select id="pricing-duration" aria-describedby="pricing-calculator-hint">
+                {calculatorOptions.map((option) => (
+                  <option
+                    value={option.hours}
+                    selected={option.hours === 6}
+                    data-total={option.total}
+                    data-package-name={option.package.name}
+                    data-package-id={option.package.id}
+                    data-calculation={option.calculation}
+                  >{option.hours === 1 ? "1 Stunde" : `${option.hours} Stunden`}</option>
+                ))}
+              </select>
+              <p id="pricing-calculator-hint">Zählt alle gewünschten Begleitungsstunden zusammen, auch an unterschiedlichen Tagen. Der Rechner wählt automatisch das günstigste passende Paket.</p>
+            </div>
+            <div class="pricing-calculator__result">
+              <output for="pricing-duration" aria-live="polite" aria-atomic="true">
+                <span class="pricing-calculator__label">Gesamtpreis in Hamburg</span>
+                <strong data-calculator-total>{formatPrice(6 * reportagePackage.priceValue)}</strong>
+                <span data-calculator-package>{reportagePackage.name}</span>
+                <span data-calculator-calculation>{`6 Stunden × ${formatPrice(reportagePackage.priceValue)}`}</span>
+              </output>
+              <p>Bildbearbeitung, Anfahrt in Hamburg und Onlinegalerie für {weddingGalleryMonths} Monate inklusive.</p>
+              <a data-calculator-package-link href={`#paket-${reportagePackage.id}`}>Alle Leistungen dieses Pakets ansehen</a>
+            </div>
+            <p class="pricing-calculator__note">Es zählt die Gesamtstundenzahl, nicht die Anzahl der Tage. Pakete sind nicht miteinander kombinierbar. Außerhalb Hamburgs kommen die vorab vereinbarten Reisekosten hinzu. Termine und Ablauf stimmen wir persönlich ab.</p>
+          </div>
+          <div class="pricing-example-grid">
+            {pricingExamples.map((example) => (
+              <article class="pricing-example" aria-labelledby={`beispiel-${example.id}-title`}>
+                <p class="pricing-kicker">{example.hours} Stunden Begleitung</p>
+                <h3 id={`beispiel-${example.id}-title`}>{example.title}</h3>
+                <p class="pricing-example__price">{formatPrice(example.total)} <span>Gesamtpreis</span></p>
+                <p class="pricing-example__calculation">{example.calculation}</p>
+                <p>Möglicher Ablauf:</p>
+                <ul>
+                  {example.steps.map((step) => <li>{step}</li>)}
+                </ul>
+                <div class="pricing-example__links">
+                  <a href={`#paket-${example.package.id}`}>Enthaltene Paketleistungen ansehen</a>
+                  <a href={example.galleryHref}>{example.galleryLabel}</a>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p class="pricing-examples__note">
+            Ihr möchtet auch einen Teil der Feier begleiten lassen? Acht Stunden
+            kosten im Rundum-Sorglos-Paket {formatPrice(8 * reportagePackage.priceValue)}
+            {` (8 × ${formatPrice(reportagePackage.priceValue)})`}. Welche Momente in
+            diesen Zeitraum fallen, richtet sich nach eurem Tagesablauf. Die
+            Anfahrt innerhalb Hamburgs, die Bildbearbeitung und die Onlinegalerie
+            für {weddingGalleryMonths} Monate sind bei allen Beispielen enthalten.
+          </p>
+        </section>
+
+
 
         <section class="pricing-split" id="enthalten" aria-labelledby="included-title">
           <div>
@@ -451,16 +555,17 @@ const schemaGraph = {
           </div>
           <div class="pricing-copy">
             <p>
-              Die RAW Bildbearbeitung ist im Preis enthalten. Dies beinhaltet konkret
-              die Farbharmonisierung, Anpassung von Helligkeit, Licht und Schatten,
-              groben Störungen, wie dem Entfernen von Pickeln oder punktuellen
-              Hautunreinheiten.
+              Eure Bilder erhalten eine aufeinander abgestimmte Bearbeitung von
+              Farben, Helligkeit und Kontrasten. Kleine störende Details wie ein
+              Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit korrigiere
+              ich dabei mit. Diese Arbeit ist im Preis enthalten.
             </p>
             <p>
-              Die Retusche ist für ausgewählte Bilder möglich. Retusche erfolgt zwar
-              durch KI unterstützt (auf Wunsch auch gänzlich ohne KI) jedoch immer noch
-              weitestgehend manuell. Durch die dadurch garantierte Konsistenz können nur
-              bestimmte, ausgewählte Bilder hochwertig retuschiert werden.
+              Wünsche zur Retusche einzelner Bilder besprechen wir gemeinsam.
+              Ich arbeite dabei überwiegend manuell und bei Bedarf mit
+              KI-Unterstützung; auf Wunsch auch vollständig ohne KI. Wenn ihr
+              Bilder drucken lassen möchtet, berate ich euch zur Druckvorbereitung.
+              Auch dieser Service ist enthalten.
             </p>
           </div>
         </section>
@@ -479,7 +584,7 @@ const schemaGraph = {
           <figure class="pricing-faq__media">
             <Image
               src={reportageImage}
-              alt="Brautpaarshooting als Beispiel für eine Hochzeitsreportage mit klaren Preisen"
+              alt="Braut mit Blumenstrauß vor dem Eiffelturm in Paris"
               widths={[420, 640, 768, 960]}
               sizes="(max-width: 760px) calc(100vw - 48px), (max-width: 1180px) 40vw, 470px"
               loading="lazy"
@@ -494,8 +599,9 @@ const schemaGraph = {
             <p class="pricing-kicker">Fragen & Antworten</p>
             <h2 id="faq-title">Häufige Fragen zu Hochzeitsfotograf Preisen</h2>
             <p>
-              Hier wird bewusst zwischen der Paketübersicht und dem verbindlichen
-              individuellen Angebot unterschieden.
+              Antworten zu Preisen, enthaltenen Leistungen und der Übergabe eurer
+              Bilder. Euren Gesamtpreis und Leistungsumfang halten wir vor der
+              Buchung im Angebot fest.
             </p>
 
             <div class="pricing-faq__list" aria-label="Häufige Fragen zu Hochzeitsfotograf Preisen">
@@ -503,7 +609,7 @@ const schemaGraph = {
                 <details
                   class="pricing-faq__item"
                   data-track-event="faq_open"
-                  data-faq-id={`preise_faq_${index + 1}`}
+                  data-faq-id={item.id}
                   data-section-id="preise_faq"
                   data-content-topic="preise_pakete"
                   data-user-intent="preisfragen_klaeren"
@@ -565,8 +671,9 @@ const schemaGraph = {
           <p class="pricing-kicker">Ist euer Termin noch frei?</p>
           <h2 id="cta-title">Fragt euren Hochzeitstermin unverbindlich an</h2>
           <p>
-            Erzählt mir kurz, wann und wo ihr heiratet, welche Begleitung ihr
-            euch wünscht und ob bereits eine Location feststeht.
+            Erzählt mir, wann und wo ihr heiratet und was ihr euch für eure Bilder
+            wünscht. Ihr müsst euch noch nicht für ein Paket entschieden haben.
+            Gemeinsam finden wir heraus, welche Begleitung zu eurem Tag passt.
           </p>
           <div>
             <a
@@ -579,16 +686,7 @@ const schemaGraph = {
               data-user-intent="termin_anfragen"
               data-journey-stage="anfrage"
             >Hochzeitstermin anfragen</a>
-            <a
-              href="/kontakt/"
-              data-track-event="cta_click"
-              data-cta-id="preise_verfuegbarkeit_pruefen"
-              data-cta-type="availability_check"
-              data-section-id="preise_anfrage_cta"
-              data-content-topic="terminverfuegbarkeit"
-              data-user-intent="verfuegbarkeit_pruefen"
-              data-journey-stage="anfrage"
-            >Verfügbarkeit prüfen</a>
+
           </div>
         </section>
       </article>
@@ -596,492 +694,171 @@ const schemaGraph = {
   </body>
 </html>
 
+<script>
+  document.querySelectorAll<HTMLElement>("[data-pricing-calculator]").forEach((calculator) => {
+    const duration = calculator.querySelector<HTMLSelectElement>("select");
+    const total = calculator.querySelector<HTMLElement>("[data-calculator-total]");
+    const packageName = calculator.querySelector<HTMLElement>("[data-calculator-package]");
+    const calculation = calculator.querySelector<HTMLElement>("[data-calculator-calculation]");
+    const packageLink = calculator.querySelector<HTMLAnchorElement>("[data-calculator-package-link]");
+    if (!duration || !total || !packageName || !calculation || !packageLink) return;
+    const formatter = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+    const update = () => {
+      const option = duration.selectedOptions[0];
+      const amount = Number(option.dataset.total);
+      if (!Number.isFinite(amount) || !option.dataset.packageId) return;
+      total.textContent = formatter.format(amount);
+      packageName.textContent = option.dataset.packageName ?? "";
+      calculation.textContent = option.dataset.calculation ?? "";
+      packageLink.href = `#paket-${option.dataset.packageId}`;
+    };
+    duration.addEventListener("change", update);
+    update();
+    calculator.hidden = false;
+  });
+</script>
+
 <style>
-  .pricing {
-    width: min(var(--max), calc(100% - clamp(56px, 8vw, 128px)));
-    margin: 0 auto;
-    padding: clamp(64px, 8vw, 112px) 0 clamp(92px, 10vw, 156px);
-    overflow-x: clip;
+  :global(.pricing-page) { --pricing-paper: #f5f2ed; --pricing-text: #44484e; }
+  :global(.pricing-page .gallery-nav--stacked) { padding: 28px 0 30px; }
+  :global(.pricing-page .site-breadcrumb) { margin-top: 12px; margin-bottom: 0; }
+  .pricing { width: min(1180px, calc(100% - clamp(64px, 12vw, 180px))); margin: 0 auto; padding: clamp(36px, 5vw, 72px) 0 100px; }
+  .pricing section[id], .pricing article[id] { scroll-margin-top: 32px; }
+  .pricing-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(38px, 6vw, 90px); align-items: center; }
+  .pricing-hero__copy { min-width: 0; }
+  .pricing-kicker { margin: 0 0 20px; color: #68655f; font-family: "Raleway", Arial, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .2em; line-height: 1.6; text-transform: uppercase; }
+  .pricing h1, .pricing h2, .pricing h3 { margin: 0; color: var(--pricing-text); font-family: "Gilda Display", Georgia, serif; font-weight: 400; overflow-wrap: break-word; }
+  .pricing h1 { font-size: clamp(38px, 4.5vw, 66px); line-height: 1.15; letter-spacing: -.035em; }
+  .pricing h1 span { display: block; margin-top: .12em; }
+  .pricing h2 { font-size: clamp(32px, 3.6vw, 48px); line-height: 1.2; }
+  .pricing h3 { font-size: clamp(27px, 2.5vw, 34px); line-height: 1.25; }
+  .pricing-hero__copy > p:not(.pricing-kicker), .pricing-copy, .pricing-examples__note, .pricing-section-heading > p:not(.pricing-kicker), .pricing-cta > p:not(.pricing-kicker) { color: var(--pricing-text); font-size: clamp(18px, 1.55vw, 21px); line-height: 1.65; }
+  .pricing-hero__copy > p:not(.pricing-kicker) { margin: 25px 0 0; }
+  .pricing-hero__copy > p.pricing-hero__prices { font-size: 17px; line-height: 1.8; }
+  .pricing-hero__actions { display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center; margin-top: 30px; }
+  .pricing-hero__actions a, .pricing-cta a { display: inline-flex; min-height: 48px; align-items: center; justify-content: center; padding: 13px 24px; border: 1px solid #65635e; color: var(--pricing-text); font-family: "Raleway", Arial, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .12em; line-height: 1.5; text-decoration: none; text-align: center; text-transform: uppercase; }
+  .pricing-hero__actions a + a { padding: 12px 0; border-color: transparent; text-decoration: underline; text-underline-offset: 5px; }
+  .pricing-hero__image { width: 100%; max-width: 460px; margin: 0 auto; background: var(--pricing-paper); }
+  .pricing-hero__image :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+  .pricing-toc { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 24px; margin: clamp(42px, 6vw, 80px) 0 0; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .pricing-toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 2px; color: var(--pricing-text); font-size: 16px; line-height: 1.5; text-underline-offset: 5px; }
+  .pricing-intro, .pricing-split, .pricing-packages, .pricing-examples, .pricing-faq, .pricing-related, .pricing-cta { margin-top: clamp(70px, 8vw, 110px); }
+  .pricing-intro, .pricing-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: clamp(35px, 7vw, 100px); align-items: start; }
+  .pricing-copy p { margin: 0 0 1em; }
+  .pricing-text-link, .pricing-example__links a, .pricing-related a { color: var(--pricing-text); text-underline-offset: 5px; line-height: 1.6; }
+  .pricing-text-link { display: inline-block; padding: 8px 0; font-size: 17px; }
+  .pricing-section-heading { max-width: 760px; margin: 0 auto 46px; text-align: center; }
+  .pricing-packages { position: relative; padding: clamp(38px, 5vw, 70px) clamp(24px, 3vw, 42px); background: var(--pricing-paper); }
+  .pricing-package-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(26px, 3.2vw, 46px); }
+  .pricing-package { min-width: 0; }
+  .pricing-package figure { margin: 0 auto 28px; width: 100%; background: #e8e3dc; }
+  .pricing-package figure :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 323 / 484; object-fit: cover; }
+  .pricing-package__body h3 { min-height: 2.5em; font-size: clamp(23px, 2vw, 29px); line-height: 1.25; text-align: center; }
+  .pricing-package__price { margin: 18px 0 24px; padding-bottom: 24px; border-bottom: 1px solid #d5d0c8; color: var(--pricing-text); font-size: clamp(24px, 2.25vw, 32px); line-height: 1.4; text-align: center; }
+  .pricing-package__body > p:not(.pricing-package__price) { color: var(--pricing-text); font-size: 17px; line-height: 1.55; margin: 0 0 20px; }
+  .pricing-package ul { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; color: var(--pricing-text); font-family: "Gilda Display", Georgia, serif; font-size: 17px; line-height: 1.55; }
+  .pricing-package__contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; margin-top: 28px; padding: 12px 0; border-top: 1px solid #d5d0c8; color: var(--pricing-text); font-size: 16px; text-decoration: none; }
+  .pricing-package__contact span { font-family: Arial, sans-serif; }
+  .pricing :global(.editorial-review) { width: 100%; background: var(--pricing-paper); }
+  .pricing :global(.editorial-review blockquote p) { overflow-wrap: break-word; }
+  .pricing-calculator { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 30px 50px; margin: 0 0 56px; padding: clamp(24px, 4vw, 48px); background: var(--pricing-paper); }
+  .pricing-calculator[hidden] { display: none; }
+  .pricing-calculator__input, .pricing-calculator__result { min-width: 0; }
+  .pricing-calculator label { display: block; margin: 26px 0 10px; color: var(--pricing-text); font-size: 18px; }
+  .pricing-calculator select { display: block; width: 100%; min-height: 52px; padding: 12px 16px; border: 1px solid #8a8278; border-radius: 0; background: #fff; color: var(--pricing-text); font: inherit; font-size: 18px; cursor: pointer; }
+  .pricing-calculator select:focus-visible { outline: 2px solid #65584a; outline-offset: 4px; }
+  .pricing-calculator p:not(.pricing-kicker), .pricing-calculator a { color: var(--pricing-text); font-size: 17px; line-height: 1.6; }
+  .pricing-calculator output { display: grid; gap: 8px; color: var(--pricing-text); font-size: 18px; line-height: 1.5; }
+  .pricing-calculator output strong { font-family: "Gilda Display", Georgia, serif; font-size: clamp(42px, 4vw, 56px); font-weight: 400; line-height: 1.2; }
+  .pricing-calculator__label { font-size: 16px; }
+  .pricing-calculator a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 5px; }
+  .pricing-calculator__note { grid-column: 1 / -1; margin: 0; padding-top: 20px; border-top: 1px solid #d5d0c8; }
+  .pricing-example-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(32px, 6vw, 84px); }
+  .pricing-example { min-width: 0; padding: 30px 0 0; border-top: 1px solid #d5d0c8; }
+  .pricing-example > p:not(.pricing-kicker):not(.pricing-example__price), .pricing-example ul { color: var(--pricing-text); font-size: 18px; line-height: 1.65; }
+  .pricing-example > .pricing-example__price { margin: 25px 0 0; font-size: 36px; line-height: 1.3; }
+  .pricing-example__price span { display: block; font-size: 16px; margin-top: 4px; }
+  .pricing-example__calculation { margin-top: 10px; }
+  .pricing-example ul { padding-left: 21px; }
+  .pricing-example li + li { margin-top: 7px; }
+  .pricing-example__links { display: grid; gap: 12px; margin-top: 22px; font-size: 17px; }
+  .pricing-example__links a { display: inline-flex; align-items: center; min-height: 44px; }
+  .pricing-examples__note { margin: 36px 0 0; padding-top: 26px; border-top: 1px solid var(--line); }
+  .pricing-faq { display: grid; grid-template-columns: minmax(0, .38fr) minmax(0, .62fr); gap: clamp(35px, 5vw, 70px); align-items: start; }
+  .pricing-faq__media { margin: 0; }
+  .pricing-faq__media :global(img) { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
+  .pricing-faq__media figcaption { margin-top: 15px; color: #68655f; font-size: 15px; line-height: 1.6; }
+  .pricing-faq__content { min-width: 0; }
+  .pricing-faq__content > p:not(.pricing-kicker) { color: var(--pricing-text); font-size: 18px; line-height: 1.65; }
+  .pricing-faq__list { margin-top: 28px; border-top: 1px solid var(--line); }
+  .pricing-faq__item { border-bottom: 1px solid var(--line); }
+  .pricing-faq__summary { display: grid; grid-template-columns: 24px minmax(0, 1fr) 28px; gap: 14px; align-items: center; padding: 20px 0; min-height: 72px; cursor: pointer; list-style: none; color: var(--pricing-text); font-family: "Gilda Display", Georgia, serif; font-size: 20px; font-weight: 400; line-height: 1.45; overflow-wrap: break-word; }
+  .pricing-faq__summary::-webkit-details-marker { display: none; }
+  .pricing-faq__index { color: #77736d; font-family: "Raleway", Arial, sans-serif; font-size: 10px; }
+  .pricing-faq__toggle { position: relative; display: block; width: 28px; height: 28px; }
+  .pricing-faq__toggle::before, .pricing-faq__toggle::after { content: ""; position: absolute; left: 50%; top: 50%; width: 13px; height: 1px; background: var(--pricing-text); transform: translate(-50%, -50%); }
+  .pricing-faq__toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+  .pricing-faq__item[open] .pricing-faq__toggle::after { display: none; }
+  .pricing-faq__panel { margin: 0 0 24px 38px; }
+  .pricing-faq__panel p { margin: 0; color: var(--pricing-text); font-size: 18px; line-height: 1.7; }
+  .pricing a:focus-visible, .pricing-faq__summary:focus-visible { outline: 2px solid #65584a; outline-offset: 5px; }
+  .pricing-related { text-align: center; }
+  .pricing-related div { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 28px; margin-top: 28px; }
+  .pricing-related a { display: inline-flex; align-items: center; min-height: 44px; font-size: 17px; }
+  .pricing-cta { padding: clamp(34px, 6vw, 70px); background: var(--pricing-paper); text-align: center; }
+  .pricing-cta > p:not(.pricing-kicker) { max-width: 640px; margin: 24px auto; }
+  .pricing-cta a { background: #44484e; color: #fff; border-color: #44484e; }
+  @media (min-width: 621px) and (max-width: 1099px) {
+    .pricing { width: calc(100% - clamp(80px, 12vw, 132px)); }
+    .pricing-hero { grid-template-columns: 1fr; gap: 38px; text-align: center; }
+    .pricing-hero__copy { max-width: 640px; margin: 0 auto; }
+    .pricing-hero__actions { justify-content: center; }
+    .pricing-hero__image { max-width: 400px; }
+    .pricing-hero__image :global(img) { aspect-ratio: 4 / 3; }
+    .pricing-intro, .pricing-split { grid-template-columns: 1fr; gap: 28px; }
+    .pricing-package-grid { grid-template-columns: 1fr; gap: 60px; }
+    .pricing-package { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+    .pricing-package figure { margin: 0; }
+    .pricing-package__body h3 { min-height: 0; font-size: 28px; text-align: left; }
+    .pricing-package__price { text-align: left; }
+    .pricing-package ul { font-size: 17px; }
+    .pricing-faq { grid-template-columns: 1fr; }
+    .pricing-faq__media { width: min(400px, 75%); margin: 0 auto; }
+    .pricing-faq__media :global(img) { aspect-ratio: 4 / 3; }
   }
-
-  .pricing-hero {
-    display: grid;
-    grid-template-columns: minmax(0, .86fr) minmax(320px, 1fr);
-    gap: clamp(42px, 6vw, 96px);
-    align-items: center;
-  }
-
-  .pricing-hero__copy {
-    min-width: 0;
-  }
-
-  .pricing-kicker {
-    margin: 0 0 14px;
-    color: var(--muted);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .28em;
-    line-height: 1.45;
-    text-transform: uppercase;
-  }
-
-  .pricing h1,
-  .pricing h2,
-  .pricing h3 {
-    margin: 0;
-    color: var(--ink);
-    font-weight: 400;
-    line-height: .98;
-    hyphens: auto;
-    overflow-wrap: break-word;
-  }
-
-  .pricing h1 {
-    max-width: 780px;
-    font-size: clamp(58px, 7vw, 118px);
-  }
-
-  .pricing h2 {
-    font-size: clamp(38px, 5vw, 76px);
-  }
-
-  .pricing h3 {
-    font-size: clamp(34px, 3.4vw, 52px);
-  }
-
-  .pricing-hero__copy > p:not(.pricing-kicker),
-  .pricing-copy,
-  .pricing-package__body > p,
-  .pricing-faq p,
-  .pricing-cta p {
-    color: var(--muted);
-    font-size: clamp(20px, 2vw, 27px);
-    line-height: 1.55;
-  }
-
-  .pricing-hero__actions,
-  .pricing-cta div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    margin-top: 32px;
-  }
-
-  .pricing-hero__actions a,
-  .pricing-cta a,
-  .pricing-related a {
-    min-height: 48px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 13px 18px;
-    border: 1px solid var(--line);
-    color: var(--ink);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .22em;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .pricing-hero__actions a:first-child,
-  .pricing-cta a:first-child {
-    background: #202633;
-    border-color: #202633;
-    color: #fff;
-  }
-
-  .pricing-hero__image {
-    margin: 0;
-    background: var(--soft);
-  }
-
-  .pricing-hero__image :global(img) {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-  }
-
-  .pricing-toc {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    margin: clamp(58px, 7vw, 108px) 0;
-    padding: 18px 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-  }
-
-  .pricing-toc a {
-    padding: 8px 12px;
-    color: var(--muted);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .2em;
-    text-decoration: none;
-    text-transform: uppercase;
-  }
-
-  .pricing-intro,
-  .pricing-split,
-  .pricing-packages,
-  .pricing-faq,
-  .pricing-related,
-  .pricing-cta {
-    margin-top: clamp(74px, 10vw, 148px);
-  }
-
-  .pricing-intro,
-  .pricing-split {
-    display: grid;
-    grid-template-columns: minmax(0, .82fr) minmax(0, 1fr);
-    gap: clamp(36px, 6vw, 92px);
-    align-items: start;
-  }
-
-  .pricing-copy p {
-    margin: 0 0 1em;
-  }
-
-  .pricing-section-heading {
-    max-width: 840px;
-    margin-bottom: clamp(36px, 5vw, 68px);
-  }
-
-  .pricing-package-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(34px, 4.2vw, 64px);
-  }
-
-  .pricing-package {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    border: 1px solid var(--line);
-    background: #fff;
-  }
-
-  .pricing-package figure {
-    margin: 0;
-    background: var(--soft);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .pricing-package figure :global(img) {
-    display: block;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .pricing-package.is-landscape figure :global(img) {
-    width: 100%;
-    aspect-ratio: 3 / 2;
-    object-fit: cover;
-  }
-
-  .pricing-package.is-portrait figure {
-    padding: clamp(24px, 3vw, 42px) 0;
-  }
-
-  .pricing-package.is-portrait figure :global(img) {
-    width: min(78%, 360px);
-    aspect-ratio: 323 / 484;
-    object-fit: cover;
-  }
-
-  .pricing-package__body {
-    padding: clamp(24px, 3vw, 42px);
-  }
-
-  .pricing-package__body h3 {
-    font-size: clamp(31px, 2.8vw, 46px);
-    line-height: 1.04;
-  }
-
-  .pricing-package__body > p:first-child {
-    margin: 0 0 10px;
-    color: var(--accent);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: .24em;
-    text-transform: uppercase;
-  }
-
-  .pricing-package__body > p:not(:first-child) {
-    margin: 16px 0 22px;
-    font-size: 19px;
-  }
-
-  .pricing-package ul {
-    display: grid;
-    gap: 10px;
-    margin: 0;
-    padding-left: 20px;
-    color: var(--muted);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 13px;
-    line-height: 1.6;
-  }
-
-  .pricing-package__body h3 + ul {
-    margin-top: clamp(28px, 2.4vw, 36px);
-  }
-
-  .pricing-faq__list {
-    margin-top: clamp(32px, 4.2vw, 56px);
-    display: grid;
-    border-top: 1px solid var(--line);
-  }
-
-  .pricing-faq {
-    display: grid;
-    grid-template-columns: minmax(260px, .42fr) minmax(0, .58fr);
-    gap: clamp(38px, 6vw, 92px);
-    align-items: start;
-    padding: clamp(5rem, 8vw, 9rem) 0;
-  }
-
-  .pricing-faq__media {
-    position: relative;
-    margin: 0;
-  }
-
-  .pricing-faq__media :global(img) {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    background: var(--soft);
-    object-fit: cover;
-  }
-
-  .pricing-faq__media figcaption {
-    max-width: 82%;
-    margin: 18px 0 0;
-    color: rgba(32, 38, 51, .58);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .18em;
-    line-height: 1.65;
-    text-transform: uppercase;
-  }
-
-  .pricing-faq__content {
-    min-width: 0;
-  }
-
-  .pricing-faq__content > .pricing-kicker {
-    margin-top: 0;
-    margin-bottom: 22px;
-    font-size: 12px;
-    line-height: 1.45;
-  }
-
-  .pricing-faq__content > h2 {
-    max-width: 760px;
-    margin: 0;
-    color: #202633;
-    font-size: clamp(40px, 4.4vw, 68px);
-    line-height: 1.02;
-    overflow-wrap: break-word;
-    hyphens: auto;
-  }
-
-  .pricing-faq__content > p {
-    max-width: 720px;
-    margin: clamp(22px, 3vw, 34px) 0 0;
-    color: var(--muted);
-    font-size: clamp(18px, 1.35vw, 21px);
-    line-height: 1.72;
-  }
-
-  .pricing-faq__item {
-    border-bottom: 1px solid var(--line);
-  }
-
-  .pricing-faq__summary {
-    display: grid;
-    grid-template-columns: 52px minmax(0, 1fr) 34px;
-    gap: clamp(14px, 2.4vw, 28px);
-    align-items: center;
-    min-height: 82px;
-    padding: clamp(18px, 2.4vw, 28px) 0;
-    cursor: pointer;
-    list-style: none;
-    color: #40454d;
-    font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(19px, 1.484375vw, 28.5px);
-    font-weight: 400;
-    letter-spacing: .03em;
-    line-height: 1.375;
-    overflow-wrap: break-word;
-    hyphens: auto;
-  }
-
-  .pricing-faq__summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .pricing-faq__index {
-    margin: .34em 0 0;
-    color: rgba(32, 38, 51, .42);
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .22em;
-    line-height: 1;
-  }
-
-  .pricing-faq__toggle {
-    position: relative;
-    display: block;
-    width: 28px;
-    height: 28px;
-    border: 1px solid rgba(32, 38, 51, .22);
-    border-radius: 999px;
-  }
-
-  .pricing-faq__toggle::before,
-  .pricing-faq__toggle::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 11px;
-    height: 1px;
-    background: #202633;
-    transform: translate(-50%, -50%);
-    transition: transform 180ms ease, opacity 180ms ease;
-  }
-
-  .pricing-faq__toggle::after {
-    transform: translate(-50%, -50%) rotate(90deg);
-  }
-
-  .pricing-faq__item[open] .pricing-faq__toggle::after {
-    opacity: 0;
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  .pricing-faq__panel {
-    max-width: 650px;
-    margin: -4px 0 clamp(22px, 2.6vw, 32px) calc(52px + clamp(14px, 2.4vw, 28px));
-  }
-
-  .pricing-faq__panel p {
-    margin: 0;
-    color: var(--muted);
-    font-size: clamp(17px, 1.18vw, 19px);
-    line-height: 1.68;
-  }
-
-  .pricing-faq__summary:focus-visible {
-    outline: 2px solid #202633;
-    outline-offset: 5px;
-  }
-
-  .pricing-related {
-    text-align: center;
-  }
-
-  .pricing-related div {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 34px;
-  }
-
-  .pricing-cta {
-    padding: clamp(42px, 6vw, 78px);
-    background: #f5f2ed;
-    text-align: center;
-  }
-
-  .pricing-cta div {
-    justify-content: center;
-  }
-
-  @media (max-width: 900px) {
-    .pricing-hero,
-    .pricing-intro,
-    .pricing-split,
-    .pricing-faq,
-    .pricing-package-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .pricing-package-grid {
-      gap: clamp(38px, 7vw, 56px);
-    }
-  }
-
   @media (max-width: 620px) {
-    :global(html),
-    :global(body) {
-      overflow-x: clip;
-    }
-
-    .pricing {
-      width: min(100% - 48px, var(--max));
-      padding-top: 44px;
-    }
-
-    .pricing h1 {
-      font-size: clamp(40px, 11vw, 50px);
-      line-height: 1.04;
-    }
-
-    .pricing h2 {
-      font-size: clamp(34px, 11vw, 52px);
-    }
-
-    .pricing-hero__actions,
-    .pricing-cta div,
-    .pricing-related div {
-      display: grid;
-    }
-
-    .pricing-hero__actions a,
-    .pricing-cta a,
-    .pricing-related a {
-      width: 100%;
-    }
-
-    .pricing-toc {
-      justify-content: stretch;
-    }
-
-    .pricing-toc a {
-      flex: 1 1 calc(50% - 12px);
-      text-align: center;
-    }
-
-    .pricing-faq {
-      padding: clamp(44px, 12vw, 72px) 0;
-    }
-
-    .pricing-faq__media figcaption {
-      max-width: 100%;
-    }
-
-    .pricing-faq__summary {
-      grid-template-columns: 36px minmax(0, 1fr) 30px;
-      gap: 12px;
-      min-height: 72px;
-      font-size: 19px;
-    }
-
-    .pricing-faq__panel {
-      margin-left: 48px;
-    }
+    .pricing { width: calc(100% - 56px); padding-top: 30px; padding-bottom: 70px; }
+    .pricing-hero, .pricing-intro, .pricing-split, .pricing-package-grid, .pricing-example-grid, .pricing-faq { grid-template-columns: 1fr; }
+    .pricing-hero { gap: 34px; text-align: center; }
+    .pricing h1 { font-size: clamp(31px, 8.6vw, 46px); line-height: 1.2; letter-spacing: -.045em; }
+    .pricing h2 { font-size: 32px; }
+    .pricing-hero__copy > p:not(.pricing-kicker) { font-size: 18px; }
+    .pricing-hero__copy > p.pricing-hero__prices { font-size: 16px; }
+    .pricing-hero__actions { justify-content: center; gap: 12px 24px; }
+    .pricing-hero__image { max-width: 350px; }
+    .pricing-hero__image :global(img) { aspect-ratio: 4 / 3; }
+    .pricing-toc { justify-content: center; gap: 4px 20px; }
+    .pricing-toc a { font-size: 16px; }
+    .pricing-intro, .pricing-split { gap: 24px; }
+    .pricing-packages { margin-inline: -4px; padding: 34px 18px; }
+    .pricing-package-grid { gap: 54px; }
+    .pricing-package figure { width: min(100%, 330px); }
+    .pricing-package__body h3 { min-height: 0; font-size: 29px; }
+    .pricing-package__price { font-size: 30px; }
+    .pricing-package ul, .pricing-package__body > p:not(.pricing-package__price) { font-size: 18px; }
+    .pricing :global(.editorial-review) { padding: 30px 18px; }
+    .pricing :global(.editorial-review__slide) { padding: 24px 18px; }
+    .pricing-calculator { grid-template-columns: 1fr; padding: 26px 20px; gap: 26px; }
+    .pricing-calculator__result { padding-top: 24px; border-top: 1px solid #d5d0c8; }
+    .pricing-example-grid { gap: 40px; }
+    .pricing-section-heading { margin-bottom: 30px; }
+    .pricing-faq { gap: 32px; }
+    .pricing-faq__media { width: min(100%, 350px); margin: 0 auto; }
+    .pricing-faq__media :global(img) { aspect-ratio: 4 / 3; }
+    .pricing-faq__summary { grid-template-columns: 20px minmax(0, 1fr) 24px; gap: 10px; font-size: 19px; }
+    .pricing-faq__panel { margin-left: 30px; }
+    .pricing-faq__panel p { font-size: 18px; }
+    .pricing-cta { padding: 36px 22px; }
+    .pricing-cta a { width: 100%; padding-inline: 16px; }
   }
 </style>

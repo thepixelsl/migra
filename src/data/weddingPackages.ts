@@ -1,3 +1,8 @@
+export const weddingGalleryMonths = 3;
+export const weddingBookingHoursRule = "Es zählen die Gesamtstunden, unabhängig von der Anzahl der Tage. Dafür gilt das günstigste passende Paket. Pakete sind nicht miteinander kombinierbar.";
+
+const galleryFeature = `Passwortgeschützte Onlinegalerie für ${weddingGalleryMonths} Monate kostenlos`;
+
 const reportageFeatures = (duration: string) => [
   duration,
   "Persönliches Vorgespräch und Beratung",
@@ -5,10 +10,11 @@ const reportageFeatures = (duration: string) => [
   "Getting Ready auf Wunsch",
   "Trauung, Brautpaarshooting und Gruppenfotos",
   "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
-  "Passwortgeschützte Onlinegalerie für 6 Monate",
+  galleryFeature,
   "Mindestens 300 bearbeitete Bilder",
   "Retusche einzelner Bilder nach Absprache",
   "Fahrtkosten innerhalb Hamburgs inklusive",
+  "Pakete sind nicht miteinander kombinierbar",
 ];
 
 /**
@@ -33,7 +39,7 @@ export const weddingPackages = [
       "1 Stunde fotografische Begleitung",
       "Persönliches Vorgespräch und Beratung",
       "Trauung, Brautpaarshooting, Gruppenfotos",
-      "passwortgeschützte Onlinegallerie für 3 Monate",
+      galleryFeature,
       "mindestens 30 Bilder",
       "inklusive RAW-Bearbeitung für alle Bilder",
       "Retusche für ausgewählte Bilder",
@@ -61,10 +67,11 @@ export const weddingPackages = [
       "Kennenlernshooting",
       "Getting Ready",
       "Trauung, Brautpaarshooting und Gruppenfotos",
-      "Passwortgeschützte Onlinegalerie für 3 Monate",
+      galleryFeature,
       "Mindestens 100 bearbeitete Bilder",
       "Retusche einzelner Bilder nach Absprache",
       "Keine Extra- oder versteckten Kosten",
+      "Pakete sind nicht miteinander kombinierbar",
     ],
   },
   {

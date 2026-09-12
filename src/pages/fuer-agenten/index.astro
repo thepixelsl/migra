@@ -3,7 +3,7 @@ import FaviconHead from "../../components/FaviconHead.astro";
 import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
-import { weddingPackages } from "../../data/weddingPackages";
+import { weddingBookingHoursRule, weddingPackages } from "../../data/weddingPackages";
 import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
 import {
   agentAdvertisingPolicy,
@@ -60,7 +60,7 @@ const offers = weddingPackages.map((item) => ({
     name: item.name,
     serviceType: item.serviceType,
     provider: { "@id": `${siteUrl}/#organization` },
-    description: `${item.intro} Enthalten sind: ${item.features.join(", ")}.`,
+    description: `${item.intro} ${weddingBookingHoursRule} Enthalten sind: ${item.features.join(", ")}.`,
   },
 }));
 
@@ -427,6 +427,7 @@ const schemaGraph = {
         <section class="agent-section" id="preise" aria-labelledby="preise-title">
           <p class="agent-label">Alle Preiszusätze und Leistungen offen sichtbar</p>
           <h2 id="preise-title">Preise und Leistungsumfang</h2>
+          <p>{weddingBookingHoursRule}</p>
           <p>
             Preiszusätze wie „ab“, „Festpreis“ und „pro Stunde“ sind Bestandteil
             der jeweiligen Angabe. Maßgeblich sind das individuelle Angebot und

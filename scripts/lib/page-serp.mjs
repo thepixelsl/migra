@@ -19,7 +19,7 @@ export async function preparePageSeo($, route, { projectRoot, distDir, siteOrigi
   let description = config.description || clean($("meta[name=description]").attr("content"));
   if (config.pricePackage) {
     const packageNode = $(`#paket-${config.pricePackage}`);
-    const price = clean(packageNode.find("h3").text());
+    const price = clean(packageNode.find(".pricing-package__price").text());
     const count = $("article.pricing-package").length;
     if (!/^\d+(?:[.,]\d+)?\s*€$/.test(price) || !count || !/1 Stunde/.test(packageNode.text())) {
       throw new Error("Pricing SEO requires the displayed one-hour fixed-price package; review changed pricing first.");
