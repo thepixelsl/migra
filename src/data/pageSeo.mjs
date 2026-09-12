@@ -12,6 +12,11 @@ export const pageSeo = {
     image: "public/images/portrait-riverside.jpg",
     alt: "York Augustin, Fotograf von Artbild-Fotografie, am Wasser",
   },
+  "/hochzeitsfotos-drucken-color-proofing/": {
+    keyword: "Hochzeitsfotos drucken Color-Proofing",
+    image: "src/assets/hochzeitsfotos-drucken-color-proofing/brautpaarportrait.jpg",
+    alt: "Brautpaar im Hotelzimmer: Braut im Spitzenkleid und Bräutigam mit Fliege",
+  },
   "/blog/": {
     keyword: "Hochzeit Hamburg Tipps",
     description: "Hochzeit in Hamburg planen: Tipps zu Getting Ready, Locations und Trauterminen, dazu Hochzeitsreportagen und Fotowissen im Blog von Artbild-Fotografie.",

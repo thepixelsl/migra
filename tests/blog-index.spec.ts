@@ -6,10 +6,14 @@ const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const migratedPages = JSON.parse(
   readFileSync(new URL("../src/data/migratedPages.json", import.meta.url), "utf8"),
 ) as Array<{ path: string; type: string }>;
-const expectedPostPaths = migratedPages
-  .filter(shouldListBlogPost)
-  .map((entry) => entry.path)
-  .sort();
+const expectedPostPaths = [
+  ...migratedPages.filter(shouldListBlogPost).map((entry) => entry.path),
+  "/hochzeitsfotos-drucken-color-proofing/",
+].sort();
+// The backup article deliberately has no preview photograph.
+const expectedImageCount = expectedPostPaths.filter(
+  (path) => path !== "/wie-sollte-man-hochzeitsfotos-sichern/",
+).length;
 const blogMediaExpectations = [
   {
     path: "/trautermin-hamburg-online-reservieren/",
@@ -113,7 +117,7 @@ test("blog index uses the configured site URL and exposes the selected migrated 
   const cards = page.locator(".journal-card");
   await expect(cards).toHaveCount(expectedPostPaths.length);
   await expect(cards.locator(".journal-card__image img")).toHaveCount(
-    expectedPostPaths.length,
+    expectedImageCount,
   );
   const cardImageAltTexts = await cards
     .locator(".journal-card__image img")

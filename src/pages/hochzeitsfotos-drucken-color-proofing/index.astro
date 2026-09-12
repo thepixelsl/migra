@@ -1,0 +1,143 @@
+---
+import { getImage } from "astro:assets";
+import FaviconHead from "../../components/FaviconHead.astro";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import { colorProofingPost as post } from "../../data/journalPosts";
+import { entityIds, photoCredits } from "../../data/businessSeo.mjs";
+import pair from "../../assets/hochzeitsfotos-drucken-color-proofing/brautpaarportrait.jpg";
+import bride from "../../assets/hochzeitsfotos-drucken-color-proofing/brautportrait.jpg";
+import cake from "../../assets/hochzeitsfotos-drucken-color-proofing/hochzeitstorte.jpg";
+import "../../styles/global.css";
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}${post.path}`;
+const ids = entityIds(siteUrl);
+const definitions = [
+  { image: pair, alt: "Brautpaar im Hotelzimmer: Braut im Spitzenkleid und Bräutigam mit Fliege" },
+  { image: bride, alt: "Brautportrait im weißen Spitzenkleid zwischen hellen Vorhängen" },
+  { image: cake, alt: "Weiße Hochzeitstorte mit goldenen Details, weißen Blüten und Gläsern auf einer gedeckten Tafel" },
+ ];
+const photos = await Promise.all(definitions.map(async ({ image, alt }) => ({
+  ...await getImage({ src: image, format: "webp", quality: 90 }),
+  width: image.width, height: image.height, alt,
+})));
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Blog", href: "/blog/" },
+  { label: "Hochzeitsfotos drucken", href: post.path },
+];
+const schemaGraph = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "BlogPosting", "@id": `${pageUrl}#article`, url: pageUrl,
+      headline: post.title, description: post.description,
+      datePublished: post.datePublished, dateModified: post.dateModified,
+      author: { "@id": ids.person }, publisher: { "@id": ids.business },
+      mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      image: photos.map((_, index) => ({ "@id": `${pageUrl}#photo-${index + 1}` })),
+      articleSection: "Fotowissen", inLanguage: "de-DE",
+    },
+    {
+      "@type": "WebPage", "@id": `${pageUrl}#webpage`, url: pageUrl,
+      name: post.metaTitle, description: post.description,
+      isPartOf: { "@id": ids.website }, mainEntity: { "@id": `${pageUrl}#article` },
+      inLanguage: "de-DE",
+    },
+    ...photos.map((photo, index) => ({
+      "@type": "ImageObject", "@id": `${pageUrl}#photo-${index + 1}`,
+      contentUrl: new URL(photo.src, siteUrl).href,
+      width: photo.width, height: photo.height, caption: photo.alt,
+      ...photoCredits(siteUrl),
+    })),
+  ],
+};
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{post.metaTitle}</title>
+    <meta name="description" content={post.description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={post.metaTitle} />
+    <meta property="og:description" content={post.description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={new URL(photos[0].src, siteUrl).href} />
+    <meta property="og:image:alt" content={photos[0].alt} />
+    <script type="application/ld+json" set:html={JSON.stringify(schemaGraph).replaceAll("<", "\\u003c")} />
+  </head>
+  <body>
+    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <main>
+      <Breadcrumbs items={breadcrumbs} siteUrl={siteUrl} currentUrl={pageUrl} />
+      <div class="proofing-shell">
+<article aria-labelledby="article-title">
+<header class="proofing-hero">
+<div class="proofing-hero-copy">
+<p class="proofing-eyebrow">Eure Hochzeitsbilder auf Papier</p>
+<h1 id="article-title">Hochzeitsfotos drucken: Was Color-Proofing für eure Bilder leisten kann</h1>
+<p>Ein Bild aus eurer Hochzeit als großer Druck, ein Fotobuch zum gemeinsamen Durchblättern oder ein Foto für eure Familie: Auf Papier bekommen eure Aufnahmen einen festen Platz im Alltag. Damit die Bilder dort so sorgfältig wirken wie eure fertige Galerie, lohnt sich ein Blick auf die Druckvorbereitung.</p>
+<p>Bei Artbild ist Color-Proofing bereits in den Hochzeitspaketen enthalten. Ich unterstütze euch dabei, die Bilder auf das vorgesehene Druckprodukt abzustimmen – von Fotobüchern über hochwertige, langlebige Materialien bis zu bedruckten Hintergründen.</p>
+<p class="proofing-byline">Von <a href="/about/">York Augustin</a> · <time datetime={post.datePublished}>12. September 2026</time></p></div>
+<figure class="proofing-image proofing-image--portrait">
+<img src={photos[0].src} alt={photos[0].alt} width={photos[0].width} height={photos[0].height} loading="eager" fetchpriority="high" decoding="async" />
+<figcaption>Ein Brautpaarportrait mit feinen Abstufungen in hellen und dunklen Bildbereichen.</figcaption></figure></header>
+<nav class="proofing-toc" aria-label="Im Artikel"><a href="#bildbearbeitung">Bildbearbeitung</a><a href="#farbwiedergabe">Farben im Druck</a><a href="#color-proofing">Color-Proofing</a><a href="#materialien">Materialien</a><a href="#druckprodukte">Eure Druckprodukte</a></nav>
+<section class="proofing-section proofing-illustrated " aria-labelledby="bildbearbeitung">
+<div class="proofing-section-copy">
+<h2 id="bildbearbeitung">Eure Bilder sind bereits bearbeitet</h2>
+<p>Alle Bilder, die ihr von mir erhaltet, sind grundlegend RAW-bearbeitet. Dazu gehören Weißabgleich, Helligkeit, Farben und Kontraste. Ihr müsst nach der Hochzeit keine einzelnen Fotos auswählen, damit diese überhaupt eine grundlegende Bearbeitung erhalten. Dafür entstehen euch auch keine zusätzlichen Einzelbildkosten.</p>
+<p>Für ausgewählte Bilder ist außerdem eine hochwertige Retusche enthalten. Hier geht es um gezielte Details, zum Beispiel einen Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit. Welche Bilder euch besonders wichtig sind und was ihr euch wünscht, besprechen wir gemeinsam.</p>
+<p>Die Vorbereitung auf einen bestimmten Druck ist ein weiterer Schritt. Ein bereits fertig bearbeitetes Foto kann je nach Papier und Druckverfahren anders wirken.</p></div>
+<figure class="proofing-image proofing-image--portrait">
+<img src={photos[1].src} alt={photos[1].alt} width={photos[1].width} height={photos[1].height} loading="lazy" decoding="async" />
+<figcaption>Hauttöne und Details im Spitzenkleid – ein Bildbeispiel zur Bearbeitung.</figcaption></figure></section>
+<section class="proofing-section proofing-illustrated " aria-labelledby="farbwiedergabe">
+<div class="proofing-section-copy">
+<h2 id="farbwiedergabe">Warum Bildschirm und Druck unterschiedlich aussehen können</h2>
+<p>Ein Bildschirm und ein gedrucktes Bild stellen Farben auf unterschiedliche Weise dar. Auch das Papier beeinflusst die Wirkung: Sein Weißton, seine Oberfläche und der mögliche Schwarzton spielen eine Rolle. Eine Druckvorschau kann solche Eigenschaften berücksichtigen und zeigen, welche Farben sich beim gewählten Ausgabeprofil verändern. <a href="https://helpx.adobe.com/photoshop/using/proofing-colors.html">Adobe: Farbproofs in Photoshop</a>.</p>
+<p>Deshalb sollte die Entscheidung für ein Material vor der endgültigen Druckvorbereitung fallen. Ein Wechsel des Papiers oder des Druckanbieters kann eine erneute Abstimmung sinnvoll machen.</p></div>
+<figure class="proofing-image proofing-image--square">
+<img src={photos[2].src} alt={photos[2].alt} width={photos[2].width} height={photos[2].height} loading="lazy" decoding="async" />
+<figcaption>Weiße Blüten, Torte und Geschirr bringen viele feine Helligkeitsabstufungen ins Bild.</figcaption></figure></section>
+<section class="proofing-section proofing-text-section " aria-labelledby="color-proofing">
+<div class="proofing-section-copy">
+<h2 id="color-proofing">Was beim Color-Proofing geprüft wird</h2>
+<p>Beim sogenannten Soft-Proof wird die zu erwartende Druckwirkung am Bildschirm simuliert. Grundlage ist ein Farbprofil für die geplante Ausgabe. Auch die Qualität und Profilierung des Monitors sowie die Lichtbedingungen beeinflussen, wie zuverlässig sich diese Vorschau beurteilen lässt. Sie hilft, kritische Stellen früh zu erkennen, ersetzt aber keine unter allen Bedingungen identische Wiedergabe. <a href="https://helpx.adobe.com/photoshop/using/proofing-colors.html">Adobe: Soft-Proof und Ausgabebedingungen</a>.</p>
+<p>Ein passendes ICC-Profil beschreibt eine konkrete Kombination aus Drucker, Tinte und Papier. Ein allgemeines Profil für irgendein Fotopapier ist deshalb nicht automatisch passend für euer ausgewähltes Produkt. Hahnemühle stellt beispielsweise solche Profile zusammen mit Hinweisen zu den benötigten Druckeinstellungen bereit. <a href="https://www.hahnemuehle.com/en/digital-papers/icc-profile.html">Hahnemühle: ICC-Profile</a>.</p>
+<p>Für eure Druckvorbereitung brauche ich deshalb vor allem den gewünschten Anbieter, das Produkt, das Material und das Format. Ein Produktlink ist dafür ein guter Anfang. Wir klären dann, welche Angaben zur Farbwiedergabe verfügbar sind und wie sich eure Bilder dafür vorbereiten lassen.</p></div></section>
+<section class="proofing-section proofing-text-section " aria-labelledby="materialien">
+<div class="proofing-section-copy">
+<h2 id="materialien">Hochwertige Materialien und lange Haltbarkeit</h2>
+<p>Eine schöne Oberfläche allein sagt noch nicht, wie lange ein Druck seine Qualität behält. Für hochwertige Fine-Art-Drucke werden beispielsweise geeignete Papiere mit Pigmenttinten kombiniert und auf ihre Alterungsbeständigkeit geprüft. Hahnemühle veröffentlicht dazu Ergebnisse standardisierter Untersuchungen. <a href="https://www.hahnemuehle.com/en/digital-fineart/longevity.html">Hahnemühle: Haltbarkeit von Fine-Art-Drucken</a>.</p>
+<p>Die Haltbarkeit hängt aber vom gesamten Druck und seinen späteren Bedingungen ab. Ein Papierhersteller kann deshalb nicht pauschal jede Kombination aus Tinten und Umwelteinflüssen garantieren. Eine konkrete Materialangabe und nachvollziehbare Informationen des Anbieters helfen mehr als ein allgemeines Versprechen, dass Bilder „für immer“ halten. <a href="https://www.hahnemuehle.com/fileadmin/user_upload/bilder/pdf/Zertifikate_Vegan_Alterungsbest%C3%A4ndigkeit/Alterungsbest%C3%A4ndigkeit_Zertifikate/2025-Certificate-HahnemuehleFineArt-Inkjet-Papers-Longevity-Rev02.pdf">Hahnemühle: Zertifikat zur Alterungsbeständigkeit</a>.</p></div></section>
+<section class="proofing-section proofing-text-section proofing-print-planning" aria-labelledby="druckprodukte">
+<div class="proofing-section-copy">
+<h2 id="druckprodukte">So planen wir eure Druckprodukte</h2>
+<p>Schickt mir den Link zum gewünschten Fotobuch, Material oder Druckprodukt und nennt mir die vorgesehenen Bilder und das Format. Dann besprechen wir die Vorbereitung. Wenn ihr einen großen Druck oder mehrere Exemplare plant und die Wirkung vorab sehen möchtet, kann ein gesonderter Probedruck beim Anbieter sinnvoll sein.</p>
+<p>Das Color-Proofing und die dazugehörige Druckvorbereitung sind in meinen Hochzeitspaketen kostenlos enthalten. Die Kosten für Fotobücher, Drucke, Materialien oder bestellte Probedrucke kommen hinzu. Ihr findet den vollständigen Leistungsumfang auf der <a href="/hochzeitsfotograf-preise/">Preisseite</a>.</p>
+<p>Wenn ihr schon wisst, welche Bilder ihr drucken möchtet, schreibt mir eure Wünsche über die <a href="/kontakt/">Kontaktseite</a>. So können wir die Vorbereitung auf das Produkt abstimmen, das später bei euch zu Hause stehen oder hängen soll.</p></div></section></article>
+        <footer class="proofing-footer"><span>Fotografie © York Augustin · Artbild-Fotografie</span><a href="/hochzeitsfotograf-preise/">Preise und enthaltene Leistungen</a></footer>
+      </div>
+    </main>
+  </body>
+</html>
+
+<style>
+
+body{color-scheme:light;--ink:#44484d;--muted:#67625c;--line:#d9d1c7;--paper:#f5f2ed}
+*{box-sizing:border-box} :global(html){scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;color:var(--ink);background:#fff;font-family:"Gilda Display",Georgia,serif;font-size:19px;line-height:1.7;-webkit-font-smoothing:antialiased}a{color:inherit;text-decoration-thickness:1px;text-underline-offset:4px}a:focus-visible{outline:2px solid var(--ink);outline-offset:6px}img{display:block;width:100%;height:auto}figure{margin:0}.proofing-section-copy,.proofing-hero-copy,.proofing-image{min-width:0}.proofing-shell{width:calc(100% - 12vw);max-width:1160px;margin-inline:auto}.proofing-hero{display:grid;grid-template-columns:minmax(0,1fr) 323px;gap:clamp(48px,7vw,96px);align-items:center;padding:64px 0 88px}.proofing-eyebrow{font-family:"Raleway",Arial,sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin:0 0 22px}h1,h2{font-weight:400;line-height:1.18;letter-spacing:-.018em;overflow-wrap:break-word}h1{margin:0 0 28px;font-size:clamp(38px,3.9vw,55px)}h2{font-size:clamp(30px,2.6vw,38px);margin:0 0 26px}p{margin:0 0 22px}p:last-child{margin-bottom:0}.proofing-image{justify-self:center;max-width:100%;width:323px}.proofing-image--square{width:484px}figcaption{font-size:15px;line-height:1.5;color:var(--muted);margin-top:15px}.proofing-toc{display:flex;justify-content:center;flex-wrap:wrap;gap:14px 28px;border-block:1px solid var(--line);padding:22px 0;font-family:"Raleway",Arial,sans-serif;font-size:12px}.proofing-section{margin-block:90px}.proofing-illustrated{display:grid;grid-template-columns:minmax(0,1fr) 323px;gap:clamp(48px,7vw,96px);align-items:center}.proofing-illustrated:has(.proofing-image--square){grid-template-columns:minmax(0,1fr) minmax(0,484px);gap:64px}.proofing-text-section{max-width:730px;margin-inline:auto}.proofing-section-copy a{overflow-wrap:anywhere}.proofing-print-planning{padding:44px 48px;background:var(--paper);max-width:826px}.proofing-byline{font-family:"Raleway",Arial,sans-serif;font-size:12px;letter-spacing:.04em;margin-top:26px;color:var(--muted)}.proofing-footer{margin-top:80px;padding:28px 0 40px;border-top:1px solid var(--line);color:var(--muted);font-size:14px;display:flex;justify-content:space-between;gap:20px}
+@media(max-width:1000px){.proofing-hero,.proofing-illustrated,.proofing-illustrated:has(.proofing-image--square){grid-template-columns:minmax(0,1fr);gap:40px}.proofing-hero{padding:56px 0 64px}.proofing-hero .proofing-hero-copy{max-width:730px;margin-inline:auto;text-align:center}.proofing-hero h1{font-size:clamp(37px,5.5vw,48px);max-width:640px;margin-inline:auto}.proofing-section{margin-block:66px}.proofing-section-copy{max-width:730px;margin-inline:auto}.proofing-image{width:323px}.proofing-image--square{width:484px}.proofing-toc{gap:14px 22px}h2{font-size:34px}.proofing-print-planning{padding:36px}}
+@media(max-width:600px){body{font-size:18px}.proofing-shell{width:calc(100% - 56px)}.proofing-hero{padding:40px 0 46px;gap:32px}.proofing-hero h1{font-size:36px}.proofing-hero .proofing-hero-copy{text-align:left}.proofing-eyebrow{font-size:10px;letter-spacing:.16em}h2{font-size:30px}.proofing-section{margin-block:50px}.proofing-toc{justify-content:flex-start;font-size:11px}.proofing-image{max-width:100%}figcaption{font-size:14px}.proofing-print-planning{padding:28px 22px}.proofing-footer{flex-direction:column;font-size:13px}}
+@media(prefers-reduced-motion:reduce){ :global(html){scroll-behavior:auto}}
+
+</style>

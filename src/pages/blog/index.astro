@@ -5,6 +5,7 @@ import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import migratedPages from "../../data/migratedPages.json";
+import { colorProofingPost, journalPosts } from "../../data/journalPosts";
 import { shouldListBlogPost } from "../../lib/blogIndexPolicy";
 import "../../styles/global.css";
 import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-titel.jpg";
@@ -58,6 +59,7 @@ const breadcrumbs = [
 ];
 
 const technicalPostPaths = new Set([
+  colorProofingPost.path,
   "/bildoptimierung-fuer-wordpress-2025/",
   "/bildoptimierung-in-wordpress-2025/",
   "/luminanzmasken-photoshop-aktion/",
@@ -73,6 +75,7 @@ const getPostCategory = (path: string) => {
   return "Hochzeit & Planung";
 };
 const dedicatedPostCardImages: Record<string, MigratedImage> = {
+  [colorProofingPost.path]: colorProofingPost.heroImage,
   "/braut-fotoshooting-fraser-suites-hamburg/": {
     src: fraserCardImage.src,
     alt: "Brautportrait in den Fraser Suites Hamburg",
@@ -109,7 +112,7 @@ const getCardImage = (entry: MigratedPost) => {
     .filter(isCardImage)
     .sort((left, right) => getImageArea(right) - getImageArea(left))[0];
 };
-const blogPosts = (migratedPages as MigratedPost[])
+const blogPosts = [...journalPosts, ...(migratedPages as MigratedPost[])]
   .filter(shouldListBlogPost)
   .sort(
     (left, right) =>
@@ -247,7 +250,7 @@ const collectionSchema = {
           <div class="journal-archive__heading">
             <p class="eyebrow">Archiv</p>
             <h2 id="journal-archive-title">Alle Beiträge</h2>
-            <p>{blogPosts.length} Artikel aus dem bisherigen Blog.</p>
+            <p>{blogPosts.length} Beiträge rund um Hochzeiten und Fotografie.</p>
           </div>
 
           <div class="journal-posts">
@@ -256,7 +259,7 @@ const collectionSchema = {
 
               return (
                 <article
-                  class:list={["journal-card", { "has-image": post.cardImage }]}
+                  class:list={["journal-card", { "has-image": post.cardImage, "journal-card--color-proofing": post.path === colorProofingPost.path }]}
                   aria-labelledby={titleId}
                 >
                   <a class="journal-card__link" href={post.path} aria-labelledby={titleId}>
@@ -501,6 +504,12 @@ const collectionSchema = {
     width: 100%;
     height: auto;
     transition: opacity 300ms ease, transform 500ms ease;
+  }
+
+  .journal-card--color-proofing .journal-card__image {
+    width: 100%;
+    max-width: 323px;
+    justify-self: center;
   }
 
   .journal-card__link:hover .journal-card__image img {

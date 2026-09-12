@@ -53,6 +53,10 @@ export const socialCardOverrides = {
   "/blog/": {
     pageType: "website",
   },
+  "/hochzeitsfotos-drucken-color-proofing/": {
+    label: "Journal",
+    pageType: "article",
+  },
   "/nd-filter-tabelle/": {
     label: "Journal",
     pageType: "article",
