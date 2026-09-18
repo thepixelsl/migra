@@ -116,7 +116,7 @@ export async function handleAgentAvailabilityTrial({ request, env }) {
   const id = `trial-${crypto.randomUUID()}`;
   // Reuse the existing handler and identity headers so every alias shares one date budget.
   const response = await checkSingleDate({
-    request: new Request(checkUrl, { headers: request.headers }), env,
+    request: new Request(checkUrl, { headers: request.headers }), env, audit: false,
   });
   const payload = await response.json();
   const successful = response.ok && payload.date === date && typeof payload.available === "boolean";

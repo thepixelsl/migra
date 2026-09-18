@@ -58,7 +58,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 2. September 2026");
+  expect(mainText).toContain("Stand: 18. September 2026");
   expect(mainText).toContain("eine Buchungsanfrage über die Agentenseite vorbereiten");
   expect(mainText).toContain("spätestens nach 30 Minuten verworfen");
   expect(mainText).toContain("Eine Übermittlung an uns erfolgt erst");
@@ -91,13 +91,14 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("ein bis drei konkrete Wunschdaten");
   expect(mainText).toContain("höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden");
   expect(mainText).toContain("pseudonyme Kurzzeitkennung");
-  expect(mainText).toContain("grobe Bot-Kategorie");
+  expect(mainText).toContain("abgeleitete Bot- oder Dienst-Kategorie");
   expect(mainText).toContain("konkret angefragten Wunschdaten");
   expect(mainText).toContain("jeweilige Verfügbarkeitsergebnis");
   expect(mainText).toContain("höchstens 30 Tage");
   expect(mainText).toContain("vollständige IP-Adresse, der vollständige User-Agent");
   expect(mainText).toContain("optional übermittelter API-Schlüssel werden nicht gespeichert");
-  expect(mainText).toContain("nicht verifiziert");
+  expect(mainText).toContain("keine sichere Identifizierung");
+  expect(mainText).toContain("keine zusätzlichen Tracking-Cookies");
   expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 

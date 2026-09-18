@@ -713,7 +713,7 @@ const schemaGraph = {
         try {
           const response = await fetch(
             `${endpoint}?date=${encodeURIComponent(quickDateInput.value)}`,
-            { headers: { Accept: "application/json" } },
+            { headers: { Accept: "application/json", "X-Artbild-Availability-Source": "agent_form" } },
           );
           const payload = await response.json();
 
@@ -817,6 +817,7 @@ const schemaGraph = {
             headers: {
               Accept: "application/json",
               "Content-Type": "application/json",
+              "X-Artbild-Availability-Source": "agent_form",
             },
             body: JSON.stringify({ dates: uniqueDates }),
           });

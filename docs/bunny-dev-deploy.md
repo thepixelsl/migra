@@ -111,3 +111,33 @@ Check the generated `https://...bunny.run` URL, then verify:
    session cookie.
 4. Blocking and unblocking a test date appears in `/api/availability`.
 5. A contact request is stored in Bunny Database and delivered by email.
+
+## Appointment observations
+
+The protected `/admin-termine/` dashboard aggregates the last 30 days, independently
+of its 100-row detail limit. A request is one validated server-side check; successful
+multi-date requests can return several date results. Repeated checks count again.
+429 attempts count as rejected requests and never as delivered availability results.
+The FAB sends `X-Artbild-Availability-Source: fab`; agent forms send `agent_form`.
+These are declared entry points, not proof of human input. The HTML adapter logs the
+original request once and disables auditing only in its internal single-date call.
+HEAD and invalid date input do not create observations.
+
+The runtime adds `metadata_json` to the existing audit table at startup, preserving
+old rows as `legacy` with no inferred entry point. Rollback to the prior image remains
+possible. Worker/D1 deployments need migration `0005_availability_observation.sql`.
+
+In production, official OpenAI, Anthropic, Perplexity and Google IP lists refresh
+in the background every six hours. Failed updates retain the last good list for at
+most 24 hours. No request waits for these downloads. Only the derived provider is
+stored. Proxy-reported IPs and User-Agent names are hints, not authentication;
+only the assigned API key confirms a registered client label. A Google network
+match does not establish Gemini usage. Generic browser traffic cannot distinguish
+human users from computer-use agents.
+
+Pattern hints group by UTC request day, entry point and reported provider label.
+At least seven consecutive target dates or twenty distinct target dates trigger a
+hint. These groups may include different senders: neither one actor nor malicious
+intent is inferred. Monthly coverage separates requested dates from dates for which
+availability was actually returned. Historical FAB and direct GET checks were not
+logged, so the 30-day totals are incomplete until a full retention window elapses.

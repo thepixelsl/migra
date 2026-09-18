@@ -596,7 +596,7 @@ test("shows exact agent requests in the protected audit without raw identifiers"
   assert.ok(Number.isFinite(Date.parse(verifiedEntry.requestedAt)));
 
   const reportedEntry = payload.requests.find(
-    (entry) => entry.clientLabel === "OpenAI" && entry.dates.length === 3,
+    (entry) => entry.clientLabel === "ChatGPT" && entry.dates.length === 3,
   );
   assert.ok(reportedEntry);
   assert.equal(reportedEntry.identitySource, "user_agent");
@@ -608,7 +608,7 @@ test("shows exact agent requests in the protected audit without raw identifiers"
   ]);
 
   const rateLimitedEntry = payload.requests.find(
-    (entry) => entry.clientLabel === "OpenAI" && entry.responseStatus === 429,
+    (entry) => entry.clientLabel === "ChatGPT" && entry.responseStatus === 429,
   );
   assert.ok(rateLimitedEntry);
   assert.deepEqual(rateLimitedEntry.dates, [AGENT_TEST_DATES.availableTwo]);
@@ -626,6 +626,7 @@ test("shows exact agent requests in the protected audit without raw identifiers"
       "dates_json",
       "results_json",
       "response_status",
+      "metadata_json",
     ],
   );
 });

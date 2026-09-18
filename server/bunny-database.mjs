@@ -92,7 +92,8 @@ const SCHEMA_STATEMENTS = [
     client_verified INTEGER NOT NULL DEFAULT 0,
     dates_json TEXT NOT NULL,
     results_json TEXT NOT NULL,
-    response_status INTEGER NOT NULL
+    response_status INTEGER NOT NULL,
+    metadata_json TEXT NOT NULL DEFAULT '{}'
   )`,
   `CREATE INDEX IF NOT EXISTS idx_agent_availability_audit_time
     ON agent_availability_audit (requested_at)`,
@@ -194,6 +195,16 @@ export async function createBunnyDatabase(env = process.env) {
     await client.execute(statement);
   }
 
+  // Additive migration: keep historical rows and permit rollback to the old image.
+  const auditColumns = await client.execute("PRAGMA table_info(agent_availability_audit)");
+  if (!auditColumns.rows.some((column) => column.name === "metadata_json")) {
+    try {
+      await client.execute("ALTER TABLE agent_availability_audit ADD COLUMN metadata_json TEXT NOT NULL DEFAULT '{}'");
+    } catch (error) {
+      const columns = await client.execute("PRAGMA table_info(agent_availability_audit)");
+      if (!columns.rows.some((column) => column.name === "metadata_json")) throw error;
+    }
+  }
   await pruneStoredData(client);
   const cleanupTimer = setInterval(() => {
     pruneStoredData(client).catch((error) => {

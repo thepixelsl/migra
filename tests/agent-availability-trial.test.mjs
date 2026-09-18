@@ -83,7 +83,7 @@ test("follows real month and day links to the live calendar without JavaScript",
   assert.equal(rows.length, 1);
   assert.equal(rows[0].id, id);
   assert.deepEqual(rows[0].results, [{ date, available: false }]);
-  assert.equal(rows[0].clientLabel, "Anthropic Claude");
+  assert.equal(rows[0].clientLabel, "Claude");
   assert.equal(rows[0].clientVerified, false);
   assert.ok(body.includes(rows[0].requestedAt));
 });

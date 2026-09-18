@@ -87,15 +87,15 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
         <div class="availability-admin__agent-toolbar">
           <div>
             <p class="availability-admin__eyebrow">Protokoll</p>
-            <h2 id="agent-requests-title">KI-Agentenanfragen</h2>
+            <h2 id="agent-requests-title">Terminabfragen</h2>
           </div>
           <button type="button" data-agent-refresh>Aktualisieren</button>
         </div>
 
         <p class="availability-admin__agent-intro">
-          Zeigt die letzten 100 gültigen API-Anfragen. Konkrete Wunschdaten und
-          Ergebnisse bleiben 30 Tage sichtbar; rohe IP-Adressen, vollständige
-          User-Agents und API-Schlüssel werden nicht gespeichert.
+          Nutzung über FAB, API und HTML-Terminseiten während der letzten 30 Tage.
+          Die Auswertung umfasst alle gespeicherten Abfragen; darunter erscheinen die letzten 100 Einzelabfragen.
+          Rohe IP-Adressen, vollständige User-Agents und API-Schlüssel werden nicht gespeichert.
         </p>
 
         <div
@@ -104,14 +104,17 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
           aria-live="polite"
           data-agent-status
         >
-          Agentenanfragen werden geladen.
+          Terminabfragen werden geladen.
         </div>
 
+        <div class="availability-observations" data-agent-statistics></div>
+        <h3 class="availability-admin__requests-heading">Letzte Einzelabfragen</h3>
         <div class="availability-admin__agent-list" data-agent-list></div>
       </section>
     </main>
 
     <script>
+      import { renderAvailabilityStatistics, channelLabel, identityLabel } from "../../lib/availabilityAdmin.mjs";
       const adminRoot = document.querySelector("[data-admin-availability]");
 
       if (adminRoot instanceof HTMLElement) {
@@ -287,6 +290,7 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
         const list = agentRoot.querySelector("[data-agent-list]");
         const refresh = agentRoot.querySelector("[data-agent-refresh]");
         const endpoint = "/api/admin/agent-requests";
+        const statisticsRoot = agentRoot.querySelector("[data-agent-statistics]");
         const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
         function setAgentStatus(message, tone = "") {
@@ -345,7 +349,7 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
           const badge = document.createElement("span");
           badge.className = "availability-admin__agent-badge";
           badge.dataset.verified = String(item?.clientVerified === true);
-          badge.textContent = item?.clientVerified === true ? "Bestätigt" : "Nur gemeldet";
+          badge.textContent = identityLabel(item?.identitySource);
           header.append(identity, badge);
 
           const dates = Array.isArray(item?.dates) ? item.dates.filter(validAgentDate) : [];
@@ -376,7 +380,16 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
           footer.textContent = responseLabel(responseStatus);
           footer.dataset.status = String(responseStatus);
 
-          article.append(header, dateList, footer);
+          const source = document.createElement("p");
+          source.className = "availability-admin__agent-source";
+          source.textContent = `${channelLabel(item?.channel)}${item?.botName ? ` · ${item.botName}` : ""}`;
+          const evidence = document.createElement("p");
+          evidence.className = "availability-admin__agent-evidence";
+          evidence.textContent = item?.evidence || "Herkunft unbekannt.";
+          const receipt = document.createElement("small");
+          receipt.className = "availability-admin__agent-receipt";
+          receipt.textContent = `Prüfnummer: ${item.id}`;
+          article.append(header, source, evidence, dateList, footer, receipt);
           return article;
         }
 
@@ -387,7 +400,7 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
           if (!Array.isArray(requests) || requests.length === 0) {
             const empty = document.createElement("p");
             empty.className = "availability-admin__agent-empty";
-            empty.textContent = "Noch keine gültigen Agenten-Anfragen protokolliert.";
+            empty.textContent = "Noch keine gültigen Terminabfragen protokolliert.";
             list.append(empty);
             return;
           }
@@ -397,7 +410,7 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
 
         async function loadAgentRequests() {
           if (refresh instanceof HTMLButtonElement) refresh.disabled = true;
-          setAgentStatus("Agentenanfragen werden geladen.");
+          setAgentStatus("Terminabfragen werden geladen.");
           try {
             const response = await fetch(endpoint, {
               method: "GET",
@@ -408,15 +421,17 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
             if (!response.ok) throw new Error(data?.message || "load_failed");
             const requests = Array.isArray(data?.requests) ? data.requests : [];
             renderAgentRequests(requests);
+            if (statisticsRoot instanceof HTMLElement) renderAvailabilityStatistics(statisticsRoot, data.statistics);
             setAgentStatus(
               requests.length === 1
-                ? "1 Agentenanfrage geladen."
-                : `${requests.length} Agentenanfragen geladen.`,
+                ? "1 Terminabfrage geladen."
+                : `${requests.length} Terminabfragen geladen.`,
               "ok",
             );
           } catch {
             renderAgentRequests([]);
-            setAgentStatus("Die Agentenanfragen konnten nicht geladen werden. Prüfe bitte die Admin-Anmeldung und die Datenbank-Verbindung.", "error");
+            if (statisticsRoot instanceof HTMLElement) statisticsRoot.replaceChildren();
+            setAgentStatus("Die Terminabfragen konnten nicht geladen werden. Prüfe bitte die Admin-Anmeldung und die Datenbank-Verbindung.", "error");
           } finally {
             if (refresh instanceof HTMLButtonElement) refresh.disabled = false;
           }
@@ -880,5 +895,32 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
       overflow-wrap: anywhere;
       font-size: clamp(34px, 11.25vw, 40px);
     }
+  }
+</style>
+
+<style>
+  .availability-observations { min-width: 0; }
+  .availability-admin__requests-heading { margin: 36px 0 20px; }
+  :global(.availability-observations__metrics) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  :global(.availability-observations__metrics > div) { display: grid; gap: 6px; padding: 18px; border: 1px solid #d8d0c6; background: #fff; }
+  :global(.availability-observations__metrics strong) { font-size: 30px; color: #171717; }
+  :global(.availability-observations__metrics span), :global(.availability-observations__note) { font: 14px/1.6 Arial, sans-serif; color: #514b44; }
+  :global(.availability-observations__section) { margin: 28px 0; min-width: 0; }
+  :global(.availability-observations__section h3), :global(.availability-observations__patterns h3) { font-size: 23px; margin: 0 0 14px; }
+  :global(.availability-observations__table-wrap) { overflow-x: auto; border: 1px solid #d8d0c6; }
+  :global(.availability-observations table) { border-collapse: collapse; width: 100%; font: 14px/1.5 Arial, sans-serif; }
+  :global(.availability-observations th), :global(.availability-observations td) { padding: 12px; border-bottom: 1px solid #e5ded5; text-align: left; overflow-wrap: anywhere; }
+  :global(.availability-observations th) { background: #eee9e2; color: #171717; font-weight: 700; }
+  :global(.availability-observations select) { max-width: 100%; padding: 10px; margin: 8px; border: 1px solid #b6aca0; color: #171717; background: #fff; font: inherit; }
+  :global(.availability-observations__patterns) { padding: 20px; background: #fff8e9; border: 1px solid #d9c7a0; margin: 28px 0; font: 14px/1.7 Arial, sans-serif; }
+  :global(.availability-observations__patterns li) { margin: 10px 0; }
+  :global(.availability-admin__agent-source) { font: 700 14px/1.5 Arial, sans-serif; margin: 0; }
+  :global(.availability-admin__agent-evidence), :global(.availability-admin__agent-receipt) { font: 13px/1.6 Arial, sans-serif; overflow-wrap: anywhere; color: #514b44; margin: 0; }
+  :global(.availability-admin__agent-card header) { flex-wrap: wrap; }
+  :global(.availability-admin__agent-badge) { white-space: normal; max-width: 100%; }
+  @media (max-width: 600px) {
+    :global(.availability-observations__metrics) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    :global(.availability-observations table) { min-width: 510px; }
+    :global(.availability-observations__metrics > div) { padding: 12px; }
   }
 </style>

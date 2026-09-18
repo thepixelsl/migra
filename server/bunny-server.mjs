@@ -1,3 +1,4 @@
+import { createAgentNetworkRegistry } from "./agent-networks.mjs";
 import { Buffer } from "node:buffer";
 import { createServer } from "node:http";
 import path from "node:path";
@@ -195,11 +196,15 @@ export async function createBunnyRuntime(options = {}) {
   const contactMailer = options.contactMailer ?? createContactMailer(env);
   const assetDirectory = options.assetDirectory || env.ASSET_DIRECTORY || DEFAULT_ASSET_DIRECTORY;
 
+  const agentNetworks = options.agentNetworks || createAgentNetworkRegistry();
+  if (env.NODE_ENV === "production") agentNetworks.start?.();
+
   const workerEnv = {
     ...env,
     ASSETS: createAssetBinding(assetDirectory),
     AVAILABILITY_KV: database.kv,
     AGENT_AUDIT_DB: database.d1,
+    AGENT_NETWORK_LOOKUP: (address) => agentNetworks.lookup(address),
     AGENT_RATE_LIMIT_DB: database.d1,
     PUBLIC_AVAILABILITY_RATE_LIMIT_DB: database.d1,
     DB: database.d1,
@@ -328,6 +333,7 @@ export async function createBunnyRuntime(options = {}) {
       return server.address();
     },
     async close() {
+      agentNetworks.close?.();
       await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()));
       if (typeof database.close === "function") {
         await database.close();

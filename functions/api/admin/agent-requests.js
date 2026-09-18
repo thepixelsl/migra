@@ -7,15 +7,19 @@ import {
   json,
   methodNotAllowed,
 } from "../../_availability.js";
+import { readAvailabilityStatistics } from "../../_availability-statistics.js";
 
 export async function onRequestGet({ request, env }) {
   const denied = assertAdminAccess(request, env);
   if (denied) return denied;
 
   try {
+    const [requests, statistics] = await Promise.all([
+      readAgentAvailabilityAudit(env), readAvailabilityStatistics(env),
+    ]);
     return json({
       retentionDays: AGENT_AUDIT_RETENTION_DAYS,
-      requests: await readAgentAvailabilityAudit(env),
+      requests, statistics,
     });
   } catch {
     return json(

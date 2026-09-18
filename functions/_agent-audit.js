@@ -1,4 +1,5 @@
 import { parseDateValue } from "./_availability.js";
+import { availabilityChannel, reportedAgentIdentity } from "./_agent-identity.js";
 
 export const AGENT_AUDIT_RETENTION_DAYS = 30;
 export const AGENT_AUDIT_RETENTION_MS = AGENT_AUDIT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -84,34 +85,10 @@ async function verifiedClientIdentity(request, env) {
     : null;
 }
 
-function reportedClientIdentity(request) {
-  const userAgent = request.headers.get("User-Agent") || "";
-  const categories = [
-    [/ChatGPT-User|OAI-SearchBot|GPTBot/i, "OpenAI"],
-    [/Claude-User|Claude-SearchBot|ClaudeBot/i, "Anthropic Claude"],
-    [/Perplexity-User|PerplexityBot/i, "Perplexity"],
-    [/Google-CloudVertexBot|GoogleOther/i, "Google"],
-    [/Applebot(?:-Extended)?/i, "Apple"],
-  ];
-  const match = categories.find(([pattern]) => pattern.test(userAgent));
-
-  if (!match) {
-    return {
-      clientLabel: "Nicht identifiziert",
-      identitySource: "unknown",
-      clientVerified: false,
-    };
-  }
-
-  return {
-    clientLabel: match[1],
-    identitySource: "user_agent",
-    clientVerified: false,
-  };
-}
-
 export async function identifyAgentClient(request, env) {
-  return await verifiedClientIdentity(request, env) || reportedClientIdentity(request);
+  const verified = await verifiedClientIdentity(request, env);
+  if (verified) return { ...verified, botName: "", activity: "agent", evidence: "Zugewiesener API-Schlüssel stimmt überein." };
+  return reportedAgentIdentity(request, env);
 }
 
 function normalizeResults(results) {
@@ -149,8 +126,9 @@ export async function writeAgentAvailabilityAudit({
         client_verified,
         dates_json,
         results_json,
-        response_status
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        response_status,
+        metadata_json
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `)
     .bind(
       id,
@@ -161,6 +139,7 @@ export async function writeAgentAvailabilityAudit({
       JSON.stringify(validDates),
       JSON.stringify(validResults),
       Number(responseStatus),
+      JSON.stringify({ version: 1, channel: availabilityChannel(request), botName: identity.botName, activity: identity.activity, evidence: identity.evidence }),
     )
     .run();
 }
@@ -193,12 +172,14 @@ export async function readAgentAvailabilityAudit(env, limit = AUDIT_RESULTS_LIMI
         client_verified,
         dates_json,
         results_json,
-        response_status
+        response_status,
+        metadata_json
       FROM agent_availability_audit
+      WHERE requested_at > ?
       ORDER BY requested_at DESC, id DESC
       LIMIT ?
     `)
-    .bind(safeLimit);
+    .bind(Date.now() - AGENT_AUDIT_RETENTION_MS, safeLimit);
   const result = typeof statement.all === "function"
     ? await statement.all()
     : await statement.run();
@@ -207,7 +188,8 @@ export async function readAgentAvailabilityAudit(env, limit = AUDIT_RESULTS_LIMI
     id: String(row.id),
     requestedAt: new Date(Number(row.requested_at)).toISOString(),
     clientLabel: cleanClientLabel(row.client_label) || "Nicht identifiziert",
-    identitySource: ["api_key", "user_agent", "unknown"].includes(String(row.identity_source))
+    ...readAuditMetadata(row),
+    identitySource: ["api_key", "user_agent", "user_agent_ip", "provider_ip", "automation", "browser", "unknown"].includes(String(row.identity_source))
       ? String(row.identity_source)
       : "unknown",
     clientVerified: Number(row.client_verified) === 1,
@@ -227,4 +209,14 @@ export async function pruneAgentAvailabilityAudit(env, now = Date.now()) {
     `)
     .bind(now - AGENT_AUDIT_RETENTION_MS)
     .run();
+}
+
+export function readAuditMetadata(row) {
+  const meta = parseStoredJson(row.metadata_json, {}) || {};
+  return {
+    channel: ["fab", "agent_form", "agent_html", "api"].includes(meta.channel) ? meta.channel : "legacy",
+    botName: cleanClientLabel(meta.botName),
+    activity: ["user", "search", "crawler", "agent", "automation", "browser"].includes(meta.activity) ? meta.activity : "unknown",
+    evidence: String(meta.evidence || "Herkunft im bisherigen Protokoll nicht weiter erfasst.").slice(0, 200),
+  };
 }

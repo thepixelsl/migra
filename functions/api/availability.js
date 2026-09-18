@@ -1,3 +1,4 @@
+import { writeAgentAvailabilityAudit } from "../_agent-audit.js";
 import {
   json,
   methodNotAllowed,
@@ -22,7 +23,7 @@ export function onRequestOptions() {
   });
 }
 
-export async function onRequestGet({ request, env }) {
+async function checkAvailability({ request, env }) {
   const url = new URL(request.url);
   const dates = url.searchParams.getAll("date");
   if (dates.length !== 1) {
@@ -100,4 +101,26 @@ export async function onRequestGet({ request, env }) {
 
 export function onRequest() {
   return methodNotAllowed("GET, OPTIONS");
+}
+
+// One observation per actual check. The HTML adapter supplies its own receipt and
+// original request so its source remains visible, without duplicate audit rows.
+export async function onRequestGet({ request, env, audit = true }) {
+  const response = await checkAvailability({ request, env });
+  if (!audit) return response;
+  const dates = new URL(request.url).searchParams.getAll("date");
+  if (dates.length !== 1 || !parseDateValue(dates[0])) return response;
+  const payload = await response.clone().json();
+  const id = crypto.randomUUID();
+  try {
+    await writeAgentAvailabilityAudit({ id, env, request, dates,
+      results: response.ok && typeof payload.available === "boolean" ? [{ date: dates[0], available: payload.available }] : [],
+      responseStatus: response.status,
+    });
+    response.headers.set("X-Artbild-Check-Id", id);
+  } catch {
+    // Observability must not prevent a visitor from checking a date.
+    console.error("Availability observation could not be stored");
+  }
+  return response;
 }

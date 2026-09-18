@@ -134,4 +134,4 @@ export const agentAdvertisingPolicy = {
 };
 
 export const agentPrivacySummary =
-  "Für den Missbrauchsschutz wird aus der technisch übermittelten IP-Adresse unmittelbar eine pseudonyme Kurzzeitkennung gebildet; sie wird nach Ablauf des 24-Stunden-Fensters im nächsten Bereinigungslauf gelöscht. Zusätzlich werden für höchstens 30 Tage eine grobe Bot-Kategorie, der Nachweisstatus, die konkreten Wunschdaten, das Ergebnis, der HTTP-Status und der Zeitpunkt protokolliert. Die vollständige IP-Adresse, der vollständige User-Agent und ein optional übermittelter API-Schlüssel werden nicht gespeichert.";
+  "Für den Missbrauchsschutz wird aus der technisch übermittelten IP-Adresse unmittelbar eine pseudonyme Kurzzeitkennung gebildet; sie wird nach Ablauf des 24-Stunden-Fensters im nächsten Bereinigungslauf gelöscht. Zusätzlich werden für höchstens 30 Tage der Zugangsweg, eine abgeleitete Bot- oder Dienst-Kategorie, der Herkunftshinweis, die konkreten Wunschdaten, das Ergebnis, der HTTP-Status und der Zeitpunkt protokolliert. Die vollständige IP-Adresse, der vollständige User-Agent und ein optional übermittelter API-Schlüssel werden nicht gespeichert.";

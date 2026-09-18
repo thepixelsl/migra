@@ -621,6 +621,7 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
       const response = await window.fetch(requestUrl, {
         method: "GET",
         credentials: "omit",
+        headers: { "X-Artbild-Availability-Source": "fab" },
         signal,
       });
       const text = await response.text();
