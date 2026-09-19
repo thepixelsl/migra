@@ -5,8 +5,11 @@ import os from "node:os";
 import path from "node:path";
 import { createClient } from "@libsql/client";
 import { identifyAgentClient, readAgentAvailabilityAudit, writeAgentAvailabilityAudit } from "../functions/_agent-audit.js";
+import { availabilitySignals } from "../src/lib/availabilitySignals.mjs";
+import { botDistribution, rankedDates } from "../src/lib/availabilityAdmin.mjs";
+import { onRequestGet as adminStatistics } from "../functions/api/admin/agent-requests.js";
 import { availabilityChannel } from "../functions/_agent-identity.js";
-import { readAvailabilityStatistics, longestDateSequence } from "../functions/_availability-statistics.js";
+import { readAvailabilityStatistics } from "../functions/_availability-statistics.js";
 import { createBunnyDatabase } from "../server/bunny-database.mjs";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { compileNetworkList, createAgentNetworkRegistry } from "../server/agent-networks.mjs";
@@ -101,13 +104,23 @@ test("counts the full retention window beyond the 100 details and distinguishes 
   assert.equal(statistics.totals.requests, 127);
   assert.equal(statistics.totals.successful, 120);
   assert.equal(statistics.totals.limited, 7);
-  assert.equal(statistics.totals.checkedDates, 120);
-  assert.equal(statistics.months[0].uniqueDates, 8);
-  assert.equal(statistics.months[0].successfulUniqueDates, 1);
-  assert.equal(statistics.patterns[0].sequence.length, 8);
+  assert.equal(statistics.totals.reportedBots, 127);
+  assert.equal(statistics.totals.manual, 0);
   assert.equal(statistics.sources[0].requests, 127);
-  assert.equal(statistics.months.length, 1);
-  assert.deepEqual(longestDateSequence(["2028-02-28", "2028-02-29", "2028-03-01", "2028-03-01"]), { length: 3, from: "2028-02-28", to: "2028-03-01" });
+  assert.equal(statistics.dateSources.length, 8);
+  assert.equal(rankedDates(statistics, {mode: "api"})[0].requests, 120);
+  assert.equal(rankedDates(statistics).length, 0);
+  assert.equal((await readAgentAvailabilityAudit(env, 10)).length, 10);
+  const adminRequest = new Request('https://example.com/api/admin/agent-requests?days=7', {headers:{'Cf-Access-Authenticated-User-Email':'info@artbild-fotografie.de'}});
+  const response = await adminStatistics({request:adminRequest, env:{...env,AVAILABILITY_KV:{get:async()=>JSON.stringify(['2027-03-01'])}}});
+  const payload = await response.json();
+  assert.equal(response.status,200);
+  assert.equal(payload.requests.length,10);
+  assert.equal(payload.statistics.totals.requests,127);
+  assert.equal(payload.statistics.windowDays,7);
+  assert.deepEqual(payload.blockedDates,['2027-03-01']);
+  assert.equal((await adminStatistics({request:request(),env})).status,401);
+
 });
 
 test("FAB, direct API, alias and HTML each record once and share the date limit", async (t) => {
@@ -135,4 +148,67 @@ test("FAB, direct API, alias and HTML each record once and share the date limit"
   await fetch(`${base}/agenten-test/${value}/`, { headers, method: "HEAD" });
   await fetch(`${base}/api/availability?date=invalid`, { headers });
   assert.equal((await readAgentAvailabilityAudit({ AGENT_AUDIT_DB: runtime.database.d1 })).length, 4);
+});
+
+test("requires bot-specific network evidence and splits all Meta purposes", async () => {
+  const ua = request('ChatGPT-User/1.0');
+  const providerOnly = {AGENT_NETWORK_LOOKUP: () => ({provider:'OpenAI'})};
+  const wrongService = {AGENT_NETWORK_LOOKUP: () => ({provider:'OpenAI',botNames:['GPTBot']})};
+  const sameService = {AGENT_NETWORK_LOOKUP: () => ({provider:'OpenAI',botNames:['ChatGPT-User']})};
+  assert.equal((await identifyAgentClient(ua,{})).audience,'reported_bot');
+  assert.equal((await identifyAgentClient(ua,providerOnly)).audience,'reported_bot');
+  assert.equal((await identifyAgentClient(ua,wrongService)).audience,'reported_bot');
+  assert.equal((await identifyAgentClient(ua,sameService)).audience,'verified_bot');
+  for(const [token,activity] of [['facebookexternalhit','preview'],['meta-externalagent','crawler'],['meta-externalfetcher','user'],['meta-webindexer','search'],['meta-externalads','ads']]) {
+    const identity=await identifyAgentClient(request(`${token}/1.1`,{'X-Artbild-Availability-Source':'fab','X-Artbild-Interaction':'browser'}),{});
+    assert.equal(identity.botName.toLowerCase(),token);assert.equal(identity.activity,activity);assert.equal(identity.audience,'reported_bot');
+  }
+});
+
+test("estimates manual devices only with a form interaction and preserves automation signals", async () => {
+  const headers={'X-Artbild-Availability-Source':'fab','X-Artbild-Interaction':'browser'};
+  for(const [ua,device] of [['Mozilla/5.0 (Windows NT 10.0) Chrome/140','desktop'],['Mozilla/5.0 (iPhone) Mobile/15 Safari/1','mobile'],['Mozilla/5.0 (iPad) Safari/1','tablet'],['Mozilla/5.0 (Linux; Android 12) Chrome/1','tablet']]) {
+    const identity=await identifyAgentClient(request(ua,headers),{});
+    assert.equal(identity.audience,'likely_manual');assert.equal(identity.device,device);
+  }
+  const browser='Mozilla/5.0 (Macintosh) Safari/1';
+  assert.equal((await identifyAgentClient(request(browser,{...headers,'X-Artbild-Device':'tablet'}),{})).device,'tablet');
+  assert.equal((await identifyAgentClient(request(browser),{})).audience,'unknown');
+  assert.equal((await identifyAgentClient(request(browser,{'X-Artbild-Availability-Source':'fab'}),{})).audience,'unknown');
+  assert.equal((await identifyAgentClient(request('Mozilla/5.0 HeadlessChrome/1',headers),{})).audience,'reported_bot');
+  assert.equal((await identifyAgentClient(request(browser,{...headers,'X-Artbild-Interaction':'automated'}),{})).audience,'reported_bot');
+  assert.equal(availabilitySignals({isTrusted:true},{webdriver:true})['X-Artbild-Interaction'],'automated');
+  assert.equal(availabilitySignals({isTrusted:true,agentInvoked:true},{})['X-Artbild-Interaction'],'automated');
+  assert.equal(availabilitySignals({isTrusted:false},{})['X-Artbild-Interaction'],'unknown');
+  assert.equal(availabilitySignals({isTrusted:true},{})['X-Artbild-Interaction'],'browser');
+});
+
+test("reconciles dashboard populations, date ranking, multi-date requests and historical gaps", async(t) => {
+  const {config}=await databaseFixture(t);const db=await createBunnyDatabase(config);t.after(()=>db.close());
+  const env={AGENT_AUDIT_DB:db.d1};const now=Date.now();
+  async function add(id,ua,headers,dates,age=1,status=200,network=null) {
+    await writeAgentAvailabilityAudit({id,env:{...env,AGENT_NETWORK_LOOKUP:()=>network},request:request(ua,headers),dates,results:status===200?dates.map(date=>({date,available:true})):[],responseStatus:status,requestedAt:now-age*86400000});
+  }
+  const manual={'X-Artbild-Availability-Source':'fab','X-Artbild-Interaction':'browser'};
+  await add('m1','Mozilla/5.0 (Windows NT 10.0) Chrome/1',manual,['2027-05-01','2027-06-01']);
+  await add('m2','Mozilla/5.0 (iPhone) Mobile/1',manual,['2027-05-01']);
+  await add('m3','Mozilla/5.0 (iPad) Safari/1',manual,['2027-06-01'],10);
+  await add('past','Mozilla/5.0 (iPhone) Mobile/1',manual,['2000-01-01']);
+  await add('verified','ChatGPT-User/1.0',{},['2027-07-01'],1,200,{provider:'OpenAI',botNames:['ChatGPT-User']});
+  await add('meta','meta-externalagent/1.1',{},['2027-07-01'],1,429);
+  await add('unknown','Mozilla/5.0',{},['2027-07-01']);
+  await db.client.execute({sql:`INSERT INTO agent_availability_audit (id,requested_at,client_label,identity_source,client_verified,dates_json,results_json,response_status,metadata_json) VALUES ('legacy',?,'Browser (Mensch oder KI)','browser',0,'["2027-07-01"]','[]',429,'{"version":1,"channel":"fab"}')`,args:[now-1000]});
+  const stats=await readAvailabilityStatistics(env,now);
+  assert.equal(stats.totals.requests,8);assert.equal(stats.totals.manual,4);assert.equal(stats.totals.verifiedBots,1);assert.equal(stats.totals.reportedBots,1);assert.equal(stats.totals.unknown,2);
+  assert.equal(stats.sources.reduce((n,s)=>n+s.requests,0),8);
+  assert.equal(stats.dateSources.reduce((n,s)=>n+s.requests,0),9);
+  assert.equal(stats.devices.reduce((n,s)=>n+s.requests,0),4);
+  assert.deepEqual(botDistribution(stats).map(row=>row.value),[1]);assert.equal(botDistribution(stats,false).length,2);
+  assert.deepEqual(rankedDates(stats).map(row=>[row.date,row.requests]),[['2027-05-01',2],['2027-06-01',2]]);
+  assert.equal(rankedDates(stats,{free:true,blockedDates:['2027-05-01']})[0].date,'2027-06-01');
+  assert.equal(rankedDates(stats,{mode:'api'})[0].requests,4);
+  assert.equal(rankedDates(stats,{mode:'api',channel:'fab'})[0].unknown,1);
+  const recent=await readAvailabilityStatistics(env,now,7);assert.equal(recent.totals.manual,3);assert.equal(recent.windowDays,7);
+  assert.equal((await readAgentAvailabilityAudit(env)).find(row=>row.id==='legacy').audience,'unknown');
+  assert.equal((await readAgentAvailabilityAudit(env)).find(row=>row.id==='legacy').device,'unknown');
 });

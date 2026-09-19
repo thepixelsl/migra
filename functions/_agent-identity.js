@@ -9,16 +9,22 @@ const BOTS = [
   [/Perplexity-User/i, "Perplexity", "Perplexity", "Perplexity-User", "user"],
   [/PerplexityBot/i, "Perplexity", "Perplexity", "PerplexityBot", "search"],
   [/Google-CloudVertexBot/i, "Google (Dienst unklar)", "Google", "Google-CloudVertexBot", "crawler"],
-  [/Googlebot|GoogleOther/i, "Google (Dienst unklar)", "Google", "Google-Crawler", "crawler"],
+  [/Googlebot/i, "Google", "Google", "Googlebot", "search"],
+  [/GoogleOther/i, "Google", "Google", "GoogleOther", "crawler"],
   [/Google-NotebookLM/i, "NotebookLM", "Google", "Google-NotebookLM", "user"],
   [/\bGemini(?:[ /;-]|$)/i, "Gemini", "Google", "Gemini", "agent"],
   [/\bClaude(?:[ /;-]|$)|claude-code/i, "Claude", "Anthropic", "Claude", "agent"],
-  [/\bChatGPT(?:[ /;-]|$)|\bCodex(?:[ /;-]|$)/i, "ChatGPT / Codex", "OpenAI", "OpenAI-Agent", "agent"],
+  [/\bCodex(?:[ /;-]|$)/i, "Codex", "OpenAI", "Codex", "agent"],
+  [/\bChatGPT(?:[ /;-]|$)/i, "ChatGPT", "OpenAI", "ChatGPT", "agent"],
   [/bingbot|BingPreview|MicrosoftPreview/i, "Microsoft Bing", "Microsoft", "Bing", "search"],
   [/\bCopilot(?:[ /;-]|$)/i, "Microsoft Copilot", "Microsoft", "Copilot", "agent"],
   [/DuckAssistBot/i, "DuckDuckGo", "DuckDuckGo", "DuckAssistBot", "user"],
   [/Applebot/i, "Apple", "Apple", "Applebot", "crawler"],
-  [/meta-externalagent|facebookexternalhit/i, "Meta", "Meta", "Meta-Crawler", "crawler"],
+  [/facebookexternalhit/i, "Meta", "Meta", "FacebookExternalHit", "preview"],
+  [/meta-externalagent/i, "Meta", "Meta", "Meta-ExternalAgent", "crawler"],
+  [/meta-externalfetcher/i, "Meta AI", "Meta", "Meta-ExternalFetcher", "user"],
+  [/meta-webindexer/i, "Meta AI", "Meta", "Meta-WebIndexer", "search"],
+  [/meta-externalads/i, "Meta", "Meta", "Meta-ExternalAds", "ads"],
   [/Amazonbot/i, "Amazon", "Amazon", "Amazonbot", "crawler"],
   [/Bytespider/i, "ByteDance", "ByteDance", "Bytespider", "crawler"],
   [/CCBot/i, "Common Crawl", "Common Crawl", "CCBot", "crawler"],
@@ -47,8 +53,10 @@ export async function reportedAgentIdentity(request, env) {
   if (bot) {
     const [, clientLabel, provider, botName, activity] = bot;
     const matches = network?.provider === provider;
+    const botNetworkMatches = matches && network.botNames?.includes(botName) === true;
     return {
       clientLabel, clientVerified: false,
+      audience: botNetworkMatches ? "verified_bot" : "reported_bot", device: "unknown",
       identitySource: matches ? "user_agent_ip" : "user_agent",
       botName, activity,
       evidence: matches ? "Bot-Kennung und gemeldete Anbieter-IP passen zusammen."
@@ -57,6 +65,7 @@ export async function reportedAgentIdentity(request, env) {
     };
   }
   if (network) return {
+    audience: "reported_bot", device: "unknown",
     clientLabel: network.provider === "Anthropic" ? "Claude / Anthropic"
       : network.provider === "Google" ? "Google (Dienst unklar)" : network.provider,
     clientVerified: false, identitySource: "provider_ip", botName: "", activity: "unknown",
@@ -64,11 +73,34 @@ export async function reportedAgentIdentity(request, env) {
   };
   const browser = /Mozilla\/5\.0|Safari\/|Chrome\/|Firefox\//i.test(ua);
   const automation = /bot\b|crawler|spider|HeadlessChrome|python-requests|python-httpx|curl\/|wget\/|node|undici|Go-http-client/i.test(ua);
+  const interaction = request.headers.get("X-Artbild-Interaction");
+  const automated = automation || interaction === "automated";
+  const manual = browser && !automated && interaction === "browser"
+    && ["fab", "agent_form"].includes(availabilityChannel(request));
   return {
-    clientLabel: automation ? "Anderer Agent / Abrufdienst" : browser ? "Browser (Mensch oder KI)" : "Nicht identifiziert",
-    clientVerified: false, identitySource: automation ? "automation" : browser ? "browser" : "unknown",
-    botName: "", activity: automation ? "automation" : browser ? "browser" : "unknown",
-    evidence: browser && !automation ? "Browserkennung; menschliche Bedienung und Computer Use sind nicht unterscheidbar."
-      : automation ? "Automatisches Abrufwerkzeug erkannt; KI-Anbieter unbekannt." : "Keine zuordenbare Kennung oder Anbieter-IP.",
+    audience: manual ? "likely_manual" : automated ? "reported_bot" : "unknown",
+    device: manual ? browserDevice(request, ua) : "unknown",
+    clientLabel: automated ? "Anderer Agent / Abrufdienst" : browser ? "Browser (Mensch oder KI)" : "Nicht identifiziert",
+    clientVerified: false, identitySource: automated ? "automation" : browser ? "browser" : "unknown",
+    botName: "", activity: automated ? "automation" : browser ? "browser" : "unknown",
+    evidence: manual ? "Browser-Formular mit Bedienungssignal; vermutlich manuell. Computer Use bleibt möglich."
+      : browser && !automated ? "Browserkennung ohne belastbares Bedienungssignal."
+        : automated ? "Automatisches Abrufwerkzeug oder WebMCP erkannt; Anbieter nicht bestätigt." : "Keine zuordenbare Kennung oder Anbieter-IP.",
   };
+}
+
+function browserDevice(request, ua) {
+  // Store a coarse class only. Touch-capable iPads can advertise a desktop UA.
+  if (/iPad|Tablet|Silk|PlayBook/i.test(ua) || (/Android/i.test(ua) && !/Mobile/i.test(ua))) return "tablet";
+  if (request.headers.get("X-Artbild-Device") === "tablet" && /Macintosh/i.test(ua)) return "tablet";
+  if (request.headers.get("Sec-CH-UA-Mobile") === "?1" || /Mobile|iPhone|iPod|Windows Phone/i.test(ua)) return "mobile";
+  if (/Windows NT|Macintosh|X11|CrOS|Linux x86/i.test(ua)) return "desktop";
+  return "unknown";
+}
+
+export function auditAudience(row, meta) {
+  if (meta.version === 2 && ["verified_bot", "reported_bot", "likely_manual", "unknown"].includes(meta.audience)) return meta.audience;
+  // Old provider matches do not record which service's network matched.
+  if (["api_key", "user_agent", "user_agent_ip", "provider_ip", "automation"].includes(row.identity_source)) return "reported_bot";
+  return "unknown";
 }

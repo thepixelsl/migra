@@ -1,0 +1,76 @@
+.availability-observations, .availability-admin__agent-list { min-width: 0; font: 14px/1.5 Arial, sans-serif; color: #263442; }
+.availability-admin__agent-actions { display:flex; flex-wrap:wrap; align-items:end; justify-content:end; gap:12px; font:13px/1.5 Arial,sans-serif; }
+.availability-admin__agent-actions label { display:grid; gap:4px; }
+.availability-admin__agent-actions select, .usage-control select { min-height:44px; padding:9px 12px; border:1px solid #c9d0d4; border-radius:6px; background:#fff; color:#263442; font:14px/1.4 Arial,sans-serif; max-width:100%; }
+.availability-admin__requests-heading { margin:32px 0 14px; font-size:24px; }
+.availability-admin__agent-list { display:block; }
+.usage-metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:24px; }
+.usage-metrics > div { border-bottom:2px solid #d6dee4; padding:14px 4px 18px; display:grid; gap:4px; }
+.usage-metrics strong { font:600 34px/1.2 Arial,sans-serif; font-variant-numeric:tabular-nums; }
+.usage-metrics span { color:#56616b; }
+.usage-charts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.usage-chart-card { padding:22px; border:1px solid #dce1e4; border-radius:10px; background:#fff; min-width:0; }
+.availability-observations h3 { font:600 20px/1.3 Arial,sans-serif; margin:0 0 16px; letter-spacing:0; }
+.usage-control { display:grid; align-items:center; gap:6px; color:#56616b; font-size:12px; }
+.usage-chart { margin:16px 0 0; display:grid; justify-items:center; gap:12px; min-width:0; }
+.usage-donut { width:min(200px,100%); height:auto; overflow:visible; }
+.usage-donut text { font:600 26px Arial,sans-serif; fill:#263442; pointer-events:none; }
+.usage-donut circle:focus { outline:none; stroke-width:34px; }
+.usage-legend { width:100%; display:grid; gap:8px; font-size:12px; }
+.usage-legend > div { display:grid; grid-template-columns:10px minmax(0,1fr) auto; gap:8px; align-items:baseline; }
+.usage-legend i { width:9px; height:9px; border-radius:50%; }
+.usage-legend span { overflow-wrap:anywhere; }
+.usage-legend strong { font-variant-numeric:tabular-nums; white-space:nowrap; }
+.usage-chart-value { margin:0; min-height:20px; font-size:12px; color:#52616d; text-align:center; }
+.usage-chart-empty { display:grid; place-items:center; width:148px; height:148px; border:24px solid #edf0f2; border-radius:50%; box-sizing:border-box; font-size:28px; color:#7a8791; }
+.usage-chart > figcaption:not(.usage-legend) { color:#56616b; font-size:13px; text-align:center; max-width:300px; }
+.usage-note { color:#5f6972; font:13px/1.5 Arial,sans-serif; margin:14px 0 0; }
+.usage-demand { margin-top:32px; }
+.usage-tabs { display:flex; flex-wrap:wrap; gap:6px; border-bottom:1px solid #dce1e4; padding-bottom:10px; margin-bottom:14px; }
+.usage-tabs button, .usage-pagination button { border:1px solid #cbd2d7; background:#fff; color:#34495e; border-radius:6px; min-height:40px; padding:9px 14px; font:600 13px Arial,sans-serif; cursor:pointer; }
+.usage-tabs button[aria-pressed="true"] { background:#334e68; border-color:#334e68; color:#fff; }
+.usage-api-filters { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; margin-bottom:14px; }
+.usage-api-filters[hidden] { display:none; }
+.usage-filters { display:flex; flex-wrap:wrap; gap:12px 24px; margin:14px 0; }
+.usage-check { display:flex; gap:8px; align-items:center; font-size:13px; min-height:32px; cursor:pointer; }
+.usage-check input { accent-color:#334e68; width:16px; height:16px; }
+.usage-table-wrap { max-width:100%; overflow-x:auto; border:1px solid #dce1e4; border-radius:8px; }
+.usage-table-wrap table { border-collapse:collapse; width:100%; font:13px/1.5 Arial,sans-serif; font-variant-numeric:tabular-nums; }
+.usage-table-wrap th { font-weight:600; color:#4e5e6d; background:#f3f6f8; white-space:nowrap; }
+.usage-table-wrap td, .usage-table-wrap th { padding:12px 14px; border-bottom:1px solid #e7ecef; text-align:right; }
+.usage-table-wrap tr:last-child td { border-bottom:0; }
+.usage-table-wrap th:nth-child(2), .usage-table-wrap td:nth-child(2) { text-align:left; }
+.usage-table-wrap tbody tr:nth-child(even) { background:#fafbfc; }
+.usage-table-wrap tbody tr:hover { background:#f1f5f8; }
+.usage-date { min-width:128px; display:grid; gap:2px; white-space:nowrap; }
+.usage-date small, .usage-recent-source small { display:block; color:#66747f; font-size:11px; }
+.usage-count { display:inline-block; min-width:24px; font-size:16px; color:#263f55; }
+.usage-pagination { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.usage-pagination span { margin-right:auto; color:#66747f; font-size:12px; }
+.usage-pagination button:disabled { opacity:.45; cursor:default; }
+.usage-method { margin-top:24px; padding-top:16px; border-top:1px solid #e2e7eb; color:#66747f; font-size:12px; }
+.usage-method summary { cursor:pointer; font-weight:600; }
+.usage-method p { max-width:80ch; line-height:1.6; }
+.usage-recent-source { min-width:130px; max-width:260px; overflow-wrap:anywhere; }
+.availability-admin__agent-list th, .availability-admin__agent-list td { text-align:left; padding:9px 12px; }
+.availability-admin__agent-list td:first-child { white-space:nowrap; color:#66747f; font-size:12px; }
+.availability-observations :is(button,select,input,summary):focus-visible, .usage-table-wrap:focus-visible { outline:3px solid #b77d3f; outline-offset:3px; }
+@media(max-width:760px) {
+  .usage-charts { gap:14px; }
+  .usage-chart-card { padding:16px; }
+  .usage-legend > div { grid-template-columns:10px minmax(0,1fr); }
+  .usage-legend strong { grid-column:2; }
+}
+@media(max-width:600px) {
+  .availability-admin__agent-toolbar { flex-direction:column; }
+  .availability-admin__agent-actions { width:100%; justify-content:space-between; }
+  .usage-metrics { gap:10px; }
+  .usage-metrics strong { font-size:26px; }
+  .usage-metrics span { font-size:11px; }
+  .usage-charts { grid-template-columns:1fr; }
+  .usage-legend > div { grid-template-columns:10px minmax(0,1fr) auto; }
+  .usage-legend strong { grid-column:auto; }
+  .usage-api-filters { grid-template-columns:1fr; }
+  .usage-table-wrap table { min-width:590px; }
+  .availability-admin__agent-list table { min-width:550px; }
+}

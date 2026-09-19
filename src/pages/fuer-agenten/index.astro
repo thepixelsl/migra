@@ -517,6 +517,7 @@ const schemaGraph = {
     </footer>
 
     <script>
+      import { availabilitySignals } from "../../lib/availabilitySignals.mjs";
       import {
         BOOKING_INQUIRY_DRAFT_STORAGE_KEY,
         bookingInquiryPackageOptions,
@@ -696,7 +697,7 @@ const schemaGraph = {
         };
       };
 
-      const checkSingleDateAvailability = async () => {
+      const checkSingleDateAvailability = async (event: SubmitEvent) => {
         if (!quickForm || !quickDateInput || !quickForm.reportValidity()) {
           return {
             ok: false,
@@ -713,7 +714,7 @@ const schemaGraph = {
         try {
           const response = await fetch(
             `${endpoint}?date=${encodeURIComponent(quickDateInput.value)}`,
-            { headers: { Accept: "application/json", "X-Artbild-Availability-Source": "agent_form" } },
+            { headers: { Accept: "application/json", "X-Artbild-Availability-Source": "agent_form", ...availabilitySignals(event) } },
           );
           const payload = await response.json();
 
@@ -780,12 +781,12 @@ const schemaGraph = {
 
       quickForm?.addEventListener("submit", (event) => {
         event.preventDefault();
-        const operation = checkSingleDateAvailability();
+        const operation = checkSingleDateAvailability(event);
         respondToWebMcp(event, operation);
         void operation;
       });
 
-      const checkMultipleDateAvailability = async () => {
+      const checkMultipleDateAvailability = async (event: SubmitEvent) => {
         if (!form || !form.reportValidity()) {
           return {
             ok: false,
@@ -818,6 +819,7 @@ const schemaGraph = {
               Accept: "application/json",
               "Content-Type": "application/json",
               "X-Artbild-Availability-Source": "agent_form",
+              ...availabilitySignals(event),
             },
             body: JSON.stringify({ dates: uniqueDates }),
           });
@@ -890,7 +892,7 @@ const schemaGraph = {
 
       form?.addEventListener("submit", (event) => {
         event.preventDefault();
-        const operation = checkMultipleDateAvailability();
+        const operation = checkMultipleDateAvailability(event);
         respondToWebMcp(event, operation);
         void operation;
       });

@@ -6,6 +6,7 @@ import {
   assertAdminAccess,
   json,
   methodNotAllowed,
+  readBlockedDates,
 } from "../../_availability.js";
 import { readAvailabilityStatistics } from "../../_availability-statistics.js";
 
@@ -14,12 +15,13 @@ export async function onRequestGet({ request, env }) {
   if (denied) return denied;
 
   try {
-    const [requests, statistics] = await Promise.all([
-      readAgentAvailabilityAudit(env), readAvailabilityStatistics(env),
+    const days = Number(new URL(request.url).searchParams.get("days"));
+    const [requests, statistics, blockedDates] = await Promise.all([
+      readAgentAvailabilityAudit(env, 10), readAvailabilityStatistics(env, Date.now(), days), readBlockedDates(env),
     ]);
     return json({
       retentionDays: AGENT_AUDIT_RETENTION_DAYS,
-      requests, statistics,
+      requests, statistics, blockedDates,
     });
   } catch {
     return json(

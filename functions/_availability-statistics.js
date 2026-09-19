@@ -1,95 +1,65 @@
 import { AGENT_AUDIT_RETENTION_MS } from "./_agent-audit.js";
 
-const CHANNEL = "COALESCE(json_extract(metadata_json, '$.channel'), 'legacy')";
 const DAY_MS = 86400000;
+// The fallback deliberately leaves historical browser and mixed Meta records unverified.
+const AUDIENCE = `CASE
+  WHEN json_extract(metadata_json, '$.version') = 2
+    AND json_extract(metadata_json, '$.audience') IN ('verified_bot','reported_bot','likely_manual','unknown')
+    THEN json_extract(metadata_json, '$.audience')
+  WHEN identity_source IN ('api_key','user_agent','user_agent_ip','provider_ip','automation') THEN 'reported_bot'
+  ELSE 'unknown' END`;
 
-export function longestDateSequence(values) {
-  const days = [...new Set(values)].filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(value)).sort();
-  let best = { length: 0, from: "", to: "" };
-  let run = 0;
-  let start = "";
-  let previous = NaN;
-  for (const day of days) {
-    const time = Date.parse(`${day}T00:00:00Z`);
-    if (!Number.isFinite(time)) continue;
-    run = time - previous === DAY_MS ? run + 1 : 1;
-    if (run === 1) start = day;
-    if (run > best.length) best = { length: run, from: start, to: day };
-    previous = time;
-  }
-  return best;
-}
-
-export async function readAvailabilityStatistics(env, now = Date.now()) {
+export async function readAvailabilityStatistics(env, now = Date.now(), days = 30) {
   const database = env.AGENT_AUDIT_DB || env.DB;
-  const since = now - AGENT_AUDIT_RETENTION_MS;
-  async function query(sql, args = [since, now]) {
-    const statement = database.prepare(sql).bind(...args);
-    const result = await statement.all();
+  const windowDays = [7, 30].includes(Number(days)) ? Number(days) : 30;
+  const since = now - Math.min(windowDays * DAY_MS, AGENT_AUDIT_RETENTION_MS);
+  const cte = `WITH observations AS (SELECT *, ${AUDIENCE} AS audience,
+    COALESCE(json_extract(metadata_json, '$.channel'), 'legacy') AS channel,
+    COALESCE(json_extract(metadata_json, '$.botName'), '') AS botName,
+    COALESCE(json_extract(metadata_json, '$.activity'), 'unknown') AS activity,
+    CASE WHEN json_extract(metadata_json, '$.version') = 2
+      AND json_extract(metadata_json, '$.device') IN ('desktop','mobile','tablet')
+      THEN json_extract(metadata_json, '$.device') ELSE 'unknown' END AS device
+    FROM agent_availability_audit WHERE requested_at > ? AND requested_at <= ?)`;
+  async function query(sql) {
+    const result = await database.prepare(`${cte} ${sql}`).bind(since, now).all();
     return result.results || result.rows || [];
   }
-  const range = "requested_at > ? AND requested_at <= ?";
-  const [totals, sources, dateRows, daily, series] = await Promise.all([
-    query(`SELECT COUNT(*) AS requests,
-      COALESCE(SUM(response_status = 200), 0) AS successful,
-      COALESCE(SUM(response_status = 429), 0) AS limited,
-      COALESCE(SUM(response_status >= 500), 0) AS errors,
-      COALESCE(SUM(json_array_length(results_json)), 0) AS checkedDates,
-      COALESCE(SUM(requested_at > ?), 0) AS last24Hours,
-      COALESCE(SUM(requested_at > ?), 0) AS last7Days,
-      MIN(requested_at) AS firstRequest
-      FROM agent_availability_audit WHERE ${range}`, [now - DAY_MS, now - 7 * DAY_MS, since, now]),
-    query(`SELECT ${CHANNEL} AS channel, client_label AS clientLabel,
-      COALESCE(json_extract(metadata_json, '$.botName'), '') AS botName,
-      GROUP_CONCAT(DISTINCT identity_source) AS evidenceTypes,
+  const [totals, sources, dateSources, devices] = await Promise.all([
+    query(`SELECT COUNT(*) AS requests, COALESCE(SUM(response_status = 200),0) AS successful,
+      COALESCE(SUM(response_status = 429),0) AS limited, COALESCE(SUM(response_status >= 500),0) AS errors,
+      COALESCE(SUM(audience = 'likely_manual'),0) AS manual,
+      COALESCE(SUM(audience = 'verified_bot'),0) AS verifiedBots,
+      COALESCE(SUM(audience = 'reported_bot'),0) AS reportedBots,
+      COALESCE(SUM(audience = 'unknown'),0) AS unknown,
+      MIN(CASE WHEN json_extract(metadata_json, '$.version') = 2 THEN requested_at END) AS differentiatedSince
+      FROM observations`),
+    query(`SELECT channel, audience, client_label AS clientLabel, botName, activity,
+      COUNT(*) AS requests, SUM(response_status = 200) AS successful, SUM(response_status = 429) AS limited
+      FROM observations GROUP BY channel, audience, client_label, botName, activity
+      ORDER BY requests DESC, client_label, botName, channel, audience`),
+    query(`SELECT dates.value AS date, channel, audience, client_label AS clientLabel, botName, activity,
       COUNT(*) AS requests, SUM(response_status = 200) AS successful,
       SUM(response_status = 429) AS limited,
-      SUM(json_array_length(results_json)) AS checkedDates
-      FROM agent_availability_audit WHERE ${range}
-      GROUP BY channel, client_label, botName ORDER BY requests DESC, client_label`),
-    query(`SELECT dates.value AS date, COUNT(*) AS requests,
-      SUM(response_status = 200 AND EXISTS (
-        SELECT 1 FROM json_each(a.results_json) r WHERE json_extract(r.value, '$.date') = dates.value
-      )) AS successful,
-      SUM(response_status = 429) AS limited
-      FROM agent_availability_audit a, json_each(a.dates_json) dates
-      WHERE ${range} GROUP BY dates.value ORDER BY dates.value`),
-    query(`SELECT strftime('%Y-%m-%d', requested_at / 1000, 'unixepoch') AS day,
-      COUNT(*) AS requests, SUM(response_status = 200) AS successful,
-      SUM(response_status = 429) AS limited
-      FROM agent_availability_audit WHERE ${range} GROUP BY day ORDER BY day DESC`),
-    query(`SELECT strftime('%Y-%m-%d', requested_at / 1000, 'unixepoch') AS day,
-      ${CHANNEL} AS channel, client_label AS clientLabel,
-      json_group_array(DISTINCT dates.value) AS dates
-      FROM agent_availability_audit a, json_each(a.dates_json) dates
-      WHERE ${range} GROUP BY day, channel, client_label`),
+      SUM(device = 'desktop') AS desktop, SUM(device = 'mobile') AS mobile, SUM(device = 'tablet') AS tablet,
+      SUM(device = 'unknown') AS unknownDevice
+      FROM observations, json_each(dates_json) dates
+      GROUP BY dates.value, channel, audience, client_label, botName, activity ORDER BY dates.value`),
+    query(`SELECT device, COUNT(*) AS requests FROM observations WHERE audience = 'likely_manual'
+      GROUP BY device ORDER BY requests DESC, device`),
   ]);
-  const dates = dateRows.filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date)).map((row) => ({
-    date: row.date, requests: Number(row.requests), successful: Number(row.successful), limited: Number(row.limited),
-  }));
-  const months = new Map();
-  for (const date of dates) {
-    const month = date.date.slice(0, 7);
-    const item = months.get(month) || { month, requests: 0, successful: 0, limited: 0, uniqueDates: 0, successfulUniqueDates: 0 };
-    item.requests += date.requests;
-    item.successful += date.successful;
-    item.limited += date.limited;
-    item.uniqueDates += 1;
-    item.successfulUniqueDates += Number(date.successful > 0);
-    months.set(month, item);
-  }
-  const patterns = series.map((row) => {
-    const requestedDates = JSON.parse(row.dates);
-    return { day: row.day, channel: row.channel, clientLabel: row.clientLabel,
-      uniqueDates: requestedDates.length, sequence: longestDateSequence(requestedDates) };
-  }).filter((row) => row.sequence.length >= 7 || row.uniqueDates >= 20)
-    .sort((a, b) => b.day.localeCompare(a.day) || b.uniqueDates - a.uniqueDates);
+  const sourceKey = (row) => JSON.stringify([row.channel, row.audience, row.clientLabel, row.botName, row.activity]);
+  const keys = new Map(sources.map((row, index) => [sourceKey(row), index]));
+  const numeric = (row, fields) => Object.fromEntries(fields.map((field) => [field, Number(row[field]) || 0]));
   return {
-    since: new Date(since).toISOString(), until: new Date(now).toISOString(),
-    totals: Object.fromEntries(Object.entries(totals[0]).map(([key, value]) => [key, value === null ? null : Number(value)])),
-    sources: sources.map((row) => ({ ...row, requests: Number(row.requests), successful: Number(row.successful), limited: Number(row.limited), checkedDates: Number(row.checkedDates) })),
-    months: [...months.values()], dates, daily,
-    patterns: patterns.slice(0, 20), patternCount: patterns.length,
-    patternExplanation: "Hinweis bei mindestens 7 aufeinanderfolgenden oder 20 verschiedenen Wunschdaten je UTC-Tag, Zugangsweg und gemeldeter Dienst-Kategorie. Mehrere Absender können zusammenfallen; dies ist kein Beweis für Scraping oder einen einzelnen Bot.",
+    windowDays, since: new Date(since).toISOString(), until: new Date(now).toISOString(),
+    totals: { ...numeric(totals[0], ['requests','successful','limited','errors','manual','verifiedBots','reportedBots','unknown']),
+      differentiatedSince: totals[0].differentiatedSince ? new Date(Number(totals[0].differentiatedSince)).toISOString() : null },
+    sources: sources.map((row, id) => ({ ...row, id, ...numeric(row, ['requests','successful','limited']) })),
+    dateSources: dateSources.filter((row) => /^\d{4}-\d{2}-\d{2}$/.test(row.date)).map((row) => ({
+      date: row.date, sourceId: keys.get(sourceKey(row)),
+      ...numeric(row, ['requests','successful','limited','desktop','mobile','tablet','unknownDevice']),
+    })),
+    devices: devices.map((row) => ({ device: row.device, requests: Number(row.requests) })),
   };
 }

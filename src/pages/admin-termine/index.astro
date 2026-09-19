@@ -2,6 +2,7 @@
 import FaviconHead from "../../components/FaviconHead.astro";
 import MobileNavigation from "../../components/MobileNavigation.astro";
 import "../../styles/global.css";
+import "../../styles/availability-statistics.css";
 
 const title = "Admin Termine | Artbild-Fotografie";
 const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hamburg.";
@@ -86,17 +87,14 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
       >
         <div class="availability-admin__agent-toolbar">
           <div>
-            <p class="availability-admin__eyebrow">Protokoll</p>
+            <p class="availability-admin__eyebrow">Statistik</p>
             <h2 id="agent-requests-title">Terminabfragen</h2>
           </div>
-          <button type="button" data-agent-refresh>Aktualisieren</button>
+          <div class="availability-admin__agent-actions">
+            <label>Zeitraum <select data-agent-window aria-label="Statistik-Zeitraum"><option value="30">Letzte 30 Tage</option><option value="7">Letzte 7 Tage</option></select></label>
+            <button type="button" data-agent-refresh>Aktualisieren</button>
+          </div>
         </div>
-
-        <p class="availability-admin__agent-intro">
-          Nutzung über FAB, API und HTML-Terminseiten während der letzten 30 Tage.
-          Die Auswertung umfasst alle gespeicherten Abfragen; darunter erscheinen die letzten 100 Einzelabfragen.
-          Rohe IP-Adressen, vollständige User-Agents und API-Schlüssel werden nicht gespeichert.
-        </p>
 
         <div
           class="availability-admin__status"
@@ -108,13 +106,13 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
         </div>
 
         <div class="availability-observations" data-agent-statistics></div>
-        <h3 class="availability-admin__requests-heading">Letzte Einzelabfragen</h3>
+        <h3 class="availability-admin__requests-heading">Letzte 10 Abfragen</h3>
         <div class="availability-admin__agent-list" data-agent-list></div>
       </section>
     </main>
 
     <script>
-      import { renderAvailabilityStatistics, channelLabel, identityLabel } from "../../lib/availabilityAdmin.mjs";
+      import { renderAvailabilityStatistics, renderRecentRequests } from "../../lib/availabilityAdmin.mjs";
       const adminRoot = document.querySelector("[data-admin-availability]");
 
       if (adminRoot instanceof HTMLElement) {
@@ -291,155 +289,42 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
         const refresh = agentRoot.querySelector("[data-agent-refresh]");
         const endpoint = "/api/admin/agent-requests";
         const statisticsRoot = agentRoot.querySelector("[data-agent-statistics]");
-        const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-
+        const windowSelect = agentRoot.querySelector<HTMLSelectElement>("[data-agent-window]");
         function setAgentStatus(message, tone = "") {
           if (!(status instanceof HTMLElement)) return;
           status.textContent = message;
           status.dataset.tone = tone;
         }
 
-        function validAgentDate(value) {
-          if (typeof value !== "string" || !datePattern.test(value)) return false;
-          return Number.isFinite(Date.parse(`${value}T12:00:00Z`));
-        }
-
-        function formatAgentDate(value) {
-          if (!validAgentDate(value)) return value;
-          return new Intl.DateTimeFormat("de-DE", {
-            weekday: "short",
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-            timeZone: "Europe/Berlin",
-          }).format(new Date(`${value}T12:00:00Z`));
-        }
-
-        function formatAgentTimestamp(value) {
-          const timestamp = typeof value === "string" ? Date.parse(value) : NaN;
-          if (!Number.isFinite(timestamp)) return "Unbekannter Zeitpunkt";
-          return new Intl.DateTimeFormat("de-DE", {
-            dateStyle: "medium",
-            timeStyle: "short",
-            timeZone: "Europe/Berlin",
-          }).format(new Date(timestamp));
-        }
-
-        function responseLabel(code) {
-          if (code === 200) return "Erfolgreich";
-          if (code === 429) return "Abfragelimit erreicht";
-          if (code >= 500) return "Technischer Fehler";
-          return `HTTP ${code}`;
-        }
-
-        function createAgentRequestCard(item) {
-          const article = document.createElement("article");
-          article.className = "availability-admin__agent-card";
-
-          const header = document.createElement("header");
-          const identity = document.createElement("div");
-          const client = document.createElement("h3");
-          client.textContent = typeof item?.clientLabel === "string"
-            ? item.clientLabel
-            : "Nicht identifiziert";
-          const timestamp = document.createElement("p");
-          timestamp.textContent = formatAgentTimestamp(item?.requestedAt);
-          identity.append(client, timestamp);
-
-          const badge = document.createElement("span");
-          badge.className = "availability-admin__agent-badge";
-          badge.dataset.verified = String(item?.clientVerified === true);
-          badge.textContent = identityLabel(item?.identitySource);
-          header.append(identity, badge);
-
-          const dates = Array.isArray(item?.dates) ? item.dates.filter(validAgentDate) : [];
-          const results = Array.isArray(item?.results) ? item.results : [];
-          const dateList = document.createElement("ul");
-          dateList.className = "availability-admin__agent-dates";
-          dateList.setAttribute("aria-label", "Angefragte Termine");
-
-          for (const date of dates) {
-            const result = results.find((entry) => entry?.date === date);
-            const row = document.createElement("li");
-            const dateText = document.createElement("span");
-            dateText.textContent = formatAgentDate(date);
-            const outcome = document.createElement("strong");
-            if (typeof result?.available === "boolean") {
-              outcome.textContent = result.available ? "frei" : "belegt";
-              outcome.dataset.available = String(result.available);
-            } else {
-              outcome.textContent = "nicht geprüft";
-              outcome.dataset.available = "unknown";
-            }
-            row.append(dateText, outcome);
-            dateList.append(row);
-          }
-
-          const footer = document.createElement("footer");
-          const responseStatus = Number(item?.responseStatus);
-          footer.textContent = responseLabel(responseStatus);
-          footer.dataset.status = String(responseStatus);
-
-          const source = document.createElement("p");
-          source.className = "availability-admin__agent-source";
-          source.textContent = `${channelLabel(item?.channel)}${item?.botName ? ` · ${item.botName}` : ""}`;
-          const evidence = document.createElement("p");
-          evidence.className = "availability-admin__agent-evidence";
-          evidence.textContent = item?.evidence || "Herkunft unbekannt.";
-          const receipt = document.createElement("small");
-          receipt.className = "availability-admin__agent-receipt";
-          receipt.textContent = `Prüfnummer: ${item.id}`;
-          article.append(header, source, evidence, dateList, footer, receipt);
-          return article;
-        }
-
-        function renderAgentRequests(requests) {
-          if (!(list instanceof HTMLElement)) return;
-          list.textContent = "";
-
-          if (!Array.isArray(requests) || requests.length === 0) {
-            const empty = document.createElement("p");
-            empty.className = "availability-admin__agent-empty";
-            empty.textContent = "Noch keine gültigen Terminabfragen protokolliert.";
-            list.append(empty);
-            return;
-          }
-
-          for (const item of requests) list.append(createAgentRequestCard(item));
-        }
-
         async function loadAgentRequests() {
           if (refresh instanceof HTMLButtonElement) refresh.disabled = true;
+          if (windowSelect) windowSelect.disabled = true;
           setAgentStatus("Terminabfragen werden geladen.");
           try {
-            const response = await fetch(endpoint, {
-              method: "GET",
-              credentials: "same-origin",
-              cache: "no-store",
+            const response = await fetch(`${endpoint}?days=${windowSelect?.value || "30"}`, {
+              method: "GET", credentials: "same-origin", cache: "no-store",
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data?.message || "load_failed");
             const requests = Array.isArray(data?.requests) ? data.requests : [];
-            renderAgentRequests(requests);
-            if (statisticsRoot instanceof HTMLElement) renderAvailabilityStatistics(statisticsRoot, data.statistics);
-            setAgentStatus(
-              requests.length === 1
-                ? "1 Terminabfrage geladen."
-                : `${requests.length} Terminabfragen geladen.`,
-              "ok",
-            );
+            if (list instanceof HTMLElement) renderRecentRequests(list, requests);
+            if (statisticsRoot instanceof HTMLElement) renderAvailabilityStatistics(statisticsRoot, data.statistics, { blockedDates: data.blockedDates });
+            setAgentStatus(`Stand ${new Intl.DateTimeFormat("de-DE", {timeStyle: "short", timeZone: "Europe/Berlin"}).format(new Date(data.statistics.until))} Uhr · beim Seitenaufruf aktualisiert`, "ok");
           } catch {
-            renderAgentRequests([]);
+            if (list instanceof HTMLElement) list.replaceChildren();
             if (statisticsRoot instanceof HTMLElement) statisticsRoot.replaceChildren();
             setAgentStatus("Die Terminabfragen konnten nicht geladen werden. Prüfe bitte die Admin-Anmeldung und die Datenbank-Verbindung.", "error");
           } finally {
             if (refresh instanceof HTMLButtonElement) refresh.disabled = false;
+            if (windowSelect) windowSelect.disabled = false;
           }
         }
 
         if (refresh instanceof HTMLButtonElement) {
           refresh.addEventListener("click", loadAgentRequests);
         }
+        windowSelect?.addEventListener("change", loadAgentRequests);
+        window.addEventListener("pageshow", (event) => { if (event.persisted) void loadAgentRequests(); });
         loadAgentRequests();
       }
     </script>
@@ -536,121 +421,6 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
     margin: 18px 0 0;
     color: #6f6a64;
     line-height: 1.55;
-  }
-
-  .availability-admin__agent-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
-  :global(.availability-admin__agent-card) {
-    min-width: 0;
-    padding: 18px;
-    border: 1px solid #ded8cf;
-    background: #fbfaf8;
-  }
-
-  :global(.availability-admin__agent-card header) {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-  }
-
-  :global(.availability-admin__agent-card h3) {
-    margin: 0;
-    overflow-wrap: anywhere;
-    font-size: 21px;
-  }
-
-  :global(.availability-admin__agent-card header p) {
-    margin: 5px 0 0;
-    color: #6f6a64;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 12px;
-  }
-
-  :global(.availability-admin__agent-badge) {
-    flex: 0 0 auto;
-    padding: 6px 8px;
-    border: 1px solid #c4bbb0;
-    color: #6f6a64;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  :global(.availability-admin__agent-badge[data-verified="true"]) {
-    border-color: #1d5b3a;
-    background: #e8f3ec;
-    color: #1d5b3a;
-  }
-
-  :global(.availability-admin__agent-dates) {
-    margin: 16px 0;
-    padding: 0;
-    display: grid;
-    gap: 7px;
-    list-style: none;
-  }
-
-  :global(.availability-admin__agent-dates li) {
-    min-width: 0;
-    padding: 9px 10px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    border: 1px solid #e5ded5;
-    background: #fff;
-    font-size: 13px;
-  }
-
-  :global(.availability-admin__agent-dates strong) {
-    flex: 0 0 auto;
-    color: #6f6a64;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 10px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  :global(.availability-admin__agent-dates strong[data-available="true"]) {
-    color: #1d5b3a;
-  }
-
-  :global(.availability-admin__agent-dates strong[data-available="false"]) {
-    color: #9d232b;
-  }
-
-  :global(.availability-admin__agent-card footer) {
-    color: #6f6a64;
-    font-family: "Raleway", Arial, sans-serif;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-  }
-
-  :global(.availability-admin__agent-card footer[data-status="200"]) {
-    color: #1d5b3a;
-  }
-
-  :global(.availability-admin__agent-card footer[data-status="429"]),
-  :global(.availability-admin__agent-card footer[data-status="503"]) {
-    color: #9d232b;
-  }
-
-  :global(.availability-admin__agent-empty) {
-    grid-column: 1 / -1;
-    margin: 0;
-    padding: 28px 18px;
-    border: 1px dashed #cfc6bb;
-    color: #6f6a64;
-    text-align: center;
   }
 
   .availability-admin__toolbar {
@@ -852,19 +622,6 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
       width: 100%;
     }
 
-    .availability-admin__agent-list {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    :global(.availability-admin__agent-card) {
-      padding: 14px;
-    }
-
-    :global(.availability-admin__agent-card header) {
-      align-items: flex-start;
-      flex-direction: column;
-    }
-
     .availability-admin__toolbar {
       grid-template-columns: 44px 1fr 44px;
       gap: 8px;
@@ -895,32 +652,5 @@ const description = "Geschützte Terminverwaltung für Artbild-Fotografie Hambur
       overflow-wrap: anywhere;
       font-size: clamp(34px, 11.25vw, 40px);
     }
-  }
-</style>
-
-<style>
-  .availability-observations { min-width: 0; }
-  .availability-admin__requests-heading { margin: 36px 0 20px; }
-  :global(.availability-observations__metrics) { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  :global(.availability-observations__metrics > div) { display: grid; gap: 6px; padding: 18px; border: 1px solid #d8d0c6; background: #fff; }
-  :global(.availability-observations__metrics strong) { font-size: 30px; color: #171717; }
-  :global(.availability-observations__metrics span), :global(.availability-observations__note) { font: 14px/1.6 Arial, sans-serif; color: #514b44; }
-  :global(.availability-observations__section) { margin: 28px 0; min-width: 0; }
-  :global(.availability-observations__section h3), :global(.availability-observations__patterns h3) { font-size: 23px; margin: 0 0 14px; }
-  :global(.availability-observations__table-wrap) { overflow-x: auto; border: 1px solid #d8d0c6; }
-  :global(.availability-observations table) { border-collapse: collapse; width: 100%; font: 14px/1.5 Arial, sans-serif; }
-  :global(.availability-observations th), :global(.availability-observations td) { padding: 12px; border-bottom: 1px solid #e5ded5; text-align: left; overflow-wrap: anywhere; }
-  :global(.availability-observations th) { background: #eee9e2; color: #171717; font-weight: 700; }
-  :global(.availability-observations select) { max-width: 100%; padding: 10px; margin: 8px; border: 1px solid #b6aca0; color: #171717; background: #fff; font: inherit; }
-  :global(.availability-observations__patterns) { padding: 20px; background: #fff8e9; border: 1px solid #d9c7a0; margin: 28px 0; font: 14px/1.7 Arial, sans-serif; }
-  :global(.availability-observations__patterns li) { margin: 10px 0; }
-  :global(.availability-admin__agent-source) { font: 700 14px/1.5 Arial, sans-serif; margin: 0; }
-  :global(.availability-admin__agent-evidence), :global(.availability-admin__agent-receipt) { font: 13px/1.6 Arial, sans-serif; overflow-wrap: anywhere; color: #514b44; margin: 0; }
-  :global(.availability-admin__agent-card header) { flex-wrap: wrap; }
-  :global(.availability-admin__agent-badge) { white-space: normal; max-width: 100%; }
-  @media (max-width: 600px) {
-    :global(.availability-observations__metrics) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    :global(.availability-observations table) { min-width: 510px; }
-    :global(.availability-observations__metrics > div) { padding: 12px; }
   }
 </style>

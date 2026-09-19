@@ -1,5 +1,5 @@
 import { parseDateValue } from "./_availability.js";
-import { availabilityChannel, reportedAgentIdentity } from "./_agent-identity.js";
+import { availabilityChannel, reportedAgentIdentity, auditAudience } from "./_agent-identity.js";
 
 export const AGENT_AUDIT_RETENTION_DAYS = 30;
 export const AGENT_AUDIT_RETENTION_MS = AGENT_AUDIT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
@@ -87,7 +87,7 @@ async function verifiedClientIdentity(request, env) {
 
 export async function identifyAgentClient(request, env) {
   const verified = await verifiedClientIdentity(request, env);
-  if (verified) return { ...verified, botName: "", activity: "agent", evidence: "Zugewiesener API-Schlüssel stimmt überein." };
+  if (verified) return { ...verified, audience: "reported_bot", device: "unknown", botName: "", activity: "agent", evidence: "API-Client bestätigt; automatische Ausführung nicht bewiesen." };
   return reportedAgentIdentity(request, env);
 }
 
@@ -139,7 +139,7 @@ export async function writeAgentAvailabilityAudit({
       JSON.stringify(validDates),
       JSON.stringify(validResults),
       Number(responseStatus),
-      JSON.stringify({ version: 1, channel: availabilityChannel(request), botName: identity.botName, activity: identity.activity, evidence: identity.evidence }),
+      JSON.stringify({ version: 2, channel: availabilityChannel(request), audience: identity.audience, device: identity.device, botName: identity.botName, activity: identity.activity, evidence: identity.evidence }),
     )
     .run();
 }
@@ -214,9 +214,11 @@ export async function pruneAgentAvailabilityAudit(env, now = Date.now()) {
 export function readAuditMetadata(row) {
   const meta = parseStoredJson(row.metadata_json, {}) || {};
   return {
+    audience: auditAudience(row, meta),
+    device: meta.version === 2 && ["desktop", "mobile", "tablet"].includes(meta.device) ? meta.device : "unknown",
     channel: ["fab", "agent_form", "agent_html", "api"].includes(meta.channel) ? meta.channel : "legacy",
     botName: cleanClientLabel(meta.botName),
-    activity: ["user", "search", "crawler", "agent", "automation", "browser"].includes(meta.activity) ? meta.activity : "unknown",
+    activity: ["user", "search", "crawler", "preview", "ads", "agent", "automation", "browser"].includes(meta.activity) ? meta.activity : "unknown",
     evidence: String(meta.evidence || "Herkunft im bisherigen Protokoll nicht weiter erfasst.").slice(0, 200),
   };
 }

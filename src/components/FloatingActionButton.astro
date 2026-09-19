@@ -306,6 +306,7 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 </div>
 
 <script>
+  import { availabilitySignals } from "../lib/availabilitySignals.mjs";
   const floatingActionRoots = document.querySelectorAll("[data-floating-action]");
 
   floatingActionRoots.forEach((root) => {
@@ -614,14 +615,14 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
       });
     }
 
-    async function requestAvailability(dateValue, signal) {
+    async function requestAvailability(dateValue, signal, event) {
       const requestUrl = new URL(endpoint, window.location.origin);
       requestUrl.searchParams.set("date", dateValue);
 
       const response = await window.fetch(requestUrl, {
         method: "GET",
         credentials: "omit",
-        headers: { "X-Artbild-Availability-Source": "fab" },
+        headers: { "X-Artbild-Availability-Source": "fab", ...availabilitySignals(event) },
         signal,
       });
       const text = await response.text();
@@ -679,7 +680,7 @@ const whatsappHref = `https://wa.me/4915161438120?text=${whatsappText}`;
 
       try {
         const [response] = await Promise.all([
-          requestAvailability(elements.date.value, requestContext.controller.signal),
+          requestAvailability(elements.date.value, requestContext.controller.signal, event),
           delay(minimumLoading),
         ]);
 

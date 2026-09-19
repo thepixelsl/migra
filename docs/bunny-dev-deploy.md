@@ -115,7 +115,7 @@ Check the generated `https://...bunny.run` URL, then verify:
 ## Appointment observations
 
 The protected `/admin-termine/` dashboard aggregates the last 30 days, independently
-of its 100-row detail limit. A request is one validated server-side check; successful
+of its ten-row detail limit. A request is one validated server-side check; successful
 multi-date requests can return several date results. Repeated checks count again.
 429 attempts count as rejected requests and never as delivered availability results.
 The FAB sends `X-Artbild-Availability-Source: fab`; agent forms send `agent_form`.
@@ -135,9 +135,20 @@ only the assigned API key confirms a registered client label. A Google network
 match does not establish Gemini usage. Generic browser traffic cannot distinguish
 human users from computer-use agents.
 
-Pattern hints group by UTC request day, entry point and reported provider label.
-At least seven consecutive target dates or twenty distinct target dates trigger a
-hint. These groups may include different senders: neither one actor nor malicious
-intent is inferred. Monthly coverage separates requested dates from dates for which
-availability was actually returned. Historical FAB and direct GET checks were not
-logged, so the 30-day totals are incomplete until a full retention window elapses.
+The compact dashboard replaces calendar-pattern and monthly-coverage lists with
+separate manual-demand and bot/API rankings. Historical FAB and direct GET checks
+were not logged before the first observation release; device and interaction
+classification starts with metadata version 2 and is never inferred retroactively.
+
+## Terminstatistik: Nachfrage und Bot-Nutzung (19. September 2026)
+
+Die Adminansicht zeigt Diagramme, eine paginierte Rangliste der Wunschtermine und genau zehn aktuelle Abrufe. Die Statistik erfasst alle gespeicherten Abfragen im gewählten 7- oder 30-Tage-Fenster, unabhängig vom Detail-Limit. Neu laden oder Aktualisieren liest frisch vom Server; kein Polling. Die Rangliste startet mit mutmaßlich manueller Nachfrage und kommenden Terminen. Bot-/API-Daten sind getrennt wählbar und nach Dienst sowie Zugangsweg filterbar. Kalenderstatus und ein Filter für freie Termine unterstützen die Terminplanung.
+
+- `metadata_json.version=2`: `audience` und grobe Geräteklasse; keine neue Tabelle oder Datenmigration. Alte Einträge bleiben erhalten, Browser ohne neue Bedienungssignale zählen als unklar.
+- `verified_bot`: Bot-Kennung und zum Dienst passende offizielle Bot-Netzliste stimmen überein. Die IP kommt weiterhin vom Hosting-Proxy (`x-real-ip`); keine Authentifizierung oder Beweis einer Buchungsabsicht. Reine Anbieterzugehörigkeit und historische Anbieterabgleiche reichen nicht.
+- `reported_bot`: nur gemeldete Bot-Kennung, generisches Abrufwerkzeug, Automatisierungs-/WebMCP-Signal, Anbieter-Netz ohne passenden Bot-Nachweis oder zugewiesener API-Client. API-Schlüssel bestätigen den Client, nicht die automatische Ausführung. Standardmäßig nicht im Diagramm mit Netzbeleg enthalten.
+- `likely_manual`: Browserkennung plus FAB-/Formularquelle und positives Bedienungssignal, ohne erkannte Automatisierung. Als Schätzung gekennzeichnet: Computer Use und gefälschte Header sind nicht ausgeschlossen. Desktop, Mobil, Tablet und unbekannt getrennt; keine Bildschirmgrößen oder Fingerprints gespeichert.
+- `unknown`: keine hinreichenden Merkmale. Nie stillschweigend als Mensch oder nachgewiesener Bot gezählt.
+- Meta-Vorschau, KI-Crawler, Nutzerabruf, Suche und Werbe-Crawler getrennt; alte `Meta-Crawler`-Einträge bleiben ausdrücklich unaufgelöst.
+
+Diagramme zählen Server-Anfragen. Die Termintabelle zählt jeden angefragten Tag pro Anfrage; Mehrfachanfragen können mehrere Tabellenzeilen beitragen. Wiederholungen und abgewiesene gültige Datumsabfragen zählen erneut, weder eindeutige Personen noch Buchungswahrscheinlichkeiten. Keine Prognose aus Crawler-Mengen.

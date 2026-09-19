@@ -1,15 +1,15 @@
 import { BlockList, isIP } from "node:net";
 
 export const BOT_NETWORK_SOURCES = [
-  ["OpenAI", "https://openai.com/chatgpt-user.json"],
-  ["OpenAI", "https://openai.com/searchbot.json"],
-  ["OpenAI", "https://openai.com/gptbot.json"],
-  ["Anthropic", "https://claude.com/crawling/bots.json"],
-  ["Perplexity", "https://www.perplexity.ai/perplexity-user.json"],
-  ["Perplexity", "https://www.perplexity.ai/perplexitybot.json"],
-  ["Google", "https://developers.google.com/static/crawling/ipranges/common-crawlers.json"],
-  ["Google", "https://developers.google.com/static/crawling/ipranges/special-crawlers.json"],
-  ["Google", "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json"],
+  ["OpenAI", "https://openai.com/chatgpt-user.json", ["ChatGPT-User"]],
+  ["OpenAI", "https://openai.com/searchbot.json", ["OAI-SearchBot"]],
+  ["OpenAI", "https://openai.com/gptbot.json", ["GPTBot"]],
+  ["Anthropic", "https://claude.com/crawling/bots.json", ["Claude-User", "Claude-SearchBot", "ClaudeBot"]],
+  ["Perplexity", "https://www.perplexity.ai/perplexity-user.json", ["Perplexity-User"]],
+  ["Perplexity", "https://www.perplexity.ai/perplexitybot.json", ["PerplexityBot"]],
+  ["Google", "https://developers.google.com/static/crawling/ipranges/common-crawlers.json", ["Googlebot", "GoogleOther"]],
+  ["Google", "https://developers.google.com/static/crawling/ipranges/special-crawlers.json", []],
+  ["Google", "https://developers.google.com/static/crawling/ipranges/user-triggered-fetchers-google.json", ["Google-NotebookLM"]],
 ];
 const MAX_AGE = 24 * 60 * 60 * 1000;
 
@@ -37,13 +37,13 @@ export function createAgentNetworkRegistry({ fetcher = fetch, now = Date.now, so
   let closed = false;
   async function refresh() {
     if (pending) return pending;
-    pending = Promise.allSettled(sources.map(async ([provider, url]) => {
+    pending = Promise.allSettled(sources.map(async ([provider, url, botNames = []]) => {
       const response = await fetcher(url, { signal: AbortSignal.timeout(4000), redirect: "error" });
       if (!response.ok) throw new Error("bot_network_fetch_failed");
       const body = await response.text();
       if (body.length > 2_000_000) throw new Error("bot_network_list_too_large");
       const list = compileNetworkList(JSON.parse(body));
-      if (!closed) entries.set(url, { provider, list, updatedAt: now() });
+      if (!closed) entries.set(url, { provider, botNames, list, updatedAt: now() });
     })).finally(() => { pending = undefined; });
     return pending;
   }
@@ -52,12 +52,10 @@ export function createAgentNetworkRegistry({ fetcher = fetch, now = Date.now, so
     lookup(address) {
       const family = isIP(address);
       if (!family) return null;
-      for (const entry of entries.values()) {
-        if (now() - entry.updatedAt <= MAX_AGE && entry.list.check(address, family === 4 ? "ipv4" : "ipv6")) {
-          return { provider: entry.provider };
-        }
-      }
-      return null;
+      const matches = [...entries.values()].filter((entry) => now() - entry.updatedAt <= MAX_AGE
+        && entry.list.check(address, family === 4 ? "ipv4" : "ipv6"));
+      if (!matches.length || new Set(matches.map((entry) => entry.provider)).size !== 1) return null;
+      return { provider: matches[0].provider, botNames: [...new Set(matches.flatMap((entry) => entry.botNames))] };
     },
     start() {
       void refresh();
