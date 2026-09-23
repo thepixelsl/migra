@@ -40,6 +40,7 @@ import img27 from "../../assets/hochzeitsfotos-hamburg/2f89e6a94004dc66.jpg";
 import img28 from "../../assets/hochzeitsfotos-hamburg/e67b1f9d22527396.jpg";
 
 const pagePath = "/braut-fotoshooting-fraser-suites-hamburg/";
+const dateModified = "2026-09-23";
 const page = migratedPages.find((entry) => entry.path === pagePath);
 
 if (!page) {
@@ -57,9 +58,17 @@ const articleHtml = `
   <h2>Inszeniertes Braut-Editorial in Hamburg</h2>
   <p>Diese Bildstrecke entstand als geplantes Editorial mit einem Model. Sie dokumentiert keine echte Hochzeit und keine Trauung.</p>
   <p>Fotografiert wurde in den Fraser Suites Hamburg: im Hotelzimmer, am Fenster und im historischen Treppenhaus. Die Serie konzentriert sich auf Brautkleid, Schleier, Styling, Licht und die Architektur des Hauses.</p>
+  <h2>Brautportraits mit Fensterlicht</h2>
+  <p>Das Hotelzimmer gab der Produktion einen ruhigen Rahmen. Am Fenster konnten wir unterschiedliche Perspektiven ausprobieren und zeigen, wie das Licht auf Gesicht, Kleid und Schleier fällt. Für diese Aufnahmen wurden Pose, Kleidung und Styling bewusst aufeinander abgestimmt.</p>
+  <p>Die Motive greifen die Vorbereitung einer Braut auf: das Anlegen des Schleiers, Details des Kleides und das fertige Styling. Im Editorial konnten wir diese Situationen ohne den Ablauf einer tatsächlichen Trauung gestalten. Wer die eigene Hochzeit plant, findet hier Anregungen für die Bildsprache – keine Dokumentation eines echten Hochzeitsmorgens.</p>
+  <h2>Das Treppenhaus als Teil der Bildgestaltung</h2>
+  <p>Eine zweite Bildfolge entstand im historischen Treppenhaus der Fraser Suites. Das Geländer, die Linien der Treppe und die Architektur geben den Portraits einen anderen Rahmen als das Hotelzimmer. Weite Einstellungen zeigen das Kleid im Raum; engere Ausschnitte lenken den Blick auf Gesicht, Stoff und Schleier.</p>
+  <p>Die Kombination beider Orte zeigt, wie unterschiedliche Bilder innerhalb einer Location entstehen können. Für ein eigenes Shooting sollten Zugang, Räume und Zeitfenster vorab mit dem Hotel abgestimmt werden.</p>
   <h2>Team und Ausstattung</h2>
   <p>Am Editorial beteiligt waren die Modedesignerin <a href="https://paramour-brautmode.de" rel="noopener" target="_blank">Nathalie Tramecourt</a> und die <a href="/gallery/visagistin-manja-biebow/">Visagistin Manija Biebow</a>. Der Brautstrauß kam vom <a href="https://www.blumenhaus-asmussen.de" rel="noopener" target="_blank">Blumenhaus Asmussen</a> in Hamburg.</p>
   <p>Die nachfolgende Galerie zeigt die vollständige fotografische Auswahl dieser Produktion.</p>
+  <h2>Inspiration für eure Vorbereitung</h2>
+  <p>Wenn ihr das Getting Ready fotografisch begleiten lassen möchtet, helfen ein heller Raum und ein abgestimmter Zeitplan. Weitere Hinweise findet ihr im Beitrag <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Getting Ready in Hamburg planen</a>. Was bei einer Hochzeitsbegleitung enthalten ist, zeigen die <a href="/hochzeitsfotograf-preise/">Preise und Pakete für Hochzeitsfotografie in Hamburg</a>.</p>
 `;
 
 const galleryImages = [
@@ -112,7 +121,7 @@ const schemaGraph = {
       headline: page.title,
       description,
       datePublished: page.datePublished,
-      dateModified: page.dateModified,
+      dateModified,
       image: { "@id": `${pageUrl}#primaryimage` },
       author: { "@type": "Person", name: "York Augustin" },
       publisher: { "@id": `${siteUrl}/#organization` },
@@ -186,7 +195,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: page.datePublished,
-      dateModified: page.dateModified,
+      dateModified,
       primaryImageOfPage: { "@id": `${pageUrl}#primaryimage` },
       inLanguage: "de-DE",
     },
@@ -211,7 +220,7 @@ const schemaGraph = {
     <meta property="og:site_name" content="Artbild-Fotografie">
     <meta property="og:image" content={ogImage}>
     <meta property="article:published_time" content={page.datePublished}>
-    <meta property="article:modified_time" content={page.dateModified}>
+    <meta property="article:modified_time" content={dateModified}>
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
     <meta name="twitter:description" content={description}>

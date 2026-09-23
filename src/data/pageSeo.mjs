@@ -292,6 +292,11 @@ export const pageSeo = {
     image: "public/migrated-assets/standesamt-hamburg/rathaus-altona.jpg",
     alt: "Rathaus Altona als einer der Hamburger Trauorte",
   },
+  "/trauung-im-rathaus-der-hansestadt-hamburg/": {
+    keyword: "Heiraten im Hamburger Rathaus Termine Kosten",
+    image: "public/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_standesamt.jpg",
+    alt: "Hamburger Rathaus am Rathausmarkt",
+  },
   "/traum-hochzeit-location-hamburg/": {
     keyword: "Hochzeitslocations Hamburg Getting Ready",
     title: "Hochzeitslocations Hamburg: Ideen für Euren Hochzeitsmorgen",

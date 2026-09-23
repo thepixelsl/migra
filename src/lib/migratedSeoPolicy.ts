@@ -120,9 +120,6 @@ export const MIGRATED_NOINDEX_RULES: Readonly<Record<string, NoindexRule>> = {
   "/guenstig-parken-an-der-elbphilharmonie/": {
     reason: "dated-price-sensitive-guidance",
   },
-  "/trauung-im-rathaus-der-hansestadt-hamburg/": {
-    reason: "dated-fee-and-availability-information",
-  },
   "/vintage-shooting-valentinstag-hamburg/": {
     reason: "keyword-focused-legacy-copy",
   },

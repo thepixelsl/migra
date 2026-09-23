@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
-test("keeps one indexable Fraser Suites version", async ({ page }) => {
+test("keeps the Fraser article and restored gallery indexable, with the secondary editorial excluded", async ({ page }) => {
   await page.goto(`${baseUrl}/braut-fotoshooting-fraser-suites-hamburg/`, {
     waitUntil: "domcontentloaded",
   });
@@ -15,17 +15,19 @@ test("keeps one indexable Fraser Suites version", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText("Ich friere Eure Momente für die Ewigkeit ein")).toHaveCount(0);
 
-  for (const path of [
-    "/gallery/hochzeitsfotos-hamburg/",
-    "/gallery/elopement-hochzeit-fraser-suites-hamburg/",
-  ]) {
-    await page.goto(`${baseUrl}${path}`, { waitUntil: "domcontentloaded" });
+  // This gallery was deliberately restored to the index on 2026-09-01.
+  await page.goto(`${baseUrl}/gallery/hochzeitsfotos-hamburg/`, { waitUntil: "domcontentloaded" });
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
+  );
+
+  await page.goto(`${baseUrl}/gallery/elopement-hochzeit-fraser-suites-hamburg/`, { waitUntil: "domcontentloaded" });
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
       "content",
       "noindex, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large",
     );
     await expect(page.locator('script[type="application/ld+json"]')).toHaveCount(0);
-  }
 });
 
 test("labels the secondary Fraser series as an editorial", async ({ page }) => {
