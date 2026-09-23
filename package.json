@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "prebuild": "node scripts/validate-tracking-config.mjs",
-    "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files",
+    "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files && npm run test:content",
+    "test:content": "node --test tests/content-quality.test.mjs",
     "schema:files": "node scripts/normalize-structured-data.mjs",
     "test:structured-data": "node --test tests/structured-data.test.mjs",
     "social:cards": "node scripts/generate-social-cards.mjs",
