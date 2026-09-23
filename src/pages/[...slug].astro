@@ -4,6 +4,7 @@ import MobileNavigation from "../components/MobileNavigation.astro";
 import DesktopNavigation from "../components/DesktopNavigation.astro";
 import GalleryMasonryEnhancer from "../components/GalleryMasonryEnhancer.astro";
 import NdFilterTable from "../components/NdFilterTable.astro";
+import LuminanceDownload from "../components/LuminanceDownload.astro";
 import migratedPages from "../data/migratedPages.json";
 import { modernizePrivacyContent } from "../lib/privacyContent";
 import { getMigratedSeoPolicy } from "../lib/migratedSeoPolicy";
@@ -338,6 +339,7 @@ const schemaGraph = {
         )}
 
         {isNdFilterTablePage && <NdFilterTable />}
+        {page.path === "/luminanzmasken-photoshop-aktion/" && <LuminanceDownload />}
 
         <section class="migrated-content" aria-label="Inhalt">
           <div set:html={contentHtml}></div>

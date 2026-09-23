@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import path from "node:path";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { load } from "cheerio";
 
 const dist = path.resolve("dist");
@@ -91,11 +92,17 @@ test("internal links, fragments and local page assets resolve", async () => {
   assert.deepEqual(errors, []);
 });
 
-test("archive pages no longer expose unusable embed controls or duplicate titles", () => {
+test("archive pages keep working downloads and no unusable embed controls", async () => {
   const backup = byRoute("/wie-sollte-man-hochzeitsfotos-sichern/");
   assert.doesNotMatch(backup("main").text(), /Inhalt entsperren|Erforderlichen Service akzeptieren|Platzhalterinhalt/);
   const luminance = byRoute("/luminanzmasken-photoshop-aktion/");
-  assert.match(luminance("main").text(), /Download.*derzeit nicht verfügbar/);
+  assert.doesNotMatch(luminance("main").text(), /Download.*derzeit nicht verfügbar/);
+  const download = luminance("#download-luminanzmasken");
+  assert.equal(download.length, 1);
+  assert.equal(download.attr("href"), "/downloads/Luminanzen.atn");
+  assert.equal(download.attr("download"), "Luminanzen.atn");
+  const action = await fs.readFile(path.join(dist, "downloads/Luminanzen.atn"));
+  assert.equal(createHash("sha256").update(action).digest("hex"), "89b1d17ce8132ecd48611dad1ab6c16cdb5c3ddb2e9d310211630a9f9ae5ebe3");
   assert.doesNotMatch(luminance("main").text(), /berarbeiten|Luninanzmasken|Dowload/);
   function byRoute(route) { return pages.find((page) => page.route === route).$; }
 });
