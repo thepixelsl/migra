@@ -11,11 +11,38 @@ import reportImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-alto
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/hochzeitsfotograf-ratgeber/";
 const pageUrl = `${siteUrl}${pagePath}`;
-const title = "Hochzeitsfotograf Hamburg: Preise & Budget-Tipps";
-const heading = "Budget für Hochzeitsfotos";
+const title = "Hochzeitsfotograf buchen: Checkliste für Eure Hochzeit";
+const heading = "Hochzeitsfotograf buchen";
 const description =
-  "Ratgeber für Hochzeitsfotografie in Hamburg: So vergleichst du Preise, Pakete, Bildbearbeitung und Fahrtkosten ohne versteckte Kosten.";
+  "Hochzeitsfotograf buchen: Checkliste für Bildstil, Zeitplan, Vorgespräch und Bildübergabe. So bereitet Ihr Eure Anfrage und Hochzeitsfotos in Hamburg vor.";
 const primaryImage = new URL(heroImage.src, siteUrl).href;
+
+const bookingChecklist = [
+  {
+    title: "Datum und Orte festhalten",
+    text: "Für die erste Anfrage helfen Euer Hochzeitsdatum, das Standesamt oder die Traulocation und der Ort der Feier. Nennt auch, ob Ihr schon feste Uhrzeiten habt oder den Ablauf noch plant. So lässt sich klären, ob die Begleitung an Eurem Tag möglich ist.",
+  },
+  {
+    title: "Ganze Bildstrecken vergleichen",
+    text: "Schaut Euch mehrere zusammenhängende Hochzeitsreportagen an: Wie wirken die Bilder bei der Trauung, draußen und in Innenräumen? Achtet neben den Paarportraits auch auf Gäste, kleine Gesten und die Bearbeitung. So findet Ihr heraus, ob der Bildstil zu Eurem Tag passt.",
+  },
+  {
+    title: "Die Dauer aus dem Ablauf ableiten",
+    text: "Schreibt auf, welche Momente Euch wichtig sind: Getting Ready, Trauung, Gratulationen, Gruppenbilder, Paarshooting oder Feier. Rechnet Wege zwischen den Orten und einen Zeitpuffer mit ein. Daraus ergibt sich die passende Begleitdauer; sie muss nicht für jede Hochzeit gleich sein.",
+  },
+  {
+    title: "Wunschmotive und wichtige Menschen sammeln",
+    text: "Eine kurze Liste der gewünschten Familien- und Gruppenbilder erleichtert die Planung. Benennt eine vertraute Person, die beim Zusammenrufen helfen kann. Besprecht auch besondere Programmpunkte, damit genügend Raum für spontane Bilder bleibt.",
+  },
+  {
+    title: "Arbeitsweise im Vorgespräch kennenlernen",
+    text: "Fragt, wie der Fotograf während der Trauung arbeitet und Euch beim Paarshooting anleitet. Besprecht einen möglichen Ortswechsel bei Regen und die Regeln Eurer Location fürs Fotografieren. Ein Kennenlernshooting kann zusätzlich zeigen, wie Ihr Euch vor der Kamera fühlt.",
+  },
+  {
+    title: "Leistungen und Bildübergabe schriftlich klären",
+    text: "Zum Angebot gehören nicht nur die Stunden vor Ort. Klärt Bildauswahl, Bearbeitung, Lieferzeit, Dateiauflösung, private Nutzung und mögliche Zusatzkosten. Haltet auch fest, was bei einer Terminänderung oder einem Ausfall vereinbart ist, bevor Ihr verbindlich bucht.",
+  },
+];
 
 const sections = [
   {
@@ -41,6 +68,14 @@ const sections = [
 ];
 
 const faqItems = [
+  {
+    question: "Wann sollten wir unseren Hochzeitsfotografen buchen?",
+    answer: "Fragt an, sobald Euer Datum und die wichtigsten Orte feststehen. Eine allgemeine Frist garantiert keinen freien Termin. Auch bei einer kurzfristigen Planung lohnt sich eine konkrete Anfrage mit Datum, Ort und gewünschter Dauer.",
+  },
+  {
+    question: "Wie lange sollten wir den Hochzeitsfotografen buchen?",
+    answer: "Das hängt von den Momenten ab, die Ihr festhalten möchtet. Plant die Begleitung vom ersten gewünschten Programmpunkt bis zum letzten und berücksichtigt Gratulationen, Gruppenbilder, Paarshooting sowie Fahrtwege. Für die reine Trauung ist ein anderer Zeitrahmen sinnvoll als für einen ganzen Hochzeitstag.",
+  },
   {
     question: "Wie spare ich bei Hochzeitsfotos Geld, ohne Qualität zu verlieren?",
     answer:
@@ -85,17 +120,17 @@ const schemaGraph = {
       headline: title,
       description,
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-06-30T11:20:00+02:00",
+      dateModified: "2026-09-23",
       author: { "@type": "Person", name: "York Augustin" },
       publisher: { "@id": `${siteUrl}/#organization` },
       image: primaryImage,
       mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
       contentLocation: { "@id": `${pageUrl}#hamburg` },
       keywords: [
-        "Hochzeitsfotograf Hamburg Preise",
-        "Hochzeitsfotograf Budget",
-        "Hochzeitsreportage Hamburg",
-        "Standesamt Hamburg",
+        "Hochzeitsfotograf buchen",
+        "Hochzeitsfotos Checkliste",
+        "Fragen an den Hochzeitsfotografen",
+        "Hochzeitsplanung Hamburg",
       ],
       inLanguage: "de",
     },
@@ -204,25 +239,26 @@ const schemaGraph = {
           <span aria-hidden="true">/</span>
           <a href="/brautstyling-hamburg/">Planung</a>
           <span aria-hidden="true">/</span>
-          <span>Budget</span>
+          <span>Hochzeitsfotograf buchen</span>
         </nav>
 
         <header
           class="advice-hero"
           data-track-section="advice_hero"
-          data-content-topic="hochzeitsfotografie_budget"
-          data-user-intent="preise_verstehen"
+          data-content-topic="hochzeitsfotograf_buchen"
+          data-user-intent="buchung_vorbereiten"
           data-journey-stage="consideration"
           data-content-format="article_hero"
           data-position="hero"
         >
           <div>
-            <p class="advice-kicker">Planung & Budget · Hamburg</p>
+            <p class="advice-kicker">Auswahl & Planung · Hamburg</p>
             <h1>{heading}</h1>
             <p>
-              Eine Hochzeitsreportage hält die flüchtigen Momente eures Tages fest.
-              Mit klaren Paketen, transparenter Bildbearbeitung und sauber geklärten
-              Fahrtkosten bleibt das Budget in Hamburg planbar.
+              Ihr möchtet einen Hochzeitsfotografen buchen und wisst noch nicht,
+              welche Fragen Ihr stellen solltet? Diese Checkliste hilft Euch,
+              Bildstil, Ablauf und Leistungen zu vergleichen und Eure Anfrage
+              für eine Hochzeit in Hamburg vorzubereiten.
             </p>
             <a
               class="advice-button"
@@ -246,12 +282,29 @@ const schemaGraph = {
               quality={86}
               loading="eager"
               fetchpriority="high"
-              alt="Hochzeitsreportage in Hamburg als Beispiel für Budgetplanung"
+              alt="Paar lacht bei einem entspannten Kennenlernshooting"
             />
           </figure>
         </header>
 
-        <section class="advice-content" aria-label="Ratgeber Hochzeitsfotograf Preise">
+        <section class="advice-booking" aria-labelledby="booking-checklist-title">
+          <p class="advice-kicker">Vor der Anfrage</p>
+          <h2 id="booking-checklist-title">Eure Checkliste für die Hochzeitsfotos</h2>
+          <ol>
+            {bookingChecklist.map((item) => (
+              <li>
+                <h3>{item.title}</h3>
+                <p>{item.text}</p>
+              </li>
+            ))}
+          </ol>
+          <p>
+            Zum Vergleich findet Ihr hier <a href="/gallery-category/hochzeit/">Hochzeitsreportagen aus Hamburg und weiteren Orten</a>.
+            Für den Morgen hilft Euch der <a href="/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/">Ratgeber zum Getting Ready</a>.
+          </p>
+        </section>
+
+        <section class="advice-content" aria-label="Leistungen und Budget vergleichen">
           {sections.map((section) => (
             <section>
               <h2>{section.title}</h2>
@@ -279,21 +332,21 @@ const schemaGraph = {
         <section
           class="advice-faq"
           aria-labelledby="faq-title"
-          data-track-section="ratgeber_preise_faq"
-          data-content-topic="preise_pakete"
-          data-user-intent="preisfragen_klaeren"
+          data-track-section="ratgeber_buchung_faq"
+          data-content-topic="hochzeitsfotograf_buchen"
+          data-user-intent="buchungsfragen_klaeren"
           data-journey-stage="information"
           data-content-format="faq"
           data-position="advice_faq"
         >
           <p class="advice-kicker">Kurz beantwortet</p>
-          <h2 id="faq-title">Häufige Fragen zu Preisen</h2>
+          <h2 id="faq-title">Fragen vor der Buchung</h2>
           <div>
             {faqItems.map((item, index) => (
               <article
-                data-track-section={`ratgeber_preise_faq_${index + 1}`}
-                data-content-topic="preise_pakete"
-                data-user-intent="preisfragen_lesen"
+                data-track-section={`ratgeber_buchung_faq_${index + 1}`}
+                data-content-topic="hochzeitsfotograf_buchen"
+                data-user-intent="buchungsfragen_lesen"
                 data-journey-stage="information"
                 data-content-format="faq_answer"
                 data-position={`faq_${index + 1}`}
@@ -385,6 +438,7 @@ const schemaGraph = {
   }
 
   .advice-hero h1,
+  .advice-booking h2,
   .advice-content h2,
   .advice-feature h2,
   .advice-faq h2 {
@@ -396,13 +450,13 @@ const schemaGraph = {
   }
 
   .advice-hero h1 {
-    max-width: 8em;
-    font-size: clamp(3.7rem, 7.8vw, 8.8rem);
+    font-size: clamp(2rem, 4.5vw, 4.8rem);
     overflow-wrap: anywhere;
     hyphens: auto;
   }
 
   .advice-hero p,
+  .advice-booking p,
   .advice-content p,
   .advice-feature p,
   .advice-faq p,
@@ -443,6 +497,7 @@ const schemaGraph = {
   }
 
   .advice-content,
+  .advice-booking,
   .advice-feature,
   .advice-faq,
   .advice-related {
@@ -458,6 +513,7 @@ const schemaGraph = {
   }
 
   .advice-content h2,
+  .advice-booking h2,
   .advice-feature h2,
   .advice-faq h2 {
     font-size: clamp(2.25rem, 4.6vw, 4.7rem);
@@ -466,6 +522,22 @@ const schemaGraph = {
   .advice-content p,
   .advice-feature p {
     margin: 18px 0 0;
+  }
+
+  .advice-booking ol {
+    margin: 34px 0;
+    padding-left: 1.5em;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 28px 48px;
+  }
+
+  .advice-booking li { min-width: 0; padding-left: 6px; }
+  .advice-booking h3 { margin: 0; font-size: 1.2rem; line-height: 1.4; }
+  .advice-booking a { color: inherit; text-underline-offset: .2em; }
+
+  @media (max-width: 760px) {
+    .advice-booking ol { grid-template-columns: 1fr; }
   }
 
   .advice-feature {
@@ -530,8 +602,8 @@ const schemaGraph = {
     }
 
     .advice-hero h1 {
-      font-size: clamp(2.72rem, 13.2vw, 4rem);
-      line-height: 1.02;
+      font-size: clamp(2rem, 8.2vw, 3.2rem);
+      line-height: 1.1;
     }
 
     .advice-feature__images {

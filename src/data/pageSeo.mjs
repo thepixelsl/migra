@@ -236,9 +236,7 @@ export const pageSeo = {
     focalPoint: "top",
   },
   "/hochzeitsfotograf-ratgeber/": {
-    keyword: "Hochzeitsfotograf Kosten vergleichen",
-    title: "Hochzeitsfotograf Kosten: Pakete & Budget vergleichen",
-    description: "Was kostet ein Hochzeitsfotograf? So vergleicht Ihr Stundenpreise, Bildbearbeitung, Fahrtkosten und Pakete für Eure Hochzeit in Hamburg ohne Kostenfallen.",
+    keyword: "Hochzeitsfotograf buchen Checkliste",
     image: "src/assets/hochzeitsfotograf-ratgeber/hochzeitsfotograf-hamburg-ratgeber-art9666.jpg",
     alt: "Paar lacht bei einem entspannten Kennenlernshooting",
   },

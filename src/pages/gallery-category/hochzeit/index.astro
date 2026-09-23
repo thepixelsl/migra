@@ -10,9 +10,9 @@ import { portfolioEntries } from "../../../data/portfolio";
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery-category/hochzeit/";
 const pageUrl = `${siteUrl}${pagePath}`;
-const title = "Hochzeitsgalerien | Artbild-Fotografie";
+const title = "Hochzeitsreportagen Hamburg: Bilder & Geschichten";
 const description =
-  "Hochzeitsgalerien von Artbild-Fotografie: Reportagen, Standesamt, Getting Ready, Elopements und Paarshootings in Hamburg, Norddeutschland und Europa.";
+  "Hochzeitsreportagen aus Hamburg und Norddeutschland: Trauung, Paarbilder und Feier in zusammenhängenden Galerien. Dazu Getting Ready und Editorials entdecken.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
 const weddingEntries = portfolioEntries.filter((entry) => entry.filter === "Hochzeit");
@@ -106,7 +106,7 @@ const schemaGraph = {
       url: pageUrl,
       name: title,
       description,
-      dateModified: "2026-07-07T18:40:00+02:00",
+      dateModified: "2026-09-23",
       primaryImageOfPage: primaryEntry
         ? {
             "@type": "ImageObject",
@@ -167,13 +167,14 @@ const schemaGraph = {
       data-content-format="category_hero"
       data-position="main"
     >
-      <p>Gallery Category</p>
-      <h1 id="wedding-category-title">Hochzeitsgalerien</h1>
+      <p>Hochzeitsgalerien · Artbild-Fotografie</p>
+      <h1 id="wedding-category-title">Hochzeitsreportagen in Hamburg</h1>
       <span aria-hidden="true"></span>
       <p>
-        Eine kuratierte Übersicht der Hochzeitsreportagen,
-        standesamtlichen Trauungen, Getting-Ready-Geschichten und Elopements
-        von Artbild-Fotografie.
+        Entdeckt Hochzeitsreportagen aus Hamburg, Norddeutschland und weiteren
+        Orten: von der standesamtlichen Trauung bis zur Feier. Ergänzend findet
+        Ihr Paarshootings und inszenierte Editorials, die auf ihren jeweiligen
+        Seiten als solche beschrieben sind.
       </p>
     </section>
 
@@ -216,6 +217,26 @@ const schemaGraph = {
       data-position="main_content"
     >
       {weddingEntries.map((entry, index) => <PortfolioCard entry={entry} priority={index < 2} />)}
+    </section>
+
+    <section class="wedding-category-guide" aria-labelledby="reportage-guide-title">
+      <h2 id="reportage-guide-title">Was zeigt eine Hochzeitsreportage?</h2>
+      <p>
+        Eine Hochzeitsreportage erzählt den Ablauf Eures Tages in Bildern.
+        Neben Paarportraits gehören die Menschen um Euch herum, Begegnungen
+        und kleine Details dazu. Welche Abschnitte ich begleite, richtet sich
+        nach Eurem Zeitplan: etwa die Vorbereitungen, die Trauung mit
+        Gratulationen oder auch die anschließende Feier.
+      </p>
+      <p>
+        Schaut beim Vergleichen der Galerien darauf, wie eine Bildstrecke
+        unterschiedliche Situationen verbindet. Die
+        <a href="/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/">Reportage aus dem Standesamt Altona</a>
+        zeigt eine standesamtliche Begleitung; bei
+        <a href="/gallery/hochzeit-valerie-und-tim/">Valerie und Tim</a>
+        seht Ihr auch die anschließende Feier. Für Eure eigene Planung hilft
+        Euch die <a href="/hochzeitsfotograf-ratgeber/">Checkliste zum Buchen eines Hochzeitsfotografen</a>.
+      </p>
     </section>
 
     <section
@@ -288,10 +309,34 @@ const schemaGraph = {
     margin: 0;
     color: #1f232c;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
-    font-size: clamp(52px, 9vw, 124px);
+    font-size: clamp(34px, 6vw, 84px);
     font-weight: 400;
     line-height: .95;
+    overflow-wrap: anywhere;
+    hyphens: auto;
   }
+
+  .wedding-category-guide {
+    width: min(780px, calc(100% - 44px));
+    margin: clamp(64px, 8vw, 100px) auto 0;
+  }
+
+  .wedding-category-guide h2 {
+    color: #1f232c;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  .wedding-category-guide p {
+    color: #716b65;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: 1.15rem;
+    line-height: 1.75;
+  }
+
+  .wedding-category-guide a { color: inherit; text-underline-offset: .2em; }
 
   .wedding-category-hero span {
     display: block;
