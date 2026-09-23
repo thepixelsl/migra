@@ -104,5 +104,12 @@ test("archive pages keep working downloads and no unusable embed controls", asyn
   const action = await fs.readFile(path.join(dist, "downloads/Luminanzen.atn"));
   assert.equal(createHash("sha256").update(action).digest("hex"), "89b1d17ce8132ecd48611dad1ab6c16cdb5c3ddb2e9d310211630a9f9ae5ebe3");
   assert.doesNotMatch(luminance("main").text(), /berarbeiten|Luninanzmasken|Dowload/);
+  assert.doesNotMatch(luminance("main").text(), /Mallorca|Hochzeitsfotograf|Instagram|TFP|VON::|TEILEN:|over the TOP/);
+  assert.equal(luminance("main form, main input[type=email], .migrated-gallery").length, 0);
+  assert.equal(luminance(".migrated-content header, .migrated-content footer, .migrated-content nav").length, 0);
+  assert.match(luminance(".migrated-hero").text(), /ohne E-Mail-Adresse/);
+  assert.doesNotMatch(luminance("meta[name=robots]").attr("content"), /noindex/);
+  const sitemap = await fs.readFile(path.join(dist, "sitemap.xml"), "utf8");
+  assert.ok(sitemap.includes(`${origin}/luminanzmasken-photoshop-aktion/`));
   function byRoute(route) { return pages.find((page) => page.route === route).$; }
 });

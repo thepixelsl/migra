@@ -27,6 +27,7 @@ type MigratedPage = {
   title: string;
   metaTitle: string;
   description: string;
+  introParagraphs?: string[];
   eyebrow: string;
   datePublished?: string;
   dateModified?: string;
@@ -68,6 +69,7 @@ const heroTitleLines =
 const isStandesamtHamburgPage = page.path === "/standesamt-hamburg/";
 const isNdFilterTablePage = page.path === "/nd-filter-tabelle/";
 const isWeddingPhotoBackupPage = page.path === "/wie-sollte-man-hochzeitsfotos-sichern/";
+const isLuminancePage = page.path === "/luminanzmasken-photoshop-aktion/";
 const isLargeEnough = (image?: MigratedImage) =>
   Boolean(image?.width && image?.height && image.width >= 480 && image.height >= 280);
 const getImageArea = (image: MigratedImage) => (image.width ?? 0) * (image.height ?? 0);
@@ -269,7 +271,7 @@ const schemaGraph = {
     </header>
 
     <main>
-      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post", "is-nd-filter-table": isNdFilterTablePage }]}>
+      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post", "is-nd-filter-table": isNdFilterTablePage, "is-luminance": isLuminancePage }]}>
         <nav class="migrated-breadcrumb" aria-label="Breadcrumb">
           <a href="/">Startseite</a>
           <span aria-hidden="true">/</span>
@@ -288,7 +290,7 @@ const schemaGraph = {
                   ))
                 : page.title}
             </h1>
-            <p>{page.description}</p>
+            {(page.introParagraphs ?? [page.description]).map((paragraph) => <p>{paragraph}</p>)}
           </div>
 
           {heroImage && (
@@ -339,7 +341,7 @@ const schemaGraph = {
         )}
 
         {isNdFilterTablePage && <NdFilterTable />}
-        {page.path === "/luminanzmasken-photoshop-aktion/" && <LuminanceDownload />}
+        {isLuminancePage && <LuminanceDownload />}
 
         <section class="migrated-content" aria-label="Inhalt">
           <div set:html={contentHtml}></div>
@@ -415,8 +417,20 @@ const schemaGraph = {
         )}
 
         <footer class="migrated-footer">
-          <a href="/portfolio/">Portfolio ansehen</a>
-          <a href="/sicherer-kontakt/">Kontakt aufnehmen</a>
+          {isLuminancePage ? (
+            <>
+              <p>Von York Augustin · Aktualisiert am <time datetime={page.dateModified}>23. September 2026</time></p>
+              <nav aria-label="Rechtliche Informationen">
+                <a href="/impressum/">Impressum</a>
+                <a href="/datenschutz/">Datenschutz</a>
+              </nav>
+            </>
+          ) : (
+            <>
+              <a href="/portfolio/">Portfolio ansehen</a>
+              <a href="/sicherer-kontakt/">Kontakt aufnehmen</a>
+            </>
+          )}
         </footer>
         {hasGallery && <GalleryMasonryEnhancer />}
       </article>
@@ -471,6 +485,18 @@ const schemaGraph = {
     align-items: center;
     margin-bottom: clamp(44px, 7vw, 96px);
   }
+
+  .migrated-article.is-luminance { width: min(820px, calc(100% - 40px)); }
+  .is-luminance .migrated-breadcrumb { margin-bottom: 32px; letter-spacing: .08em; }
+  .is-luminance .migrated-hero { margin-bottom: 32px; }
+  .is-luminance .migrated-hero h1 { font-size: clamp(34px, 5.2vw, 70px); line-height: 1.08; }
+  .is-luminance .migrated-hero p:not(.migrated-kicker) { max-width: none; margin-top: 20px; font-size: clamp(20px, 1.8vw, 24px); }
+  .is-luminance .migrated-content :global(h2) { margin-top: 48px; font-size: clamp(30px, 3.5vw, 42px); }
+  .is-luminance .migrated-content :global(h3) { margin-top: 32px; font-size: clamp(25px, 2.7vw, 32px); }
+  .is-luminance .migrated-content :global(li + li) { margin-top: 14px; }
+  .is-luminance .migrated-content :global(table) { margin-bottom: 28px; text-align: left; }
+  .is-luminance .migrated-footer { display: block; margin-top: 48px; font-size: 16px; }
+  .is-luminance .migrated-footer nav { display: flex; gap: 20px; }
 
   .migrated-hero.has-no-image {
     display: block;

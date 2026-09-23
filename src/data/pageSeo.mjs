@@ -6,6 +6,12 @@
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
 export const pageSeo = {
+  "/luminanzmasken-photoshop-aktion/": {
+    keyword: "Luminanzmasken Photoshop",
+    image: "public/migrated-assets/luminanzmasken-photoshop-aktion/lukminanzmasken.jpg",
+    alt: "Luminanzmasken: Titelgrafik mit Hamburger Architektur in den Buchstaben",
+    fit: "contain",
+  },
   "/": { keyword: "Hochzeitsfotograf Hamburg", preserveHomepage: true },
   "/about/": {
     keyword: "York Augustin Fotograf Hamburg",

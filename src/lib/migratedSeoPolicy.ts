@@ -60,9 +60,6 @@ export const MIGRATED_NOINDEX_RULES: Readonly<Record<string, NoindexRule>> = {
   "/aktionen-in-adobe-photoshop-cc-importieren/": {
     reason: "thin-legacy-post",
   },
-  "/luminanzmasken-photoshop-aktion/": {
-    reason: "migrated-navigation-inside-article-content",
-  },
 
   // Utility and campaign landing pages that are not durable search results.
   "/insta-artbild/": {
