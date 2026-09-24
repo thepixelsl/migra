@@ -4882,41 +4882,6 @@
     "contentHtml": "<p>Eine standesamtliche Trauung im Hamburger Rathaus findet im Phönixsaal statt. Für Terminabsprachen ist das Standesamt Hamburg-Mitte zuständig. Gemeint ist hier das Rathaus am Rathausmarkt; das Rathaus Altona ist ein anderer Trauort.</p>\n<p><strong>Zuletzt geprüft am 23. September 2026.</strong></p>\n<h2>Termine für die Trauung im Hamburger Rathaus</h2>\n<p>Die Stadt bietet Trauungen an ausgewählten Freitagen an. Laut der <a href=\"https://www.hamburg.de/politik-und-verwaltung/behoerden/senatskanzlei/aktuelles/pressemeldungen/heiraten-im-hamburger-rathaus-1104518\" target=\"_blank\" rel=\"noopener\">offiziellen Mitteilung zu den Hochzeitsterminen 2026</a> sind für dieses Jahr bereits alle Termine vergeben. Fragt künftige Termine direkt beim Standesamt an; eine Buchung des Fotografen reserviert keinen Trautermin.</p>\n<h2>Was kostet eine Trauung im Rathaus?</h2>\n<p>Die <a href=\"https://www.hamburg.de/politik-und-verwaltung/senat/rathaus-hamburg/heiraten-im-rathaus-238502\" target=\"_blank\" rel=\"noopener\">offizielle Rathaus-Seite</a> nennt diese zusätzlichen Kosten:</p>\n<ul><li>300 Euro Service-Zuschlag des Standesamts</li><li>200 Euro für die Nutzung der Räume des Hamburger Rathauses</li></ul>\n<p>Zusammen sind das <strong>500 Euro zusätzlich</strong> zu den gesetzlichen Gebühren für Anmeldung beziehungsweise Vorbereitung der Eheschließung und den Eheurkunden. Den Gesamtbetrag für euren Fall bestätigt das Standesamt. Die Zusatzkosten sind kein Komplettpreis für die Hochzeit oder die fotografische Begleitung.</p>\n<h2>Kontakt und Planung</h2>\n<p>Terminabsprachen für das Hamburger Rathaus: <strong>Standesamt Hamburg-Mitte</strong>, Telefon <a href=\"tel:+4940428542653\">040 42854 2653</a>. Weitere Adressen und Kontakte findet ihr in der <a href=\"/standesamt-hamburg/\">Übersicht der Hamburger Standesämter</a>.</p>\n<p>Beachtet bei der Anreise: Auf dem Rathausmarkt ist laut der städtischen Mitteilung weder Vorfahren noch Parken möglich. Plant deshalb den Weg zu Fuß und Zeit für das Eintreffen eurer Gäste mit ein.</p>\n<h2>Fotos rund um eure standesamtliche Hochzeit</h2>\n<p>Stimmt vorab ab, welche Momente ihr festhalten möchtet: das Ankommen, die Trauung, gemeinsame Bilder mit euren Gästen und ein Paarshooting. Klärt mit dem Standesamt, welche Aufnahmen im Trauraum möglich sind, und plant Gruppenbilder sowie das Paarshooting als eigene Zeitfenster ein.</p>\n<p>Die <a href=\"/hochzeitsfotograf-preise/\">Preise für standesamtliche Hochzeitsbegleitungen</a> helfen euch bei der Planung des fotografischen Budgets. Falls ihr einen anderen Trauort sucht, bietet der <a href=\"/standesamt-hamburg/\">Standesamtfinder für Hamburg und Umgebung</a> offizielle Kontakte und Buchungswege. Hinweise zur städtischen Online-Reservierung findet ihr im <a href=\"/trautermin-hamburg-online-reservieren/\">Beitrag zum Hamburger Traukalender</a>.</p>",
     "galleryImages": [
       {
-        "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_hochformat-200x300.jpg",
-        "alt": "Trauung im Rathaus der Hansestadt Hamburg",
-        "width": 200,
-        "height": 300,
-        "eager": true
-      },
-      {
-        "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_hochformat-683x1024.jpg",
-        "alt": "Trauung im Rathaus der Hansestadt Hamburg",
-        "width": 683,
-        "height": 1024,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_hochformat-768x1152.jpg",
-        "alt": "Trauung im Rathaus der Hansestadt Hamburg",
-        "width": 768,
-        "height": 1152,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_hochformat.jpg",
-        "alt": "Trauung im Rathaus der Hansestadt Hamburg",
-        "width": 924,
-        "height": 1386,
-        "eager": false
-      },
-      {
-        "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_hochformat-150x225.jpg",
-        "alt": "Trauung im Rathaus der Hansestadt Hamburg",
-        "width": 150,
-        "height": 225,
-        "eager": false
-      },
-      {
         "src": "/migrated-assets/trauung-im-rathaus-der-hansestadt-hamburg/rathaus_hamburg_standesamt.jpg",
         "alt": "Trauung im Rathaus der Hansestadt Hamburg",
         "width": 1386,
@@ -4928,7 +4893,8 @@
       "Trauung im Rathaus der Hansestadt Hamburg",
       "Artbild-Fotografie",
       "Hamburg"
-    ]
+    ],
+    "galleryLayout": "single"
   },
   {
     "path": "/unterwegs-in-baden-wuerttemberg/",

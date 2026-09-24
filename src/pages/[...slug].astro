@@ -34,6 +34,7 @@ type MigratedPage = {
   heroImage?: MigratedImage;
   contentHtml: string;
   galleryImages: MigratedImage[];
+  galleryLayout?: "single";
   keywords: string[];
 };
 
@@ -112,6 +113,7 @@ const galleryImages = isGallery
     : page.galleryImages
   : page.galleryImages.filter((image) => isLargeEnough(image));
 const hasGallery = galleryImages.length > 0;
+const isSingleImageGallery = page.galleryLayout === "single" && galleryImages.length === 1;
 const normalizedContentHtml = sanitizeMigratedHtml(page.contentHtml).replace(
   /\b(href|action)=["']https?:\/\/(?:www\.)?artbild-fotografie\.(?:de|ch)(\/[^"']*)?["']/gi,
   (_match, attribute, path = "/") => `${attribute}="${path}"`,
@@ -351,7 +353,10 @@ const schemaGraph = {
           <section class="migrated-gallery" aria-labelledby="migrated-gallery-title">
             <p class="migrated-kicker">Bildstrecke</p>
             <h2 id="migrated-gallery-title">{isGallery || page.type === "post" ? "Bildgalerie" : "Bilder zur Seite"}</h2>
-            <div class="migrated-gallery__grid masonry-gallery" data-masonry-gallery>
+            <div
+              class:list={["migrated-gallery__grid", { "migrated-gallery__single": isSingleImageGallery, "masonry-gallery": !isSingleImageGallery }]}
+              data-masonry-gallery={!isSingleImageGallery || undefined}
+            >
               {galleryImages.map((image, index) => (
                 <figure
                   class={`masonry-gallery__item is-${getImageOrientation(image)}`}
@@ -702,6 +707,12 @@ const schemaGraph = {
     width: min(1320px, 100%);
     margin-right: auto;
     margin-left: auto;
+  }
+
+  .migrated-gallery > .migrated-gallery__single {
+    width: min(820px, 100%);
+    margin-inline: auto;
+    transform: none;
   }
 
   .migrated-gallery figure {
