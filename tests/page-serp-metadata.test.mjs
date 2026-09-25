@@ -91,10 +91,9 @@ test("footer boilerplate is excluded from snippets but remains visible and linke
   }
 });
 
-test("attention hooks remain backed by the page: package price, PDF and official-calendar link", () => {
+test("pricing preserves the original description without obsolete years; other hooks stay backed by the page", () => {
   const pricing = pages.find((p) => p.card.route === "/hochzeitsfotograf-preise/");
-  assert.ok(pricing.card.description.includes(pricing.$("#paket-pure-moments-title").text().trim()));
-  assert.match(pricing.card.description, /für 1 Stunde/);
+  assert.equal(pricing.card.description, "Hochzeitsfotograf Preise - Günstige Festpreisangebote für Deine Hochheitsreportage. Keine versteckten Kosten, keine Extrakosten.");
   const table = pages.find((p) => p.card.route === "/nd-filter-tabelle/");
   assert.equal(table.$("a[href='/wp-content/uploads/2019/08/ND-Filter-Tabelle.pdf']").length, 1);
   const calendar = pages.find((p) => p.card.route === "/trautermin-hamburg-online-reservieren/");

@@ -9,6 +9,7 @@ import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
 import { googleReviews } from "../../data/reviews";
 import { weddingBookingHoursRule, weddingGalleryMonths, weddingPackages } from "../../data/weddingPackages";
 import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
+import { pageSeo } from "../../data/pageSeo.mjs";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
@@ -18,8 +19,7 @@ const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fo
 const pagePath = "/hochzeitsfotograf-preise/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Hochzeitsfotograf Hamburg Preise";
-const description =
-  "Preise und Pakete für Hochzeitsfotografie in Hamburg mit dem jeweils aufgeführten Leistungsumfang und Hinweisen zum individuellen Angebot.";
+const description = pageSeo[pagePath].description;
 const primaryImage = new URL(heroImage.src, siteUrl).href;
 const [pureMoments, standesamtPackage, reportagePackage] = weddingPackages;
 const formatPrice = (value: number) =>
@@ -148,6 +148,11 @@ const faqItems = [
     answer: "Ja. Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet. Dazu gehören Weißabgleich, Helligkeit, Farben und Kontraste. Ihr müsst später keine einzelnen Fotos zur Bearbeitung auswählen oder dafür extra bezahlen. Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im Preis enthalten. Welche Bilder und Details euch dabei wichtig sind, besprechen wir gemeinsam.",
   },
   {
+    id: "preise_faq_delivery",
+    question: "Wann bekommen wir unsere Bilder?",
+    answer: "Die ersten 100 Bilder erhaltet ihr binnen 7 Tagen nach der Hochzeit – außer beim 1-Stunden-Paket. Alle Bilder erhaltet ihr im Normalfall und ohne Extrawünsche binnen 14 Tagen nach der Hochzeit.",
+  },
+  {
     id: "preise_faq_16",
     question: "Wie bekommen wir unsere Bilder und wie lange bleibt die Galerie verfügbar?",
     answer: `Ihr erhaltet eure Bilder in einer passwortgeschützten Onlinegalerie bei PicDrop. Die Galerie ist bei allen Paketen ${weddingGalleryMonths} Monate kostenlos verfügbar. Ladet eure Bilder innerhalb dieser Zeit herunter und sichert sie für euch.`,
@@ -174,8 +179,8 @@ const faqItems = [
   },
   {
     id: "preise_faq_13",
-    question: "Welche Zahlungsarten sind möglich?",
-    answer: "Ihr könnt per Überweisung, bar oder mit PayPal Plus bezahlen. Über PayPal Plus ist auch Ratenzahlung möglich.",
+    question: "Welche Zahlungsbedingungen gelten?",
+    answer: "Die Zahlungsbedingungen richten sich nach eurem Vertrag.",
   },
   {
     id: "preise_faq_8",
