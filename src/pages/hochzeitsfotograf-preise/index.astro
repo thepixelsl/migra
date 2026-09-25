@@ -222,7 +222,7 @@ const schemaGraph = {
         "@id": `${pageUrl}#service`,
       },
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-09-12T00:00:00+02:00",
+      dateModified: "2026-09-25T00:00:00+02:00",
       inLanguage: "de",
       primaryImageOfPage: {
         "@type": "ImageObject",
@@ -464,6 +464,22 @@ const schemaGraph = {
             ))}
           </div>
         </section>
+
+        <div class="pricing-price-context" id="preisgestaltung">
+          <section aria-labelledby="price-quality-title">
+            <h2 id="price-quality-title">Wie viel kostet ein guter Hochzeitsfotograf?</h2>
+            <p>Ein guter Hochzeitsfotograf macht nicht nur die Bilder auf Eurer Hochzeit, sondern investiert auch Arbeitszeit, nach der Hochzeit in die Bildbearbeitung, die Bildauswahl und ggf. in die Bildretusche, falls dies einmal nötig sein sollte. Daher habe ich noch keinen guten Hochzeitsfotografen für weniger als 100€ pro Stunde gesehen.</p>
+          </section>
+          <section aria-labelledby="price-hourly-title">
+            <h2 id="price-hourly-title">Wie teuer ist ein Fotograf pro Stunde?</h2>
+            <p>Ein guter Hochzeitsfotograf nimmt einen Preis, der sowohl die Kosten für die An- und Abfahrt, den Arbeitslohn vor Ort und den Arbeitslohn für die Bildbearbeitung abdeckt.</p>
+          </section>
+          <section aria-labelledby="price-composition-title">
+            <h2 id="price-composition-title">Warum kostet ein Hochzeitsfotograf so viel?</h2>
+            <p>Nicht nur eine hochwertige Ausrüstung, im Wert vieler tausend Euro, sondern auch die Bearbeitungzeit nach der Hochzeit, die oft viele Arbeitsstunden Zeit in Anspruch nimmt, müssen mit in den Preis einfließen.</p>
+            <p>So erklärt sich der Preis und die Preiszusammensetzung.</p>
+          </section>
+        </div>
 
         <EditorialReviewQuote
           reviews={[
@@ -771,7 +787,11 @@ const schemaGraph = {
   .pricing-hero__image :global(img) { display: block; width: 100%; height: auto; object-fit: contain; }
   .pricing-toc { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 24px; margin: clamp(42px, 6vw, 80px) 0 0; padding: 18px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
   .pricing-toc a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 2px; color: var(--pricing-text); font-size: 16px; line-height: 1.5; text-underline-offset: 5px; }
-  .pricing-intro, .pricing-split, .pricing-packages, .pricing-examples, .pricing-faq, .pricing-related, .pricing-cta { margin-top: clamp(70px, 8vw, 110px); }
+  .pricing-intro, .pricing-split, .pricing-packages, .pricing-price-context, .pricing-examples, .pricing-faq, .pricing-related, .pricing-cta { margin-top: clamp(70px, 8vw, 110px); }
+  .pricing-price-context { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(32px, 4vw, 56px); }
+  .pricing-price-context > section { min-width: 0; }
+  .pricing-price-context h2 { font-size: 28px; line-height: 1.3; }
+  .pricing-price-context p { margin: 22px 0 0; color: var(--pricing-text); font-size: 18px; line-height: 1.65; }
   .pricing-intro, .pricing-split { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: clamp(35px, 7vw, 100px); align-items: start; }
   .pricing-copy p { margin: 0 0 1em; }
   .pricing-text-link, .pricing-example__links a, .pricing-related a { color: var(--pricing-text); text-underline-offset: 5px; line-height: 1.6; }
@@ -837,6 +857,9 @@ const schemaGraph = {
   .pricing-cta { padding: clamp(34px, 6vw, 70px); background: var(--pricing-paper); text-align: center; }
   .pricing-cta > p:not(.pricing-kicker) { max-width: 640px; margin: 24px auto; }
   .pricing-cta a { background: #44484e; color: #fff; border-color: #44484e; }
+  @media (max-width: 1099px) {
+    .pricing-price-context { grid-template-columns: 1fr; }
+  }
   @media (min-width: 621px) and (max-width: 1099px) {
     .pricing { width: calc(100% - clamp(80px, 12vw, 132px)); }
     .pricing-hero { grid-template-columns: 1fr; gap: 38px; text-align: center; }
