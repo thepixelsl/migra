@@ -70,8 +70,10 @@ before(async () => {
   await mkdir(path.join(assetDirectory, "admin-termine"), { recursive: true });
   await mkdir(path.join(assetDirectory, "api", "agent-availability"), { recursive: true });
   await mkdir(path.join(assetDirectory, "_astro"), { recursive: true });
+  await mkdir(path.join(assetDirectory, "web-stories", "test-story"), { recursive: true });
   await Promise.all([
     writeFile(path.join(assetDirectory, "index.html"), "<!doctype html><h1>Start</h1>"),
+    writeFile(path.join(assetDirectory, "web-stories", "test-story", "index.html"), "<!doctype html><html amp><amp-story>Story</amp-story></html>"),
     writeFile(path.join(assetDirectory, "about", "index.html"), "<!doctype html><h1>Über uns</h1>"),
     writeFile(path.join(assetDirectory, "admin-termine", "index.html"), "<!doctype html><h1>Admin</h1>"),
     writeFile(path.join(assetDirectory, "fuer-agenten.md"), "# Buchungsinformationen für KI-Agenten"),
@@ -182,6 +184,20 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
 
   const removedDateLinkCatalog = await fetch(`${baseUrl}/api/agent-availability/date-links`);
   assert.equal(removedDateLinkCatalog.status, 404);
+});
+
+test("permits the AMP CDN on standalone Web Stories without relaxing other routes", async () => {
+  const story = await fetch(`${baseUrl}/web-stories/test-story/`);
+  assert.equal(story.status, 200);
+  const policy = story.headers.get("content-security-policy");
+  for (const directive of ["script-src", "style-src", "connect-src"]) {
+    assert.match(policy, new RegExp(`${directive}[^;]+https://cdn\\.ampproject\\.org`));
+  }
+  assert.equal(story.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
+  for (const route of ["/", "/about/", "/admin-login/", "/api/availability", "/web-stories-test/"]) {
+    const response = await fetch(`${baseUrl}${route}`);
+    assert.doesNotMatch(response.headers.get("content-security-policy"), /ampproject/);
+  }
 });
 
 test("uses immutable caching for built Astro assets", async () => {

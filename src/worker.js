@@ -5,6 +5,7 @@ import * as adminAgentRequests from "../functions/api/admin/agent-requests.js";
 import * as contact from "../functions/api/contact.js";
 import { assertAdminAccess } from "../functions/_availability.js";
 import { legacyContentRedirect } from "./lib/legacyRedirects.mjs";
+import { webStorySecurityPolicy } from "./lib/webStorySecurity.mjs";
 
 export { AgentRateLimiter } from "./AgentRateLimiter.js";
 
@@ -72,10 +73,10 @@ function looksLikePagePath(pathname) {
   return pathname.endsWith("/") || !lastSegment.includes(".") || lastSegment.endsWith(".html");
 }
 
-function withSecurityHeaders(response) {
+function withSecurityHeaders(response, pathname = "") {
   const headers = new Headers(response.headers);
   headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
-  headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+  headers.set("Content-Security-Policy", webStorySecurityPolicy(CONTENT_SECURITY_POLICY, pathname));
   headers.set("X-Content-Type-Options", "nosniff");
   headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
@@ -260,6 +261,6 @@ export default {
       status: assetResponse.status,
       statusText: assetResponse.statusText,
       headers: responseHeaders,
-    }));
+    }), url.pathname);
   },
 };

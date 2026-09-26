@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 import { AGENT_AVAILABILITY_MAX_BODY_BYTES } from "../functions/_agent-availability-contract.js";
 import worker from "../src/worker.js";
+import { webStorySecurityPolicy } from "../src/lib/webStorySecurity.mjs";
 import { adminAuthPath, createAdminAuthentication } from "./admin-auth.mjs";
 import { createAssetBinding } from "./bunny-assets.mjs";
 import { createBunnyDatabase } from "./bunny-database.mjs";
@@ -126,10 +127,10 @@ function withBunnyHeaders(response, env, requestUrl) {
   const securePublicOrigin = String(env.BUNNY_PUBLIC_SCHEME || "https").toLowerCase() !== "http";
   headers.delete("Server");
   if (securePublicOrigin) headers.set("Strict-Transport-Security", HSTS_HEADER_VALUE);
-  headers.set("Content-Security-Policy", [
+  headers.set("Content-Security-Policy", webStorySecurityPolicy([
     ...CONTENT_SECURITY_POLICY_DIRECTIVES,
     ...(securePublicOrigin ? ["upgrade-insecure-requests"] : []),
-  ].join("; "));
+  ].join("; "), pathname));
   if (adminAuthPath(pathname)) {
     headers.set("Content-Security-Policy", "default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; style-src 'unsafe-inline'; script-src 'none'; connect-src 'none'");
     // `no-referrer` also turns browser form POST Origin into null. Preserve

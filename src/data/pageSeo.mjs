@@ -6,6 +6,12 @@
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
 export const pageSeo = {
+  "/web-stories/paarshooting-hamburg-september-2026/": {
+    keyword: "Paarshooting Hamburg Web Story",
+    image: "public/images/web-stories/paarshooting-hamburg-september-2026/01-stadthausbruecke.webp",
+    alt: "Paarshooting in Hamburg: ein Paar aus der Schweiz an der Stadthausbrücke",
+    fit: "contain",
+  },
   "/luminanzmasken-photoshop-aktion/": {
     keyword: "Luminanzmasken Photoshop",
     image: "public/migrated-assets/luminanzmasken-photoshop-aktion/lukminanzmasken.jpg",

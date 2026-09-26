@@ -1,0 +1,95 @@
+---
+import type { StoryPage } from "../data/webStories";
+
+interface Props {
+  title: string;
+  description: string;
+  poster: string;
+  pages: StoryPage[];
+}
+const { title, description, poster, pages } = Astro.props;
+const origin = Astro.site?.origin ?? "https://artbild-fotografie.de";
+const canonical = new URL(Astro.url.pathname, origin).href;
+const absolute = (value: string) => new URL(value, origin).href;
+const schema = {
+  "@context": "https://schema.org", "@type": "Article",
+  "@id": `${canonical}#article`, url: canonical, headline: title, description,
+  inLanguage: "de", image: absolute(poster),
+  author: { "@type": "Person", name: "York Augustin", url: `${origin}/about/` },
+  publisher: { "@type": "Organization", name: "Artbild-Fotografie", logo: {
+    "@type": "ImageObject", url: `${origin}/images/web-stories/publisher-logo.png`, width: 192, height: 192,
+  } },
+};
+---
+<!doctype html>
+<html amp="" lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline async src="https://cdn.ampproject.org/v0.js"></script>
+    <script is:inline async custom-element="amp-story" src="https://cdn.ampproject.org/v0/amp-story-1.0.js"></script>
+    <title>{title} | Artbild-Fotografie</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absolute(poster)} />
+    <meta property="og:image:alt" content={pages[0].photos[0].alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)}></script>
+    <style is:inline amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style>
+    <noscript><style is:inline amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <style is:inline amp-custom>
+      @font-face{font-family:Gilda;src:url('/fonts/gilda-display/gilda-display.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+      @font-face{font-family:Raleway;src:url('/fonts/raleway/raleway.woff2') format('woff2');font-weight:100 900;font-style:normal;font-display:swap}
+      *{box-sizing:border-box}body{margin:0;background:#eceae7;color:#252d30;font-family:Raleway,Arial,sans-serif}
+      amp-story{font-family:Raleway,Arial,sans-serif}amp-story-page{background:#fff}
+      amp-story-grid-layer.paper{padding:0}
+      .frame{width:100%;height:10em;padding:.90em .36em .30em;display:flex;flex-direction:column;gap:.22em}
+      .masthead{display:flex;align-items:center;justify-content:space-between;flex:none;padding-bottom:.13em;border-bottom:1px solid #d5c4ab}
+      .brand{font-size:.19em;letter-spacing:.2em;font-weight:600}.edition{font-size:.115em;text-transform:uppercase;letter-spacing:.13em;color:#666}
+      .photographs{position:relative;display:flex;gap:.12em;flex:1;min-height:0;width:100%;overflow:hidden}
+      .photo{position:relative;flex:1;min-width:0;height:100%}
+      .photo amp-img{height:100%;width:100%}.photo amp-img img{object-fit:contain}
+      .copy{flex:none;padding:.06em .08em 0}
+      .kicker{font-size:.137em;line-height:1.5;letter-spacing:.105em;text-transform:uppercase;font-weight:600;color:#756047;margin:0 0 .65em}
+      h1,h2{font-family:Gilda,Georgia,serif;font-weight:400;letter-spacing:-.035em;line-height:1.12;margin:0 0 .25em;font-size:.49em;white-space:pre-line}
+      h1{font-size:.60em}.body-copy{font-size:.25em;line-height:1.52;letter-spacing:.005em;margin:0;max-width:31em}
+      .colophon{display:flex;justify-content:space-between;gap:1em;font-size:.115em;letter-spacing:.10em;text-transform:uppercase;color:#707474;margin-top:.06em;flex:none}
+      .cover .photographs{flex:1}.cover .body-copy{font-size:.245em}.cover .copy{padding-top:.09em}
+      .diptych .photographs{align-items:center}.diptych .photo{height:90%}.diptych .photo:first-child{align-self:flex-start}.diptych .photo:last-child{align-self:flex-end}
+      .closing .frame{padding-bottom:1.22em}
+      @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+    </style>
+  </head>
+  <body>
+    <amp-story standalone="" title={title} publisher="Artbild-Fotografie" publisher-logo-src={absolute("/images/web-stories/publisher-logo.png")} poster-portrait-src={absolute(poster)}>
+      {pages.map((page, index) => (
+        <amp-story-page id={page.id} class={page.layout ?? "framed"}>
+          <amp-story-grid-layer template="vertical" aspect-ratio="9:16" class="paper">
+            <div class="frame">
+              <div class="masthead"><span class="brand">ARTBILD</span><span class="edition">Hamburg zu zweit</span></div>
+              <div class="photographs">
+                {page.photos.map((photo) => (
+                  <div class="photo"><amp-img src={photo.src} width={photo.width} height={photo.height} layout="fill" alt={photo.alt}></amp-img></div>
+                ))}
+              </div>
+              <div class="copy">
+                <p class="kicker">{page.kicker}</p>
+                {index === 0 ? <h1>{page.heading}</h1> : <h2>{page.heading}</h2>}
+                <p class="body-copy">{page.text}</p>
+              </div>
+              <div class="colophon"><span>{index === 0 ? "September 2026 · Fotografie York Augustin" : "Artbild-Fotografie · Hamburg"}</span><span>{String(index + 1).padStart(2, "0")} / {pages.length}</span></div>
+            </div>
+          </amp-story-grid-layer>
+          {page.cta && <amp-story-page-outlink layout="nodisplay" theme="dark"><a href={absolute(page.cta.href)}>{page.cta.label}</a></amp-story-page-outlink>}
+        </amp-story-page>
+      ))}
+    </amp-story>
+  </body>
+</html>

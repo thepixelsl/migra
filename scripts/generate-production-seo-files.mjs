@@ -27,6 +27,7 @@ function xmlEscape(value) {
 }
 
 const canonicalUrls = new Set();
+const webStoryUrls = new Set();
 const preferredImages = new Map();
 const contentImages = new Map();
 const imageMetadataCache = new Map();
@@ -45,6 +46,9 @@ for (const file of await htmlFiles(DIST_DIRECTORY)) {
   canonicalUrl.search = "";
   canonicalUrls.add(canonicalUrl.href);
   const route = `/${path.relative(DIST_DIRECTORY, file).split(path.sep).join("/").replace(/index\.html$/, "")}`;
+  if (canonicalUrl.pathname === route && $("amp-story[standalone]").length === 1) {
+    webStoryUrls.add(canonicalUrl.href);
+  }
   if (canonicalUrl.pathname === route && !/\b(?:noimageindex|none)\b/.test(robots)) {
     contentImages.set(canonicalUrl.href, await collectPageImages($, canonicalUrl.href, {
       distDirectory: DIST_DIRECTORY, metadataCache: imageMetadataCache,
@@ -81,6 +85,14 @@ const sitemap = [
 
 const imagePages = urls.map((url) => ({ url, images: contentImages.get(url) || [] }));
 const imageSitemap = renderImageSitemap(imagePages);
+const webStorySitemap = [
+  '<?xml version="1.0" encoding="UTF-8"?>',
+  '<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>',
+  '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+  ...[...webStoryUrls].sort().map((url) => `  <url><loc>${xmlEscape(url)}</loc></url>`),
+  "</urlset>",
+  "",
+].join("\n");
 
 const sitemapStylesheet = `<?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
@@ -301,6 +313,7 @@ const robots = [
   ...privateRobotPaths.map((pathname) => `Disallow: ${pathname}`),
   `Sitemap: ${PRODUCTION_ORIGIN}/sitemap.xml`,
   `Sitemap: ${PRODUCTION_ORIGIN}/image-sitemap.xml`,
+  `Sitemap: ${PRODUCTION_ORIGIN}/web-story-sitemap.xml`,
   "",
 ].join("\n");
 
@@ -308,8 +321,10 @@ await Promise.all([
   writeFile(path.join(DIST_DIRECTORY, "robots.txt"), robots),
   writeFile(path.join(DIST_DIRECTORY, "sitemap.xml"), sitemap),
   writeFile(path.join(DIST_DIRECTORY, "image-sitemap.xml"), imageSitemap),
+  writeFile(path.join(DIST_DIRECTORY, "web-story-sitemap.xml"), webStorySitemap),
   writeFile(path.join(DIST_DIRECTORY, "sitemap.xsl"), sitemapStylesheet),
 ]);
 
 console.log(`Production SEO files: ${urls.length} indexable canonical URLs.`);
+console.log(`Web Story sitemap: ${webStoryUrls.size} indexable standalone stories.`);
 console.log(`Image sitemap: ${imagePages.filter((page) => page.images.length).length} pages, ${imagePages.reduce((sum, page) => sum + page.images.length, 0)} content image references.`);
