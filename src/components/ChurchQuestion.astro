@@ -1,0 +1,13 @@
+---
+interface Props { question: string; number?: number; open?: boolean; level?: 'h2' | 'h3' | 'h4'; }
+const { question, number, open = false, level = 'h3' } = Astro.props;
+const Heading = level;
+---
+<details class="church-question" open={open}>
+  <summary>
+    {number && <span class="church-question__number" aria-hidden="true">{String(number).padStart(2, '0')}</span>}
+    <Heading>{question}</Heading>
+    <span class="church-question__toggle" aria-hidden="true"></span>
+  </summary>
+  <div class="church-question__answer"><slot /></div>
+</details>

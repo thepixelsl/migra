@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import KirchenLayout from '../../layouts/KirchenLayout.astro';
+import ChurchBooking from '../../components/ChurchBooking.astro';
+import hero from '../../assets/kirchenfinder/kirche-alt-rahlstedt.jpg';
+import { churchPortraits, finderPath, guidePath, type Church } from '../../data/kirchen';
+export function getStaticPaths(){return churchPortraits.map(church=>({params:{slug:church.portrait!.slug},props:{church}}));}
+const {church}=Astro.props as {church:Church};
+const title=`${church.name}: Hochzeit & Anmeldung`;
+const description=`Kirchliche Trauung in ${church.name}: zuständiger Kontakt, Anmeldeweg, örtliche Voraussetzungen und offene Fragen für Eure Terminreservierung.`;
+const hasPhoto=church.id==='alt-rahlstedt';
+const siteUrl=Astro.site?.toString().replace(/\/$/,'')??'https://artbild-fotografie.de';
+const graph=[{'@type':'Church','@id':`${siteUrl}${finderPath}#ort-${church.id}`,name:church.name,url:`${siteUrl}${church.url}`,description:church.portrait!.introduction}];
+---
+<KirchenLayout title={title} description={description} pagePath={church.url} image={hasPhoto?hero.src:undefined} graph={graph} breadcrumbs={[{label:'Startseite',href:'/'},{label:'Kirchliche Trauung',href:guidePath},{label:'Kirchenfinder',href:finderPath},{label:church.name,href:church.url}]}>
+  <div class="church-wrap">
+    <header class="church-portrait-hero"><p class="church-eyebrow">Kirchlich heiraten · {church.area}</p><h1>{church.name}</h1><p>{church.portrait!.introduction}</p><div class="church-actions"><a class="church-button" href="#kontakt-und-anmeldung">Kontakt & Anmeldung</a><a class="church-text-link" href={finderPath}>Andere Traukirchen in Hamburg</a></div></header>
+    {hasPhoto&&<figure style="margin:0 0 40px"><Image class="church-portrait-image" src={hero} alt="Außenansicht der Kirche Alt-Rahlstedt mit dem Weg zum Eingang" widths={[420,680,960,1386]} sizes="(max-width: 700px) calc(100vw - 40px), min(1080px, 90vw)" format="webp" loading="eager" fetchpriority="high" /><figcaption class="church-row__meta">Kirche Alt-Rahlstedt · Aufnahme aus dem Artbild-Archiv</figcaption></figure>}
+    <div id="kontakt-und-anmeldung" class="church-portrait-body">
+      <ChurchBooking church={church} detailed />
+      <div class="church-portrait-links"><p>Ihr habt noch Fragen zu Kirchenzugehörigkeit, Unterlagen oder dem Traugespräch?</p><a class="church-text-link" href={guidePath}>Fragen zur kirchlichen Trauung in Hamburg →</a></div>
+    </div>
+    <section class="church-cta"><p class="church-eyebrow">Fotos von Eurer Hochzeit</p><h2>Plant Ihr Eure Trauung hier?</h2><p>Schreibt mir Euer Datum und den Namen der Kirche. Für die fotografische Begleitung besprechen wir gemeinsam, welche Aufnahmen erlaubt sind und wie viel Zeit Ihr rund um den Gottesdienst habt.</p><a class="church-button" href="/kontakt/">Hochzeitsfotografie anfragen</a></section>
+  </div>
+</KirchenLayout>

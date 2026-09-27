@@ -1,0 +1,116 @@
+---
+import { Image } from 'astro:assets';
+import KirchenLayout from '../../layouts/KirchenLayout.astro';
+import ChurchQuestion from '../../components/ChurchQuestion.astro';
+import hero from '../../assets/kirchenfinder/kirche-alt-rahlstedt.jpg';
+import { guidePath, finderPath, churchPortraits, kirchenStandLabel } from '../../data/kirchen';
+const ekd='https://www.ekd.de/kirchliche-trauung-13014.htm';
+const katholisch='https://kirchlich-heiraten.net/wir-trauen-uns/was-sonst-noch-wichtig-ist/';
+const katholischUnterlagen='https://kirchlich-heiraten.net/wir-trauen-uns/benoetigte-unterlagen/';
+const katholischAblauf='https://kirchlich-heiraten.net/die-feier-der-trauung/der-ablauf/';
+---
+<KirchenLayout title="Kirchliche Trauung Hamburg: Anmeldung, Kosten & Ablauf" description="Kirchlich heiraten in Hamburg: Wo meldet Ihr Euch an? Welche Voraussetzungen und Unterlagen braucht Ihr? Mit örtlichen Kontakten, Kosten und Kirchenfinder." pagePath={guidePath} image={hero.src} breadcrumbs={[{label:'Startseite',href:'/'},{label:'Blog & Planung',href:'/blog/'},{label:'Kirchliche Trauung Hamburg',href:guidePath}]}>
+  <div class="church-wrap">
+    <header class="church-hero">
+      <p class="church-eyebrow">Anmeldung · Voraussetzungen · Ablauf</p>
+      <h1>Kirchlich heiraten<span>in Hamburg.</span></h1>
+      <p class="church-hero__lead">Ihr habt eine Kirche im Kopf – aber wer vergibt den Termin? Hier erfahrt Ihr, wie Ihr Eure kirchliche Trauung anmeldet, welche Unterlagen gebraucht werden und was Ihr mit der Gemeinde besprechen solltet.</p>
+      <a class="church-button" href={finderPath}>Eine Kirche für die Hochzeit finden</a>
+      <nav aria-label="Themen dieser Seite"><ul class="church-jump-links"><li><a href="#anmeldung">Termin & Anmeldung</a></li><li><a href="#voraussetzungen">Voraussetzungen & Unterlagen</a></li><li><a href="#kosten-ablauf">Kosten & Ablauf</a></li></ul></nav>
+    </header>
+    <section class="church-intro" aria-labelledby="guide-intro-title">
+      <figure><Image src={hero} alt="Kirche Alt-Rahlstedt zwischen Bäumen im Sonnenlicht" widths={[420,680,960,1386]} sizes="(max-width: 700px) calc(100vw - 48px), 508px" format="webp" loading="eager" fetchpriority="high" /><figcaption>Kirche Alt-Rahlstedt · Foto: York Augustin</figcaption></figure>
+      <div class="church-intro__copy"><p class="church-eyebrow">Bevor Ihr einen Termin festplant</p><h2 id="guide-intro-title">Die Kirche auswählen.<br />Dann die Zusage klären.</h2><p>In Flottbek könnt Ihr Euch frühestens ein Jahr vorher anmelden. In Nienstedten vereinbart Ihr den Termin, bevor Ihr das Formular ausfüllt. Im Michel gehört ein Trauseminar dazu.</p><p>Diese Unterschiede findet Ihr bei den einzelnen Kirchen – zusammen mit Telefonnummer, E-Mail und den Fragen, die das Kirchenbüro noch beantworten muss.</p><a class="church-text-link" href={finderPath}>Kirchen in Hamburg vergleichen →</a></div>
+    </section>
+    <div class="church-guide-body">
+      <section id="anmeldung" class="church-section" aria-labelledby="guide-path-title">
+        <p class="church-eyebrow">01 · Termin & Anmeldung</p><h2 id="guide-path-title">Wie melden wir unsere kirchliche Trauung an?</h2>
+        <p>Für die erste Anfrage reichen Euer Wunschdatum, die gewünschte Kirche und ein paar Angaben zu Euch. Nennt Eure Konfessionen und wo Ihr wohnt. So kann die Gemeinde gleich sagen, wer zuständig ist.</p>
+        <ol class="church-journey">
+          <li><div><h3>Im Kirchenbüro anfragen</h3><p>Fragt, ob die Kirche an Eurem Datum frei ist und wer Euch trauen kann. Manche Gemeinden beginnen mit einem Gespräch im Pfarramt. Den passenden Kontakt findet Ihr <a href={finderPath}>bei Eurer Wunschkirche</a>.</p></div></li>
+          <li><div><h3>Die Anmeldung vervollständigen</h3><p>Lasst Euch das Formular und die Dokumentenliste geben. Gehört Ihr zu einer anderen Gemeinde, klärt gleich, ob Ihr von dort eine Bescheinigung, Eure Pastorin oder Euren Pastor mitbringen müsst.</p></div></li>
+          <li><div><h3>Den Termin bestätigen lassen</h3><p>Fragt nach, was für eine feste Zusage noch fehlt. Notiert Euch die Abgabefristen und wie lange eine Vormerkung gilt. Danach vereinbart Ihr das Traugespräch und besprecht den Gottesdienst.</p></div></li>
+        </ol>
+        <div class="church-questions">
+          <ChurchQuestion number={1} question="Wie lange vorher müssen wir die kirchliche Trauung anmelden?" open>
+            <p>Das hängt von der Kirche ab. In <a href={finderPath+'flottbeker-kirche/'}>Flottbek</a> beginnt die Anmeldung frühestens ein Jahr vorher. Die <a href={finderPath+'#christianskirche'}>Christianskirche Ottensen</a> nennt mindestens sechs Wochen Vorlauf. Das ist keine Zusage, dass kurzfristig noch ein Termin frei ist.</p>
+            <p>Fragt nach, sobald Kirche und Wunschdatum für Euch feststehen. Lasst Euch zwei Fristen nennen: Ab wann nimmt das Büro Anmeldungen an – und bis wann müssen Eure Unterlagen dort sein?</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={2} question="Ist eine Vormerkung schon eine feste Reservierung?">
+            <p>Verlasst Euch auf die ausdrückliche Bestätigung der Gemeinde. In <a href={finderPath+'sinstorfer-kirche/'}>Sinstorf</a> wird die Anmeldung mit Eingang des ausgefüllten Formulars verbindlich. In <a href={finderPath+'st-gertrud-uhlenhorst/'}>St. Gertrud am Immenhof</a> müssen auch die Anlagen dabei sein.</p>
+            <p>Andere Kirchen erklären diesen Schritt online nicht. Fragt dann konkret: „Ist unsere Kirche für Datum und Uhrzeit fest reserviert, und steht auch fest, wer uns traut?“</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={3} question="Können wir in einer anderen Gemeinde heiraten? Was ist ein Dimissoriale?">
+            <p>Ja, mehrere Hamburger Gemeinden nehmen auch Paare von außerhalb an. Für eine evangelische Trauung braucht Ihr dann häufig ein <strong>Dimissoriale</strong>: die Zustimmung Eurer Wohnsitzgemeinde zur Trauung in einer anderen Gemeinde. Fragt Euer Kirchenbüro am Wohnort danach.</p>
+            <p>Klärt zusätzlich, wer die Trauung übernimmt. In <a href={finderPath+'#blankenese'}>Blankenese</a> sollen Paare von außerhalb ihre eigene Pastorin oder ihren eigenen Pastor mitbringen; <a href={finderPath+'flottbeker-kirche/'}>Flottbek</a> versucht bei Bedarf zu helfen.</p>
+          </ChurchQuestion>
+        </div>
+      </section>
+      <section id="voraussetzungen" class="church-section" aria-labelledby="guide-requirements-title">
+        <p class="church-eyebrow">02 · Voraussetzungen & Unterlagen</p><h2 id="guide-requirements-title">Können wir kirchlich heiraten?</h2>
+        <p>Evangelisch oder katholisch, Mitglied einer anderen Gemeinde oder aus der Kirche ausgetreten: Sagt bei der Anfrage offen, wie es bei Euch ist. Die Antworten unterscheiden sich je nach Konfession und Gemeinde.</p>
+        <div class="church-questions">
+          <ChurchQuestion number={1} question="Welche Unterlagen brauchen wir für die kirchliche Trauung?" open>
+            <p>Viele evangelische Gemeinden fragen nach Tauf- und Konfirmationsnachweisen sowie der standesamtlichen Eheurkunde. Bei einer Trauung außerhalb Eurer Gemeinde kommt häufig das Dimissoriale hinzu. Nutzt die Liste Eurer Kirche: In <a href={finderPath+'kirche-alt-rahlstedt/'}>Alt-Rahlstedt</a> müssen die Unterlagen sechs Wochen vorher vorliegen, im <a href={finderPath+'st-michaelis-michel/'}>Michel</a> vier Wochen vorher.</p>
+            <p>Für die katholische Trauung braucht die katholische Person einen Taufschein, der beim Traugespräch höchstens sechs Monate alt ist. Ihr bekommt ihn normalerweise in Eurer Taufpfarrei. Bei einer anderen Traukirche wird außerdem eine Überweisung der Wohnortpfarrei benötigt. Das erklärt das <a href={katholischUnterlagen}>Erzbistum Hamburg zu den Unterlagen</a>.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={2} question="Können wir kirchlich heiraten, wenn einer von uns ausgetreten ist?">
+            <p>Das kann möglich sein. <a href={finderPath+'flottbeker-kirche/'}>Flottbek</a> beschreibt einen Traugottesdienst auch dann, wenn eine Person kein Kirchenmitglied ist. Die <a href={finderPath+'st-gertrud-altenwerder/'}>Thomasgemeinde</a> erläutert dafür einen Gottesdienst anlässlich der Eheschließung.</p>
+            <p>Für katholische Paare nennt das <a href={katholisch}>Erzbistum Hamburg</a> ebenfalls eine Möglichkeit, wenn eine Person ausgetreten ist. Die verbleibende Kirchenmitgliedschaft und die dazugehörigen Glaubenszusagen werden im Gespräch geklärt. Erzählt dem Pfarramt auch, ob Ihr getauft seid; Austritt und fehlende Taufe sind unterschiedliche Ausgangslagen.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={3} question="Ist eine kirchliche Trauung ohne Taufe, Konfirmation oder Firmung möglich?">
+            <p>Diese drei Fragen haben unterschiedliche Antworten. Für die katholische Trauung ist eine fehlende Firmung in Deutschland laut <a href={katholisch}>Erzbistum Hamburg</a> kein grundsätzliches Hindernis. Ist eine Person nicht getauft oder gehört einer anderen Religion an, muss das Pfarramt die nötige Erlaubnis klären.</p>
+            <p>Für die evangelische Trauung besprecht Ihr fehlende Tauf- oder Konfirmationsnachweise mit Eurem Pfarrteam. Lasst Euch sagen, ob lediglich eine Urkunde fehlt oder ob eine Voraussetzung noch geklärt werden muss.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={4} question="Können wir ohne Standesamt kirchlich heiraten?">
+            <p>Für eine evangelische Trauung muss die standesamtliche Eheschließung vorausgehen. So erläutert es die <a href={ekd}>EKD</a>. Liegen beide Termine dicht beieinander, fragt nach dem Nachreichen der Eheurkunde: Im <a href={finderPath+'st-michaelis-michel/'}>Michel</a> kann sie in diesem Fall am Trautag im Original übergeben werden.</p>
+            <p>Für eine katholische Trauung beschreibt das <a href={katholisch}>Erzbistum Hamburg</a> eine andere Regelung. Klärt eine Trauung ohne vorheriges Standesamt deshalb frühzeitig im katholischen Pfarramt.</p>
+            <a href="/standesamt-hamburg/">Standesämter und Trauorte in Hamburg finden →</a>
+          </ChurchQuestion>
+          <ChurchQuestion number={5} question="Einer evangelisch, einer katholisch: Geht eine ökumenische Trauung?">
+            <p>Ja. Gemeint ist damit eine evangelische Trauung mit katholischer Beteiligung oder eine katholische Trauung mit evangelischer Beteiligung. Wendet Euch früh an beide Pfarrämter, damit Gottesdienst, Unterlagen und Zuständigkeiten zusammenpassen. Das <a href={katholisch}>Erzbistum Hamburg erklärt beide Formen</a>.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={6} question="Können gleichgeschlechtliche Paare hier kirchlich heiraten?">
+            <p>Mehrere evangelische Gemeinden in unserem Verzeichnis sagen das ausdrücklich zu, darunter <a href={finderPath+'kirche-alt-rahlstedt/'}>Alt-Rahlstedt</a>, <a href={finderPath+'st-gertrud-uhlenhorst/'}>St. Gertrud Uhlenhorst</a> und die <a href={finderPath+'#christus-eimsbuettel'}>Kirchengemeinde Eimsbüttel</a>. Die Anmeldung und die weiteren örtlichen Voraussetzungen findet Ihr beim jeweiligen Eintrag.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={7} question="Ist eine kirchliche Trauung nach einer Scheidung möglich?">
+            <p>In der evangelischen Kirche ist eine erneute Trauung möglich; <a href={finderPath+'kirche-alt-rahlstedt/'}>Alt-Rahlstedt</a> spricht Paare, die wieder heiraten, ausdrücklich an.</p>
+            <p>Für eine katholische Trauung muss eine frühere Ehe gesondert geprüft werden. Besprecht das vor der Terminplanung mit dem Pfarramt. Hinweise zur zuständigen Fachstelle stehen beim <a href={katholisch}>Erzbistum Hamburg</a>.</p>
+          </ChurchQuestion>
+        </div>
+      </section>
+      <section id="kosten-ablauf" class="church-section" aria-labelledby="guide-ceremony-title">
+        <p class="church-eyebrow">03 · Kosten & Ablauf</p><h2 id="guide-ceremony-title">Was kommt vor und am Hochzeitstag auf uns zu?</h2>
+        <div class="church-questions">
+          <ChurchQuestion number={1} question="Was kostet eine kirchliche Trauung in Hamburg?" open>
+            <p>Einen einheitlichen Preis gibt es nicht. Der <a href={finderPath+'st-michaelis-michel/'}>Michel</a> und <a href={finderPath+'#katharinen'}>St. Katharinen</a> nennen keine Traugebühren; zusätzliche musikalische Beiträge bezahlt Ihr selbst. In <a href={finderPath+'sinstorfer-kirche/'}>Sinstorf</a> kostet die Trauung für Kirchenmitglieder selbst nichts, für Altarblumen und Küsterarbeit werden 60 Euro genannt.</p>
+            <p>Fragt nach dem Betrag für Eure konkrete Planung: Sind Kirchenmusik, Küsterdienst und Blumen enthalten? Was kosten zusätzliche Wünsche? Wird bei Paaren aus anderen Gemeinden etwas berechnet?</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={2} question="Was besprechen wir im Traugespräch?">
+            <p>Es geht um Euch als Paar und um den Gottesdienst: Was möchtet Ihr mit Eurem Ja ausdrücken? Welcher Trauspruch passt zu Euch? Wer übernimmt eine Lesung oder Fürbitte? Dazu kommen die praktischen Fragen zu Einzug, Musik und Ablauf.</p>
+            <p>In <a href={finderPath+'flottbeker-kirche/'}>Flottbek</a> gehört diese Vorbereitung zum Gespräch mit der Pastorin oder dem Pastor. Im <a href={finderPath+'st-michaelis-michel/'}>Michel</a> müsst Ihr außerdem an einem Trauseminar teilnehmen; die Termine bekommt Ihr nach der Anmeldung.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={3} question="Wie läuft eine kirchliche Trauung ab?">
+            <p>Bei einer evangelischen Trauung folgen auf Einzug und Begrüßung unter anderem Lesung, Ansprache, Trauversprechen, Ringwechsel und Segen. Fürbitten, Vaterunser und Auszug schließen den Gottesdienst ab. Den genauen Ablauf vereinbart Ihr im Traugespräch. Eine Übersicht bietet die <a href={ekd}>EKD zum Ablauf</a>.</p>
+            <p>Katholisch könnt Ihr die Trauung in einer Wortgottesfeier oder einer Messe feiern. Bei der Messe kommt die Eucharistiefeier dazu. Das <a href={katholischAblauf}>Erzbistum Hamburg zeigt beide Abläufe</a> – hilfreich auch, wenn Ihr ein Kirchenheft vorbereiten möchtet.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={4} question="Wie lange dauert eine kirchliche Trauung?">
+            <p>Die <a href={ekd}>EKD nennt für evangelische Trauungen etwa 25 bis 60 Minuten</a>. Musik, persönliche Beiträge und ein mögliches Abendmahl beeinflussen die Dauer. Fragt Euer Pfarrteam nach der Zeit für Euren geplanten Gottesdienst.</p>
+            <p>Plant Gratulationen, Gruppenfotos und die Fahrt zur Feier zusätzlich ein. Fragt auch, wann die nächste Trauung beginnt und wie lange Ihr den Kirchplatz nutzen könnt.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={5} question="Können wir unsere Hochzeitslieder selbst aussuchen?">
+            <p>Bringt Eure Liedwünsche zum Traugespräch mit und klärt auch, wer sie spielt oder singt. Die Regeln unterscheiden sich: Im <a href={finderPath+'st-michaelis-michel/'}>Michel</a> ist geistliche Livemusik vorgesehen; externe Mitwirkende brauchen die Zustimmung der Gemeinde.</p>
+            <p>In <a href={finderPath+'sinstorfer-kirche/'}>Sinstorf</a> sollt Ihr besondere Musikwünsche spätestens sechs Wochen vorher mit der Orgelbegleitung besprechen. Bucht zusätzliche Musiker erst, wenn die Kirche zugestimmt hat.</p>
+          </ChurchQuestion>
+          <ChurchQuestion number={6} question="Darf unser Hochzeitsfotograf während der Trauung fotografieren?">
+            <p>Das müsst Ihr für Eure Kirche absprechen. Im <a href={finderPath+'st-michaelis-michel/'}>Michel</a> sind Fotos nur beim Einzug und Auszug erlaubt. <a href={finderPath+'kirche-alt-rahlstedt/'}>Alt-Rahlstedt</a> lässt wenige unauffällige Aufnahmen während des Gottesdienstes nur nach ausdrücklicher Vereinbarung zu. In <a href={finderPath+'#christus-eimsbuettel'}>Eimsbüttel</a> ist Fotografieren grundsätzlich möglich, möglichst durch eine einzelne Person.</p>
+            <p>Für Eure Hochzeitsfotos klären wir deshalb vorher mit dem Pfarrteam, welche Aufnahmen und Positionen erlaubt sind. So könnt Ihr Euch auf die Trauung konzentrieren.</p>
+          </ChurchQuestion>
+        </div>
+      </section>
+      <section class="church-section" aria-labelledby="guide-local-title"><p class="church-eyebrow">Kontakte für Eure Anmeldung</p><h2 id="guide-local-title">Welche Kirche habt Ihr im Kopf?</h2><ul class="church-examples">{churchPortraits.map(church=><li><h3><a href={church.url}>{church.name}</a></h3><p>{church.highlight}</p></li>)}</ul><a class="church-button" href={finderPath}>Alle 38 Trauorte ansehen</a></section>
+      <section class="church-sources"><h2>Woher kommen die Angaben?</h2><p>Die Gemeindeseiten wurden am {kirchenStandLabel} geprüft. Quellen und noch offene Fragen stehen bei den einzelnen Kirchen. Ergänzend sind die Informationen der EKD und des Erzbistums Hamburg direkt in den Antworten verlinkt.</p><p>Freie Termine erfahrt Ihr bei der Gemeinde. <a href={finderPath+'#so-arbeiten-wir'}>Mehr zum Verzeichnis und seinem Umfang</a></p></section>
+    </div>
+    <section class="church-cta"><p class="church-eyebrow">Hochzeitsfotografie · Hamburg</p><h2>Wer fotografiert Eure kirchliche Trauung?</h2><p>Schreibt mir, wann und in welcher Kirche Ihr heiraten möchtet. Dann besprechen wir die Fotos rund um Eure Trauung und wie die Begleitung in Euren Tagesablauf passt.</p><a class="church-button" href="/kontakt/">York nach Eurem Hochzeitstermin fragen</a></section>
+  </div>
+</KirchenLayout>

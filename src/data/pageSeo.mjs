@@ -6,6 +6,53 @@
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
 export const pageSeo = {
+  "/kirchenfinder-hamburg/": {
+    keyword: "Kirchen Hochzeit Hamburg",
+    image: "src/assets/kirchenfinder/kirche-alt-rahlstedt.jpg",
+    alt: "Kirche Alt-Rahlstedt als einer der recherchierten kirchlichen Trauorte",
+  },
+  "/kirchliche-trauung-hamburg/": {
+    keyword: "Kirchliche Trauung Hamburg",
+    image: "src/assets/kirchenfinder/kirche-alt-rahlstedt.jpg",
+    alt: "Kirche Alt-Rahlstedt mit dem Weg zum Eingang",
+  },
+  "/kirchenfinder-hamburg/kirche-alt-rahlstedt/": {
+    keyword: "Kirche Alt-Rahlstedt Trauung",
+    image: "src/assets/kirchenfinder/kirche-alt-rahlstedt.jpg",
+    alt: "Außenansicht der Kirche Alt-Rahlstedt",
+  },
+  // An author portrait is used until photographs of these specific churches exist.
+  // A photograph of Alt-Rahlstedt must not represent another church.
+  "/kirchenfinder-hamburg/st-gertrud-altenwerder/": {
+    keyword: "St. Gertrud Altenwerder Trauung",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
+  "/kirchenfinder-hamburg/st-michaelis-michel/": {
+    keyword: "Heiraten im Michel",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
+  "/kirchenfinder-hamburg/sinstorfer-kirche/": {
+    keyword: "Sinstorfer Kirche Trauung",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
+  "/kirchenfinder-hamburg/flottbeker-kirche/": {
+    keyword: "Flottbeker Kirche Trauung Anmeldung",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
+  "/kirchenfinder-hamburg/nienstedtener-kirche/": {
+    keyword: "Nienstedtener Kirche Trauung Anmeldung",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
+  "/kirchenfinder-hamburg/st-gertrud-uhlenhorst/": {
+    keyword: "St. Gertrud Uhlenhorst Trauung",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Ansprechpartner für Hochzeitsfotografie bei Artbild",
+  },
   "/web-stories/paarshooting-hamburg-september-2026/": {
     keyword: "Paarshooting Hamburg Web Story",
     image: "public/images/web-stories/paarshooting-hamburg-september-2026/01-stadthausbruecke.webp",

@@ -1,0 +1,1840 @@
+{
+  "checkedOn": "2026-09-27",
+  "venues": [
+    {
+      "id": "alt-rahlstedt",
+      "name": "Kirche Alt-Rahlstedt",
+      "area": "Rahlstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "alt-rahlstedt",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "alt-rahlstedt",
+        "alt-rahlstedt-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "address": "Pfarrstraße 19, 22149 Hamburg"
+    },
+    {
+      "id": "martinskirche-rahlstedt",
+      "name": "Martinskirche",
+      "area": "Rahlstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "alt-rahlstedt",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "alt-rahlstedt",
+        "alt-rahlstedt-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "address": "Hohwachter Weg 2, 22143 Hamburg"
+    },
+    {
+      "id": "auferstehung-braak",
+      "name": "Auferstehungskirche Braak",
+      "area": "Braak",
+      "scope": "Umland",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "alt-rahlstedt",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "alt-rahlstedt",
+        "alt-rahlstedt-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "address": "An der Chaussee 3, 22145 Braak"
+    },
+    {
+      "id": "bergstedt",
+      "name": "Bergstedter Kirche",
+      "area": "Bergstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "obergalster",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "obergalster",
+        "obergalster-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "reopening_event_documented",
+        "note": "Die Gemeinde nennt den 1. Dezember 2024 als Wiedereröffnungstermin nach der Sanierung. Klärt im Kirchenbüro, ob für Euren Wunschtermin Einschränkungen bestehen.",
+        "sourceIds": [
+          "bergstedt-wiedereroeffnung"
+        ]
+      }
+    },
+    {
+      "id": "jubilate",
+      "name": "Jubilatekirche",
+      "area": "Lemsahl-Mellingstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "obergalster",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "obergalster",
+        "obergalster-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "matthias-claudius",
+      "name": "Matthias-Claudius-Kirche",
+      "area": "Wohldorf-Ohlstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "obergalster",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "obergalster",
+        "obergalster-orte"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "restoration_in_progress",
+        "note": "Nach dem Brand vom 3. Januar 2025 wird die Kirche wiederaufgebaut. Laut Gemeindemeldung vom August 2026 finden Veranstaltungen bis zur Wiedereröffnung im Gemeindesaal statt. Ein Wiedereröffnungstermin ist noch nicht bekannt. Ob Eure Trauung im Ersatzsaal möglich ist, muss die Gemeinde bestätigen.",
+        "sourceIds": [
+          "ohlstedt-brand"
+        ],
+        "reportedAsOf": "2026-08",
+        "reopeningDate": null
+      }
+    },
+    {
+      "id": "luther-wellingsbuettel",
+      "name": "Lutherkirche",
+      "area": "Wellingsbüttel",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "wellingsbuettel",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "wellingsbuettel"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "markt-niendorf",
+      "name": "Kirche am Markt",
+      "area": "Niendorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "niendorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "niendorf",
+        "niendorf-57"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Kirchenbüro Kirche am Markt",
+        "phone": "040 581171",
+        "email": "kirche-am-markt@kirche-in-niendorf.de",
+        "sourceIds": [
+          "niendorf-57"
+        ]
+      }
+    },
+    {
+      "id": "verheissung",
+      "name": "Verheißungskirche",
+      "area": "Niendorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "niendorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "niendorf",
+        "niendorf-57"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Kirchenbüro Verheißungskirche",
+        "phone": "040 5714830",
+        "email": "verheissung@kirche-in-niendorf.de",
+        "sourceIds": [
+          "niendorf-57"
+        ]
+      }
+    },
+    {
+      "id": "immanuel",
+      "name": "Immanuel-Haus",
+      "area": "Niendorf",
+      "scope": "Hamburg",
+      "venueType": "Gemeindezentrum",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "niendorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "niendorf",
+        "niendorf-57"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Kirchenbüro Immanuel-Haus",
+        "phone": "040 5512282",
+        "email": "immanuel-haus@kirche-in-niendorf.de",
+        "sourceIds": [
+          "niendorf-57"
+        ]
+      }
+    },
+    {
+      "id": "johannis-eppendorf",
+      "name": "St. Johannis Eppendorf",
+      "area": "Eppendorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "eppendorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "eppendorf"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "johannis-harvestehude",
+      "name": "St. Johannis Harvestehude",
+      "area": "Bereich Harvestehude/Rotherbaum",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "harvestehude",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "harvestehude"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "andreas",
+      "name": "St. Andreas",
+      "area": "Harvestehude",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "andreas",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "andreas"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "gertrud-uhlenhorst",
+      "name": "St. Gertrud Uhlenhorst",
+      "area": "Uhlenhorst",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "gertrud-uhlenhorst",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "gertrud-uhlenhorst"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "christus-eimsbuettel",
+      "name": "Christuskirche Eimsbüttel",
+      "area": "Eimsbüttel",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "eimsbuettel",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "eimsbuettel"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "apostel-eimsbuettel",
+      "name": "Apostelkirche",
+      "area": "Eimsbüttel",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "eimsbuettel",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "eimsbuettel"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "michel",
+      "name": "Hauptkirche St. Michaelis – Michel",
+      "area": "Neustadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "michel",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "michel"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "petri",
+      "name": "Hauptkirche St. Petri",
+      "area": "Altstadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "petri",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "petri"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "jacobi",
+      "name": "Hauptkirche St. Jacobi",
+      "area": "Altstadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "jacobi",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "jacobi"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "future_construction_planned",
+        "note": "Die Gemeinde plant eine Bauphase von 2028 bis 2034. Fragt bei Eurer Terminanfrage ausdrücklich nach, ob und wie die Arbeiten Eure Trauung betreffen.",
+        "sourceIds": [
+          "jacobi-bauplanung"
+        ],
+        "plannedStartYear": 2028,
+        "plannedEndYear": 2034
+      }
+    },
+    {
+      "id": "katharinen",
+      "name": "Hauptkirche St. Katharinen",
+      "area": "Altstadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "katharinen",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "katharinen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "nikolai-klosterstern",
+      "name": "Hauptkirche St. Nikolai am Klosterstern",
+      "area": "Harvestehude",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "nikolai",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "nikolai"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "mariendom",
+      "name": "St. Marien-Dom",
+      "area": "St. Georg",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "mariendom",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "mariendom"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "christianskirche",
+      "name": "Christianskirche",
+      "area": "Ottensen",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "ottensen",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "ottensen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "christus-othmarschen",
+      "name": "Christuskirche Othmarschen",
+      "area": "Othmarschen",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "othmarschen",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "othmarschen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "flottbek",
+      "name": "Flottbeker Kirche",
+      "area": "Groß Flottbek",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "flottbek",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "flottbek"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "nienstedten",
+      "name": "Nienstedtener Kirche",
+      "area": "Nienstedten",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "nienstedten",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "nienstedten"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "blankenese",
+      "name": "Blankeneser Kirche am Markt",
+      "area": "Blankenese",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "blankenese",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "blankenese"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "moorfleet",
+      "name": "St. Nikolai Moorfleet",
+      "area": "Moorfleet",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "moorfleet",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "marschlande-moorfleet"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "nicolai-altengamme",
+      "name": "St. Nicolai Altengamme",
+      "area": "Altengamme",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "vierlanden",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "vierlanden",
+        "vierlanden-61"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Altengamme",
+        "phone": "040 7235236",
+        "email": null,
+        "sourceIds": [
+          "vierlanden-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "johannis-curslack",
+      "name": "St. Johannis Curslack",
+      "area": "Curslack",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "vierlanden",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "vierlanden",
+        "vierlanden-62"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Curslack",
+        "phone": "040 7231140",
+        "email": null,
+        "sourceIds": [
+          "vierlanden-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "severini",
+      "name": "St. Severini",
+      "area": "Kirchwerder",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "vierlanden",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "vierlanden",
+        "vierlanden-63"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Kirchwerder",
+        "phone": "040 7230202",
+        "email": "buero@st-severini.de",
+        "sourceIds": [
+          "vierlanden-kontakt",
+          "vierlanden-63"
+        ]
+      }
+    },
+    {
+      "id": "johannis-neuengamme",
+      "name": "St. Johannis Neuengamme",
+      "area": "Neuengamme",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "vierlanden",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "vierlanden",
+        "vierlanden-64"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Neuengamme",
+        "phone": "040 7232573",
+        "email": null,
+        "sourceIds": [
+          "vierlanden-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "sinstorf",
+      "name": "Sinstorfer Kirche",
+      "area": "Sinstorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "sinstorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "sinstorf-trauung"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "auferstehung-marmstorf",
+      "name": "Auferstehungskirche Marmstorf",
+      "area": "Marmstorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "marmstorf",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "marmstorf"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "thomas-hausbruch",
+      "name": "Thomaskirche Hausbruch",
+      "area": "Hausbruch",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "thomas",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "thomas"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "nikolai-finkenwerder",
+      "name": "St. Nikolai Finkenwerder",
+      "area": "Finkenwerder",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "finkenwerder",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "finkenwerder"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "maria-magdalena",
+      "name": "St. Maria Magdalena Moorburg",
+      "area": "Moorburg",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "moorburg",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "moorburg"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Aktuelle Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte mit der Gemeinde klären.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "gertrud-altenwerder",
+      "name": "St. Gertrud Altenwerder",
+      "area": "Altenwerder",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "evangelisch-lutherisch",
+      "profileId": "thomas",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "thomas"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "building": {
+        "status": "reopened_after_renovation",
+        "note": "Die Kirche wurde am 7. September 2025 nach der Sanierung wiedereröffnet. Klärt bei Eurer Terminanfrage, ob für Euren Hochzeitstag neue Einschränkungen bestehen.",
+        "sourceIds": [
+          "altenwerder-gemeindebrief",
+          "altenwerder-wiedereroeffnet"
+        ],
+        "reopeningDate": "2025-09-07"
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "id": "alt-rahlstedt",
+      "name": "Kirchengemeinde Alt-Rahlstedt",
+      "sourceIds": [
+        "alt-rahlstedt"
+      ],
+      "contact": {
+        "role": "Gemeindebüro",
+        "phone": "040 6771575",
+        "email": "buero@kirche-alt-rahlstedt.de"
+      },
+      "steps": [
+        "Ruft im Gemeindebüro an oder schreibt eine E-Mail. Nennt die gewünschte Kirche und Euer Datum; das Büro nennt Euch mögliche Termine und schickt Euch das Anmeldeformular.",
+        "Gebt die Unterlagen spätestens sechs Wochen vor der Trauung ab. Wenn Ihr zu einer anderen Gemeinde gehört, fragt dort nach der Bescheinigung für eine Trauung außerhalb Eurer Gemeinde (Dimissoriale).",
+        "Im Traugespräch besprecht Ihr mit Eurer Pastorin oder Eurem Pastor den Ablauf."
+      ],
+      "requirements": [
+        "Ihr könnt Euch als Gemeindemitglieder anmelden. Auch Mitglieder anderer christlicher Kirchen mit einer persönlichen oder familiären Verbindung zur Gemeinde werden genannt.",
+        "Ihr müsst standesamtlich verheiratet sein. Mindestens eine Person sollte Kirchenmitglied sein. Wenn das bei Euch anders ist, fragt vor der Anmeldung nach. Auch queere Paare und Paare, die erneut heiraten, sind willkommen.",
+        "Benötigt werden Kopien Eurer Tauf- und Konfirmationsurkunden sowie die Eheurkunde. Zunächst kann auch die Terminbestätigung des Standesamts eingereicht werden. Gehört Ihr zu einer anderen Gemeinde, kommt das Dimissoriale hinzu."
+      ],
+      "unknowns": [
+        "Wie weit im Voraus können wir einen Termin anfragen, und wie lange wird er für uns vorgemerkt?",
+        "Wir gehören zu einer anderen Gemeinde: Welche persönliche oder familiäre Verbindung zu Alt-Rahlstedt reicht für die Anmeldung aus?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Trauungen finden normalerweise freitags und samstags statt. In der Karwoche und am Wochenende des Ewigkeitssonntags sind keine Trauungen vorgesehen.",
+      "photography": "Beim Einzug und Auszug sind Fotos möglich. Während des Gottesdienstes soll grundsätzlich nicht fotografiert werden. Einige wenige, unauffällige Aufnahmen durch eine vorher benannte Person können ausdrücklich vereinbart werden. Sprecht das vorab mit Eurem Pfarrteam ab."
+    },
+    {
+      "id": "thomas",
+      "name": "Thomasgemeinde: Hausbruch und Altenwerder",
+      "sourceIds": [
+        "thomas"
+      ],
+      "contact": {
+        "role": "Gemeindebüro der Thomasgemeinde",
+        "phone": "040 7960208",
+        "email": "hausbruch@kirche-suederelbe.de"
+      },
+      "steps": [
+        "Schreibt oder ruft im Gemeindebüro an. Sagt gleich dazu, ob Ihr in der Thomaskirche Hausbruch oder in St. Gertrud Altenwerder heiraten möchtet. Nennt Euer Datum und gegebenenfalls die Pastorin oder den Pastor, die oder den Ihr Euch wünscht.",
+        "Gehört Ihr zu einer anderen Gemeinde, bittet das Kirchenbüro an Eurem Wohnort um ein Dimissoriale. Das ist die Bescheinigung für Eure Trauung in einer anderen Gemeinde.",
+        "Einige Wochen vor der Hochzeit besprecht Ihr im Traugespräch den Ablauf, die Musik und Euren Trauspruch."
+      ],
+      "requirements": [
+        "In der Regel muss eine Person evangelisch sein. Wenn die andere Person keiner Kirche angehört, beschreibt die Gemeinde dafür einen Gottesdienst anlässlich der Eheschließung. Besprecht mit dem Pfarrteam, welche Form für Euch passt.",
+        "Ihr könnt auch anfragen, wenn Ihr nicht zur Thomasgemeinde gehört. Das gilt für Hausbruch und Altenwerder."
+      ],
+      "unknowns": [
+        "Welches Formular und welche Unterlagen brauchen wir, und bis wann müssen sie vorliegen?",
+        "Wie lange wird der Termin vorgemerkt, und wann bekommen wir eine feste Zusage?",
+        "Welche Zusatzkosten und Fotoregeln gelten? Für Altenwerder: Wie erreichen unsere Gäste die Kirche am Hochzeitstag?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Trauungen finden meistens samstags statt. Den genauen Tag und die Uhrzeit vereinbart Ihr mit dem Gemeindebüro.",
+      "costs": "Für die Trauung selbst verlangt die Gemeinde keine Gebühr. Was etwa besondere Musik oder weiterer Schmuck kosten, solltet Ihr zusätzlich erfragen."
+    },
+    {
+      "id": "michel",
+      "name": "Hauptkirche St. Michaelis – Michel",
+      "sourceIds": [
+        "michel"
+      ],
+      "contact": {
+        "role": "Pfarramt · Sonja Todt",
+        "phone": "040 37678-0",
+        "email": "pastorat@st-michaelis.de"
+      },
+      "steps": [
+        "Fragt Euren Wunschtermin möglichst früh im Gemeindebüro an – telefonisch oder per E-Mail an das Pfarramt.",
+        "Nach der Anmeldung bekommt Ihr die Termine für das Trauseminar. Die Teilnahme gehört im Michel verpflichtend zur Vorbereitung.",
+        "Reicht die angeforderten Unterlagen und Angaben spätestens vier Wochen vor der Trauung ein. Heiratet Ihr erst kurz vorher standesamtlich, bringt die Eheurkunde am Trautag im Original mit."
+      ],
+      "requirements": [
+        "Beide sollen einer christlichen Kirche angehören; eine Person soll evangelisch-lutherisch sein. Trifft das auf Euch nicht zu, klärt Eure Situation direkt mit dem Pfarramt.",
+        "Das Büro braucht Kopien der Tauf- und Konfirmationsurkunden, die standesamtliche Terminbestätigung und die Eheurkunde. Gehört Ihr zu einer anderen Gemeinde, braucht Ihr außerdem ein Dimissoriale.",
+        "Gebt auch Eure geplante Gästezahl und Euren Trauspruch an. Der Trauspruch muss aus der Bibel stammen."
+      ],
+      "unknowns": [
+        "Wie weit im Voraus nimmt das Büro Anmeldungen an, und wie lange gilt eine Vormerkung?",
+        "Was müssen wir tun, damit unser Termin fest zugesagt ist?",
+        "Können wir im Michel heiraten, wenn unsere Kirchenzugehörigkeit von den genannten Voraussetzungen abweicht?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Im Michel wird normalerweise samstags getraut. In der Karwoche und am Wochenende des Ewigkeitssonntags sind keine Trauungen vorgesehen.",
+      "costs": "Es fallen keine Traugebühren an. Zusätzliche Solisten oder Chöre bezahlt Ihr selbst.",
+      "photography": "Fotos sind beim Einzug und Auszug erlaubt. Während des Gottesdienstes darf nicht fotografiert werden; Videoaufnahmen von einem festen Stativ sind möglich.",
+      "localRules": "Für die Trauung ist geistliche Livemusik vorgesehen. Externe Musikerinnen, Musiker oder andere Mitwirkende müssen vorher mit der Gemeinde abgestimmt werden."
+    },
+    {
+      "id": "obergalster",
+      "name": "Oberalster-Bergstedt",
+      "sourceIds": [
+        "obergalster"
+      ],
+      "contact": {
+        "role": "Gemeinsames Kirchenbüro",
+        "phone": "040 6049156",
+        "email": null
+      },
+      "steps": [
+        "Ruft im gemeinsamen Kirchenbüro an und nennt die gewünschte Kirche: Bergstedt, Jubilate oder Matthias-Claudius.",
+        "Laut Gemeindeseite meldet sich anschließend Pastor Richard Tockhorn bei Euch. Mit ihm besprecht Ihr Termin, Gottesdienst und Ablauf."
+      ],
+      "requirements": [
+        "Die Gemeindeseite nennt Geburtsurkunden für das Paar und die vorgesehenen Trauzeugen. Fragt nach, ob Ihr tatsächlich auch Urkunden für Eure Trauzeugen mitbringen müsst.",
+        "Eine Person des Paares sowie die Trauzeugen sollen evangelisch sein. Lasst Euch vor der Anmeldung erklären, welche Anforderungen in Eurem Fall gelten."
+      ],
+      "unknowns": [
+        "Brauchen wir Trauzeugen, und welche Nachweise werden von ihnen verlangt?",
+        "Können wir hier heiraten, wenn wir zu einer anderen Gemeinde gehören? Welche Unterlagen müssen bis wann vorliegen?",
+        "Wie bekommen wir eine feste Terminzusage?",
+        "Für die Matthias-Claudius-Kirche: Ist die Trauung im Kirchengebäude möglich, oder wird ein anderer Ort vereinbart?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "niendorf",
+      "name": "Kirche in Niendorf",
+      "sourceIds": [
+        "niendorf",
+        "niendorf-57"
+      ],
+      "contact": {
+        "role": "Kirchenbüro des gewählten Ortes",
+        "phone": null,
+        "email": null
+      },
+      "steps": [
+        "Fragt im Büro der gewünschten Kirche frühzeitig nach Eurem Trautermin.",
+        "Wohnt Ihr außerhalb der Gemeinde, sollt Ihr Eure Pastorin oder Euren Pastor am Wohnort fragen, ob sie oder er die Trauung übernimmt.",
+        "Reicht die Unterlagen ein und vereinbart etwa vier bis sechs Wochen vor der Hochzeit das Traugespräch."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss Kirchenmitglied sein.",
+        "Reicht Kopien Eurer Tauf- und Konfirmationsurkunden sowie der standesamtlichen Eheurkunde ein."
+      ],
+      "unknowns": [
+        "Ab wann können wir buchen, und wann ist der Termin verbindlich bestätigt?",
+        "Was machen wir, wenn niemand aus unserem Pfarrteam die Trauung übernehmen kann?",
+        "Brauchen wir als Paar aus einer anderen Gemeinde weitere Unterlagen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "In der Kirche am Markt sind Trauungen freitags und samstags zur vollen Stunde vorgesehen. In der Verheißungskirche und im Immanuel-Haus vereinbart Ihr die Zeiten individuell.",
+      "costs": "Der Gottesdienst einschließlich Orgelmusik kostet nichts. Zusätzlichen Blumenschmuck und weitere musikalische Beiträge bezahlt Ihr selbst."
+    },
+    {
+      "id": "nienstedten",
+      "name": "Nienstedtener Kirche",
+      "sourceIds": [
+        "nienstedten"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 828744",
+        "email": "kirchenbuero@kirche-nienstedten.de",
+        "form": "https://forms.churchdesk.com/f/4qHfjt970h"
+      },
+      "steps": [
+        "Vereinbart zuerst einen Trautermin mit dem Kirchenbüro.",
+        "Füllt anschließend das offizielle Anmeldeformular aus und hängt die geforderten Dokumente an. Das Formular setzt die vorherige Terminabsprache voraus.",
+        "Danach meldet sich das Pfarrteam für Euer Traugespräch."
+      ],
+      "requirements": [
+        "Die Gemeinde verlangt Eure Geburtsurkunde, eine Mitgliedsbescheinigung der evangelisch-lutherischen Kirche und die standesamtliche Eheurkunde.",
+        "Es können mehrere Taufen oder Trauungen an einem Tag stattfinden. Sprecht deshalb ab, wie viel Zeit Ihr vor und nach dem Gottesdienst in der Kirche habt."
+      ],
+      "unknowns": [
+        "Ist der Termin nach unserem Gespräch fest reserviert, oder fehlt noch eine Bestätigung?",
+        "Wann können wir uns frühestens anmelden? Brauchen wir ein Dimissoriale oder eine eigene Pastorin beziehungsweise einen eigenen Pastor?",
+        "Welche Kosten fallen an, und welche Regeln gelten für Fotos und die Zeit in der Kirche?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "blankenese",
+      "name": "Blankeneser Kirche am Markt",
+      "sourceIds": [
+        "blankenese"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 866250-0",
+        "email": null
+      },
+      "steps": [
+        "Fragt Euren Trautermin im Kirchenbüro an.",
+        "Gehört Ihr zu einer anderen Gemeinde, bringt Ihr laut Gemeindeseite Eure eigene Pastorin oder Euren eigenen Pastor mit. Klärt deshalb beide Kalender vor der festen Zusage.",
+        "Gebt das Trauformular und die standesamtliche Bescheinigung im Büro ab."
+      ],
+      "requirements": [
+        "Für Paare aus anderen Gemeinden ist eine eigene Pastorin oder ein eigener Pastor vorgesehen.",
+        "Den Blumenschmuck stimmt Ihr spätestens eine Woche vor der Hochzeit ab. Das ist die Frist für die Dekoration; den Trautermin solltet Ihr vorher vereinbaren."
+      ],
+      "unknowns": [
+        "Welche Kirchenzugehörigkeit wird vorausgesetzt, und ab wann können wir einen Termin reservieren?",
+        "Wann wird die Anmeldung verbindlich, welche Unterlagen fehlen noch und was kostet die Trauung?",
+        "Gibt es eine andere Lösung, wenn unser Pfarrteam die Trauung nicht übernehmen kann?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "eppendorf",
+      "name": "St. Johannis Eppendorf",
+      "sourceIds": [
+        "eppendorf"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 477910",
+        "email": null
+      },
+      "steps": [
+        "Ruft im Kirchenbüro an und fragt nach Eurem Wunschtermin. Erste Fragen zur Organisation könnt Ihr direkt dort besprechen.",
+        "Anschließend meldet sich das Pfarrteam für die weitere Vorbereitung bei Euch."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Können wir mit unserer Kirchenzugehörigkeit hier heiraten, auch wenn wir nicht zur Gemeinde gehören?",
+        "Welche Unterlagen und Gebühren sind vorgesehen, und wann ist unser Termin fest?",
+        "An welche E-Mail-Adresse sollen wir schreiben? Die Gemeindeseite verwendet zwei unterschiedliche Schreibweisen der Domain; lasst Euch die richtige Adresse am Telefon geben."
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "gertrud-uhlenhorst",
+      "name": "St. Gertrud Uhlenhorst",
+      "sourceIds": [
+        "gertrud-uhlenhorst"
+      ],
+      "contact": {
+        "role": "Gemeindebüro, Immenhof 10",
+        "phone": "040 2203353",
+        "email": "info@st-gertrud-hamburg.de"
+      },
+      "steps": [
+        "Lasst Euren Wunschtermin im Gemeindebüro vormerken. Trauungen werden zur vollen Stunde angesetzt.",
+        "Das Büro schickt Euch ein Formular. Füllt es aus und sendet es mit allen Anlagen zurück.",
+        "Danach bereitet Ihr den Gottesdienst in den Traugesprächen mit dem Pfarrteam vor."
+      ],
+      "requirements": [
+        "Ihr braucht Eure standesamtliche Eheurkunde. Falls nötig, könnt Ihr sie am Tag der kirchlichen Trauung mitbringen.",
+        "Gehört Ihr zu einer anderen Gemeinde, braucht Ihr ein Dimissoriale. Als Alternative nennt die Gemeinde einen Wechsel der Gemeindezugehörigkeit. Auch queere Paare können sich hier trauen lassen."
+      ],
+      "unknowns": [
+        "Wie lange hält das Büro den vorgemerkten Termin für uns frei?",
+        "Welche Bedingungen aus dem undatierten Merkblatt für Paare aus anderen Gemeinden gelten für unsere Hochzeit?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": "Sobald das ausgefüllte Formular mit den erforderlichen Anlagen bei der Gemeinde eingegangen ist, ist Eure Anmeldung laut Gemeindeseite verbindlich."
+    },
+    {
+      "id": "jacobi",
+      "name": "Hauptkirche St. Jacobi",
+      "sourceIds": [
+        "jacobi"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 303737-0",
+        "email": "info@jacobus.de"
+      },
+      "steps": [
+        "Fragt im Kirchenbüro nach einer Trauung an Eurem Wunschdatum. Sprecht dabei auch an, ob Bauarbeiten die Nutzung der Kirche betreffen."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Voraussetzungen gelten für uns? Müssen wir eine eigene Pastorin oder einen eigenen Pastor mitbringen?",
+        "Welche Unterlagen und Kosten kommen auf uns zu, und wann bekommen wir eine feste Zusage?",
+        "Für eine Hochzeit ab 2028: Welche Einschränkungen entstehen durch die geplanten Bauarbeiten?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "petri",
+      "name": "Hauptkirche St. Petri",
+      "sourceIds": [
+        "petri"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 325740-0",
+        "email": "info@sankt-petri.de"
+      },
+      "steps": [
+        "Ruft im Kirchenbüro an oder schreibt eine E-Mail mit Eurem Wunschtermin. Dort erfahrt Ihr, wie Ihr die Trauung anmeldet."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Können wir mit unserer Kirchenzugehörigkeit hier heiraten?",
+        "Welche Tage sind möglich, welche Unterlagen werden gebraucht und was kostet die Trauung?",
+        "Wann ist unser Termin verbindlich bestätigt?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "katharinen",
+      "name": "Hauptkirche St. Katharinen",
+      "sourceIds": [
+        "katharinen"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 30374730",
+        "email": "kontakt@katharinen-hamburg.de"
+      },
+      "steps": [
+        "Fragt im Kirchenbüro nach Eurem Wunschdatum und lasst einen passenden Termin vormerken.",
+        "Gehört Ihr zu einer anderen Gemeinde, bittet St. Katharinen Euch, zunächst Eure eigene Pastorin oder Euren eigenen Pastor anzusprechen.",
+        "Reicht Eure Unterlagen ein und vereinbart ein Traugespräch. Bei Bedarf kommt ein zweites Treffen in der Kirche hinzu."
+      ],
+      "requirements": [
+        "Benötigt werden Tauf- und Konfirmationsnachweise, soweit vorhanden, sowie die standesamtliche Bescheinigung.",
+        "Wenn Ihr zu einer anderen Gemeinde gehört, braucht Ihr ein Dimissoriale von dort."
+      ],
+      "unknowns": [
+        "Wann wird die Vormerkung zu einer festen Zusage?",
+        "Welche Kirchenzugehörigkeit wird vorausgesetzt, und bis wann müssen unsere Unterlagen vorliegen?",
+        "Was ist möglich, wenn unsere eigene Pastorin oder unser eigener Pastor nicht kommen kann?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Trauungen sind samstags um 12, 14 oder 16 Uhr vorgesehen. Ausgenommen sind die Karwoche und das Wochenende des Ewigkeitssonntags.",
+      "costs": "Die Gemeinde erhebt derzeit keine Traugebühren. Zusätzliche musikalische Beiträge bezahlt Ihr selbst."
+    },
+    {
+      "id": "nikolai",
+      "name": "Hauptkirche St. Nikolai am Klosterstern",
+      "sourceIds": [
+        "nikolai"
+      ],
+      "contact": {
+        "role": "Pastorin Maren Schack",
+        "phone": "040 44113477",
+        "email": "maren.schack@hauptkirche-stnikolai.de"
+      },
+      "steps": [
+        "Vereinbart zuerst ein Gespräch mit einer Pastorin. Als Kontakt veröffentlicht die Gemeinde Pastorin Maren Schack.",
+        "Besprecht dort Euer Datum und die weiteren Schritte zur Anmeldung in St. Nikolai am Klosterstern."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Merkt das Pfarrteam unseren Kirchentermin vor, oder müssen wir zusätzlich das Kirchenbüro kontaktieren?",
+        "Welche Voraussetzungen, Unterlagen und Gebühren gelten für uns?",
+        "Wann bekommen wir die verbindliche Zusage?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "mariendom",
+      "name": "St. Marien-Dom",
+      "sourceIds": [
+        "mariendom"
+      ],
+      "contact": {
+        "role": "Pfarrbüro St. Ansgar",
+        "phone": null,
+        "email": "pfarrbuero@sankt-ansgar.de"
+      },
+      "steps": [
+        "Schreibt dem Pfarrbüro St. Ansgar eine E-Mail. Nennt Eure Namen, Konfessionen, Adresse, Kontaktdaten und Euren Wunschtermin.",
+        "Das Pfarrbüro meldet sich zu Eurer Anfrage. Klärt mit ihm, welche Schritte zur Ehevorbereitung und Anmeldung dazugehören."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Voraussetzungen gelten in unserer Situation, und welche Ehevorbereitung ist vorgesehen?",
+        "Welche Bescheinigungen müssen wir bis wann einreichen?",
+        "Wer reserviert unseren Termin, und wann ist er fest zugesagt?",
+        "Welche Kosten und Regeln für Musik und Fotografie gelten?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "othmarschen",
+      "name": "Christuskirche Othmarschen",
+      "sourceIds": [
+        "othmarschen"
+      ],
+      "contact": {
+        "role": "Kirchenbüro, Anne-Kathrin Ziegler",
+        "phone": "040 8801105",
+        "email": "buero@christuskirche-othmarschen.de"
+      },
+      "steps": [
+        "Wendet Euch mit Eurem Wunschtermin an das Kirchenbüro. Anne-Kathrin Ziegler ist dort als Ansprechpartnerin angegeben."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Wie weit im Voraus können wir anfragen, und wann ist eine Vormerkung verbindlich?",
+        "Welche Kirchenzugehörigkeit und Unterlagen brauchen wir? Müssen wir jemanden aus unserem eigenen Pfarrteam mitbringen?",
+        "Welche Kosten entstehen, und welche Fotos sind während der Trauung erlaubt?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "flottbek",
+      "name": "Flottbeker Kirche",
+      "sourceIds": [
+        "flottbek"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 828819",
+        "email": "info@kirche-in-flottbek.de"
+      },
+      "steps": [
+        "Ihr könnt Eure Trauung frühestens ein Jahr vorher anmelden. Fragt zuerst im Kirchenbüro, ob Euer Wunschtermin möglich ist.",
+        "Nach der Terminabsprache bekommt Ihr das Anmeldeformular und eine Liste der benötigten Unterlagen. Schickt das ausgefüllte Formular zurück.",
+        "Meldet Euch danach selbst bei der zuständigen Pastorin oder dem zuständigen Pastor, um den Termin bestätigen zu lassen. Das Traugespräch folgt näher an der Hochzeit."
+      ],
+      "requirements": [
+        "Wenn Ihr zu einer anderen Gemeinde gehört, fragt dort zuerst nach einer Pastorin oder einem Pastor und nach der Kirchenmusik für Eure Trauung. Falls das nicht klappt, versucht Flottbek zu helfen.",
+        "Gehört eine Person keiner Kirche an, ist laut Gemeinde in der Regel trotzdem ein Traugottesdienst möglich."
+      ],
+      "unknowns": [
+        "Wie lange wird der Termin für uns vorgemerkt?",
+        "Ist mit der Bestätigung durch die Pastorin oder den Pastor alles fest vereinbart, oder fehlt noch etwas?",
+        "Welche Unterlagen werden aktuell verlangt, und welche Zusatzkosten können entstehen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Trauungen sind freitags und samstags um 14, 15.30 oder 17 Uhr vorgesehen. Andere Wochentage könnt Ihr mit der Gemeinde absprechen."
+    },
+    {
+      "id": "eimsbuettel",
+      "name": "Christus- und Apostelkirche Eimsbüttel",
+      "sourceIds": [
+        "eimsbuettel"
+      ],
+      "contact": {
+        "role": "Gemeindesekretariat/Kirchenbüro",
+        "phone": "040 398097800",
+        "email": "kirchenbuero@ev-ke.de"
+      },
+      "steps": [
+        "Fragt im Kirchenbüro nach Eurem Wunschtermin und nennt die gewünschte Kirche: Christus- oder Apostelkirche.",
+        "Stimmt ab, ob sowohl die Kirche als auch eine Pastorin oder ein Pastor an dem Tag zur Verfügung stehen.",
+        "Reicht die angeforderten Unterlagen ein. Zur Vorbereitung gehört mindestens ein Traugespräch."
+      ],
+      "requirements": [
+        "Ihr braucht die standesamtliche Terminbestätigung beziehungsweise Eheurkunde, Kopien der Tauf- und Konfirmationsurkunden und Euren Trauspruch. Gehört Ihr zu einer anderen Gemeinde, kommt ein Dimissoriale hinzu.",
+        "Die Gemeinde berücksichtigt auch Paare, bei denen eine Person kein Kirchenmitglied ist. Gleichgeschlechtliche Paare können sich hier ebenfalls trauen lassen."
+      ],
+      "unknowns": [
+        "Ab wann können wir unsere Trauung anmelden?",
+        "Wie lange bleibt unser Termin vorgemerkt, und wann ist er verbindlich zugesagt?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "costs": "Der Traugottesdienst ist kostenlos. Zusätzlichen Blumenschmuck organisiert und bezahlt Ihr selbst.",
+      "photography": "Fotografieren ist grundsätzlich möglich. Die Gemeinde bittet darum, möglichst eine einzige Person damit zu beauftragen, damit der Gottesdienst ruhig bleibt. Sprecht die Aufnahmen vorher ab."
+    },
+    {
+      "id": "harvestehude",
+      "name": "St. Johannis Harvestehude",
+      "sourceIds": [
+        "harvestehude"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 444235",
+        "email": null
+      },
+      "steps": [
+        "Fragt im Kirchenbüro nach Eurem Wunschtermin und gebt die schriftliche Anmeldung ab.",
+        "Gehört Ihr zu einer anderen Gemeinde, klärt gleich mit, ob Eure eigene Pastorin oder Euer eigener Pastor mitkommt.",
+        "Besprecht mit dem Pfarrteam die benötigten Nachweise und den Termin für das Traugespräch."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss evangelisch sein. Gleichgeschlechtliche Paare sind ausdrücklich eingeschlossen.",
+        "Für die Anmeldung werden Tauf-, Konfirmations- oder Firmdaten erfragt. Wenn Ihr zu einer anderen Gemeinde gehört, braucht Ihr ein Dimissoriale."
+      ],
+      "unknowns": [
+        "Wie weit im Voraus können wir reservieren?",
+        "Bis wann müssen unsere Unterlagen vorliegen, und wann ist der Termin verbindlich?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Trauungen finden samstags um 14 oder 16 Uhr statt.",
+      "costs": "Es gibt keine Traugebühren. Die Gemeinde bittet um eine Spende."
+    },
+    {
+      "id": "sinstorf",
+      "name": "Sinstorfer Kirche",
+      "sourceIds": [
+        "sinstorf-trauung"
+      ],
+      "contact": {
+        "role": "Gemeindebüro",
+        "phone": "040 7600347",
+        "email": "gemeindebuero@kirche-sinstorf.de"
+      },
+      "steps": [
+        "Fragt im Gemeindebüro nach Datum und Uhrzeit und lasst den Termin vormerken.",
+        "Füllt das zugeschickte Anmeldeformular aus und sendet es zurück.",
+        "Vereinbart ein Traugespräch. Besondere Musikwünsche besprecht Ihr spätestens sechs Wochen vor der Hochzeit mit der Orgelbegleitung."
+      ],
+      "requirements": [
+        "Ihr braucht die standesamtliche Eheurkunde. Falls nötig, könnt Ihr sie am Trautag mitbringen.",
+        "Wenn Ihr zu einer anderen Gemeinde gehört, braucht Ihr ein Dimissoriale oder wechselt Eure Gemeindezugehörigkeit. Falls die evangelisch-lutherische Mitgliedschaft fehlt, besprecht das zunächst mit dem Pfarrteam."
+      ],
+      "unknowns": [
+        "Ab wann können wir uns anmelden, und wie lange bleibt eine Vormerkung bestehen?",
+        "Welche Fotos sind während der Trauung erlaubt? Welche zusätzlichen Leistungen kosten extra?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": "Mit Eingang des ausgefüllten Anmeldeformulars ist Eure Anmeldung laut Gemeinde verbindlich und der Termin festgelegt.",
+      "costs": "Für Kirchenmitglieder ist die Trauung selbst kostenfrei. Für Altarblumen und Küsterarbeit nennt die Gemeinde 60 Euro. Fragt bei zusätzlichen Wünschen nach den weiteren Kosten; die 60 Euro sind kein bestätigter Gesamtpreis."
+    },
+    {
+      "id": "marmstorf",
+      "name": "Auferstehungskirche Marmstorf",
+      "sourceIds": [
+        "marmstorf",
+        "marmstorf-kontakt"
+      ],
+      "contact": {
+        "role": "Kirchenbüro oder Pfarramt; Bürokontakt Annette Habermann",
+        "phone": "040 7606664",
+        "email": "annette.habermann@kirchemarmstorf.de"
+      },
+      "steps": [
+        "Fragt im Kirchenbüro oder Pfarramt nach Eurem Termin. Im Büro ist Annette Habermann als Kontakt angegeben.",
+        "Plant zwei Vorbereitungsgespräche ein; so beschreibt es die Gemeinde."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss evangelisch-lutherisch sein."
+      ],
+      "unknowns": [
+        "Welche Unterlagen müssen bis wann vorliegen, und wann ist der Termin fest reserviert?",
+        "Was gilt, wenn wir nicht zur Gemeinde gehören? Welche Kosten und Absprachen für Musik und Fotos kommen hinzu?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "wellingsbuettel",
+      "name": "Lutherkirche Wellingsbüttel",
+      "sourceIds": [
+        "wellingsbuettel",
+        "wellingsbuettel-47"
+      ],
+      "contact": {
+        "role": "Gemeindebüro",
+        "phone": "040 53640360",
+        "email": "buero@kirche-wellingsbuettel.de"
+      },
+      "steps": [
+        "Meldet Euch mit Eurem Trauwunsch im Gemeindebüro und bittet um das aktuelle Informationsblatt zur Hochzeit."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Kirchenzugehörigkeit und Unterlagen brauchen wir, und welche Fristen gelten?",
+        "Wie wird unser Termin vorgemerkt, und wann bekommen wir eine feste Zusage?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "vierlanden",
+      "name": "Vierländer Kirchengemeinden",
+      "sourceIds": [
+        "vierlanden",
+        "vierlanden-kontakt"
+      ],
+      "contact": {
+        "role": "Eines der Gemeindebüros; Ortskontakte bei den Kirchen",
+        "phone": null,
+        "email": null
+      },
+      "steps": [
+        "Fragt in einem der Gemeindebüros nach Eurem Wunschdatum und nennt die gewünschte Kirche.",
+        "Meldet die Trauung an und reicht die Unterlagen ein.",
+        "Etwa vier bis sechs Wochen vor der Hochzeit meldet sich Eure Pastorin oder Euer Pastor, um das Traugespräch zu vereinbaren."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss evangelisch sein. Gleichgeschlechtliche Paare können sich ebenfalls trauen lassen.",
+        "Ihr braucht das Anmeldeformular, Eure Geburtsurkunden und die Eheurkunde. Zunächst genügt auch die standesamtliche Terminbestätigung. Wenn Ihr zu einer anderen Gemeinde gehört, braucht Ihr ein Dimissoriale."
+      ],
+      "unknowns": [
+        "Wie lange bleibt der Termin vorgemerkt, und wann ist er verbindlich zugesagt?",
+        "Welche Zusatzkosten und Fotoregeln gelten in unserer ausgewählten Kirche? Gibt es dort weitere Bedingungen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Die Gemeinden nennen samstags 13.30 und 15.30 Uhr als Trauzeiten. Die gemeinsamen Uhrzeiten erleichtern auch eine Vertretung, falls jemand aus dem Pfarrteam erkrankt."
+    },
+    {
+      "id": "finkenwerder",
+      "name": "St. Nikolai Finkenwerder",
+      "sourceIds": [
+        "finkenwerder"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 7426833",
+        "email": null
+      },
+      "steps": [
+        "Vereinbart im Kirchenbüro einen möglichen Termin für Eure Trauung.",
+        "Die weitere Vorbereitung besprecht Ihr mit dem Pfarrteam."
+      ],
+      "requirements": [
+        "Ihr braucht Eure Ausweise, Tauf- und Konfirmationsnachweise sowie die standesamtliche Terminbestätigung oder Eheurkunde.",
+        "Wenn Ihr zu einer anderen Gemeinde gehört, braucht Ihr von dort eine Mitgliedschaftsbescheinigung."
+      ],
+      "unknowns": [
+        "Welche Kirchenzugehörigkeit wird vorausgesetzt, und wie früh können wir uns anmelden?",
+        "Wer aus dem Pfarrteam ist für uns zuständig, und wann ist der Termin fest zugesagt?",
+        "Welche Kosten und Regeln für unseren Gottesdienst gelten?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Üblich sind Trauungen am Freitag oder Samstag. Andere Tage könnt Ihr mit der Gemeinde vereinbaren."
+    },
+    {
+      "id": "moorburg",
+      "name": "St. Maria Magdalena Moorburg",
+      "sourceIds": [
+        "moorburg"
+      ],
+      "contact": {
+        "role": "Kirchenbüro",
+        "phone": "040 7402433",
+        "email": "buero@kirche-moorburg.de"
+      },
+      "steps": [
+        "Fragt zuerst im Kirchenbüro nach, ob die Kirche an Eurem Wunschdatum frei ist.",
+        "Stimmt danach den Termin und die Vorbereitung mit dem Pfarrteam ab."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss Kirchenmitglied sein. Wenn die andere Person keiner Kirche angehört, erklärt die Gemeinde dafür eine besondere Gottesdienstform. Besprecht mit dem Pfarrteam, wie Ihr Eure Trauung feiern könnt.",
+        "Ihr braucht Eure Ausweise, Tauf- und Konfirmationsnachweise sowie die standesamtliche Bescheinigung. Gehört Ihr zu einer anderen Gemeinde, wird außerdem ein Nachweis von dort benötigt."
+      ],
+      "unknowns": [
+        "Ab wann können wir anfragen, wie lange bleibt eine Vormerkung bestehen und wann wird der Termin fest zugesagt?",
+        "Bis wann müssen die Unterlagen vorliegen, und was kosten zusätzliche Leistungen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "photography": "Die Gemeinde beschreibt Fotos beim Einzug und Auszug sowie Videoaufnahmen von einem festen Stativ. Klärt Eure konkreten Wünsche vor der Hochzeit mit dem Pfarrteam."
+    },
+    {
+      "id": "andreas",
+      "name": "St. Andreas",
+      "sourceIds": [
+        "andreas"
+      ],
+      "contact": {
+        "role": "Kirchenbüro · Kontakt zu Pastor Dr. Kord Schoeler",
+        "phone": "040 456959",
+        "email": "kirchenbuero@standreas-hamburg.de"
+      },
+      "steps": [
+        "Fragt zunächst Pastor Dr. Kord Schoeler nach einem Termin. Das Kirchenbüro kann Euch den Kontakt vermitteln.",
+        "Im ersten Traugespräch besprecht Ihr den Gottesdienst und Eure Wünsche.",
+        "Etwa zwei Wochen vor der Hochzeit ist ein zweites Gespräch direkt in der Kirche vorgesehen."
+      ],
+      "requirements": [
+        "Wenn eine Person keiner Kirche oder einer anderen Religion angehört, könnt Ihr das mit dem Pastor besprechen. Die Gemeinde geht auf diese Situation ausdrücklich ein."
+      ],
+      "unknowns": [
+        "Wie erreichen wir den Pastor direkt, und wann bekommen wir eine feste Terminzusage?",
+        "Welche Unterlagen und Fristen gelten? Was kommt auf uns zu, wenn wir aus einer anderen Gemeinde kommen, auch bei den Kosten?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "ottensen",
+      "name": "Christianskirche Ottensen",
+      "sourceIds": [
+        "ottensen"
+      ],
+      "contact": {
+        "role": "Kirchenbüro, Frau Wolter",
+        "phone": "040 398617-0",
+        "email": "buero@kirche-ottensen.de"
+      },
+      "steps": [
+        "Fragt mindestens sechs Wochen vor der Hochzeit im Kirchenbüro bei Frau Wolter an.",
+        "Gehört Ihr zu einer anderen Gemeinde, müsst Ihr laut Gemeindeseite Eure eigene Pastorin oder Euren eigenen Pastor mitbringen.",
+        "Stimmt den genauen Tag und die Kirchenmusik mit dem Büro ab."
+      ],
+      "requirements": [
+        "Paare aus der Gemeinde haben bei der Terminvergabe Vorrang.",
+        "Die Gemeinde nennt einzelne Samstage für 2026. Weitere Freitage und Samstage können gegebenenfalls vereinbart werden. Ob noch ein Platz frei ist, müsst Ihr im Büro erfragen."
+      ],
+      "unknowns": [
+        "Welche Termine und Regeln gelten für 2027? Welche Kirchenzugehörigkeit und Unterlagen brauchen wir?",
+        "Wann ist unser Termin verbindlich? Kann eine Vormerkung wegen des Vorrangs für Gemeindemitglieder noch entfallen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "moorfleet",
+      "name": "St. Nikolai Moorfleet",
+      "sourceIds": [
+        "marschlande-moorfleet"
+      ],
+      "contact": {
+        "role": "Gemeindebüro Kirche Marschlande",
+        "phone": "040 787529",
+        "email": "info@kirche-marschlande.de"
+      },
+      "steps": [
+        "Wendet Euch an den Kontakt der Kirche Marschlande und fragt, wer die Anmeldung für eine Trauung in St. Nikolai Moorfleet übernimmt."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Wer reserviert unseren Termin, und wann ist er fest zugesagt?",
+        "Welche Kirchenzugehörigkeit und Unterlagen brauchen wir? Müssen wir unsere eigene Pastorin oder unseren eigenen Pastor mitbringen?",
+        "Welche Kosten und weiteren Bedingungen gelten in Moorfleet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    }
+  ],
+  "sources": [
+    {
+      "id": "thomas",
+      "url": "https://www.thomasgemeindesuederelbe.de/lebensfeste/trauung",
+      "title": "Trauung | Thomasgemeinde",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "michel",
+      "url": "https://www.st-michaelis.de/gemeinde/trauung/",
+      "title": "Trauung: Hauptkirche St. Michaelis",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "alt-rahlstedt",
+      "url": "https://www.kirche-alt-rahlstedt.de/lebensbegleitung/trauung",
+      "title": "Trauung | Ev-Luth. Kirchengemeinde Alt-Rahlstedt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "niendorf",
+      "url": "https://www.kirche-in-niendorf.de/hochzeit-barockkirche-hamburg-niendorf",
+      "title": "Trauung - www.kirche-in-niendorf.de",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "nienstedten",
+      "url": "https://www.kirche-nienstedten.de/feiern/trauung",
+      "title": "",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "obergalster",
+      "url": "https://kircheoberalsterbergstedt.de/service",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Service",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "blankenese",
+      "url": "https://www.blankeneser-kirche.de/feiern/trauung",
+      "title": "Trauung | Ev.-luth. Kirchengemeinde Blankenese ",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "eppendorf",
+      "url": "https://www.st-johannis-eppendorf.de/gemeindeleben/trauungen/",
+      "title": "Sag einfach „Ja“ – St. Johannis Eppendorf",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "gertrud-uhlenhorst",
+      "url": "https://www.st-gertrud-hamburg.de/lebensfeste/trauung",
+      "title": "Trauung | Ev.-Luth. Kirchengemeinde St. Gertrud Hamburg",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "jacobi",
+      "url": "https://jacobus.de/die-hauptkirche/taufe-hochzeit-beerdigung",
+      "title": "Taufe, Trauung, Beerdigung: Hauptkirche St. Jacobi",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "katharinen",
+      "url": "https://www.katharinen-hamburg.de/gemeinde/trauung/",
+      "title": "Trauung | Hauptkirche St. Katharinen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "petri",
+      "url": "https://www.sankt-petri.de/gottesdienste-gemeinde-termine/taufe-trauung-bestattung",
+      "title": "Taufe, Trauung, Bestattung: Ev.-Luth. Hauptkirche St. Petri",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "othmarschen",
+      "url": "https://christuskirche-othmarschen.de/kirche/wir-feiern/",
+      "title": "Gottesdienste und Kirchenfeste | Christuskirche Othmarschen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "eimsbuettel",
+      "url": "https://ev-ke.de/glauben/trauungen",
+      "title": "Trauungen - Ev.-Luth. Kirchengemeinde Eimsbüttel in Hamburg",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "nikolai",
+      "url": "https://www.hauptkirche-stnikolai.de/trauung",
+      "title": "Die kirchliche Trauung | Hauptkirche St. Nikolai",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "mariendom",
+      "url": "https://www.mariendomhamburg.de/domgemeinde/trauung/",
+      "title": "Trauung – St. Marien-Dom Hamburg",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "harvestehude",
+      "url": "https://stjohannis.hamburg/amtshandlungen/trauung/",
+      "title": "Kirche St. Johannis Harvestehude, Hamburg – Trauung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "marmstorf",
+      "url": "https://kirchemarmstorf.de/buero/beratung-amtshandlungen/",
+      "title": "Beratung / Amtshandlungen – Auferstehungskirche Marmstorf",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "alt-rahlstedt-orte",
+      "url": "https://www.kirche-alt-rahlstedt.de/gemeinde/unsere-standorte",
+      "title": "Unsere Standorte | Ev-Luth. Kirchengemeinde Alt-Rahlstedt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "obergalster-orte",
+      "url": "https://kircheoberalsterbergstedt.de/gemeinde/",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Gemeinde",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "sinstorf-trauung",
+      "url": "https://www.kirche-sinstorf.de/gottes-segen/trauung",
+      "title": "Trauung | Ev.-luth. Kirchengemeinde Sinstorf",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "flottbek",
+      "url": "https://www.kirche-in-flottbek.de/feste-des-lebens/trauung",
+      "title": "Trauung | ",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "ohlstedt-brand",
+      "url": "https://kircheoberalsterbergstedt.de/?catid=18&id=125%3Abrand-in-der-matthias-claudius-kirche-in-wohldorf-ohlstedt&view=article",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Wiederaufbau der Matthias-Claudius-Kirche (Stand August 2026)",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "bergstedt-wiedereroeffnung",
+      "url": "https://kircheoberalsterbergstedt.de/kalender/eventdetail/376/-/festgottesdienst-zur-wiedereroeffnung-der-bergstedter-kirche-anschliessend-empfang-und-adventsmarkt",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Festgottesdienst zur Wiedereröffnung der Bergstedter Kirche (anschließend Empfang und Adventsmarkt)",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "wellingsbuettel",
+      "url": "https://www.kirche-wellingsbuettel.de/gemeindeleben/besondere-anlaesse-und-kasualien",
+      "title": "Besondere Anlässe  und Kasualien | Ev.Luth. Kirchengemeinde Wellingsbüttel",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden",
+      "url": "https://www.kirche-in-vierlanden.de/lebensstationen",
+      "title": "Kirche in Vierlanden – Lebensstationen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "marschlande-moorfleet",
+      "url": "https://www.kirche-marschlande.de/unsere-kirchen/kirche-moorfleet",
+      "title": "Kirche Moorfleet | Ev.-luth. Kirchengemeinde Marschlande",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "finkenwerder",
+      "url": "https://kirchesuederelbe.de/finkenwerder/feiern-im-leben/trauung/",
+      "title": "Trauung – Kirche Süderelbe",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "wellingsbuettel-47",
+      "url": "https://kirche-wellingsbuettel.dev.churchtools.website/gemeindeleben/besondere-anlaesse-und-kasualien/trauung",
+      "title": "Trauung | Ev.Luth. Kirchengemeinde Wellingsbüttel",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "niendorf-57",
+      "url": "https://www.kirche-in-niendorf.de/kirchenbuero-kirche-niendorf",
+      "title": "Kontakt - www.kirche-in-niendorf.de",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden-kontakt",
+      "url": "https://www.kirche-in-vierlanden.de/kontakt/",
+      "title": "Kirche in Vierlanden – Kontakt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "ottensen",
+      "url": "https://www.kirche-ottensen.de/feiern/",
+      "title": "feiern - Kirchengemeinde Ottensen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "moorburg",
+      "url": "https://kirchesuederelbe.de/moorburg/feiern-im-leben/trauung/",
+      "title": "Trauung – Kirche Süderelbe",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden-61",
+      "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-nicolai-zu-altengamme",
+      "title": "Kirche in Vierlanden – St. Nicolai Altengamme",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "andreas",
+      "url": "https://st-andreas.hamburg/trauungen/",
+      "title": "Trauungen | Ev.-luth. Kirchengemeinde St. Andreas",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden-63",
+      "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-severini-kirchwerder",
+      "title": "Kirche in Vierlanden – St. Severini Kirchwerder",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden-62",
+      "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-johannis-zu-curslack",
+      "title": "Kirche in Vierlanden – St. Johannis zu Curslack",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "vierlanden-64",
+      "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-johannis-zu-neuengamme",
+      "title": "Kirche in Vierlanden – St. Johannis Neuengamme",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "altenwerder-gemeindebrief",
+      "url": "https://kirchesuederelbe.de/wp-content/uploads/GB-SEPT-NOV-2025-WEB.pdf",
+      "title": "Gemeindebrief September–November 2025, gedruckte Seiten 8–9",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "altenwerder-wiedereroeffnet",
+      "url": "https://www.besser-im-blick.de/nachrichten/life/15672-st-gertrudkirche-mit-grossen-fest-wiedereroeffnet",
+      "title": "Bericht über die erfolgte Wiedereröffnung, 8. September 2025",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "jacobi-bauplanung",
+      "url": "https://jacobus.de/fileadmin/vox_downloads/voxjacobi2602.pdf",
+      "title": "Vox Jacobi April–Juni 2026, insbesondere gedruckte Seite 7",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "marmstorf-kontakt",
+      "url": "https://kirchemarmstorf.de/buero/ansprechpartner/",
+      "title": "Ansprechpartner Auferstehungskirche Marmstorf",
+      "checkedOn": "2026-09-27"
+    }
+  ]
+}

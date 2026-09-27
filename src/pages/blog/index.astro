@@ -10,6 +10,7 @@ import { shouldListBlogPost } from "../../lib/blogIndexPolicy";
 import "../../styles/global.css";
 import trauterminCardImage from "../../assets/trautermin-hamburg-online-reservieren/trautermin-hamburg-rathaus-titel.jpg";
 import fraserCardImage from "../../assets/hochzeitsfotos-hamburg/b7165c174eaf06f9.jpg";
+import kirchenCardImage from "../../assets/kirchenfinder/kirche-alt-rahlstedt.jpg";
 
 type MigratedImage = {
   src: string;
@@ -126,6 +127,7 @@ const blogPosts = [...journalPosts, ...(migratedPages as MigratedPost[])]
   }));
 
 const collectionItems = [
+  { url: `${canonicalSiteUrl}/kirchenfinder-hamburg/`, name: "Kirchenfinder Hamburg" },
   {
     url: `${canonicalSiteUrl}/trautermin-hamburg-online-reservieren/`,
     name: "Traukalender der Stadt Hamburg",
@@ -244,6 +246,11 @@ const collectionSchema = {
             </span>
             <span class="pinned-post__cta">Zum Artikel</span>
           </span>
+        </a>
+
+        <a class="pinned-post" href="/kirchenfinder-hamburg/" aria-label="Zum Kirchenfinder Hamburg" data-track-event="cta_click" data-cta-id="blog_church_finder" data-cta-type="planning_tool" data-section-id="blog_index" data-content-topic="kirchenfinder_hamburg" data-user-intent="traukirche_finden" data-journey-stage="planung">
+          <span class="pinned-post__media"><Image src={kirchenCardImage} alt="Kirche Alt-Rahlstedt im Gegenlicht" widths={[420,640,900]} sizes="(max-width: 900px) calc(100vw - 40px), 520px" loading="lazy" format="webp" /></span>
+          <span class="pinned-post__body"><span class="pinned-post__label">Kirchlich heiraten</span><strong>Ein Ort für Euer Ja.</strong><span class="pinned-post__description">Kirchen in Hamburg finden, die richtigen Menschen ansprechen und Eure Anmeldung vorbereiten.</span><span class="pinned-post__cta">Zum Kirchenfinder</span></span>
         </a>
 
         <section class="journal-archive" aria-labelledby="journal-archive-title">

@@ -1,0 +1,39 @@
+---
+import ChurchQuestion from './ChurchQuestion.astro';
+import { phoneHref, kirchenStandLabel, type Church } from '../data/kirchen';
+const { church, detailed = false } = Astro.props as { church: Church; detailed?: boolean };
+const { profile, contact } = church;
+const Heading = detailed ? 'h2' : 'h4';
+let number = 0;
+---
+<div class="church-booking">
+  <section class="church-contact" aria-label={`Kontakt für ${church.name}`}>
+    <p class="church-eyebrow">Hier fragt Ihr Euren Trautermin an</p>
+    <Heading>{contact.role}</Heading>
+    <div class="church-contact__links">
+      {contact.phone && <a href={phoneHref(contact.phone)}><span>Telefon</span>{contact.phone}</a>}
+      {contact.email && <a href={`mailto:${contact.email}`}><span>E-Mail</span>{contact.email}</a>}
+      {'form' in contact && contact.form && <a href={contact.form}><span>Anmeldung</span>Zum Formular der Gemeinde ↗</a>}
+    </div>
+    {!contact.phone && !contact.email && <p>Die Kontakte der einzelnen Kirchen findet Ihr auf der unten verlinkten Gemeindeseite.</p>}
+  </section>
+  {church.hasBuildingNote && <aside class:list={['church-notice', { 'church-notice--restricted': church.isRestricted }]} aria-label="Bau und Nutzung"><strong>{church.isRestricted ? 'Wiederaufbau: Trauort vorher absprechen' : 'Hinweis zum Kirchengebäude'}</strong><p>{church.building.note}</p></aside>}
+  <div class="church-questions" aria-label={`Fragen zur Trauung: ${church.name}`}>
+    <ChurchQuestion question="Wie reservieren wir einen Trautermin?" number={++number} level={Heading} open>
+      <ol class="church-steps">{profile.steps.map(step => <li>{step}</li>)}</ol>
+      <div class="church-confirmation"><strong>Wann steht der Termin fest?</strong><p>{profile.bindingRule ?? 'Das erklärt die Gemeinde auf ihrer Website noch nicht genau. Fragt bei der Anmeldung: „Ist unser Termin schon fest zugesagt? Falls er nur vorgemerkt ist: Was fehlt noch, und bis wann müssen wir das erledigen?“'}</p></div>
+    </ChurchQuestion>
+    {profile.requirements.length > 0 && <ChurchQuestion question="Welche Voraussetzungen und Unterlagen brauchen wir?" number={++number} level={Heading}><ul class="church-bullets">{profile.requirements.map(item => <li>{item}</li>)}</ul></ChurchQuestion>}
+    {'schedule' in profile && profile.schedule && <ChurchQuestion question="An welchen Tagen und zu welchen Uhrzeiten können wir heiraten?" number={++number} level={Heading}><p>{profile.schedule}</p><p>Ob Euer Wunschdatum noch frei ist, erfahrt Ihr beim oben genannten Kontakt.</p></ChurchQuestion>}
+    {'costs' in profile && profile.costs && <ChurchQuestion question="Was kostet die kirchliche Trauung hier?" number={++number} level={Heading}><p>{profile.costs}</p></ChurchQuestion>}
+    {('photography' in profile && profile.photography || 'localRules' in profile && profile.localRules) && <ChurchQuestion question={'localRules' in profile && profile.localRules ? 'Was gilt für Fotos und Musik in der Kirche?' : 'Dürfen wir während der Trauung fotografieren lassen?'} number={++number} level={Heading}>
+      {'photography' in profile && profile.photography && <p>{profile.photography}</p>}
+      {'localRules' in profile && profile.localRules && <p>{profile.localRules}</p>}
+    </ChurchQuestion>}
+    <ChurchQuestion question="Was sollten wir beim Kirchenbüro noch nachfragen?" number={++number} level={Heading}>
+      <p>Zu diesen Punkten gibt es auf der Gemeindeseite noch keine eindeutige Auskunft. Nehmt die Fragen mit ins erste Gespräch:</p>
+      <ul class="church-bullets">{profile.unknowns.map(item => <li>{item}</li>)}</ul>
+    </ChurchQuestion>
+  </div>
+  <details class="church-sources"><summary>Gemeindequellen · geprüft am <time datetime={church.checkedOn}>{kirchenStandLabel}</time></summary><p>Die Angaben stammen von den folgenden Kirchenseiten. Freie Termine und Eure Anmeldung bestätigt Euch die Gemeinde direkt.</p><ul>{church.sources.map(source => <li><a href={source.url}>{source.title} ↗</a></li>)}</ul></details>
+</div>

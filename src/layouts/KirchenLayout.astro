@@ -1,0 +1,51 @@
+---
+import FaviconHead from '../components/FaviconHead.astro';
+import MobileNavigation from '../components/MobileNavigation.astro';
+import DesktopNavigation from '../components/DesktopNavigation.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import '../styles/global.css';
+import '../styles/kirchen.css';
+import { finderPath, guidePath, kirchenStand } from '../data/kirchen';
+const { title, description, pagePath, breadcrumbs, image, graph = [], collection = false } = Astro.props;
+const siteUrl = Astro.site?.toString().replace(/\/$/,'') ?? 'https://artbild-fotografie.de';
+const pageUrl = `${siteUrl}${pagePath}`;
+const schema = { '@context':'https://schema.org', '@graph':[
+  { '@type':collection?'CollectionPage':'WebPage', '@id':`${pageUrl}#webpage`, url:pageUrl, name:title, description, inLanguage:'de', dateModified:kirchenStand, breadcrumb:{'@id':`${pageUrl}#breadcrumb`}, ...(image?{primaryImageOfPage:{'@type':'ImageObject',url:new URL(image,siteUrl).href}}:{}) }, ...graph,
+] };
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FaviconHead />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Artbild-Fotografie" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    {image && <meta property="og:image" content={new URL(image,siteUrl).href} />}
+    <meta name="twitter:card" content={image?'summary_large_image':'summary'} />
+    {collection && <link rel="alternate" type="application/json" href={`${finderPath}daten.json`} title="Kirchenfinder: Kontakte, Buchungswege und Quellen" />}
+    {collection && <link rel="alternate" type="text/markdown" href={`${finderPath}kompakt.md`} title="Kirchenfinder als Text" />}
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g,'\\u003c')} />
+  </head>
+  <body class="church-page">
+    <a class="church-skip" href="#inhalt">Zum Inhalt</a>
+    <header class="gallery-header"><MobileNavigation showFloatingAction={false} /><DesktopNavigation /></header>
+    <main id="inhalt">
+      <Breadcrumbs items={breadcrumbs} siteUrl={siteUrl} currentUrl={pageUrl} />
+      <slot />
+    </main>
+    <footer class="church-footer">
+      <a href="/" class="church-footer__brand">Artbild-Fotografie</a>
+      <p>Hochzeitsfotografie in Hamburg · York Augustin</p>
+      <nav aria-label="Weiterführende Links"><a href={guidePath}>Kirchliche Trauung planen</a><a href={finderPath}>Kirchenfinder</a><a href="/standesamt-hamburg/">Standesamtfinder</a><a href="/kontakt/">Kontakt</a><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a></nav>
+    </footer>
+  </body>
+</html>
