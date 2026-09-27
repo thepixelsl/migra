@@ -847,6 +847,686 @@
         ],
         "reopeningDate": "2025-09-07"
       }
+    },
+    {
+      "id": "st-joseph-altona",
+      "name": "St. Joseph auf der Großen Freiheit",
+      "area": "St. Pauli",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-ansgar",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-ansgar-joseph"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "St. Joseph und die Pfarrei St. Ansgar stimmen Eure Anfrage gemeinsam ab.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-theresien-altona",
+      "name": "St. Theresien",
+      "area": "Altona-Altstadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-ansgar",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-ansgar-joseph"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Wunschkirche ausdrücklich nennen; zuständig ist das Büro St. Joseph / St. Theresien.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-sophien-barmbek",
+      "name": "St. Sophien",
+      "area": "Barmbek-Süd",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-sophien",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-sophien-ehe"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Erst das Gemeindebüro anschreiben, dann Ehevorbereitung und Traugespräch vereinbaren.",
+      "offerNote": "Die verlinkte Gemeindequelle beschreibt Trauungen vor Ort. Freie Termine und Eure persönliche Anmeldung sind damit noch nicht bestätigt.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "kleiner-michel",
+      "name": "Kleiner Michel · St. Ansgar und St. Bernhard",
+      "area": "Neustadt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-kleiner-michel",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-kleinermichel-ehe"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Kirchenvormerkung und Zusage des Geistlichen getrennt klären; feste Samstagstermine.",
+      "offerNote": "Die verlinkte Gemeindequelle beschreibt Trauungen vor Ort. Freie Termine und Eure persönliche Anmeldung sind damit noch nicht bestätigt.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "mariae-himmelfahrt-rahlstedt",
+      "name": "Mariä Himmelfahrt",
+      "area": "Rahlstedt",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-prassek",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-prassek-gemeinden"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Wohnsitzpfarrei und Büro der Wunschkirche gemeinsam in die Planung einbeziehen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Mariä Himmelfahrt",
+        "phone": "040 334 65 45 25",
+        "email": "mariaehimmelfahrt@johannes-prassek.de",
+        "sourceIds": [
+          "kath-prassek-bueros"
+        ]
+      }
+    },
+    {
+      "id": "heilig-geist-farmsen",
+      "name": "Heilig Geist",
+      "area": "Farmsen-Berne",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-prassek",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-prassek-gemeinden"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Wohnsitzpfarrei und Büro der Wunschkirche gemeinsam in die Planung einbeziehen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Heilig Geist",
+        "phone": "040 334 65 45 21",
+        "email": "hl.geist@johannes-prassek.de",
+        "sourceIds": [
+          "kath-prassek-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-bernard-poppenbuettel",
+      "name": "St. Bernard",
+      "area": "Poppenbüttel",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-prassek",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-prassek-gemeinden"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Wohnsitzpfarrei und Büro der Wunschkirche gemeinsam in die Planung einbeziehen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro St. Bernard",
+        "phone": "040 334 65 45 22",
+        "email": "St.Bernard@johannes-prassek.de",
+        "sourceIds": [
+          "kath-prassek-bueros"
+        ]
+      }
+    },
+    {
+      "id": "heilig-kreuz-volksdorf",
+      "name": "Heilig Kreuz",
+      "area": "Volksdorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-prassek",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-prassek-gemeinden"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Wohnsitzpfarrei und Büro der Wunschkirche gemeinsam in die Planung einbeziehen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Heilig Kreuz",
+        "phone": "040 334 65 45 23",
+        "email": "hl.kreuz@johannes-prassek.de",
+        "sourceIds": [
+          "kath-prassek-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-wilhelm-bramfeld",
+      "name": "St. Wilhelm",
+      "area": "Bramfeld",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-wilhelm",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-prassek-wilhelm-ehe"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Mindestens drei Monate vorher beim Gemeindebüro anfragen.",
+      "offerNote": "Die verlinkte Gemeindequelle beschreibt Trauungen vor Ort. Freie Termine und Eure persönliche Anmeldung sind damit noch nicht bestätigt.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro St. Wilhelm",
+        "phone": "040 334 65 45 24",
+        "email": "st.wilhelm@johannes-prassek.de",
+        "sourceIds": [
+          "kath-prassek-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-antonius-winterhude",
+      "name": "St. Antonius",
+      "area": "Winterhude",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-heilig-geist",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-geist-ehe",
+        "kath-geist-kontakt"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Mehrere Monate vorher melden und die konkrete Kirche mit dem Büro abstimmen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro St. Antonius",
+        "phone": "040 696 3838 10",
+        "email": "pfarrei@heiliggeist.org",
+        "sourceIds": [
+          "kath-geist-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "st-bonifatius-eimsbuettel",
+      "name": "St. Bonifatius",
+      "area": "Eimsbüttel",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-heilig-geist",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-geist-ehe",
+        "kath-geist-kontakt"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Mehrere Monate vorher melden und die konkrete Kirche mit dem Büro abstimmen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro St. Bonifatius",
+        "phone": "040 696 3838 40",
+        "email": "pfarrei@heiliggeist.org",
+        "sourceIds": [
+          "kath-geist-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "st-elisabeth-harvestehude",
+      "name": "St. Elisabeth",
+      "area": "Harvestehude",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-heilig-geist",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-geist-ehe",
+        "kath-geist-kontakt"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Mehrere Monate vorher melden und die konkrete Kirche mit dem Büro abstimmen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "temporary_closure",
+        "note": "Laut Mitteilung vom September 2026 ist die Kirche ab Mitte September wegen Malerarbeiten geschlossen; Gottesdienste werden verlegt. Die Arbeiten sollen voraussichtlich bis Anfang Oktober dauern. Eine Wiederöffnung und die Nutzung für Euren Trautermin müsst Ihr beim Büro bestätigen lassen.",
+        "sourceIds": [
+          "kath-elisabeth-maler"
+        ]
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro St. Elisabeth",
+        "phone": "040 696 3838 70",
+        "email": "pfarrei@heiliggeist.org",
+        "sourceIds": [
+          "kath-geist-kontakt"
+        ]
+      }
+    },
+    {
+      "id": "maria-gruen",
+      "name": "Maria Grün",
+      "area": "Blankenese",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-west",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-west",
+        "kath-west-mariagruen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "works_announced",
+        "note": "Die offizielle Kirchenseite beschreibt Schäden durch marode Entwässerungsleitungen und eine geplante Sicherung der Fundamente. Ein belastbarer aktueller Bauzeitraum oder Abschluss ist dort nicht genannt. Fragt nach Zugang, Gerüsten und Nutzung der Kirche an Eurem Datum; aus dem Sanierungshinweis folgt keine pauschale Absage für Trauungen.",
+        "sourceIds": [
+          "kath-west-mariagruen"
+        ]
+      }
+    },
+    {
+      "id": "st-marien-ottensen",
+      "name": "St. Marien",
+      "area": "Ottensen",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-west",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-west",
+        "kath-west-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-bruder-konrad",
+      "name": "St. Bruder Konrad",
+      "area": "Osdorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-west",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-west",
+        "kath-west-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-paulus-augustinus",
+      "name": "St. Paulus-Augustinus",
+      "area": "Groß Flottbek",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-west",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-west",
+        "kath-west-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-petrus-finkenwerder",
+      "name": "St. Petrus",
+      "area": "Finkenwerder",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-west",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-west",
+        "kath-west-petrus"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-annen-langenhorn",
+      "name": "St. Annen",
+      "area": "Langenhorn",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-katharina",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-katharina"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Pfarrei bietet Ehevorbereitung an; Kirche und Termin telefonisch klären.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "heilige-familie-langenhorn",
+      "name": "Heilige Familie",
+      "area": "Langenhorn",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-katharina",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-katharina"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Die Pfarrei bietet Ehevorbereitung an; Kirche und Termin telefonisch klären.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-maria-harburg",
+      "name": "St. Maria",
+      "area": "Harburg",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-kolbe",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-kolbe-kirchen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Das örtliche Büro prüft Wunschkirche, Termin und die Begleitung durch einen Geistlichen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Harburg",
+        "phone": "040 70 20 89 20",
+        "email": "buero.harburg@maximiliankolbe-hh.de",
+        "sourceIds": [
+          "kath-kolbe-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-franz-joseph",
+      "name": "St. Franz-Joseph",
+      "area": "Wilstorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-kolbe",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-kolbe-kirchen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Das örtliche Büro prüft Wunschkirche, Termin und die Begleitung durch einen Geistlichen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Harburg",
+        "phone": "040 70 20 89 20",
+        "email": "buero.harburg@maximiliankolbe-hh.de",
+        "sourceIds": [
+          "kath-kolbe-bueros"
+        ]
+      }
+    },
+    {
+      "id": "heilig-kreuz-neugraben",
+      "name": "Heilig Kreuz",
+      "area": "Neugraben-Fischbek",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-kolbe",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-kolbe-kirchen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Das örtliche Büro prüft Wunschkirche, Termin und die Begleitung durch einen Geistlichen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Neugraben",
+        "phone": "040 70 20 89 10",
+        "email": "buero.neugraben@maximiliankolbe-hh.de",
+        "sourceIds": [
+          "kath-kolbe-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-bonifatius-wilhelmsburg",
+      "name": "St. Bonifatius",
+      "area": "Wilhelmsburg",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-kolbe",
+      "offerEvidence": "official_parish_offer",
+      "sourceIds": [
+        "kath-kolbe-kirchen"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Das örtliche Büro prüft Wunschkirche, Termin und die Begleitung durch einen Geistlichen.",
+      "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      },
+      "contactOverride": {
+        "role": "Gemeindebüro Wilhelmsburg",
+        "phone": "040 70 20 89 30",
+        "email": "buero.wilhelmsburg@maximiliankolbe-hh.de",
+        "sourceIds": [
+          "kath-kolbe-bueros"
+        ]
+      }
+    },
+    {
+      "id": "st-joseph-wandsbek",
+      "name": "St. Joseph",
+      "area": "Wandsbek",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-joseph-wandsbek",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-joseph-ehe"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Termine frühestens etwa sechs Monate vorher; Wohnsitzpfarrei zuerst ansprechen.",
+      "offerNote": "Die verlinkte Gemeindequelle beschreibt Trauungen vor Ort. Freie Termine und Eure persönliche Anmeldung sind damit noch nicht bestätigt.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-agnes-tonndorf",
+      "name": "St. Agnes",
+      "area": "Tonndorf",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "römisch-katholisch",
+      "profileId": "kath-agnes",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-agnes-ehe"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Hochzeitstermine werden direkt über das Gemeindebüro abgesprochen.",
+      "offerNote": "Die verlinkte Gemeindequelle beschreibt Trauungen vor Ort. Freie Termine und Eure persönliche Anmeldung sind damit noch nicht bestätigt.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
+    },
+    {
+      "id": "st-johannis-steilshoop",
+      "name": "St. Johannis",
+      "area": "Steilshoop",
+      "scope": "Hamburg",
+      "venueType": "Kirche",
+      "denomination": "katholisch (maronitisch)",
+      "profileId": "kath-johannis",
+      "offerEvidence": "explicit_official_offer",
+      "sourceIds": [
+        "kath-franziskus-maroniten"
+      ],
+      "checkedOn": "2026-09-27",
+      "liveAvailability": null,
+      "highlight": "Örtlicher Beleg für maronitische Trauungen; Ritus und Zuständigkeit vorher klären.",
+      "offerNote": "Die offizielle Quelle belegt ausdrücklich Trauungen der maronitischen Gemeinde in St. Johannis. Daraus folgt keine allgemeine Zusage für Trauungen im lateinischen Ritus. Beides muss mit der zuständigen Seelsorge geklärt werden.",
+      "building": {
+        "status": "not_individually_verified",
+        "note": "Nutzung und mögliche Einschränkungen für Euren Wunschtermin bitte bei der Gemeinde bestätigen lassen.",
+        "sourceIds": []
+      }
     }
   ],
   "profiles": [
@@ -1214,16 +1894,20 @@
       "id": "mariendom",
       "name": "St. Marien-Dom",
       "sourceIds": [
-        "mariendom"
+        "mariendom",
+        "kath-ansgar-ehe",
+        "kath-ansgar-bueros"
       ],
       "contact": {
         "role": "Pfarrbüro St. Ansgar",
-        "phone": null,
-        "email": "pfarrbuero@sankt-ansgar.de"
+        "phone": "040 28 49 90 70",
+        "email": "pfarrbuero@sankt-ansgar.de",
+        "form": "https://sankt-ansgar.de/hochzeit/"
       },
       "steps": [
         "Schreibt dem Pfarrbüro St. Ansgar eine E-Mail. Nennt Eure Namen, Konfessionen, Adresse, Kontaktdaten und Euren Wunschtermin.",
-        "Das Pfarrbüro meldet sich zu Eurer Anfrage. Klärt mit ihm, welche Schritte zur Ehevorbereitung und Anmeldung dazugehören."
+        "Das Pfarrbüro meldet sich zu Eurer Anfrage. Klärt mit ihm, welche Schritte zur Ehevorbereitung und Anmeldung dazugehören.",
+        "Gebt ausdrücklich den St. Marien-Dom als Wunschkirche an. Besprecht mit dem Pfarrbüro, welcher Priester oder Diakon Euch begleitet und wer das Ehevorbereitungsprotokoll aufnimmt."
       ],
       "requirements": [],
       "unknowns": [
@@ -1581,6 +2265,387 @@
       ],
       "checkedOn": "2026-09-27",
       "bindingRule": null
+    },
+    {
+      "id": "kath-ansgar",
+      "name": "St. Ansgar – St. Joseph und St. Theresien",
+      "sourceIds": [
+        "kath-ansgar-ehe",
+        "kath-ansgar-bueros",
+        "kath-ansgar-joseph"
+      ],
+      "contact": {
+        "role": "Gemeindebüro St. Joseph / St. Theresien",
+        "phone": "040 31 49 19",
+        "email": "gemeindebuero.st-joseph@sankt-ansgar.de",
+        "form": "https://sankt-ansgar.de/hochzeit/"
+      },
+      "steps": [
+        "Schreibt dem Gemeindebüro oder nutzt das offizielle Hochzeitsformular der Pfarrei. Nennt die gewünschte Kirche, Euer Datum, beide Namen und Konfessionen sowie Adresse und Telefonnummer.",
+        "Lasst Kirche und Termin gemeinsam mit einem Priester oder Diakon abstimmen. Klärt dabei die Ehevorbereitung und welche Aufgaben Eure Wohnsitzpfarrei übernimmt.",
+        "Fragt nach der ausdrücklichen Zusage für die gewünschte Kirche, bevor Ihr mit dem Termin weiterplant."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-sophien",
+      "name": "St. Sophien",
+      "sourceIds": [
+        "kath-sophien-ehe",
+        "kath-ansgar-bueros"
+      ],
+      "contact": {
+        "role": "Gemeindebüro St. Sophien",
+        "phone": "040 74 10 74 20",
+        "email": "gemeindebuero.st-sophien@sankt-ansgar.de"
+      },
+      "steps": [
+        "Schreibt dem Gemeindebüro beide Namen, Adresse und Telefonnummer, Konfession oder Religion, Eure Wohnsitzpfarrei und den Wunschtermin. Gebt auch frühere standesamtliche oder kirchliche Ehen an.",
+        "Das Büro klärt die ersten Fragen. Wenn Ihr in der Pfarrei wohnt, vereinbart Ihr anschließend das Ehevorbereitungsgespräch mit Pater Augustinus Hildebrandt OP. Wohnt Ihr anderswo, lasst zuerst die Zuständigkeit klären.",
+        "Nach dem Ehevorbereitungsprotokoll plant Ihr das Traugespräch mit dem Geistlichen, der Eure Hochzeit begleitet."
+      ],
+      "requirements": [
+        "Katholische Partner brauchen einen Auszug aus dem Taufbuch; andere christliche Partner eine Kopie ihrer Taufurkunde.",
+        "Falls Ihr bereits standesamtlich verheiratet seid: eine Kopie der Heiratsurkunde mitbringen.",
+        "Frühere Ehen schon bei der Anfrage angeben."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-kleiner-michel",
+      "name": "Kleiner Michel",
+      "sourceIds": [
+        "kath-kleinermichel-ehe",
+        "kath-kleinermichel-merkblatt",
+        "kath-kleinermichel-fotos",
+        "kath-ansgar-bueros"
+      ],
+      "contact": {
+        "role": "Hochzeitsanfrage am Kleinen Michel",
+        "phone": "040 37 12 33",
+        "email": "pater@kleiner-michel.de",
+        "form": "https://sankt-ansgar.de/hochzeit/"
+      },
+      "steps": [
+        "Fragt Eure Wunschzeit am Kleinen Michel an. Wenn Ihr nicht zur Gemeinde gehört, besprecht parallel mit Eurer Wohnsitzpfarrei die Vorbereitung und ob Euer Pfarrer die Trauung begleiten kann.",
+        "Klärt getrennt die Vormerkung der Kirche und die Zusage eines Priesters oder Diakons. Laut Merkblatt sind Kirchenreservierungen etwa ein Jahr vorher möglich; für einen Geistlichen des Kleinen Michel gibt es eine verbindliche Zusage erst ab Ende November nach einem persönlichen Gespräch.",
+        "Plant das Ehevorbereitungsprotokoll und die Gespräche zum Gottesdienst. Die Gemeinde lädt außerdem zu einem Vorbereitungstag ein."
+      ],
+      "requirements": [
+        "Mindestens eine Person muss Mitglied der katholischen Kirche sein.",
+        "Zwei Trauzeugen gehören zur Feier.",
+        "Die persönlichen Voraussetzungen werden vor einer festen Zusage mit dem Kleinen Michel oder der Wohnortpfarrei geklärt."
+      ],
+      "unknowns": [
+        "Welche Unterlagen müssen wir für das Ehevorbereitungsprotokoll mitbringen?",
+        "Welcher Vorbereitungstag passt zu unserem Hochzeitstermin?",
+        "Welche Musiker sind verfügbar, und welches Honorar vereinbaren wir?",
+        "Ist nach unserer Trauung ein Empfang möglich? Welche Räume können wir tatsächlich nutzen?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": "Eine feste Zusage setzt die Klärung der persönlichen Voraussetzungen voraus. Die Vorreservierung der Kirche ersetzt nicht die Zusage des Priesters oder Diakons. Für einen Geistlichen des Kleinen Michel nennt das Merkblatt Ende November und ein persönliches Gespräch.",
+      "schedule": "Das Merkblatt nennt samstags 11, 13 und 15 Uhr. Sonntags und in der Woche vor Ostern sind keine Hochzeiten vorgesehen. Für die Fastenzeit gelten besondere liturgische Absprachen. Die Website nennt Oktober/November als Planungsbeginn für das Folgejahr; das Merkblatt präzisiert die Zusage eines eigenen Geistlichen auf Ende November.",
+      "costs": "Eine Spende an die Gemeinde ist laut Merkblatt freiwillig. Das Musikerhonorar vereinbart Ihr selbst mit den Musikern. Für einen Empfang mit Catering wird eine Raummiete genannt; eine feste Summe ist nicht veröffentlicht.",
+      "photography": "Ein Fotograf oder eine Fotografin begleitet den Gottesdienst und soll 15 Minuten vorher zur Absprache mit dem Geistlichen da sein. Das weiterhin verlinkte Merkblatt von Juli 2015 untersagt Blitz und zusätzliche Beleuchtung. Video ist dort nur mit einer Standkamera vorgesehen. Lasst Euch die aktuellen Regeln und erlaubten Positionen vorab bestätigen.",
+      "localRules": "Besonderen Blumenschmuck müsst Ihr mit der von der Kirche benannten Floristin abstimmen. Musikwünsche besprecht Ihr mit dem Geistlichen und dem Kirchenmusiker. Für die Saalmiete nennt die Website eine Zugehörigkeit zur Sonntagsgemeinde; das Merkblatt formuliert teilweise weitergehende Möglichkeiten. Deshalb die Raumnutzung ausdrücklich bestätigen lassen."
+    },
+    {
+      "id": "kath-prassek",
+      "name": "Seliger Johannes Prassek",
+      "sourceIds": [
+        "kath-prassek-ehe",
+        "kath-prassek-bueros",
+        "kath-prassek-gemeinden"
+      ],
+      "contact": {
+        "role": "Pfarrbüro Seliger Johannes Prassek",
+        "phone": "040 334 65 45 00",
+        "email": "pfarrbuero@johannes-prassek.de"
+      },
+      "steps": [
+        "Meldet Euch bei Eurer katholischen Wohnsitzpfarrei. Ist nur eine Person katholisch, ist deren Pfarramt zuständig. Fragt zugleich im Büro der Wunschkirche nach dem Termin.",
+        "Klärt mit dem Büro, wer die Trauung feiert und das Ehevorbereitungsprotokoll aufnimmt. Ein vertrauter Seelsorger oder eine muttersprachliche katholische Mission kann einbezogen werden.",
+        "Bringt die angeforderten Nachweise zum Gespräch mit und lasst Euch die Zusage für die konkrete Kirche bestätigen."
+      ],
+      "requirements": [
+        "Katholische Partner brauchen einen neu ausgestellten Taufschein aus dem Taufpfarramt.",
+        "Nichtkatholische Partner sollen laut Pfarreiseite einen Taufnachweis und einen kirchlich anerkannten Ledigennachweis vorlegen; die passende Form mit dem Pfarramt klären.",
+        "Eine fehlende Firmung verhindert laut Pfarrei die Trauung nicht grundsätzlich.",
+        "Bei evangelischer Trauung benötigt der katholische Partner eine Befreiung von der katholischen Formpflicht; diese wird über das katholische Pfarramt geklärt."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "contactNote": "Vom 24. September bis 9. Oktober 2026 bleiben die Gemeindebüros laut Pfarrei geschlossen. Das zentrale Pfarrbüro in Rahlstedt ist in dieser Zeit montags, mittwochs und freitags von 9 bis 11 Uhr geöffnet: 040 334 65 45 00, pfarrbuero@johannes-prassek.de."
+    },
+    {
+      "id": "kath-wilhelm",
+      "name": "St. Wilhelm",
+      "sourceIds": [
+        "kath-prassek-ehe",
+        "kath-prassek-bueros",
+        "kath-prassek-wilhelm-ehe"
+      ],
+      "contact": {
+        "role": "Pfarrbüro Seliger Johannes Prassek",
+        "phone": "040 334 65 45 00",
+        "email": "pfarrbuero@johannes-prassek.de"
+      },
+      "steps": [
+        "Fragt mindestens drei Monate vor Eurem Wunschtermin beim Gemeindebüro St. Wilhelm oder beim zentralen Pfarrbüro an. Die Gemeinde empfiehlt diesen Vorlauf ausdrücklich.",
+        "Klärt mit dem Büro, wer die Trauung feiert und das Ehevorbereitungsprotokoll aufnimmt. Ein vertrauter Seelsorger oder eine muttersprachliche katholische Mission kann einbezogen werden.",
+        "Bringt die angeforderten Nachweise zum Gespräch mit und lasst Euch die Zusage für die konkrete Kirche bestätigen."
+      ],
+      "requirements": [
+        "Mindestens eine Person gehört der katholischen Kirche an.",
+        "Katholische Partner brauchen einen neu ausgestellten Taufschein aus dem Taufpfarramt.",
+        "Nichtkatholische Partner sollen laut Pfarreiseite einen Taufnachweis und einen kirchlich anerkannten Ledigennachweis vorlegen; die passende Form mit dem Pfarramt klären.",
+        "Eine fehlende Firmung verhindert laut Pfarrei die Trauung nicht grundsätzlich.",
+        "Bei evangelischer Trauung benötigt der katholische Partner eine Befreiung von der katholischen Formpflicht; diese wird über das katholische Pfarramt geklärt."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "contactNote": "Vom 24. September bis 9. Oktober 2026 bleiben die Gemeindebüros laut Pfarrei geschlossen. Das zentrale Pfarrbüro in Rahlstedt ist in dieser Zeit montags, mittwochs und freitags von 9 bis 11 Uhr geöffnet: 040 334 65 45 00, pfarrbuero@johannes-prassek.de."
+    },
+    {
+      "id": "kath-heilig-geist",
+      "name": "Pfarrei Heilig Geist",
+      "sourceIds": [
+        "kath-geist-ehe",
+        "kath-geist-kontakt"
+      ],
+      "contact": {
+        "role": "Pfarrbüro Heilig Geist",
+        "phone": "040 696 38 38 0",
+        "email": "pfarrei@heiliggeist.org"
+      },
+      "steps": [
+        "Meldet Euch mehrere Monate vor Eurer Hochzeit im Gemeindebüro. Nennt die Wunschkirche, das Datum und Eure Konfessionen.",
+        "Vereinbart ein Traugespräch. Besprecht dabei, welche Form des Gottesdienstes zu Euch passt und wer die Feier begleitet.",
+        "Lasst die konkrete Kirche, Uhrzeit und die noch nötigen Unterlagen bestätigen."
+      ],
+      "requirements": [
+        "Bei unterschiedlichen Konfessionen bespricht die Pfarrei mit Euch die Möglichkeiten einer gemeinsamen Feier.",
+        "Auch wenn eine Person keiner Kirche angehört, sollt Ihr Eure Situation im Gespräch klären; die Pfarrei nennt dafür Möglichkeiten, aber keine pauschale Zusage."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-west",
+      "name": "St. Maria im Hamburger Westen",
+      "sourceIds": [
+        "kath-west-ehe",
+        "kath-west-bueros",
+        "kath-west-team"
+      ],
+      "contact": {
+        "role": "Pastor Wolfgang Bruns",
+        "phone": "040 41 28 39 95",
+        "email": "pastor.bruns@kathhw.de"
+      },
+      "steps": [
+        "Schreibt Pastor Wolfgang Bruns mit Eurer Wunschkirche, Datum und Uhrzeit. Die Pfarrei nennt ihn ausdrücklich als ersten Kontakt für Hochzeiten.",
+        "Gebt für beide Personen Namen, Konfession, Geburtsdatum und -ort, Wohnadresse, Telefonnummer und E-Mail sowie Datum und Ort der standesamtlichen Trauung an. Frühere Ehen ebenfalls nennen.",
+        "Ein Priester bespricht mit Euch die weiteren Schritte und führt das Ehevorbereitungsgespräch. Lasst die Kirche und die Begleitung durch einen Geistlichen ausdrücklich zusagen."
+      ],
+      "requirements": [
+        "Katholische Partner: Auszug aus dem Taufbuch zum Zweck der Eheschließung, höchstens sechs Monate alt.",
+        "Andere Christen: Kopie der Taufurkunde. Für evangelische Partner nennt die Pfarrei zusätzlich ein Dimissoriale des Wohnsitzpfarramts.",
+        "Nichtgetaufte Partner: Kopie des Personalausweises. Die persönlichen Voraussetzungen vorab mit dem Priester klären.",
+        "Bei Trauung außerhalb der Pfarrei werden zusätzlich Name und Anschrift der anderen Pfarrei und des Bistums benötigt."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-katharina",
+      "name": "St. Katharina von Siena",
+      "sourceIds": [
+        "kath-katharina-ehe",
+        "kath-katharina"
+      ],
+      "contact": {
+        "role": "Pfarrbüro St. Katharina von Siena",
+        "phone": "040 52 01 65 100",
+        "email": null
+      },
+      "steps": [
+        "Ruft im Pfarrbüro an und nennt ausdrücklich St. Annen oder Heilige Familie als Wunschkirche. Fragt nach dem Termin und den Voraussetzungen für Eure Situation.",
+        "Die Pfarrei bietet Treffen zur Ehevorbereitung an. Klärt im Büro, welche Gespräche und Unterlagen für Eure Anmeldung vorgesehen sind.",
+        "Lasst Euch die Kirche, die Begleitung durch einen Geistlichen und den verbindlichen Bestätigungsschritt nennen."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-kolbe",
+      "name": "St. Maximilian Kolbe",
+      "sourceIds": [
+        "kath-kolbe-sakramente",
+        "kath-kolbe-kirchen",
+        "kath-kolbe-bueros"
+      ],
+      "contact": {
+        "role": "Pfarrbüro St. Maximilian Kolbe",
+        "phone": "040 70 20 89 20",
+        "email": "info@maximiliankolbe-hh.de"
+      },
+      "steps": [
+        "Meldet Euch im zuständigen Gemeindebüro mit Wunschkirche und Datum. Die Pfarrei nimmt Anfragen zu Sakramenten auch über info@maximiliankolbe-hh.de entgegen.",
+        "Fragt ausdrücklich, ob Eure Trauung in dieser Kirche möglich ist und wer sie begleiten kann. Die Website beschreibt das Ehesakrament, veröffentlicht aber keine eigene Terminregel für die einzelnen Kirchen.",
+        "Lasst Euch die Unterlagen, Vorbereitungsgespräche und den Schritt zur verbindlichen Zusage erklären."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-joseph-wandsbek",
+      "name": "St. Joseph Wandsbek",
+      "sourceIds": [
+        "kath-joseph-ehe",
+        "kath-joseph-kontakt"
+      ],
+      "contact": {
+        "role": "Gemeindebüro St. Joseph Wandsbek",
+        "phone": "040 68 55 14",
+        "email": "gemeindebuero@sankt-joseph-wandsbek.de"
+      },
+      "steps": [
+        "Wendet Euch zuerst an die Wohnsitzpfarrei eines Partners; wenn nur eine Person katholisch ist, an deren Pfarramt.",
+        "Fragt im Gemeindebüro nach dem Trautermin. Die Gemeinde vergibt Termine laut Website frühestens etwa sechs Monate vorher.",
+        "Vereinbart über das Büro das Ehevorbereitungsgespräch. Bringt den aktuellen Taufschein mit und klärt gegebenenfalls die Traulizenz der Wohnsitzpfarrei."
+      ],
+      "requirements": [
+        "Die Gemeinde sieht die eigene Pfarrkirche als regulären Trauort vor. Für eine Ausnahme verlangt sie eine Begründung und die schriftliche Traulizenz des Wohnsitzpfarrers.",
+        "Der Taufschein darf laut Gemeindeseite nicht älter als sechs Monate sein."
+      ],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null,
+      "schedule": "Termine werden frühestens etwa sechs Monate vor der Trauung vergeben. In Advents- und Fastenzeit sind Trauungen laut Gemeinde in der Regel nicht möglich.",
+      "localRules": "Vor der Kirche stehen laut Trauungsseite nur vier Parkplätze zur Verfügung. Besprecht die Anreise Eurer Gäste frühzeitig; veröffentlichte Regeln für Musik und Fotografie müsst Ihr beim Büro erfragen."
+    },
+    {
+      "id": "kath-agnes",
+      "name": "St. Agnes Tonndorf",
+      "sourceIds": [
+        "kath-agnes-ehe",
+        "kath-agnes-kontakt"
+      ],
+      "contact": {
+        "role": "Gemeindebüro St. Agnes",
+        "phone": "040 66 74 98",
+        "email": "buero-tonndorf@st-paulus-adv.de"
+      },
+      "steps": [
+        "Fragt den Hochzeitstermin beim Gemeindebüro an. Die Sakramentenseite nennt diesen Weg ausdrücklich.",
+        "Besprecht Eure Konfessionen, Wohnsitzpfarrei und den gewünschten Gottesdienst. Lasst Euch sagen, welcher Geistliche Euch begleitet.",
+        "Klärt die nötigen Unterlagen, Vorbereitungsgespräche und die feste Terminbestätigung."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Welche Unterlagen brauchen wir in unserer persönlichen Situation und bis wann?",
+        "Wer übernimmt die Trauung, und wann bekommen wir die feste Zusage für Kirche und Geistlichen?",
+        "Was kosten Musik, Küsterdienst und weitere Wünsche?",
+        "Welche Regeln gelten für Fotos, Video, Blumen und den Empfang nach der Trauung?",
+        "Wie viele Gäste passen hinein, und ist der Zugang für alle unsere Gäste geeignet?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
+    },
+    {
+      "id": "kath-johannis",
+      "name": "St. Johannis – maronitische Trauungen",
+      "sourceIds": [
+        "kath-franziskus-maroniten",
+        "kath-franziskus-bueros"
+      ],
+      "contact": {
+        "role": "Gemeindebüro St. Johannis – Vermittlung zur maronitischen Gemeinde",
+        "phone": "040 5247355 50",
+        "email": "buerosteilshoop@st-franziskus-hamburg.de"
+      },
+      "steps": [
+        "Fragt im Gemeindebüro St. Johannis nach dem Kontakt zur maronitischen Gemeinde und nennt Euren Trauwunsch.",
+        "Klärt mit deren Seelsorge, ob der maronitische Ritus und die Voraussetzungen für Euch passen. Die offizielle Gemeindeseite nennt Gottesdienste in arabischer und deutscher Sprache sowie Trauungen.",
+        "Lasst den Termin, die kirchliche Zuständigkeit und die erforderlichen Unterlagen bestätigen."
+      ],
+      "requirements": [],
+      "unknowns": [
+        "Ist eine Trauung in unserem Fall nach maronitischem Ritus möglich?",
+        "Wer übernimmt die Vorbereitung, welche Unterlagen brauchen wir und in welcher Sprache wird gefeiert?",
+        "Falls wir eine Trauung im lateinischen Ritus möchten: Ist diese hier möglich und wer wäre zuständig?",
+        "Welche Zeiten, Kosten und Regeln für Fotos und Musik gelten?"
+      ],
+      "checkedOn": "2026-09-27",
+      "bindingRule": null
     }
   ],
   "sources": [
@@ -1611,7 +2676,7 @@
     {
       "id": "nienstedten",
       "url": "https://www.kirche-nienstedten.de/feiern/trauung",
-      "title": "",
+      "title": "Nienstedten: kirchliche Trauung und Anmeldung",
       "checkedOn": "2026-09-27"
     },
     {
@@ -1835,6 +2900,553 @@
       "url": "https://kirchemarmstorf.de/buero/ansprechpartner/",
       "title": "Ansprechpartner Auferstehungskirche Marmstorf",
       "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-ansgar-ehe",
+      "url": "https://sankt-ansgar.de/hochzeit/",
+      "title": "St. Ansgar: Hochzeit und Anfrageformular",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-ansgar-bueros",
+      "url": "https://sankt-ansgar.de/kontakt/pfarrbuero/",
+      "title": "St. Ansgar: aktuelle Gemeindebüros",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-ansgar-kirchen",
+      "url": "https://sankt-ansgar.de/gemeinden/",
+      "title": "St. Ansgar: Gemeinden und Kirchen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-ansgar-joseph",
+      "url": "https://sankt-ansgar.de/gemeinden/st-joseph-altona/",
+      "title": "St. Joseph und St. Theresien: Gemeinde und Kontakt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-sophien-ehe",
+      "url": "https://sanktsophien.de/ehe/",
+      "title": "St. Sophien: Anmeldung und Ehevorbereitung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kleinermichel-ehe",
+      "url": "https://kleiner-michel.de/sakramente-hochzeit.html",
+      "title": "Kleiner Michel: Hochzeit und Terminplanung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kleinermichel-merkblatt",
+      "url": "https://kleiner-michel.de/assets/templates/kleinermichel/files/pdf/2024-2025/Merkblatt-zur-Hochzeit_im_Kleinen-Michel_April_2025.pdf",
+      "title": "Kleiner Michel: Hochzeitsmerkblatt, April 2025",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kleinermichel-fotos",
+      "url": "https://kleiner-michel.de/assets/templates/kleinermichel/files/pdf/Merkblatt-zur-Hochzeit_fuer-Photo-Video_2015-07.pdf",
+      "title": "Kleiner Michel: aktuell verlinkte Foto- und Videoregeln, Juli 2015",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-prassek-ehe",
+      "url": "https://johannes-prassek.de/?page_id=380",
+      "title": "Seliger Johannes Prassek: Trauung, Zuständigkeit und Unterlagen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-prassek-bueros",
+      "url": "https://johannes-prassek.de/?page_id=186",
+      "title": "Seliger Johannes Prassek: Büros und vorübergehende Öffnungszeiten",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-prassek-gemeinden",
+      "url": "https://johannes-prassek.de/?page_id=9240",
+      "title": "Seliger Johannes Prassek: die fünf Gemeinden",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-prassek-wilhelm-ehe",
+      "url": "https://johannes-prassek.de/?page_id=4647",
+      "title": "St. Wilhelm: Hochzeitstermine und Mindestvorlauf",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-geist-ehe",
+      "url": "https://heiliggeist.org/sakramente/",
+      "title": "Heilig Geist: Hochzeit und Vorbereitung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-geist-kontakt",
+      "url": "https://heiliggeist.org/kontakte-ansprechpartner/",
+      "title": "Heilig Geist: Kontakte in den drei Gemeinden",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-elisabeth-maler",
+      "url": "https://heiliggeist.org/gottesdienste-waehrnd-der-malerarbeiten-in-st-elisabeth/",
+      "title": "St. Elisabeth: Verlegung der Gottesdienste während der Malerarbeiten, September 2026",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west-ehe",
+      "url": "https://katholisch-im-hamburger-westen.de/kirche-in-vielen-lebenslagen/ehe/",
+      "title": "St. Maria im Hamburger Westen: Hochzeitsanfrage und Unterlagen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west-bueros",
+      "url": "https://katholisch-im-hamburger-westen.de/kontakt-2/pfarrbuero/",
+      "title": "St. Maria im Hamburger Westen: Gemeindebüros",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west-team",
+      "url": "https://katholisch-im-hamburger-westen.de/kontakt-2/pastoralteam/",
+      "title": "St. Maria im Hamburger Westen: Pastoralteam",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west",
+      "url": "https://katholisch-im-hamburger-westen.de/",
+      "title": "St. Maria im Hamburger Westen: Kirchenübersicht",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west-mariagruen",
+      "url": "https://katholisch-im-hamburger-westen.de/__trashed/kirche-maria-gruen/",
+      "title": "Maria Grün: Kirche und Fundamentsanierung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-west-petrus",
+      "url": "https://katholisch-im-hamburger-westen.de/__trashed/kirche-st-petrus/",
+      "title": "St. Petrus Finkenwerder: Kirche und zuständiges Büro",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-katharina-ehe",
+      "url": "https://www.katharina-von-siena.de/st-pfarrei/ehe",
+      "title": "St. Katharina von Siena: Ehe und Ehevorbereitung",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-katharina",
+      "url": "https://www.katharina-von-siena.de/index.php",
+      "title": "St. Katharina von Siena: Gemeinden und Kontakt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kolbe-sakramente",
+      "url": "https://maximiliankolbe-hh.de/glauben-leben/sakramente/",
+      "title": "St. Maximilian Kolbe: Sakramente und Anfragekontakt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kolbe-kirchen",
+      "url": "https://maximiliankolbe-hh.de/kirchen-und-einrichtungen/kirchen/",
+      "title": "St. Maximilian Kolbe: Kirchen und Kapelle",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kolbe-bueros",
+      "url": "https://maximiliankolbe-hh.de/fuer-sie-da/pfarrbueros/",
+      "title": "St. Maximilian Kolbe: Gemeindebüros",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-joseph-ehe",
+      "url": "https://www.sankt-joseph-wandsbek.de/sakramente/ehe/",
+      "title": "St. Joseph Wandsbek: Trautermine und Voraussetzungen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-joseph-kontakt",
+      "url": "https://www.sankt-joseph-wandsbek.de/kontakt/",
+      "title": "St. Joseph Wandsbek: Gemeindebüro",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-agnes-ehe",
+      "url": "https://st-agnes-tonndorf.de/sakramente-und-segnungen/",
+      "title": "St. Agnes Tonndorf: Hochzeit und Terminabsprache",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-agnes-kontakt",
+      "url": "https://st-agnes-tonndorf.de/ansprechpartner/",
+      "title": "St. Agnes Tonndorf: aktuelle Ansprechpartner",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-franziskus-maroniten",
+      "url": "https://st-franziskus-hamburg.de/maronitische-kirche/",
+      "title": "St. Johannis: maronitische Gemeinde mit Taufen und Trauungen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-franziskus-bueros",
+      "url": "https://st-franziskus-hamburg.de/pfarrbueros/",
+      "title": "St. Franziskus: zuständige Gemeindebüros",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-bakhita-kirchen",
+      "url": "https://hljosefina-bakhita.de/karte_Kirchen.php",
+      "title": "Heilige Josefina Bakhita: Gemeinden",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-bakhita-buero",
+      "url": "https://hljosefina-bakhita.de/Pfarrbuero__10582",
+      "title": "Heilige Josefina Bakhita: Pfarrbüro",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-bakhita-reform",
+      "url": "https://hljosefina-bakhita.de/VIR-Vermoegens-und-Immobilienreform_neue-Informationen-September-2026_11715",
+      "title": "Heilige Josefina Bakhita: Standortplanung, September 2026",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-bakhita-thomas",
+      "url": "https://www.trauerzentrum-hamburg.de/",
+      "title": "St. Thomas Morus: Trauerzentrum und Kolumbarium",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-franziskus-ehe",
+      "url": "https://st-franziskus-hamburg.de/sakramente/",
+      "title": "St. Franziskus: veröffentlichte Sakramenteninformationen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-elisabeth-bueros",
+      "url": "https://pfarrei-heilige-elisabeth.de/kontakt/pfarrbueros/",
+      "title": "Heilige Elisabeth: Pfarrbüros",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-elisabeth-marien",
+      "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/st-marien/",
+      "title": "St. Marien, Hamburg-Bergedorf – Pfarrei Heilige Elisabeth",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-elisabeth-christophorus",
+      "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/st-christophorus/",
+      "title": "St. Christophorus, Hamburg-Lohbrügge – Pfarrei Heilige Elisabeth",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-elisabeth-stein",
+      "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/edith-stein-kirche/",
+      "title": "Edith-Stein, Hamburg-Neuallermöhe – Pfarrei Heilige Elisabeth",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-paulus",
+      "url": "https://sankt-paulus-billstedt.de/",
+      "title": "St. Paulus und St. Stephanus: Gemeinden und Kontakt",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-paulus-adressen",
+      "url": "https://sankt-paulus-billstedt.de/anschriften/",
+      "title": "St. Paulus und St. Stephanus: Anschriften",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-ansgar-dom",
+      "url": "https://sankt-ansgar.de/gemeinden/st-marien-dom/",
+      "title": "Domgemeinde: St. Erich wegen baulicher Mängel geschlossen",
+      "checkedOn": "2026-09-27"
+    },
+    {
+      "id": "kath-kolbe-profanierung",
+      "url": "https://epub.sub.uni-hamburg.de/epub/volltexte/2015/39035/pdf/20151.pdf",
+      "title": "Erzbistum Hamburg: Amtsblatt Januar 2015, Profanierung St. Maximilian Kolbe",
+      "checkedOn": "2026-09-27"
+    }
+  ],
+  "additionalResearch": [
+    {
+      "id": "st-ansgar-niendorf",
+      "name": "St. Ansgar",
+      "area": "Niendorf",
+      "status": "wedding_offer_not_found",
+      "note": "Die Kirche gehört zur Pfarrei Heilige Josefina Bakhita. In den geprüften Gemeindeinformationen, dem aktuellen Pfarrwegweiser und Pfarrbrief haben wir keinen konkreten Anmeldeweg für eine Trauung gefunden. Fragt beim Pfarrbüro, ob und unter welchen Bedingungen Ihr hier heiraten könnt.",
+      "contact": {
+        "role": "Pfarrbüro Heilige Josefina Bakhita",
+        "phone": "040 589 748 0",
+        "email": "pfarrbuero@hljosefina-bakhita.de"
+      },
+      "sourceIds": [
+        "kath-bakhita-kirchen",
+        "kath-bakhita-buero",
+        "kath-bakhita-reform"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-gabriel-eidelstedt",
+      "name": "St. Gabriel",
+      "area": "Eidelstedt",
+      "status": "wedding_offer_not_found",
+      "note": "Die Kirche gehört zur Pfarrei Heilige Josefina Bakhita. In den geprüften Gemeindeinformationen, dem aktuellen Pfarrwegweiser und Pfarrbrief haben wir keinen konkreten Anmeldeweg für eine Trauung gefunden. Fragt beim Pfarrbüro, ob und unter welchen Bedingungen Ihr hier heiraten könnt.",
+      "contact": {
+        "role": "Pfarrbüro Heilige Josefina Bakhita",
+        "phone": "040 589 748 0",
+        "email": "pfarrbuero@hljosefina-bakhita.de"
+      },
+      "sourceIds": [
+        "kath-bakhita-kirchen",
+        "kath-bakhita-buero",
+        "kath-bakhita-reform"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-jakobus-lurup",
+      "name": "St. Jakobus",
+      "area": "Lurup",
+      "status": "wedding_offer_not_found",
+      "note": "Die Kirche gehört zur Pfarrei Heilige Josefina Bakhita. In den geprüften Gemeindeinformationen, dem aktuellen Pfarrwegweiser und Pfarrbrief haben wir keinen konkreten Anmeldeweg für eine Trauung gefunden. Fragt beim Pfarrbüro, ob und unter welchen Bedingungen Ihr hier heiraten könnt.",
+      "contact": {
+        "role": "Pfarrbüro Heilige Josefina Bakhita",
+        "phone": "040 589 748 0",
+        "email": "pfarrbuero@hljosefina-bakhita.de"
+      },
+      "sourceIds": [
+        "kath-bakhita-kirchen",
+        "kath-bakhita-buero",
+        "kath-bakhita-reform"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-thomas-morus",
+      "name": "St. Thomas Morus",
+      "area": "Stellingen",
+      "status": "wedding_offer_not_found",
+      "note": "Die Kirche gehört zur Pfarrei Heilige Josefina Bakhita. In den geprüften Gemeindeinformationen, dem aktuellen Pfarrwegweiser und Pfarrbrief haben wir keinen konkreten Anmeldeweg für eine Trauung gefunden. Fragt beim Pfarrbüro, ob und unter welchen Bedingungen Ihr hier heiraten könnt. St. Thomas Morus wird als Trauerzentrum und Kolumbarium genutzt; das ist kein Beleg für ein Trauangebot.",
+      "contact": {
+        "role": "Pfarrbüro Heilige Josefina Bakhita",
+        "phone": "040 589 748 0",
+        "email": "pfarrbuero@hljosefina-bakhita.de"
+      },
+      "sourceIds": [
+        "kath-bakhita-kirchen",
+        "kath-bakhita-buero",
+        "kath-bakhita-reform",
+        "kath-bakhita-thomas"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-franziskus-barmbek",
+      "name": "St. Franziskus",
+      "area": "Barmbek-Nord",
+      "status": "wedding_offer_not_found",
+      "note": "Gemeinde und zuständiges Büro sind offiziell belegt. Die geprüfte Sakramentenseite veröffentlicht aber keinen örtlichen Anmeldeweg für Hochzeiten. Fragt zuerst, ob eine Trauung in dieser Kirche angeboten wird, wer Euch begleitet und welche Unterlagen erforderlich sind.",
+      "contact": {
+        "role": "Gemeindebüro St. Franziskus",
+        "phone": "040 5247355 30",
+        "email": "buerobarmbek@st-franziskus-hamburg.de"
+      },
+      "sourceIds": [
+        "kath-franziskus-ehe",
+        "kath-franziskus-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-olaf-horn",
+      "name": "St. Olaf",
+      "area": "Horn",
+      "status": "wedding_offer_not_found",
+      "note": "Gemeinde und zuständiges Büro sind offiziell belegt. Die geprüfte Sakramentenseite veröffentlicht aber keinen örtlichen Anmeldeweg für Hochzeiten. Fragt zuerst, ob eine Trauung in dieser Kirche angeboten wird, wer Euch begleitet und welche Unterlagen erforderlich sind.",
+      "contact": {
+        "role": "Gemeindebüro St. Olaf",
+        "phone": "040 5247355 20",
+        "email": "buerohorn@st-franziskus-hamburg.de"
+      },
+      "sourceIds": [
+        "kath-franziskus-ehe",
+        "kath-franziskus-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "herz-jesu-hamm",
+      "name": "Herz Jesu",
+      "area": "Hamm",
+      "status": "wedding_offer_not_found",
+      "note": "Gemeinde und zuständiges Büro sind offiziell belegt. Die geprüfte Sakramentenseite veröffentlicht aber keinen örtlichen Anmeldeweg für Hochzeiten. Fragt zuerst, ob eine Trauung in dieser Kirche angeboten wird, wer Euch begleitet und welche Unterlagen erforderlich sind.",
+      "contact": {
+        "role": "Gemeindebüro Herz Jesu",
+        "phone": "040 5247355 40",
+        "email": "buerohamm@st-franziskus-hamburg.de"
+      },
+      "sourceIds": [
+        "kath-franziskus-ehe",
+        "kath-franziskus-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-marien-bergedorf",
+      "name": "St. Marien",
+      "area": "Bergedorf",
+      "status": "wedding_offer_not_found",
+      "note": "Die offizielle Seite bestätigt Kirche und Pfarreizugehörigkeit. Ein öffentlich beschriebener örtlicher Weg zur Traureservierung ließ sich nicht belegen. Das Pfarrbüro Bergedorf kann klären, ob Eure Trauung hier möglich ist und wer für die Vorbereitung zuständig ist.",
+      "contact": {
+        "role": "Pfarrbüro Bergedorf",
+        "phone": "040 721 60 00",
+        "email": null
+      },
+      "sourceIds": [
+        "kath-elisabeth-marien",
+        "kath-elisabeth-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-christophorus-lohbruegge",
+      "name": "St. Christophorus",
+      "area": "Lohbrügge",
+      "status": "wedding_offer_not_found",
+      "note": "Die offizielle Seite bestätigt Kirche und Pfarreizugehörigkeit. Ein öffentlich beschriebener örtlicher Weg zur Traureservierung ließ sich nicht belegen. Das Pfarrbüro Bergedorf kann klären, ob Eure Trauung hier möglich ist und wer für die Vorbereitung zuständig ist.",
+      "contact": {
+        "role": "Pfarrbüro Bergedorf",
+        "phone": "040 721 60 00",
+        "email": null
+      },
+      "sourceIds": [
+        "kath-elisabeth-christophorus",
+        "kath-elisabeth-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "edith-stein-neuallermoehe",
+      "name": "Edith-Stein-Kirche",
+      "area": "Neuallermöhe",
+      "status": "wedding_offer_not_found",
+      "note": "Die offizielle Seite bestätigt Kirche und Pfarreizugehörigkeit. Ein öffentlich beschriebener örtlicher Weg zur Traureservierung ließ sich nicht belegen. Das Pfarrbüro Bergedorf kann klären, ob Eure Trauung hier möglich ist und wer für die Vorbereitung zuständig ist.",
+      "contact": {
+        "role": "Pfarrbüro Bergedorf",
+        "phone": "040 721 60 00",
+        "email": null
+      },
+      "sourceIds": [
+        "kath-elisabeth-stein",
+        "kath-elisabeth-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-paulus-billstedt",
+      "name": "St. Paulus",
+      "area": "Billstedt",
+      "status": "wedding_offer_not_found",
+      "note": "Gemeinde und Büro sind belegt, ein eigener öffentlicher Trau-Anmeldeweg jedoch nicht. Die Regeln von St. Joseph Wandsbek übertragen wir nicht automatisch auf diesen Standort derselben Pfarrei. Fragt das Büro nach Kirche beziehungsweise Gottesdienstraum, Termin und Vorbereitung.",
+      "contact": {
+        "role": "Pfarrbüro St. Paulus",
+        "phone": "040 731 38 35",
+        "email": "pfarrbuero@sankt-paulus-billstedt.de"
+      },
+      "sourceIds": [
+        "kath-paulus",
+        "kath-paulus-adressen"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-stephanus-muemmelmannsberg",
+      "name": "St. Stephanus",
+      "area": "Billstedt / Mümmelmannsberg",
+      "status": "wedding_offer_not_found",
+      "note": "Gemeinde und Büro sind belegt, ein eigener öffentlicher Trau-Anmeldeweg jedoch nicht. Die Regeln von St. Joseph Wandsbek übertragen wir nicht automatisch auf diesen Standort derselben Pfarrei. Fragt das Büro nach Kirche beziehungsweise Gottesdienstraum, Termin und Vorbereitung.",
+      "contact": {
+        "role": "Pfarrbüro St. Paulus",
+        "phone": "040 731 38 35",
+        "email": "pfarrbuero@sankt-paulus-billstedt.de"
+      },
+      "sourceIds": [
+        "kath-paulus",
+        "kath-paulus-adressen"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-vinzenz-kapelle",
+      "name": "Kapelle St. Vinzenz",
+      "area": "Eißendorf",
+      "status": "wedding_offer_not_found",
+      "note": "Die Pfarrei führt die Kapelle der Seniorenwohnanlage als kirchlichen Ort. Ein Trauangebot für externe Paare ist damit nicht belegt. Klärt die Nutzung ausdrücklich über das Pfarrbüro.",
+      "contact": {
+        "role": "Pfarrbüro St. Maximilian Kolbe",
+        "phone": "040 70 20 89 20",
+        "email": "info@maximiliankolbe-hh.de"
+      },
+      "sourceIds": [
+        "kath-kolbe-kirchen",
+        "kath-kolbe-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-erich-rothenburgsort",
+      "name": "St. Erich",
+      "area": "Rothenburgsort",
+      "status": "closed_until_further_notice",
+      "note": "Die Domgemeinde bezeichnet St. Erich wegen baulicher Mängel als bis auf Weiteres geschlossen. Für einen künftigen Wunschtermin fragt nach dem tatsächlichen Nutzungsstand oder einer anderen Kirche der Pfarrei. Eine Wiederöffnung ist in der geprüften Quelle nicht zugesagt.",
+      "contact": {
+        "role": "Pfarrbüro St. Ansgar",
+        "phone": "040 28 49 90 70",
+        "email": "pfarrbuero@sankt-ansgar.de"
+      },
+      "sourceIds": [
+        "kath-ansgar-dom",
+        "kath-ansgar-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
+    },
+    {
+      "id": "st-maximilian-kolbe-ehemalig",
+      "name": "Ehemalige St.-Maximilian-Kolbe-Kirche",
+      "area": "Wilhelmsburg",
+      "status": "deconsecrated",
+      "note": "Das kirchliche Amtsblatt dokumentiert die Profanierung mit Wirkung vom 11. Januar 2015. Das ehemalige Kirchengebäude wird deshalb nicht als katholische Traukirche aufgeführt. Für eine katholische Trauung in Wilhelmsburg ist das Büro von St. Bonifatius der passende erste Kontakt.",
+      "contact": {
+        "role": "Gemeindebüro St. Bonifatius Wilhelmsburg",
+        "phone": "040 70 20 89 30",
+        "email": "buero.wilhelmsburg@maximiliankolbe-hh.de"
+      },
+      "sourceIds": [
+        "kath-kolbe-profanierung",
+        "kath-kolbe-bueros"
+      ],
+      "checkedOn": "2026-09-27",
+      "availability": null
     }
   ]
 }

@@ -16,8 +16,10 @@ let number = 0;
       {'form' in contact && contact.form && <a href={contact.form}><span>Anmeldung</span>Zum Formular der Gemeinde ↗</a>}
     </div>
     {!contact.phone && !contact.email && <p>Die Kontakte der einzelnen Kirchen findet Ihr auf der unten verlinkten Gemeindeseite.</p>}
+    {'contactNote' in profile && profile.contactNote && <p>{profile.contactNote}</p>}
   </section>
-  {church.hasBuildingNote && <aside class:list={['church-notice', { 'church-notice--restricted': church.isRestricted }]} aria-label="Bau und Nutzung"><strong>{church.isRestricted ? 'Wiederaufbau: Trauort vorher absprechen' : 'Hinweis zum Kirchengebäude'}</strong><p>{church.building.note}</p></aside>}
+  {church.offerNote && <p class="church-evidence"><strong>{church.isParishOffer ? 'Trauung über die Pfarrei anfragen.' : 'Was die Quelle belegt.'}</strong> {church.offerNote}</p>}
+  {church.hasBuildingNote && <aside class:list={['church-notice', { 'church-notice--restricted': church.isRestricted || church.building.status === 'temporary_closure' }]} aria-label="Bau und Nutzung"><strong>{church.buildingLabel}</strong><p>{church.building.note}</p></aside>}
   <div class="church-questions" aria-label={`Fragen zur Trauung: ${church.name}`}>
     <ChurchQuestion question="Wie reservieren wir einen Trautermin?" number={++number} level={Heading} open>
       <ol class="church-steps">{profile.steps.map(step => <li>{step}</li>)}</ol>
@@ -26,7 +28,7 @@ let number = 0;
     {profile.requirements.length > 0 && <ChurchQuestion question="Welche Voraussetzungen und Unterlagen brauchen wir?" number={++number} level={Heading}><ul class="church-bullets">{profile.requirements.map(item => <li>{item}</li>)}</ul></ChurchQuestion>}
     {'schedule' in profile && profile.schedule && <ChurchQuestion question="An welchen Tagen und zu welchen Uhrzeiten können wir heiraten?" number={++number} level={Heading}><p>{profile.schedule}</p><p>Ob Euer Wunschdatum noch frei ist, erfahrt Ihr beim oben genannten Kontakt.</p></ChurchQuestion>}
     {'costs' in profile && profile.costs && <ChurchQuestion question="Was kostet die kirchliche Trauung hier?" number={++number} level={Heading}><p>{profile.costs}</p></ChurchQuestion>}
-    {('photography' in profile && profile.photography || 'localRules' in profile && profile.localRules) && <ChurchQuestion question={'localRules' in profile && profile.localRules ? 'Was gilt für Fotos und Musik in der Kirche?' : 'Dürfen wir während der Trauung fotografieren lassen?'} number={++number} level={Heading}>
+    {('photography' in profile && profile.photography || 'localRules' in profile && profile.localRules) && <ChurchQuestion question={'localRules' in profile && profile.localRules ? 'Welche Regeln und Besonderheiten gelten vor Ort?' : 'Dürfen wir während der Trauung fotografieren lassen?'} number={++number} level={Heading}>
       {'photography' in profile && profile.photography && <p>{profile.photography}</p>}
       {'localRules' in profile && profile.localRules && <p>{profile.localRules}</p>}
     </ChurchQuestion>}

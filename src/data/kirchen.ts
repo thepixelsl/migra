@@ -46,6 +46,9 @@ const profileHighlights: Record<string, string> = {
 };
 
 const regions: Record<string, string> = {
+  'Farmsen-Berne':'Nordosten', Poppenbüttel:'Nordosten', Volksdorf:'Nordosten', Bramfeld:'Nordosten', Wandsbek:'Nordosten', Tonndorf:'Nordosten',
+  Langenhorn:'Norden', Winterhude:'Innenstadt & Alster', 'Barmbek-Süd':'Innenstadt & Alster', Steilshoop:'Nordosten',
+  'St. Pauli':'Westen', 'Altona-Altstadt':'Westen', Osdorf:'Westen', Harburg:'Süderelbe', Wilstorf:'Süderelbe', 'Neugraben-Fischbek':'Süderelbe', Wilhelmsburg:'Süderelbe',
   Rahlstedt:'Nordosten', Bergstedt:'Nordosten', 'Lemsahl-Mellingstedt':'Nordosten', 'Wohldorf-Ohlstedt':'Nordosten', 'Wellingsbüttel':'Nordosten',
   Niendorf:'Norden', Eppendorf:'Norden', Harvestehude:'Innenstadt & Alster', 'Bereich Harvestehude/Rotherbaum':'Innenstadt & Alster', Uhlenhorst:'Innenstadt & Alster', Neustadt:'Innenstadt & Alster', Altstadt:'Innenstadt & Alster', 'St. Georg':'Innenstadt & Alster',
   Eimsbüttel:'Westen', Ottensen:'Westen', Othmarschen:'Westen', 'Groß Flottbek':'Westen', Nienstedten:'Westen', Blankenese:'Westen',
@@ -64,10 +67,17 @@ export const churches = research.venues.map(venue => {
     sources: sourceIds.map(id => research.sources.find(source => source.id === id)!).filter(Boolean),
     isRestricted: venue.building.status === 'restoration_in_progress',
     hasBuildingNote: venue.building.status !== 'not_individually_verified',
-    highlight: profileHighlights[profile.id],
+    highlight: 'highlight' in venue ? venue.highlight : profileHighlights[profile.id],
+    offerNote: 'offerNote' in venue ? venue.offerNote : null,
+    isParishOffer: venue.offerEvidence === 'official_parish_offer',
+    isCatholic: venue.denomination !== 'evangelisch-lutherisch',
+    buildingLabel: venue.building.status === 'temporary_closure' ? 'Vorübergehend geschlossen' : venue.building.status === 'restoration_in_progress' ? 'Kirchengebäude im Wiederaufbau' : 'Bauhinweis beachten',
   };
 });
 export type Church = (typeof churches)[number];
+export const catholicChurches = churches.filter(church => church.isCatholic);
+export const additionalChurchResearch = research.additionalResearch.map(entry => ({...entry, sources: entry.sourceIds.map(id => research.sources.find(source => source.id === id)!)}));
+export const directoryScope = `${churches.length} Kirchen und kirchliche Trauorte, davon ${catholicChurches.length} katholische Kirchen. Örtliche Traubelege und allgemeine Pfarreiangebote sind gekennzeichnet. Weitere ${additionalChurchResearch.length} katholische Standorte mit offenem Traunachweis, Schließung oder Umnutzung stehen separat. Kein vollständiges Verzeichnis aller Hamburger Trauorte.`;
 export const churchRegions = [...new Set(churches.map(church => church.region))].sort((a,b)=>a.localeCompare(b,'de'));
 export const churchPortraits = churches.filter(church => church.portrait);
 export const phoneHref = (phone: string) => `tel:${phone.replace(/[^+\d]/g,'')}`;
@@ -79,7 +89,7 @@ export function churchCollection(siteUrl: string) {
       '@type':'ListItem', position:index+1, item:{
         '@type':church.venueType==='Kirche'?'Church':'CivicStructure',
         '@id':`${siteUrl}${finderPath}#ort-${church.id}`, name:church.name, url:`${siteUrl}${church.url}`,
-        description:church.isRestricted?church.building.note:`${church.area}. Trauangebot laut offizieller Gemeindequelle; Wunschtermin und individuelle Voraussetzungen bei der Gemeinde bestätigen.`,
+        description:church.hasBuildingNote?church.building.note:church.offerNote??`${church.area}. Trauangebot laut offizieller Gemeindequelle; Wunschtermin und individuelle Voraussetzungen bei der Gemeinde bestätigen.`,
       },
     })),
   };
@@ -87,15 +97,18 @@ export function churchCollection(siteUrl: string) {
 
 export function churchDirectoryData(siteUrl: string) {
   return {
-    schemaVersion:1, language:'de', checkedOn:kirchenStand, canonicalUrl:`${siteUrl}${finderPath}`,
-    scope:'38 offiziell belegte Trauorte: 36 Hamburger Kirchen, Immanuel-Haus und Auferstehungskirche Braak. Kein vollständiges Hamburger Verzeichnis.',
+    schemaVersion:2, language:'de', checkedOn:kirchenStand, canonicalUrl:`${siteUrl}${finderPath}`,
+    scope:directoryScope,
+    evidenceDefinitions:{explicit_official_offer:'Offizielle Quelle zum Trauangebot der Kirche.',official_parish_offer:'Trauanfrage oder Ehevorbereitung auf Pfarreiebene belegt; Nutzung der einzelnen Kirche muss ausdrücklich bestätigt werden.'},
+    additionalResearch:additionalChurchResearch,
     availabilityKnown:false, createsReservation:false,
     bookingAuthority:'Die jeweilige Kirchengemeinde. Artbild-Fotografie vermittelt Informationen und bietet fotografische Begleitung an.',
     churches:churches.map(church=>({
       id:church.id, name:church.name, area:church.area, region:church.region, denomination:church.denomination,
       type:church.venueType, scope:church.scope, url:`${siteUrl}${church.url}`, checkedOn:kirchenStand,
-      offerEvidence:'official_church_source', availability:null, building:church.building,
+      offerEvidence:church.offerEvidence, offerNote:church.offerNote, availability:null, building:church.building,
       contact:church.contact, bookingSteps:church.profile.steps, requirements:church.profile.requirements,
+      contactNote:'contactNote' in church.profile?church.profile.contactNote:null,
       bindingRule:church.profile.bindingRule, questionsToClarify:church.profile.unknowns,
       schedule:'schedule' in church.profile?church.profile.schedule:null,
       costs:'costs' in church.profile?church.profile.costs:null,
