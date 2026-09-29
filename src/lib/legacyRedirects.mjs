@@ -20,13 +20,23 @@ const PATH_REDIRECTS = new Map([
   ["/nd-filter-tabelle/amp/", "/nd-filter-tabelle/"],
   // Existing redirect, also used to keep migrated internal links direct.
   ["/datenschutzerklaerung/", "/datenschutz/"],
+  // Collection and calendar aliases share the same canonical redirect path.
+  ["/gallery/", "/portfolio/"],
+  ["/gallery-category/", "/portfolio/"],
+  ["/traukalender-hamburg/", "/trautermin-hamburg-online-reservieren/"],
+  ["/blog/traukalender-hamburg/", "/trautermin-hamburg-online-reservieren/"],
+  ["/blog/trautermin-hamburg-online-reservieren/", "/trautermin-hamburg-online-reservieren/"],
+  // The migrated download is still publicly available (2026-09-29 audit).
+  ["/wp-content/uploads/2020/05/tfp-vertrag-dsgvo.pdf", "/migrated-assets/tfp-shooting-hamburg/tfp-vertrag-dsgvo.pdf"],
+  // The original Photoshop action is available again on its current guide.
+  ["/shop/luminanzmasken-aktion-fuer-photoshop-cc/", "/luminanzmasken-photoshop-aktion/"],
 ]);
 
 /** Return a new same-origin URL for a reviewed legacy alias, or null. */
 export function legacyContentRedirect(url) {
   const pathname = url.pathname.replace(/\/{2,}/g, "/");
   const slashPath = pathname.endsWith("/") ? pathname : `${pathname}/`;
-  let target = PATH_REDIRECTS.get(slashPath);
+  let target = PATH_REDIRECTS.get(pathname) || PATH_REDIRECTS.get(slashPath);
 
   // Only the homepage query form belonged to WordPress. Never interpret an
   // unrelated page/API parameter as a post ID, or guess an unknown post's home.

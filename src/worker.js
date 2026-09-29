@@ -38,36 +38,6 @@ function normalizePathname(pathname) {
   return pathname.replace(/\/{2,}/g, "/");
 }
 
-function collectionRootRedirect(pathname) {
-  if (pathname === "/gallery" || pathname === "/gallery/") return "/portfolio/";
-  if (pathname === "/gallery-category" || pathname === "/gallery-category/") return "/portfolio/";
-  return null;
-}
-
-function canonicalContentRedirect(pathname) {
-  if (
-    pathname === "/datenschutzerklaerung"
-    || pathname === "/datenschutzerklaerung/"
-  ) {
-    return "/datenschutz/";
-  }
-
-  const traukalenderAliases = new Set([
-    "/traukalender-hamburg",
-    "/traukalender-hamburg/",
-    "/blog/traukalender-hamburg",
-    "/blog/traukalender-hamburg/",
-    "/blog/trautermin-hamburg-online-reservieren",
-    "/blog/trautermin-hamburg-online-reservieren/",
-  ]);
-
-  if (traukalenderAliases.has(pathname)) {
-    return "/trautermin-hamburg-online-reservieren/";
-  }
-
-  return null;
-}
-
 function looksLikePagePath(pathname) {
   const lastSegment = pathname.split("/").pop() || "";
   return pathname.endsWith("/") || !lastSegment.includes(".") || lastSegment.endsWith(".html");
@@ -128,49 +98,36 @@ export default {
       ? legacyContentRedirect(url)
       : null;
 
-    if (legacyDestination) {
-      // Combine protocol, host, slash and legacy-path changes in one hop.
-      if (isHttpRequest(request, url)) legacyDestination.protocol = "https:";
-      if (["www.artbild-fotografie.de", "www.artbild-fotografie.ch"].includes(legacyDestination.hostname)) {
-        legacyDestination.hostname = legacyDestination.hostname.replace(/^www\./, "");
+    const destination = legacyDestination || new URL(url.href);
+    destination.pathname = normalizePathname(destination.pathname);
+    if (isHttpRequest(request, url)) destination.protocol = "https:";
+    if (["www.artbild-fotografie.de", "www.artbild-fotografie.ch"].includes(destination.hostname)) {
+      destination.hostname = destination.hostname.replace(/^www\./, "");
+    }
+
+    if (destination.href !== url.href) {
+      // Fold the asset server's directory redirect into host/protocol changes.
+      // Probe only read requests and accept only a same-origin trailing slash;
+      // never invent slash redirects for missing pages, files or API routes.
+      if (!legacyDestination && (request.method === "GET" || request.method === "HEAD")
+        && !destination.pathname.endsWith("/") && looksLikePagePath(destination.pathname)
+        && !destination.pathname.startsWith("/api/") && env.ASSETS?.fetch) {
+        const probe = await env.ASSETS.fetch(new Request(destination, { method: "HEAD" }));
+        const location = probe.headers.get("location");
+        if ([301, 308].includes(probe.status) && location) {
+          const assetDestination = new URL(location, destination);
+          if (assetDestination.origin === destination.origin
+            && assetDestination.pathname === `${destination.pathname}/`
+            && assetDestination.search === destination.search) {
+            destination.pathname = assetDestination.pathname;
+          }
+        }
+        await probe.body?.cancel();
       }
       return withSecurityHeaders(new Response(null, {
         status: 301,
-        headers: { Location: legacyDestination.toString() },
-      }));
-    }
-
-    const normalizedPathname = normalizePathname(url.pathname);
-    const collectionRedirectPath = collectionRootRedirect(normalizedPathname);
-    const contentRedirectPath = canonicalContentRedirect(normalizedPathname);
-
-    if (normalizedPathname !== url.pathname || collectionRedirectPath || contentRedirectPath) {
-      url.pathname = collectionRedirectPath || contentRedirectPath || normalizedPathname;
-      return withSecurityHeaders(new Response(null, {
-        status: 301,
         headers: {
-          Location: url.toString(),
-        },
-      }));
-    }
-
-    if (isHttpRequest(request, url)) {
-      url.protocol = "https:";
-      return new Response(null, {
-        status: 301,
-        headers: {
-          Location: url.toString(),
-        },
-      });
-    }
-
-    const canonicalHosts = new Set(["www.artbild-fotografie.de", "www.artbild-fotografie.ch"]);
-    if (canonicalHosts.has(url.hostname)) {
-      url.hostname = url.hostname.replace(/^www\./, "");
-      return withSecurityHeaders(new Response(null, {
-        status: 301,
-        headers: {
-          Location: url.toString(),
+          Location: destination.toString(),
         },
       }));
     }

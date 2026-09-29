@@ -27,6 +27,14 @@ const REDIRECTS = [
   ["/gallery/traumhochzeit-in-paris/amp/", "/gallery/traumhochzeit-in-paris/"],
   ["/gallery/venedig/amp/", "/gallery/venedig/"],
   ["/nd-filter-tabelle/amp/", "/nd-filter-tabelle/"],
+  ["/datenschutzerklaerung/", "/datenschutz/"],
+  ["/gallery/", "/portfolio/"],
+  ["/gallery-category/", "/portfolio/"],
+  ["/traukalender-hamburg/", "/trautermin-hamburg-online-reservieren/"],
+  ["/blog/traukalender-hamburg/", "/trautermin-hamburg-online-reservieren/"],
+  ["/blog/trautermin-hamburg-online-reservieren/", "/trautermin-hamburg-online-reservieren/"],
+  ["/wp-content/uploads/2020/05/tfp-vertrag-dsgvo.pdf", "/migrated-assets/tfp-shooting-hamburg/tfp-vertrag-dsgvo.pdf"],
+  ["/shop/luminanzmasken-aktion-fuer-photoshop-cc/", "/luminanzmasken-photoshop-aktion/"],
 ];
 
 let directory;
@@ -40,6 +48,12 @@ before(async () => {
   const assetDirectory = path.join(directory, "dist");
   const targets = new Set(["/", "/portfolio/", "/datenschutz/", ...REDIRECTS.map(([, target]) => target)]);
   for (const target of targets) {
+    if (target.endsWith(".pdf")) {
+      const targetFile = path.join(assetDirectory, target);
+      await mkdir(path.dirname(targetFile), { recursive: true });
+      await writeFile(targetFile, "%PDF-1.4 migrated download fixture");
+      continue;
+    }
     const targetDirectory = path.join(assetDirectory, target);
     await mkdir(targetDirectory, { recursive: true });
     await writeFile(path.join(targetDirectory, "index.html"), `<!doctype html><link rel="canonical" href="${production}${target}"><h1>${target}</h1>`);
@@ -62,8 +76,8 @@ after(async () => {
   if (directory) await rm(directory, { recursive: true, force: true });
 });
 
-test("all 16 approved legacy URLs redirect once to working canonical destinations", async () => {
-  assert.equal(REDIRECTS.length, 16);
+test("all reviewed legacy URLs redirect once to working canonical destinations", async () => {
+  assert.equal(REDIRECTS.length, 24);
   for (const [source, target] of REDIRECTS) {
     for (const method of ["GET", "HEAD"]) {
       const response = await fetch(baseUrl + source, { method, headers: productionHeaders, redirect: "manual" });
@@ -76,13 +90,18 @@ test("all 16 approved legacy URLs redirect once to working canonical destination
     assert.equal(destination.status, 200, target);
     assert.equal(destination.headers.has("location"), false, target);
     assert.equal(destination.headers.has("x-robots-tag"), false, target);
-    assert.ok((await destination.text()).includes(`href="${production}${target}"`), target);
+    if (target.endsWith(".pdf")) {
+      assert.equal(destination.headers.get("content-type"), "application/pdf");
+      assert.match(await destination.text(), /^%PDF-/);
+    } else {
+      assert.ok((await destination.text()).includes(`href="${production}${target}"`), target);
+    }
   }
 });
 
 test("approved path aliases handle missing and repeated slashes plus www/http in one hop", async () => {
   for (const [source, target] of REDIRECTS.filter(([source]) => !source.includes("?"))) {
-    for (const variant of [source.slice(0, -1), source.replace(/\//g, "//")]) {
+    for (const variant of [source.endsWith("/") ? source.slice(0, -1) : source, source.replace(/\//g, "//")]) {
       // Exercise the shared worker directly: a Node HTTP server treats // as a
       // network-path reference, unlike the already parsed platform Request URL.
       const response = await worker.fetch(new Request(`http://www.artbild-fotografie.de${variant}?utm_source=legacy`), {}, {});
@@ -90,6 +109,24 @@ test("approved path aliases handle missing and repeated slashes plus www/http in
       assert.equal(response.headers.get("location"), `${production}${target}?utm_source=legacy`, variant);
     }
   }
+});
+
+test("HTTP, www and an existing page's trailing slash resolve in one hop", async () => {
+  for (const source of ["/about", "/about/", "/portfolio", "/portfolio/"]) {
+    for (const method of ["GET", "HEAD"]) {
+      const response = await fetch(`${baseUrl}${source}?utm_source=redirect&a=1&a=2`, {
+        method, redirect: "manual",
+        headers: { "X-Forwarded-Host": "www.artbild-fotografie.de", "X-Forwarded-Proto": "http" },
+      });
+      assert.equal(response.status, 301, source);
+      assert.equal(response.headers.get("location"), `${production}${source.replace(/\/$/, "")}/?utm_source=redirect&a=1&a=2`);
+      assert.match(response.headers.get("strict-transport-security"), /max-age=/);
+    }
+  }
+  const missing = await fetch(`${baseUrl}/does-not-exist`, {
+    redirect: "manual", headers: { "X-Forwarded-Host": "www.artbild-fotografie.de", "X-Forwarded-Proto": "http" },
+  });
+  assert.equal(missing.headers.get("location"), `${production}/does-not-exist`, "do not invent a directory for a missing page");
 });
 
 test("query cleanup is limited to matched aliases and preserves other parameters and fragments", () => {
@@ -124,7 +161,7 @@ test("retired taxonomies, feeds, unapproved archives and downloads remain genuin
   for (const source of [
     "/tag/hochzeitsfotograf/", "/gallery-tag/bilder/", "/gallery/traumhochzeit-in-paris/feed/",
     "/gallery-category/hamburg-travel/", "/portfolio/page/2/", "/web-stories/hochzeit-hamburg-mitte/",
-    "/wp-content/uploads/2020/05/tfp-vertrag-dsgvo.pdf", "/gallery/unknown/amp/",
+    "/wp-content/uploads/2020/06/ND-Filter-Tabelle.xlsx", "/gallery/unknown/amp/",
   ]) {
     const response = await fetch(baseUrl + source, { headers: productionHeaders, redirect: "manual" });
     assert.equal(response.status, 404, source);
