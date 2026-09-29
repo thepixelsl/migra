@@ -170,6 +170,9 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
   assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/\*\.clarity\.ms/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.clarity\.ms/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/c\.bing\.com/);
+  assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/bzrcdn\.openai\.com/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/bzrcdn\.openai\.com/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/bzr\.openai\.com/);
   // GA4 may select a regional analytics.google.com collection endpoint.
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.analytics\.google\.com/);
   assert.doesNotMatch(contentSecurityPolicy, /https:\/\/\*\.google\.com|doubleclick\.net/);

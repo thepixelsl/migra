@@ -33,6 +33,10 @@ const configuredGa4DataRetentionMonths = String(
     || (environment === "production" ? productionTrackingDefaults.ga4DataRetentionMonths : ""),
 ).trim();
 const ga4DataRetentionMonths = configuredGa4DataRetentionMonths || "2";
+const openaiAdsPixelId = String(
+  buildEnvironment.PUBLIC_OPENAI_ADS_PIXEL_ID
+    ?? (environment === "production" ? productionTrackingDefaults.openaiAdsPixelId : ""),
+).trim();
 
 const fail = (message) => {
   console.error(`Tracking-Konfiguration ungültig: ${message}`);
@@ -47,6 +51,10 @@ if (!allowedEnvironments.has(environment)) {
 
 if (!["2", "14"].includes(ga4DataRetentionMonths)) {
   fail("PUBLIC_GA4_DATA_RETENTION_MONTHS muss 2 oder 14 sein.");
+}
+
+if (openaiAdsPixelId && !/^[A-Za-z0-9_-]{8,100}$/.test(openaiAdsPixelId)) {
+  fail("PUBLIC_OPENAI_ADS_PIXEL_ID muss eine Pixel-Kennung ohne URL, Leerzeichen oder Sonderzeichen sein.");
 }
 
 const configuredProviderCount = Object.values(values).filter(Boolean).length;
@@ -71,7 +79,7 @@ if (environment === "production") {
   }
 
   const placeholders = /TEST|DEMO|EXAMPLE|PLACEHOLDER|XXXX/i;
-  if (Object.values(values).some((value) => placeholders.test(value))) {
+  if ([...Object.values(values), openaiAdsPixelId].some((value) => placeholders.test(value))) {
     fail("Im Production-Modus sind Test- oder Platzhalter-Kennungen nicht erlaubt.");
   }
 

@@ -9,7 +9,12 @@ test.use({
   },
 });
 
-const providerRequest = /https:\/\/(?:www\.googletagmanager\.com|www\.google-analytics\.com|www\.clarity\.ms|connect\.facebook\.net)\//;
+// These availability fixtures use September 2026 dates; keep them in the future.
+test.beforeEach(async ({ page }) => {
+  await page.clock.setFixedTime(new Date("2026-09-01T10:00:00Z"));
+});
+
+const providerRequest = /https:\/\/(?:www\.googletagmanager\.com|www\.google-analytics\.com|www\.clarity\.ms|connect\.facebook\.net|bzrcdn\.openai\.com|bzr\.openai\.com)\//;
 
 const captureProviderRequests = async (page: Page) => {
   const requests: string[] = [];
@@ -445,6 +450,7 @@ test("updates Google consent when Meta Pixel is selected independently", async (
 
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   await page.getByRole("button", { name: "EINSTELLUNGEN" }).click();
+  await page.getByText("DETAILS ANZEIGEN", { exact: true }).last().click();
   await page.getByLabel("Meta Pixel erlauben").check();
   expect(requests.some((url) => url.includes("googletagmanager.com"))).toBe(false);
   await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
@@ -486,6 +492,7 @@ test("accepts all optional services only after the decision and restores it", as
     googleAnalytics: true,
     microsoftClarity: true,
     metaPixel: true,
+    openaiAds: await page.locator('[data-consent-service="openaiAds"]').count() === 1,
   });
 
   await page.reload({ waitUntil: "domcontentloaded" });
@@ -509,6 +516,7 @@ test("stores only necessary on Escape and keeps the dialog closed after reload",
     googleAnalytics: false,
     microsoftClarity: false,
     metaPixel: false,
+    openaiAds: false,
   });
 
   await page.reload({ waitUntil: "domcontentloaded" });
@@ -603,6 +611,7 @@ test("stores and restores an independent Microsoft Clarity choice", async ({ pag
     googleAnalytics: false,
     microsoftClarity: true,
     metaPixel: false,
+    openaiAds: false,
   });
   expect(stored.state?.services).toEqual(stored.decision?.services);
   expect(stored.update).toMatchObject({
@@ -656,7 +665,7 @@ test("revoking all optional services reloads without GTM", async ({ page }) => {
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeChecked();
 
   await page.getByLabel("Statistik erlauben").uncheck();
-  await page.getByLabel("Meta Pixel erlauben").uncheck();
+  await page.getByLabel("Marketing erlauben").uncheck();
 
   await Promise.all([
     page.waitForEvent("domcontentloaded"),
@@ -675,6 +684,7 @@ test("revoking all optional services reloads without GTM", async ({ page }) => {
     googleAnalytics: false,
     microsoftClarity: false,
     metaPixel: false,
+    openaiAds: false,
   });
   expect(restored.update).toMatchObject({
     consent_google_tag_manager: "denied",
@@ -798,6 +808,7 @@ test("keeps the consent dialog usable without horizontal overflow", async ({ pag
     expect(serviceGeometry.widestRightEdge).toBeLessThanOrEqual(viewport.width + 1);
     await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
     await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
+    await page.getByText("DETAILS ANZEIGEN", { exact: true }).last().click();
     await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   }
 });
@@ -852,6 +863,7 @@ test("the X is a necessary-only decision and revokes prior consent", async ({ pa
       googleAnalytics: false,
       microsoftClarity: false,
       metaPixel: false,
+      openaiAds: false,
     });
   }
 });
@@ -861,7 +873,7 @@ test("shows the compact branded view and three service cards without hosting det
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto(`${baseUrl}/kontakt/`, { waitUntil: "domcontentloaded" });
   const intro = page.locator(".consent-dialog__intro");
-  await expect(intro).toContainText("Schön, dass Du da bist.");
+  await expect(intro).toContainText(/Mit (Deiner )?Zustimmung/);
   await expect(intro).toContainText("Eure Auswahl könnt ihr jederzeit ändern.");
   const dialog = page.locator("[data-consent-dialog]");
   await expect(dialog).toHaveAttribute("aria-labelledby", "consent-title");
@@ -904,6 +916,7 @@ test("shows the compact branded view and three service cards without hosting det
   await page.getByText("DETAILS ANZEIGEN", { exact: true }).first().click();
   await expect(page.getByLabel("Google Analytics erlauben")).toBeVisible();
   await expect(page.getByLabel("Microsoft Clarity erlauben")).toBeVisible();
+  await page.getByText("DETAILS ANZEIGEN", { exact: true }).last().click();
   await expect(page.getByLabel("Meta Pixel erlauben")).toBeVisible();
   const clarityRecord = detailsPanel.locator(".consent-service-choice").filter({
     has: page.getByLabel("Microsoft Clarity erlauben"),

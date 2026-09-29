@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { productionTrackingDefaults } from "../src/config/trackingDefaults.mjs";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
@@ -58,7 +59,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 19. September 2026");
+  expect(mainText).toContain("Stand: 29. September 2026");
   expect(mainText).toContain("eine Buchungsanfrage über die Agentenseite vorbereiten");
   expect(mainText).toContain("spätestens nach 30 Minuten verworfen");
   expect(mainText).toContain("Eine Übermittlung an uns erfolgt erst");
@@ -105,8 +106,9 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
   expect(mainText).toContain("Google Tag Manager, Google Analytics, Microsoft Clarity und Meta Pixel werden erst nach Ihrer Einwilligung");
-  expect(mainText).toContain("Google Tag Manager, Google Analytics, Microsoft Clarity und Meta Pixel im Banner einzeln auswählen");
-  expect(mainText).toContain("Wenn Sie ihn deaktivieren, werden Google Analytics, Microsoft Clarity und Meta Pixel ebenfalls deaktiviert");
+  expect(mainText).toContain("Google Analytics, Microsoft Clarity und Meta Pixel");
+  expect(mainText).toContain("er hat keinen eigenen Schalter im Banner");
+  expect(mainText).toContain("Sobald Sie alle drei Dienste abwählen, wird auch der Tag Manager deaktiviert");
   expect(mainText).toContain("Vor Ihrer Einwilligung wird der Tag Manager vollständig blockiert");
   expect(mainText).not.toContain("erweiterten Einwilligungsmodus");
   expect(mainText).toContain("Cookie enthält die gewählten Services");
@@ -114,7 +116,6 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).not.toContain("Google Analytics 4");
   expect(mainText).toContain("Einwilligung in den Service „Microsoft Clarity“");
   expect(mainText).toContain("Einwilligung in den Service „Meta Pixel“");
-  expect(mainText).toContain("Service-Gruppen, Services und Provider");
   expect(mainText).toContain("Google Ireland Limited");
   expect(mainText).toContain("HTTP-Protokolldaten innerhalb von 14 Tagen");
   expect(mainText).toMatch(
@@ -212,8 +213,8 @@ test("provides consent settings for the configured production providers", async 
   const trackingConfig = await page.locator("#artbild-tracking-config").textContent();
   expect(JSON.parse(trackingConfig ?? "{}")).toMatchObject({
     consentEnabled: true,
-    gtmContainerId: "GTM-5TM37JC",
-    googleAnalyticsId: "G-TSWGFD1YKF",
+    gtmContainerId: process.env.PUBLIC_GTM_CONTAINER_ID || productionTrackingDefaults.gtmContainerId,
+    googleAnalyticsId: process.env.PUBLIC_GA4_MEASUREMENT_ID || productionTrackingDefaults.googleAnalyticsId,
   });
 });
 

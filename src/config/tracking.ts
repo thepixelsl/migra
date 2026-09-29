@@ -41,8 +41,13 @@ const ga4DataRetentionMonths = String(
 
 const googleTrackingConfigured = /^GTM-[A-Z0-9]{4,}$/i.test(gtmContainerId)
   && /^G-[A-Z0-9]{6,}$/i.test(googleAnalyticsId);
+const openaiAdsPixelId = String(
+  import.meta.env.PUBLIC_OPENAI_ADS_PIXEL_ID
+    ?? (environment === "production" ? productionTrackingDefaults.openaiAdsPixelId : ""),
+).trim();
+const openaiAdsConfigured = /^[A-Za-z0-9_-]{8,100}$/.test(openaiAdsPixelId);
 const consentEnabled = environment !== "disabled"
-  && googleTrackingConfigured;
+  && (googleTrackingConfigured || openaiAdsConfigured);
 
 export const trackingConfig = {
   environment,
@@ -57,6 +62,8 @@ export const trackingConfig = {
   googleAnalyticsDelivery: "direct",
   ga4DataRetentionMonths,
   googleTrackingConfigured,
+  openaiAdsPixelId,
+  openaiAdsConfigured,
   metaViaTagManager: true,
   clarityViaTagManager: true,
 } as const;

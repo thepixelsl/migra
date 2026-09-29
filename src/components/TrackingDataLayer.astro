@@ -251,6 +251,10 @@ import { trackingConfig } from "../config/tracking";
       const analyticsGranted = window.ArtbildConsent?.services?.googleAnalytics === true;
       const marketingGranted = window.ArtbildConsent?.services?.metaPixel === true;
       const clarityGranted = window.ArtbildConsent?.services?.microsoftClarity === true;
+      // OpenAI consent does not enable GTM, Google Analytics, Clarity, or Meta.
+      if (window.ArtbildConsent?.services?.openaiAds === true) {
+        window.artbildOpenAIAds?.track?.(payload);
+      }
       if (!tagManagerGranted || (!analyticsGranted && !marketingGranted)) return;
 
       const eventPayload = compact({

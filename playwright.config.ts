@@ -1,8 +1,9 @@
 import { defineConfig } from "@playwright/test";
+import { productionTrackingDefaults } from "./src/config/trackingDefaults.mjs";
 
 const consentCookieValue = encodeURIComponent(
   JSON.stringify({
-    version: process.env.PUBLIC_CONSENT_VERSION ?? "2026-09-02.1",
+    version: process.env.PUBLIC_CONSENT_VERSION ?? productionTrackingDefaults.consentVersion,
     necessary: true,
     analytics: false,
     clarity: false,
@@ -12,6 +13,7 @@ const consentCookieValue = encodeURIComponent(
       googleAnalytics: false,
       microsoftClarity: false,
       metaPixel: false,
+      openaiAds: false,
     },
     updatedAt: "2026-07-29T00:00:00.000Z",
   }),

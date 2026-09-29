@@ -1,3 +1,8 @@
+---
+import { trackingConfig } from "../config/tracking";
+const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
+---
+
 <dialog
   class="consent-dialog"
   data-consent-dialog
@@ -28,10 +33,16 @@
       >
       <h2 id="consent-title" tabindex="-1">COOKIE-EINSTELLUNGEN</h2>
       <p id="consent-summary">
-        Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
-        Analyse- und Marketingdienste, um unsere Website und Werbung zu
-        verbessern. Dabei können Daten durch Google, Microsoft und Meta auch in
-        den USA verarbeitet werden. Eure Auswahl könnt ihr jederzeit ändern.
+        {openaiAdsConfigured ? <>
+          Mit Zustimmung nutzen Google, Microsoft, Meta und OpenAI Daten für Statistik und Werbung, auch in den USA.
+          OpenAI misst Anzeigen und gleicht Kontaktangaben aus Formularen gehasht ab.
+          Eure OpenAI-Auswahl widerspricht persönlicher Werbenutzung dieser Daten.
+        </> : <>
+          Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
+          Analyse- und Marketingdienste, um unsere Website und Werbung zu
+          verbessern. Dabei können Daten durch Google, Microsoft und Meta auch in
+          den USA verarbeitet werden.
+        </>} Eure Auswahl könnt ihr jederzeit ändern.
       </p>
     </div>
 
@@ -143,14 +154,13 @@
         <div class="consent-card__heading">
           <div>
             <h4>Marketing</h4>
-            <p class="consent-card__status">Meta Pixel</p>
+            <p class="consent-card__status">Meta Pixel{openaiAdsConfigured ? " und OpenAI Ads" : ""}</p>
           </div>
           <label class="consent-switch">
-            <span class="visually-hidden">Meta Pixel erlauben</span>
+            <span class="visually-hidden">Marketing erlauben</span>
             <input
               type="checkbox"
               data-consent-group="marketing"
-              data-consent-service="metaPixel"
             >
             <span aria-hidden="true"></span>
           </label>
@@ -161,10 +171,35 @@
           <summary>DETAILS ANZEIGEN</summary>
           <div class="consent-card__details-body">
             <section class="consent-service-choice">
-              <h5>Meta Pixel</h5>
+              <div class="consent-service-choice__heading">
+                <h5>Meta Pixel</h5>
+                <label class="consent-switch consent-switch--service">
+                  <span class="visually-hidden">Meta Pixel erlauben</span>
+                  <input type="checkbox" data-consent-service="metaPixel">
+                  <span aria-hidden="true"></span>
+                </label>
+              </div>
               <p><strong>Zweck:</strong> Messung von Kontaktaktionen, Zielgruppenbildung und Remarketing.</p>
               <p><strong>Cookies:</strong> <code>_fbp</code> und <code>_fbc</code> · bis zu 90 Tage.</p>
             </section>
+            {openaiAdsConfigured && <section class="consent-service-choice">
+              <div class="consent-service-choice__heading">
+                <h5>OpenAI Ads</h5>
+                <label class="consent-switch consent-switch--service">
+                  <span class="visually-hidden">OpenAI Ads erlauben</span>
+                  <input type="checkbox" data-consent-service="openaiAds">
+                  <span aria-hidden="true"></span>
+                </label>
+              </div>
+              <p><strong>Anbieter:</strong> OpenAI Ireland Ltd. und verbundene Unternehmen.</p>
+              <p><strong>Zweck:</strong> Seitenaufrufe und erfolgreich gesendete Kontaktanfragen Anzeigen in ChatGPT zuordnen.</p>
+              <p><strong>Eure Auswahl:</strong> Mit der Aktivierung erlaubt ihr diese Messung einschließlich Kontaktabgleich und widersprecht einer Verwendung dieser Messdaten für künftige persönlich zugeschnittene Werbung. Diesen Widerspruch übermitteln wir mit jedem Ereignis an OpenAI.</p>
+              <p><strong>Automatischer Abgleich:</strong> Unterstützte Kontaktangaben, etwa E-Mail-Adresse, Telefonnummer oder Name, können aus Formularen erkannt, im Browser normalisiert und gehasht an OpenAI übermittelt werden. Hashwerte sind keine anonymen Daten.</p>
+              <p><strong>Weitere Daten:</strong> Anzeigen- und Browserkennung, aufgerufene Seite sowie technische Verbindungsdaten. Unsere Ereignisaufrufe enthalten keine Nachrichtentexte oder Hochzeitstermine.</p>
+              <p><strong>First-Party-Cookies:</strong> <code>__oppref</code> · bis zu 30 Tage; <code>__obref</code> · bis zu 365 Tage. Die Einwilligung kann zusätzlich lokal gespeichert werden.</p>
+              <p>Die Auswahl ist unabhängig von Meta und Statistik. Bei Widerruf stoppen wir das Tracking und entfernen die genannten Kennungen.</p>
+              <p><a href="/datenschutz/#openai-ads">Weitere Informationen zu OpenAI Ads</a></p>
+            </section>}
           </div>
         </details>
       </article>
@@ -212,7 +247,10 @@
     const googleAnalyticsInput = dialog.querySelector('[data-consent-service="googleAnalytics"]');
     const microsoftClarityInput = dialog.querySelector('[data-consent-service="microsoftClarity"]');
     const metaPixelInput = dialog.querySelector('[data-consent-service="metaPixel"]');
-    const serviceInputs = [googleAnalyticsInput, microsoftClarityInput, metaPixelInput]
+    const openaiAdsInput = dialog.querySelector('[data-consent-service="openaiAds"]');
+    const marketingServices = [metaPixelInput, openaiAdsInput]
+      .filter((input) => input instanceof HTMLInputElement);
+    const serviceInputs = [googleAnalyticsInput, microsoftClarityInput, ...marketingServices]
       .filter((input) => input instanceof HTMLInputElement);
     const closeButton = dialog.querySelector("[data-consent-close]");
     const customizeButton = dialog.querySelector("[data-consent-customize]");
@@ -231,13 +269,10 @@
         statisticsInput.checked = googleAnalytics && microsoftClarity;
         statisticsInput.indeterminate = googleAnalytics !== microsoftClarity;
       }
-      if (
-        marketingInput instanceof HTMLInputElement
-        && metaPixelInput instanceof HTMLInputElement
-        && marketingInput !== metaPixelInput
-      ) {
-        marketingInput.checked = metaPixelInput.checked;
-        marketingInput.indeterminate = false;
+      if (marketingInput instanceof HTMLInputElement) {
+        marketingInput.checked = marketingServices.every((input) => input.checked);
+        marketingInput.indeterminate = marketingServices.some((input) => input.checked)
+          && !marketingInput.checked;
       }
     };
 
@@ -255,6 +290,9 @@
       if (metaPixelInput instanceof HTMLInputElement) {
         metaPixelInput.checked = services.metaPixel === true
           || (services.metaPixel === undefined && state.marketing === true);
+      }
+      if (openaiAdsInput instanceof HTMLInputElement) {
+        openaiAdsInput.checked = services.openaiAds === true;
       }
       syncGroupsFromServices();
     };
@@ -292,16 +330,11 @@
       statisticsInput.indeterminate = false;
     });
 
-    if (marketingInput !== metaPixelInput) {
-      marketingInput?.addEventListener("change", () => {
-        if (
-          marketingInput instanceof HTMLInputElement
-          && metaPixelInput instanceof HTMLInputElement
-        ) {
-          metaPixelInput.checked = marketingInput.checked;
-        }
-      });
-    }
+    marketingInput?.addEventListener("change", () => {
+      if (!(marketingInput instanceof HTMLInputElement)) return;
+      marketingServices.forEach((input) => { input.checked = marketingInput.checked; });
+      marketingInput.indeterminate = false;
+    });
 
     serviceInputs.forEach((input) => {
       input.addEventListener("change", syncGroupsFromServices);
@@ -346,6 +379,7 @@
           googleAnalytics: false,
           microsoftClarity: false,
           metaPixel: false,
+          openaiAds: false,
         },
       });
     };
@@ -357,6 +391,7 @@
           googleAnalytics: true,
           microsoftClarity: true,
           metaPixel: true,
+          openaiAds: openaiAdsInput instanceof HTMLInputElement,
         },
       });
     };
@@ -393,6 +428,7 @@
           googleAnalytics,
           microsoftClarity,
           metaPixel,
+          openaiAds: openaiAdsInput instanceof HTMLInputElement && openaiAdsInput.checked,
         },
       });
     });
@@ -868,6 +904,24 @@
   }
 
   @media (max-width: 640px) {
+    .consent-dialog[data-consent-view="compact"] .consent-dialog__shell {
+      box-sizing: border-box;
+      height: min(90dvh, 820px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .consent-dialog[data-consent-view="compact"] .consent-dialog__intro {
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+
+    .consent-dialog[data-consent-view="compact"] .consent-dialog__quick-actions,
+    .consent-dialog[data-consent-view="compact"] .consent-dialog__legal {
+      flex-shrink: 0;
+    }
+
     .consent-dialog {
       width: 92vw;
       max-height: 90dvh;
@@ -879,20 +933,20 @@
     }
 
     .consent-dialog__logo {
-      width: 135px;
-      margin-bottom: 20px;
+      width: 100px;
+      margin-bottom: 10px;
     }
 
     .consent-dialog h2 {
       padding: 0 24px;
-      font-size: 23px;
+      font-size: 21px;
       letter-spacing: .075em;
     }
 
     .consent-dialog__intro p {
-      margin-top: 17px;
-      font-size: 16px;
-      line-height: 1.55;
+      margin-top: 12px;
+      font-size: 15px;
+      line-height: 1.4;
     }
 
     .consent-dialog__quick-actions {

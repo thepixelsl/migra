@@ -1,4 +1,4 @@
-# Consent, Google Analytics, Microsoft Clarity und Meta Pixel
+# Consent, Google Analytics, Microsoft Clarity, Meta Pixel und OpenAI Ads
 
 ## Architektur
 
@@ -6,8 +6,8 @@ Die Website trennt Einwilligung, Ereignisse und Anbieter:
 
 1. `TrackingHead.astro` liest eine bestehende Einwilligung und setzt vor allen
    Tags die Google-Consent-Standardwerte auf `denied`. GTM wird nur nach einer
-   aktuellen oder gespeicherten Einwilligung für mindestens einen optionalen
-   Service geladen.
+   aktuellen oder gespeicherten Einwilligung für Google Analytics, Clarity
+   oder Meta geladen. OpenAI allein aktiviert GTM nicht.
 2. `ConsentBanner.astro` verwaltet die Kategorien `necessary`, `analytics` und
    `marketing`.
 3. `TrackingDataLayer.astro` erzeugt ausschließlich strukturierte Ereignisse
@@ -21,6 +21,11 @@ Die Website trennt Einwilligung, Ereignisse und Anbieter:
    `analytics_storage=granted` sowie ein freigegebenes Statistikereignis.
 6. Das Meta Pixel liegt im GTM und benötigt zusätzlich `ad_storage=granted`
    sowie ein freigegebenes Marketingereignis.
+7. OpenAI Ads liegt direkt in `src/lib/openaiAds.mjs` und wird nur nach
+   `services.openaiAds === true` geladen. `TrackingDataLayer.astro` leitet
+   bestätigte Kontaktanfragen an diesen separaten Messdienst weiter.
+   Automatischer Formularabgleich und Aktivierungsstatus sind im
+   [Einrichtungsbericht](../reports/openai-ads-2026-09-29/setup.md) dokumentiert.
 
 Die Anbieterkennungen sind öffentliche Build-Konfiguration. Sie sind keine
 Geheimnisse, sollen aber nicht im Quellcode verteilt werden.
@@ -55,12 +60,25 @@ PUBLIC_TRACKING_ALLOWED_HOSTS=artbild-fotografie.de,www.artbild-fotografie.de
 PUBLIC_GTM_CONTAINER_ID=GTM-5TM37JC
 PUBLIC_GA4_MEASUREMENT_ID=G-TSWGFD1YKF
 PUBLIC_GA4_DATA_RETENTION_MONTHS=14
-PUBLIC_CONSENT_VERSION=2026-09-02.1
+PUBLIC_CONSENT_VERSION=2026-09-29.1
+PUBLIC_OPENAI_ADS_PIXEL_ID=
 ```
 
 Diese Werte müssen dem Astro-Build zur Verfügung stehen. Ein Eintrag unter
 Wrangler `[vars]` oder in `.dev.vars` reicht nicht aus, weil die Website
 statisch gebaut wird.
+
+OpenAI ist bei leerer Pixel-ID deaktiviert. Die Produktionskonfiguration nutzt
+`PUBLIC_OPENAI_ADS_PIXEL_ID=2cAZY96fYjnEsMfeaUPEtH`. Die getrennte Einwilligung
+umfasst den ausdrücklich beschriebenen automatischen Formularabgleich und
+den Widerspruch gegen künftige persönliche Werbenutzung dieser Messdaten.
+Jedes Ereignis übermittelt dafür `opt_out: true`. Der technische Prüfbericht
+unter `reports/openai-ads-2026-09-29/setup.md` dokumentiert Datenumfang,
+Einwilligung, Widerruf, Vertragsgrundlagen und die Grenzen der Prüfung.
+Docker und der Bunny-Image-Workflow
+übernehmen diese Build-Variable. Sie enthält eine öffentliche Pixel-ID,
+keinen API-Schlüssel. Die neue Consent-Version fordert eine neue Entscheidung;
+eine alte Marketing-Zustimmung schaltet OpenAI nicht frei.
 
 `PUBLIC_GA4_DATA_RETENTION_MONTHS` dokumentiert die in GA4 geprüfte
 Aufbewahrungsdauer für Nutzer- und Ereignisdaten. Der Wert darf nur `2` oder
@@ -84,7 +102,7 @@ Anschließend muss neu gebaut und deployt werden.
 ## Google Tag Manager
 
 Der Google Tag Manager wird auf erlaubten öffentlichen Hosts nur im Basic Mode
-und erst nach einer Einwilligung für mindestens einen optionalen Service
+und erst nach einer Einwilligung für Google Analytics, Clarity oder Meta
 geladen. Vorher setzt die Website `analytics_storage`, `ad_storage`,
 `ad_user_data` und `ad_personalization` auf `denied`. Es werden keine
 cookielosen Google-Signale gesendet. Verhaltens-, Sichtbarkeits- und

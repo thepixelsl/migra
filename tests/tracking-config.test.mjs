@@ -8,6 +8,7 @@ const trackingKeys = [
   "PUBLIC_GTM_CONTAINER_ID",
   "PUBLIC_GA4_MEASUREMENT_ID",
   "PUBLIC_GA4_DATA_RETENTION_MONTHS",
+  "PUBLIC_OPENAI_ADS_PIXEL_ID",
 ];
 
 function validateTracking(extraEnvironment = {}) {
@@ -67,4 +68,21 @@ test("uses the verified 14-month retention default in production", () => {
   });
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /Anbieter konfiguriert/);
+});
+
+test("accepts an OpenAI-only test configuration", () => {
+  const result = validateTracking({ PUBLIC_TRACKING_ENV: "test", PUBLIC_OPENAI_ADS_PIXEL_ID: "TEST_OPENAI_PIXEL" });
+  assert.equal(result.status, 0, result.stderr);
+});
+
+test("rejects a URL instead of an OpenAI Pixel ID", () => {
+  const result = validateTracking({ PUBLIC_TRACKING_ENV: "test", PUBLIC_OPENAI_ADS_PIXEL_ID: "https://example.com/pixel" });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /PUBLIC_OPENAI_ADS_PIXEL_ID/);
+});
+
+test("rejects an OpenAI placeholder in production", () => {
+  const result = validateTracking({ PUBLIC_TRACKING_ENV: "production", PUBLIC_OPENAI_ADS_PIXEL_ID: "TEST_OPENAI_PIXEL" });
+  assert.equal(result.status, 1);
+  assert.match(result.stderr, /Platzhalter/);
 });

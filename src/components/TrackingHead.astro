@@ -17,6 +17,8 @@ const publicConfig = trackingExcluded
       gtmContainerId: "",
       googleAnalyticsId: "",
       googleTrackingConfigured: false,
+      openaiAdsPixelId: "",
+      openaiAdsConfigured: false,
     }
   : trackingConfig;
 
@@ -56,6 +58,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           googleAnalytics: false,
           microsoftClarity: false,
           metaPixel: false,
+          openaiAds: false,
         },
       };
       window.artbildConsent = window.ArtbildConsent;
@@ -66,6 +69,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     const GOOGLE_ANALYTICS_COOKIE_PREFIXES = ["_ga", "_gid", "_gat"];
     const META_COOKIE_PREFIXES = ["_fbp", "_fbc"];
     const CLARITY_COOKIE_PREFIXES = ["_clck", "_clsk"];
+    const OPENAI_COOKIE_PREFIXES = ["__oppref", "__obref"];
 
     const hostMatches = (hostname, rule) => {
       if (!rule) return false;
@@ -104,6 +108,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           || typeof services.googleAnalytics !== "boolean"
           || typeof services.microsoftClarity !== "boolean"
           || typeof services.metaPixel !== "boolean"
+          || typeof services.openaiAds !== "boolean"
         ) {
           return null;
         }
@@ -117,6 +122,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
             googleAnalytics,
             microsoftClarity,
             metaPixel,
+            openaiAds: config.openaiAdsConfigured && services.openaiAds === true,
           },
         };
       } catch (_) {
@@ -124,10 +130,18 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       }
     };
 
+    let consentChannel;
+    try {
+      consentChannel = new BroadcastChannel("artbild-consent");
+    } catch (_) {
+      // A current cookie check and focus/visibility events remain available.
+    }
+
     const writeDecision = (decision) => {
       const value = encodeURIComponent(JSON.stringify(decision));
       const secure = window.location.protocol === "https:" ? "; Secure" : "";
       document.cookie = `${COOKIE_NAME}=${value}; Path=/; Max-Age=15552000; SameSite=Lax${secure}`;
+      try { consentChannel?.postMessage("changed"); } catch (_) {}
     };
 
     const expireCookie = (name) => {
@@ -163,6 +177,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       googleAnalytics: storedDecision?.services.googleAnalytics === true,
       microsoftClarity: storedDecision?.services.microsoftClarity === true,
       metaPixel: storedDecision?.services.metaPixel === true,
+      openaiAds: storedDecision?.services.openaiAds === true,
     };
 
     const googleConsentState = (state) => ({
@@ -207,6 +222,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
         googleAnalytics: state.googleAnalytics === true,
         microsoftClarity: state.microsoftClarity === true,
         metaPixel: state.metaPixel === true,
+        openaiAds: state.openaiAds === true,
       };
       const publicState = {
         enabled: true,
@@ -391,6 +407,13 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           nextState?.marketing,
           currentServices.metaPixel,
         ),
+        // A legacy marketing/Google consent must never grant this new vendor.
+        openaiAds: config.openaiAdsConfigured && requestedValue(
+          requestedServices.openaiAds,
+          nextState?.openaiAds,
+          undefined,
+          currentServices.openaiAds,
+        ),
       };
       const googleTagManagerExplicitlyDenied = requestedServices.googleTagManager === false
         || nextState?.googleTagManager === false;
@@ -406,6 +429,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       const googleAnalyticsWasGranted = currentServices.googleAnalytics === true;
       const clarityWasGranted = currentServices.microsoftClarity === true;
       const metaWasGranted = currentServices.metaPixel === true;
+      const openaiWasGranted = currentServices.openaiAds === true;
       const decision = {
         version: config.consentVersion,
         necessary: true,
@@ -418,6 +442,8 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
 
       writeDecision(decision);
       publishState(state, true);
+      window.artbildOpenAIAds?.updateConsent?.();
+      if (!state.openaiAds) clearProviderCookies(OPENAI_COOKIE_PREFIXES);
       window.gtag("consent", "update", googleConsentState(state));
       if (state.googleAnalytics) {
         loadGoogleAnalytics();
@@ -466,6 +492,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           consent_google_analytics: state.googleAnalytics ? "granted" : "denied",
           consent_microsoft_clarity: state.microsoftClarity ? "granted" : "denied",
           consent_meta_pixel: state.metaPixel ? "granted" : "denied",
+          consent_openai_ads: state.openaiAds ? "granted" : "denied",
           consent_mode: "basic",
         });
         window.dispatchEvent(new CustomEvent("artbild:consent_update", { detail }));
@@ -504,6 +531,11 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
           && !state.metaPixel
           && typeof window.fbq === "function"
         )
+        || (
+          openaiWasGranted
+          && !state.openaiAds
+          && window.__artbildOpenAIAdsRequested === true
+        )
       ) {
         window.setTimeout(() => window.location.reload(), 0);
       }
@@ -524,14 +556,31 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
     if (!initialState.metaPixel) {
       clearProviderCookies(META_COOKIE_PREFIXES);
     }
+    if (!initialState.openaiAds) {
+      clearProviderCookies(OPENAI_COOKIE_PREFIXES);
+    }
 
     window.artbildConsentApi = {
       getState: () => ({ ...window.ArtbildConsent }),
+      isServiceAllowed: (name) => readDecision()?.services?.[name] === true,
       setConsent: updateConsent,
       openSettings: () => {
         window.dispatchEvent(new CustomEvent("artbild:consent_settings_open"));
       },
     };
+
+    const syncOpenAIWithdrawal = () => {
+      if (window.__artbildOpenAIAdsRequested && readDecision()?.services.openaiAds !== true) {
+        window.artbildOpenAIAds?.updateConsent?.();
+        window.location.reload();
+      }
+    };
+    if (consentChannel) consentChannel.onmessage = syncOpenAIWithdrawal;
+    window.addEventListener("focus", syncOpenAIWithdrawal);
+    window.addEventListener("pageshow", syncOpenAIWithdrawal);
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") syncOpenAIWithdrawal();
+    });
 
     window.dataLayer.push({
       event: "artbild_consent_state",
@@ -542,6 +591,7 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       consent_google_analytics: initialState.googleAnalytics ? "granted" : "denied",
       consent_microsoft_clarity: initialState.microsoftClarity ? "granted" : "denied",
       consent_meta_pixel: initialState.metaPixel ? "granted" : "denied",
+      consent_openai_ads: initialState.openaiAds ? "granted" : "denied",
       consent_decision_present: Boolean(storedDecision),
       consent_mode: "basic",
     });
@@ -557,4 +607,8 @@ const serializedConfig = JSON.stringify(publicConfig).replace(/</g, "\\u003c");
       }
     }, 500);
   })();
+</script>
+
+<script>
+  import "../lib/openaiAds.mjs";
 </script>
