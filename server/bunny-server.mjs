@@ -28,8 +28,8 @@ const CONTENT_SECURITY_POLICY_DIRECTIVES = [
   "img-src 'self' data: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms https://bzrcdn.openai.com",
-  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com https://bzr.openai.com https://bzrcdn.openai.com",
+  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms",
+  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com",
 ];
 
 function firstHeaderValue(value) {
@@ -140,6 +140,12 @@ function withBunnyHeaders(response, env, requestUrl) {
   }
   headers.set("X-Content-Type-Options", "nosniff");
   if (!adminAuthPath(pathname)) headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  if (pathname === "/openai-conversion.html") {
+    headers.set("Content-Security-Policy", "sandbox allow-scripts; default-src 'none'; base-uri 'none'; object-src 'none'; frame-ancestors 'self'; form-action 'none'; script-src 'unsafe-inline' https://bzrcdn.openai.com; connect-src https://bzr.openai.com https://bzrcdn.openai.com");
+    headers.set("Referrer-Policy", "no-referrer");
+    headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+    headers.set("Cache-Control", "no-store");
+  }
   headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()");
   const privatePath = pathname.startsWith("/api/")
     || pathname.startsWith("/admin-termine")

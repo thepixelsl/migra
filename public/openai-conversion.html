@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="referrer" content="no-referrer">
+  <title>Anzeigenmessung</title>
+</head>
+<body>
+<script>
+(() => {
+  if (window.parent === window) return;
+  let sent = false;
+  window.addEventListener("message", event => {
+    if (sent || event.source !== window.parent || event.origin !== window.location.origin
+      || event.data?.type !== "artbild:openai:lead"
+      || !/^[A-Za-z0-9_-]{8,100}$/.test(event.data.pixelId || "")) return;
+    // Fail closed if someone embeds this page without an opaque sandbox.
+    try { void window.parent.document; return; } catch (_) {}
+    sent = true;
+    const queue = function () { queue.q.push(arguments); };
+    queue.q = [];
+    window.oaiq = queue;
+    window.oaiq("consent", true);
+    window.oaiq("init", { pixelId: event.data.pixelId });
+    window.oaiq("measure", "lead_created", { type: "customer_action" }, { opt_out: true });
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://bzrcdn.openai.com/sdk/oaiq.min.js";
+    script.onerror = () => { queue.q.length = 0; script.remove(); };
+    document.head.appendChild(script);
+  });
+})();
+</script>
+</body>
+</html>

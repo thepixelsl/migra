@@ -170,9 +170,7 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
   assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/\*\.clarity\.ms/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.clarity\.ms/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/c\.bing\.com/);
-  assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/bzrcdn\.openai\.com/);
-  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/bzrcdn\.openai\.com/);
-  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/bzr\.openai\.com/);
+  assert.doesNotMatch(contentSecurityPolicy, /https:\/\/(bzrcdn|bzr)\.openai\.com/);
   // GA4 may select a regional analytics.google.com collection endpoint.
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.analytics\.google\.com/);
   assert.doesNotMatch(contentSecurityPolicy, /https:\/\/\*\.google\.com|doubleclick\.net/);
@@ -187,6 +185,20 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
 
   const removedDateLinkCatalog = await fetch(`${baseUrl}/api/agent-availability/date-links`);
   assert.equal(removedDateLinkCatalog.status, 404);
+});
+
+test("isolates OpenAI measurement with an opaque sandbox and no referrer", async () => {
+  const response = await fetch(`${baseUrl}/openai-conversion.html`, {
+    headers: { "X-Forwarded-Host": "artbild-fotografie.de" },
+  });
+  const policy = response.headers.get("content-security-policy");
+  assert.match(policy, /sandbox allow-scripts;/);
+  assert.doesNotMatch(policy, /allow-same-origin/);
+  assert.match(policy, /script-src 'unsafe-inline' https:\/\/bzrcdn\.openai\.com/);
+  assert.match(policy, /connect-src https:\/\/bzr\.openai\.com https:\/\/bzrcdn\.openai\.com/);
+  assert.equal(response.headers.get("referrer-policy"), "no-referrer");
+  assert.equal(response.headers.get("cache-control"), "no-store");
+  assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
 });
 
 test("permits the AMP CDN on standalone Web Stories without relaxing other routes", async () => {

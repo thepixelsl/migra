@@ -35,7 +35,7 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
       <p id="consent-summary">
         {openaiAdsConfigured ? <>
           Mit Zustimmung nutzen Google, Microsoft, Meta und OpenAI Daten für Statistik und Werbung, auch in den USA.
-          OpenAI misst Anzeigen und gleicht Kontaktangaben aus Formularen gehasht ab.
+          OpenAI misst nur erfolgreich gesendete Anfragen und erhält keine Formularinhalte.
           Eure OpenAI-Auswahl widerspricht persönlicher Werbenutzung dieser Daten.
         </> : <>
           Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
@@ -192,11 +192,11 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
                 </label>
               </div>
               <p><strong>Anbieter:</strong> OpenAI Ireland Ltd. und verbundene Unternehmen.</p>
-              <p><strong>Zweck:</strong> Seitenaufrufe und erfolgreich gesendete Kontaktanfragen Anzeigen in ChatGPT zuordnen.</p>
-              <p><strong>Eure Auswahl:</strong> Mit der Aktivierung erlaubt ihr diese Messung einschließlich Kontaktabgleich und widersprecht einer Verwendung dieser Messdaten für künftige persönlich zugeschnittene Werbung. Diesen Widerspruch übermitteln wir mit jedem Ereignis an OpenAI.</p>
-              <p><strong>Automatischer Abgleich:</strong> Mit eurer Einwilligung kann OpenAI Kontaktangaben aus Formularen wie E-Mail-Adresse, Telefonnummer oder Name für den Abgleich mit Anzeigenkontakten verwenden.</p>
-              <p><strong>Weitere Daten:</strong> Anzeigen- und Browserkennung, aufgerufene Seite sowie technische Verbindungsdaten. Unsere Ereignisaufrufe enthalten keine Nachrichtentexte oder Hochzeitstermine.</p>
-              <p><strong>First-Party-Cookies:</strong> <code>__oppref</code> · bis zu 30 Tage; <code>__obref</code> · bis zu 365 Tage. Die Einwilligung kann zusätzlich lokal gespeichert werden.</p>
+              <p><strong>Zweck:</strong> Erfolgreich gesendete Kontaktanfragen Anzeigen in ChatGPT zuordnen.</p>
+              <p><strong>Eure Auswahl:</strong> Mit der Aktivierung erlaubt ihr diese Messung und widersprecht einer Verwendung dieser Messdaten für künftige persönlich zugeschnittene Werbung. Diesen Widerspruch übermitteln wir mit jedem Ereignis an OpenAI.</p>
+              <p><strong>Keine Formularinhalte:</strong> E-Mail-Adresse, Name, Telefonnummer und Nachricht werden für diese Messung weder ausgelesen noch an OpenAI übermittelt.</p>
+              <p><strong>Weitere Daten:</strong> Anzeigenkennung, Zeitpunkt des erfolgreichen Absendens sowie technische Verbindungsdaten. Einzelheiten stehen in der Datenschutzerklärung.</p>
+              <p><strong>First-Party-Cookies:</strong> <code>__oppref</code> · bis zu 30 Tage für die Anzeigenzuordnung. Die OpenAI-Messung speichert keine dauerhafte Browserkennung.</p>
               <p>Die Auswahl ist unabhängig von Meta und Statistik. Bei Widerruf stoppen wir das Tracking und entfernen die genannten Kennungen.</p>
               <p><a href="/datenschutz/#openai-ads">Weitere Informationen zu OpenAI Ads</a></p>
             </section>}
