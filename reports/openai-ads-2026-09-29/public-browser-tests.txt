@@ -1,0 +1,17 @@
+
+Running 10 tests using 1 worker
+
+(node:45774) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   1 tests/openai-ads-consent.spec.ts:51:1 › blocks OpenAI before consent and never replays earlier successes (9.5s)
+  ✓   2 tests/openai-ads-consent.spec.ts:66:1 › OpenAI alone stays independent and initializes once per page (7.1s)
+  ✓   3 tests/openai-ads-consent.spec.ts:88:1 › tracks only a confirmed successful inquiry, with minimal data (3.9s)
+  ✓   4 tests/openai-ads-consent.spec.ts:116:1 › withdrawal stops tracking, removes identifiers and preserves denial on reload (6.5s)
+  ✓   5 tests/openai-ads-consent.spec.ts:134:1 › drops the pending SDK queue when consent is revoked during download (6.2s)
+  ✓   6 tests/openai-ads-consent.spec.ts:150:1 › withdrawal in another tab stops an already loaded pixel (8.7s)
+  ✓   7 tests/openai-ads-consent.spec.ts:171:1 › a failed SDK download does not prevent a contact inquiry (6.4s)
+  ✓   8 tests/openai-ads-consent.spec.ts:183:1 › old consent and legacy marketing consent never enable OpenAI (3.6s)
+  ✓   9 tests/openai-ads-consent.spec.ts:196:1 › renders the matching notice and privacy section on narrow screens (16.4s)
+  ✓  10 tests/openai-ads-consent.spec.ts:223:1 › official SDK honors consent, opt-out and attribution cookies (intercepted transport) (15.3s)
+
+  10 passed (1.4m)

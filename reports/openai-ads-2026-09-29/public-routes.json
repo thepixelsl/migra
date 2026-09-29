@@ -1,0 +1,82 @@
+{
+  "checkedAt": "2026-09-29T18:24:12.271Z",
+  "origin": "https://artbild-fotografie.de",
+  "results": [
+    {
+      "path": "/",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "openaiNotice": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/kontakt/",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "openaiNotice": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/datenschutz/",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "openaiNotice": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/datenschutzerklaerung/",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "openaiNotice": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/readyz",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/healthz",
+      "status": 200,
+      "expected": 200,
+      "fresh": true,
+      "ok": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/api/admin/availability",
+      "status": 401,
+      "expected": 401,
+      "fresh": true,
+      "ok": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    },
+    {
+      "path": "/__openai-release-check-not-found__/",
+      "status": 404,
+      "expected": 404,
+      "fresh": true,
+      "ok": true,
+      "sdkCsp": true,
+      "eventCsp": true
+    }
+  ]
+}

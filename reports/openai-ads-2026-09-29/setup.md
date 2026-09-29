@@ -1,6 +1,6 @@
 # OpenAI Ads: Einrichtung und Prüfung für Artbild-Fotografie
 
-Stand: 29. September 2026. Die Website-Änderungen sind implementiert und lokal geprüft. Die Produktionsveröffentlichung wird mit der öffentlichen Pixel-ID `2cAZY96fYjnEsMfeaUPEtH` durchgeführt. Ohne konfigurierte Pixel-ID bleibt die Integration ausgeschaltet; auf der Website ist zusätzlich die eigene Einwilligung der Besucher erforderlich.
+Stand: 29. September 2026. Die Website-Änderungen sind auf **https://artbild-fotografie.de** veröffentlicht, mit der öffentlichen Pixel-ID `2cAZY96fYjnEsMfeaUPEtH`. Auf der Website ist zusätzlich die eigene Einwilligung der Besucher erforderlich. Ohne konfigurierte Pixel-ID bleibt die Integration ausgeschaltet.
 
 ## Konto und verbindliche Datenschutzvorgabe
 
@@ -73,7 +73,7 @@ Der offizielle [Image Tag](https://developers.openai.com/ads/image-tag) wurde al
 
 ## Mobile Vorschau
 
-Geprüft bei 320 Pixel Breite. Der Dialog lässt sich vertikal scrollen; es gibt keinen horizontalen Überlauf.
+Auf der öffentlichen Website bei 320 Pixel Breite aufgenommen. Zusätzlich sind 390 und 1440 Pixel Breite geprüft. Der Dialog lässt sich vertikal scrollen; es gibt keinen horizontalen Überlauf.
 
 ![Cookie-Banner auf einem schmalen Mobilgerät](cookie-banner-mobile.png)
 
@@ -89,7 +89,7 @@ Geprüft bei 320 Pixel Breite. Der Dialog lässt sich vertikal scrollen; es gibt
 - Vollständiger Website-Build mit der echten öffentlichen Pixel-ID erfolgreich, einschließlich **4 Inhaltsprüfungen**. Das ist ein lokaler Prüfbuild, keine Veröffentlichung.
 - Statischer Plugin-Check der geänderten Implementierungsdateien: bestanden. Der vollständige Setup-Scan wurde wegen langer Laufzeit abgebrochen; der fokussierte Scan bestand. Der vollständige CAPI-Geheimnis-Scan des Repositories schloss ohne Befund ab. Nicht benötigte CAPI-/Deduplizierungsmarker sind bei der reinen Browser-Integration keine Pflicht.
 - Kein echter Kontaktversand und kein Test-Conversion-Versand an OpenAI: Kontakt-Backend und Werbe-Endpunkte wurden in den Browserprüfungen abgefangen.
-- Öffentliche Kontaktseite abschließend gelesen: HTTP 200, bisherige Consent-Version `2026-09-02.1`, kein OpenAI-Schalter und keine konfigurierte OpenAI-Integration. Die Veröffentlichung steht aus.
+- Öffentliche Start-, Kontakt- und beide Datenschutzseiten liefern HTTP 200, Consent-Version `2026-09-29.1`, die echte Pixel-ID und den OpenAI-Hinweis. Die regulären URLs wurden ohne Cache-Buster geprüft. `/readyz` und `/healthz` liefern 200, die geschützte Verwaltungs-API 401 und eine unbekannte Route 404. [Messwerte](public-routes.json).
 - Noch kein Nachweis des Eingangs im echten Ads-Ereignisstream oder einer zugeordneten Anzeigenkonversion. Ein bestandener lokaler Test ist kein solcher Nachweis.
 
 Reproduzierbarer lokaler Start (nur künstliche Testkennungen):
@@ -101,12 +101,15 @@ ASTRO_URL=http://127.0.0.1:4326 PUBLIC_GTM_CONTAINER_ID=GTM-TEST1 PUBLIC_GA4_MEA
 
 Der zusätzliche Test mit dem Original-SDK benötigt `OPENAI_ADS_SDK_PATH` mit dem Pfad einer separat von der offiziellen CDN-Adresse bezogenen Kopie. Ohne diesen Wert wird nur dieser eine Test ausdrücklich übersprungen. Das SDK wird nicht im Repository mitgeführt.
 
-## Noch bis zum Livebetrieb
+## Produktionsveröffentlichung
 
-1. Technische Prüfung und dazu passende Banner-/Datenschutztexte sind abgeschlossen. Der automatische Kontaktabgleich bleibt Bestandteil der ausdrücklich beschriebenen optionalen Einwilligung. Eine Supportanfrage zu seiner Abschaltung ist kein Umsetzungshindernis und wurde nicht versendet.
-2. Abschließenden Website-Build und die Veröffentlichung der konkreten Änderung nachvollziehen. Der dokumentierte Image Tag wird nicht als unbestätigter Ersatz für das interaktive Kontaktformular eingesetzt.
-3. Die Conversion-Ereignisdefinition für `lead_created` ist fertig. Keine Kampagnenoptimierung oder Budgetänderung ist Teil dieser Änderung.
-4. Die öffentliche Build-Variable `PUBLIC_OPENAI_ADS_PIXEL_ID=2cAZY96fYjnEsMfeaUPEtH` setzen, das unveränderliche Bunny-Produktionsimage bauen und nach dem vorhandenen Releaseverfahren veröffentlichen.
-5. Öffentliche Routen, Cookie-Banner und Netzwerkanfragen auf Desktop/Mobilgeräten erneut prüfen; einen ausdrücklich vereinbarten Test am echten Ereignisstream nachvollziehen. Keine Kundenanfrage zu Testzwecken versenden.
+- Quellstand: `078da2c40b0848fbfcbdfcb764c6846c9b1d2efd`.
+- [GitHub-Produktionsbuild 36610073138](https://github.com/thepixelsl/migra/actions/runs/36610073138): erfolgreich, einschließlich Laufzeit-, HTML-Sanitizer- und Buildprüfungen.
+- Image: `ghcr.io/thepixelsl/migra-bunny-dev:prod-sha-078da2c`, Digest `sha256:e462779aff9c410936850209e0c637376dc0f365fb4ccf696207da37e9293fc7`.
+- Öffentliche GitHub-Buildvariable gesetzt und zurückgelesen. Kein neuer geheimer Schlüssel.
+- Bunny `artbild-dev`, Container `web`: neues Image gespeichert, Status **Active**, eine bereite Frankfurt-Instanz `3GTqeXB7JjpDfw`, vorherige Instanz entfernt. Keine Änderung an Ressourcen, Umgebungsgeheimnissen oder Endpunkten.
+- **Alle 10 OpenAI-Browsertests auch auf der öffentlichen Website bestanden**, einschließlich Original-SDK mit abgefangenem Transport, AAM-Hash, Opt-out, Erfolg/Fehler, Ablehnung, Widerruf, zweitem Tab und alter Consent-Version. Zusätzlich bestand der öffentliche Darstellungs-/Bedienbarkeitstest bei 320, 390 und 1440 Pixel Breite. Die obigen Screenshots stammen aus dieser Live-Prüfung. Alle acht öffentlichen Routenprüfungen bestanden.
+- Die Conversion-Ereignisdefinition für `lead_created` ist fertig. Keine Kampagnenoptimierung oder Budgetänderung ist Teil dieser Änderung.
+- Ein echter Eingang im Ads-Ereignisstream oder eine einer Anzeige zugeordnete Konversion ist weiterhin nicht nachgewiesen. Die Website-Tests fangen den Transport und das Kontakt-Backend ab; sie erzeugen keine Kundenanfrage und keine künstliche Anzeigenkonversion beim Anbieter.
 
 Vor der Veröffentlichung muss der Betreiber prüfen, dass Umsetzung und Datenumfang seine Datenschutz-, Sicherheits-, Einwilligungs- und Datenverarbeitungsanforderungen erfüllen. Dieser technische Prüfbericht ist keine rechtliche Freigabe.
