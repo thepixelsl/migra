@@ -208,7 +208,8 @@ test("renders accurate minimal measurement copy on narrow screens", async ({ pag
   }
   await page.locator("[data-consent-dialog]").screenshot({ path: test.info().outputPath("cookie-banner-mobile.png") });
   await openSettings(page);
-  await expect(page.locator("[data-consent-details]")).toContainText("weder ausgelesen noch an OpenAI übermittelt");
+  await expect(page.locator("[data-consent-details]")).not.toContainText("Keine Formularinhalte:");
+  await expect(page.locator("[data-consent-details]")).not.toContainText("weder ausgelesen noch an OpenAI übermittelt");
   await expect(page.locator("[data-consent-details]")).toContainText("widersprecht einer Verwendung dieser Messdaten");
   await expect(page.locator("[data-consent-dialog]")).not.toContainText("IP-Adresse");
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
