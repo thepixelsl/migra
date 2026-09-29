@@ -207,7 +207,7 @@ test("renders the matching notice and privacy section on narrow screens", async 
   await page.locator("[data-consent-dialog]").screenshot({ path: test.info().outputPath("cookie-banner-mobile.png") });
   await openSettings(page);
   await expect(page.getByLabel("OpenAI Ads erlauben")).toBeVisible();
-  await expect(page.locator("[data-consent-details]")).toContainText("Übermittelt werden im Browser erzeugte Vergleichswerte");
+  await expect(page.locator("[data-consent-details]")).toContainText("für den Abgleich mit Anzeigenkontakten verwenden");
   await expect(page.locator("[data-consent-details]")).toContainText("widersprecht einer Verwendung dieser Messdaten");
   await page.getByLabel("OpenAI Ads erlauben").scrollIntoViewIfNeeded();
   await page.locator("[data-consent-dialog]").screenshot({ path: test.info().outputPath("cookie-openai-details-mobile.png") });
@@ -215,7 +215,7 @@ test("renders the matching notice and privacy section on narrow screens", async 
   await page.getByRole("button", { name: "AUSWAHL SPEICHERN" }).click();
   await page.goto(`${baseUrl}/datenschutz/#openai-ads`);
   await expect(page.locator("#openai-ads")).toContainText("OpenAI Ads");
-  await expect(page.locator("body")).toContainText("bereits im Browser in Vergleichswerte umgewandelt");
+  await expect(page.locator("body")).toContainText("Dieser automatische Kontaktabgleich ist von Ihrer Einwilligung");
   await expect(page.locator("body")).toContainText("OpenAI als Auftragsverarbeiter");
   await expect(page.locator('a[href="https://openai.com/policies/ad-tools-subprocessors/"]')).toHaveCount(1);
 });
