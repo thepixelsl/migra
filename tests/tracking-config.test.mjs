@@ -9,6 +9,8 @@ const trackingKeys = [
   "PUBLIC_GA4_MEASUREMENT_ID",
   "PUBLIC_GA4_DATA_RETENTION_MONTHS",
   "PUBLIC_OPENAI_ADS_PIXEL_ID",
+  "PUBLIC_GOOGLE_ADS_ID",
+  "PUBLIC_GOOGLE_ADS_CONVERSION_LABEL",
 ];
 
 function validateTracking(extraEnvironment = {}) {
@@ -58,7 +60,7 @@ test("rejects an unsupported GA4 data-retention value", () => {
   assert.match(result.stderr, /muss 2 oder 14 sein/);
 });
 
-test("uses the verified 14-month retention default in production", () => {
+test("accepts the two-month target retention configuration in production", () => {
   const result = validateTracking({
     PUBLIC_TRACKING_ENV: "production",
     PUBLIC_TRACKING_ALLOWED_HOSTS: "artbild-fotografie.de",
@@ -85,4 +87,12 @@ test("rejects an OpenAI placeholder in production", () => {
   const result = validateTracking({ PUBLIC_TRACKING_ENV: "production", PUBLIC_OPENAI_ADS_PIXEL_ID: "TEST_OPENAI_PIXEL" });
   assert.equal(result.status, 1);
   assert.match(result.stderr, /Platzhalter/);
+});
+
+ test("rejects invalid Ads identifiers", () => {
+  for (const extra of [{ PUBLIC_GOOGLE_ADS_ID: "G-invalid" }, { PUBLIC_GOOGLE_ADS_CONVERSION_LABEL: "https://example.test/" }]) {
+    const result = validateTracking({ PUBLIC_TRACKING_ENV: "test", ...extra });
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /PUBLIC_GOOGLE_ADS_/);
+  }
 });

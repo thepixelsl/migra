@@ -16,6 +16,8 @@ import { trackingConfig } from "../config/tracking";
     const observedForms = new WeakSet();
     const startedForms = new WeakSet();
     let trackingReadyPublished = false;
+    const confirmedLeads = new Set();
+    const trackingConfiguration = JSON.parse(document.getElementById("artbild-tracking-config")?.textContent || "{}");
 
     window[DATA_LAYER_NAME] = window[DATA_LAYER_NAME] || [];
 
@@ -247,20 +249,27 @@ import { trackingConfig } from "../config/tracking";
     };
 
     const pushEvent = (payload) => {
-      const tagManagerGranted = window.ArtbildConsent?.services?.googleTagManager === true;
-      const analyticsGranted = window.ArtbildConsent?.services?.googleAnalytics === true;
-      const marketingGranted = window.ArtbildConsent?.services?.metaPixel === true;
-      const clarityGranted = window.ArtbildConsent?.services?.microsoftClarity === true;
+      if (payload?.event === "form_success") {
+        if (!/^[a-f0-9-]{36}$/.test(payload.event_id || "") || confirmedLeads.has(payload.event_id)) return;
+        confirmedLeads.add(payload.event_id);
+      }
+      const analyticsGranted = window.artbildConsentApi?.isServiceAllowed?.("googleAnalytics") === true;
+      const marketingGranted = window.artbildConsentApi?.isServiceAllowed?.("metaPixel") === true;
+      const clarityGranted = window.artbildConsentApi?.isServiceAllowed?.("microsoftClarity") === true;
       // OpenAI consent does not enable GTM, Google Analytics, Clarity, or Meta.
-      if (window.ArtbildConsent?.services?.openaiAds === true) {
+      if (window.artbildConsentApi?.isServiceAllowed?.("openaiAds") === true) {
         window.artbildOpenAIAds?.track?.(payload);
       }
-      if (!tagManagerGranted || (!analyticsGranted && !marketingGranted)) return;
+      window.artbildGoogleAds?.track?.(payload);
+      if (!analyticsGranted && !marketingGranted) return;
 
       const eventPayload = compact({
         page_id: pageId(),
         page_type: pageType(),
-        ...payload,
+        ...Object.fromEntries(Object.entries(payload).filter(([key, value]) =>
+          ["event", "page_type", "section_id", "content_topic", "journey_stage", "cta_id", "cta_type",
+           "resource_type", "position", "form_id", "form_type", "result", "interaction_action"].includes(key)
+          && typeof value === "string" && /^[a-z0-9_]{1,80}$/.test(value))),
       });
       if (!eventPayload.event) return;
 
@@ -275,22 +284,23 @@ import { trackingConfig } from "../config/tracking";
         : "denied";
       if (analyticsGranted) {
         const { event, ...parameters } = eventPayload;
-        window.gtag?.("event", event, parameters);
+        window.gtag?.("event", event, { ...parameters, send_to: trackingConfiguration.googleAnalyticsId });
       }
       if (marketingGranted) {
-        window.artbildMetaPixel?.track?.(eventPayload);
+        window.artbildMetaPixel?.track?.(payload);
       }
     };
 
     const publishTrackingReady = () => {
       if (
         trackingReadyPublished
-        || window.ArtbildConsent?.services?.googleAnalytics !== true
+        || window.artbildConsentApi?.isServiceAllowed?.("googleAnalytics") !== true
       ) return;
       trackingReadyPublished = true;
       window.gtag?.("event", "artbild_tracking_ready", {
         consent_mode: "basic",
         tracking_schema: "artbild_v2",
+        send_to: trackingConfiguration.googleAnalyticsId,
       });
     };
 
@@ -303,8 +313,8 @@ import { trackingConfig } from "../config/tracking";
             googleTagManager: true,
             googleAnalytics: true,
             microsoftClarity:
-              window.ArtbildConsent?.services?.microsoftClarity === true,
-            metaPixel: window.ArtbildConsent?.services?.metaPixel === true,
+              window.artbildConsentApi?.isServiceAllowed?.("microsoftClarity") === true,
+            metaPixel: window.artbildConsentApi?.isServiceAllowed?.("metaPixel") === true,
           },
         });
       },
@@ -315,8 +325,8 @@ import { trackingConfig } from "../config/tracking";
               window.ArtbildConsent?.services?.googleTagManager === true,
             googleAnalytics: false,
             microsoftClarity:
-              window.ArtbildConsent?.services?.microsoftClarity === true,
-            metaPixel: window.ArtbildConsent?.services?.metaPixel === true,
+              window.artbildConsentApi?.isServiceAllowed?.("microsoftClarity") === true,
+            metaPixel: window.artbildConsentApi?.isServiceAllowed?.("metaPixel") === true,
           },
         });
       },
@@ -431,6 +441,7 @@ import { trackingConfig } from "../config/tracking";
 
     window.addEventListener("artbild:form_success", (event) => {
       pushEvent({
+        event_id: event.detail?.eventId,
         event: "form_success",
         page_type: pageType(),
         form_id: sanitize(event.detail?.formId),

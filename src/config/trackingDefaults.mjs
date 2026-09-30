@@ -5,6 +5,8 @@ export const productionTrackingDefaults = Object.freeze({
   googleAnalyticsId: "G-TSWGFD1YKF",
   // The SDK is restricted to an opaque frame with no access to form fields.
   openaiAdsPixelId: "",
-  ga4DataRetentionMonths: "14",
-  consentVersion: "2026-09-29.1",
+  googleAdsId: "AW-874983678",
+  googleAdsConversionLabel: "",
+  ga4DataRetentionMonths: "2",
+  consentVersion: "2026-09-30.1",
 });

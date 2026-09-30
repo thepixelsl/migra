@@ -1,4 +1,5 @@
 import { loadEnv } from "vite";
+import { trackingRelease } from "../src/config/trackingRelease.mjs";
 import { productionTrackingDefaults } from "../src/config/trackingDefaults.mjs";
 
 const fileEnvironment = loadEnv("production", process.cwd(), "");
@@ -56,6 +57,13 @@ if (!["2", "14"].includes(ga4DataRetentionMonths)) {
 if (openaiAdsPixelId && !/^[A-Za-z0-9_-]{8,100}$/.test(openaiAdsPixelId)) {
   fail("PUBLIC_OPENAI_ADS_PIXEL_ID muss eine Pixel-Kennung ohne URL, Leerzeichen oder Sonderzeichen sein.");
 }
+
+const adsId = String(buildEnvironment.PUBLIC_GOOGLE_ADS_ID ?? productionTrackingDefaults.googleAdsId).trim();
+const adsLabel = String(buildEnvironment.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL ?? productionTrackingDefaults.googleAdsConversionLabel).trim();
+if (adsId && !/^AW-\d+$/.test(adsId)) fail("PUBLIC_GOOGLE_ADS_ID muss eine AW-Kennung sein.");
+if (adsLabel && !/^[A-Za-z0-9_-]+$/.test(adsLabel)) fail("PUBLIC_GOOGLE_ADS_CONVERSION_LABEL hat ein unzulässiges Format.");
+if (environment === "production" && trackingRelease.googleAds && (!adsId || !adsLabel)) fail("Freigegebene Ads-Messung benötigt bestätigte ID und Conversion-Label.");
+if (environment === "production" && trackingRelease.googleAnalytics && ga4DataRetentionMonths !== "2") fail("Freigegebene Analytics-Messung benötigt die bestätigte Aufbewahrungsfrist von 2 Monaten.");
 
 const configuredProviderCount = Object.values(values).filter(Boolean).length;
 if (configuredProviderCount === 1) {

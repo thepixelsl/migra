@@ -1,4 +1,5 @@
 import { productionTrackingDefaults } from "./trackingDefaults.mjs";
+import { trackingRelease } from "./trackingRelease.mjs";
 
 export type TrackingEnvironment = "disabled" | "staging" | "test" | "production";
 
@@ -46,19 +47,30 @@ const openaiAdsPixelId = String(
     ?? (environment === "production" ? productionTrackingDefaults.openaiAdsPixelId : ""),
 ).trim();
 const openaiAdsConfigured = /^[A-Za-z0-9_-]{8,100}$/.test(openaiAdsPixelId);
+const googleAdsId = String(import.meta.env.PUBLIC_GOOGLE_ADS_ID ?? productionTrackingDefaults.googleAdsId).trim();
+const googleAdsConversionLabel = String(import.meta.env.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL ?? productionTrackingDefaults.googleAdsConversionLabel).trim();
+const googleAdsConfigured = /^AW-\d+$/.test(googleAdsId) && /^[A-Za-z0-9_-]+$/.test(googleAdsConversionLabel);
+// A build must never bypass account/transport acceptance via a test env variable.
+const providerRelease = environment === "test" && import.meta.env.DEV
+  ? Object.fromEntries(Object.keys(trackingRelease).map(key => [key, true]))
+  : trackingRelease;
 const consentEnabled = environment !== "disabled"
-  && (googleTrackingConfigured || openaiAdsConfigured);
+  && (googleTrackingConfigured || googleAdsConfigured || openaiAdsConfigured);
 
 export const trackingConfig = {
   environment,
   consentEnabled,
   consentVersion: String(
-    import.meta.env.PUBLIC_CONSENT_VERSION
-      || productionTrackingDefaults.consentVersion,
+    environment === "test" ? (import.meta.env.PUBLIC_CONSENT_VERSION || productionTrackingDefaults.consentVersion)
+      : productionTrackingDefaults.consentVersion,
   ),
   allowedHosts: configuredHosts.length ? configuredHosts : defaultAllowedHosts,
   gtmContainerId,
   googleAnalyticsId,
+  googleAdsId,
+  googleAdsConversionLabel,
+  googleAdsConfigured,
+  providerRelease,
   googleAnalyticsDelivery: "direct",
   ga4DataRetentionMonths,
   googleTrackingConfigured,
