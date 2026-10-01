@@ -19,8 +19,8 @@ const CONTENT_SECURITY_POLICY = [
   "img-src 'self' data: https:",
   "font-src 'self' data:",
   "style-src 'self' 'unsafe-inline'",
-  "script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms",
-  "connect-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com",
+  "script-src 'self' 'unsafe-inline' https://www.googleadservices.com https://www.google.com https://www.googletagmanager.com https://connect.facebook.net https://*.clarity.ms",
+  "connect-src 'self' https://www.google.com https://www.google.de https://www.google.ch https://www.googleadservices.com https://googleads.g.doubleclick.net https://pagead2.googlesyndication.com https://ad.doubleclick.net https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com https://connect.facebook.net https://www.facebook.com https://*.clarity.ms https://c.bing.com",
   "upgrade-insecure-requests",
 ].join("; ");
 const DOWNLOAD_PATH_PREFIXES = ["/downloads/"];

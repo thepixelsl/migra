@@ -60,7 +60,7 @@ test("rejects an unsupported GA4 data-retention value", () => {
   assert.match(result.stderr, /muss 2 oder 14 sein/);
 });
 
-test("accepts the two-month target retention configuration in production", () => {
+test("accepts the verified retention configuration in production", () => {
   const result = validateTracking({
     PUBLIC_TRACKING_ENV: "production",
     PUBLIC_TRACKING_ALLOWED_HOSTS: "artbild-fotografie.de",

@@ -2,7 +2,7 @@
 import { trackingConfig } from "../config/tracking";
 const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
 const allowed = (name: string) => trackingConfig.providerRelease[name] === true
-  && (name === "openaiAds" ? openaiAdsConfigured : name === "googleAds" ? trackingConfig.googleAdsConfigured : trackingConfig.googleTrackingConfigured);
+  && (name === "openaiAds" ? openaiAdsConfigured : name === "googleAds" ? trackingConfig.googleAdsConfigured : name === "microsoftClarity" ? Boolean(trackingConfig.clarityProjectId) : trackingConfig.googleTrackingConfigured);
 const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
 ---
 
@@ -38,12 +38,12 @@ const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
       <h2 id="consent-title" tabindex="-1">COOKIE-EINSTELLUNGEN</h2>
       <p id="consent-summary">
         {!anyAvailable ? <>Die optionalen Statistik- und Werbedienste sind derzeit deaktiviert. Es werden keine dieser Messdienste geladen. Technisch notwendige Funktionen wie das Kontaktformular stehen euch weiterhin zur Verfügung.</> : openaiAdsConfigured ? <>
-          Mit Zustimmung nutzen wir Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung sowie Meta Pixel für Messung und personalisierte Werbung. OpenAI misst Anzeigen in ChatGPT. Daten können auch in den USA verarbeitet werden.
+          Mit Zustimmung nutzen wir Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel ist derzeit deaktiviert. OpenAI misst Anzeigen in ChatGPT. Daten können auch in den USA verarbeitet werden.
           OpenAI misst nur erfolgreich gesendete Anfragen und erhält keine Formularinhalte.
           Eure OpenAI-Auswahl widerspricht persönlicher Werbenutzung dieser Daten.
         </> : <>
           Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
-          Dienste: Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung und Meta Pixel für Messung und personalisierte Werbung. Dabei können Daten durch Google, Microsoft und Meta auch in
+          Dienste: Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel ist derzeit deaktiviert. Dabei können Daten durch Google, Microsoft und Meta auch in
           den USA verarbeitet werden.
         </>} Eure Auswahl könnt ihr jederzeit ändern.
       </p>

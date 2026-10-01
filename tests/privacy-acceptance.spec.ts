@@ -5,7 +5,7 @@ import { gunzipSync } from "node:zlib";
 
 const services = ["googleAnalytics", "googleAds", "microsoftClarity", "metaPixel", "openaiAds"];
 const SDK = "https://bzrcdn.openai.com/sdk/oaiq.min.js";
-const root = new URL("../reports/ads-datenschutz-2026-09-30/evidence/", import.meta.url);
+const root = new URL("../reports/tracking-activation-2026-10-01/evidence/", import.meta.url);
 const all = Object.fromEntries(services.map(name => [name, true]));
 const none = Object.fromEntries(services.map(name => [name, false]));
 const fakeSDK = `const pending=window.oaiq.q; window.oaiq=(...a)=>{if(a[0]==='measure')fetch('https://bzr.openai.com/mock',{method:'POST',body:JSON.stringify(a)});};pending.forEach(a=>window.oaiq(...a));`;
@@ -18,8 +18,8 @@ async function observe(context: BrowserContext, real = false) {
     if (["127.0.0.1", "localhost", "artbild-fotografie.de"].includes(url.hostname)) {
       if (url.pathname === "/api/contact") return route.fulfill({ json: { ok: true, message: "Synthetische Testanfrage bestätigt" } });
       if (url.pathname === "/@vite/client") return route.fulfill({contentType: "application/javascript", body: ""});
-      if (url.hostname === "artbild-fotografie.de") {
-        const response = await route.fetch({ url: "http://127.0.0.1:4341" + url.pathname + url.search });
+      if (url.hostname === "artbild-fotografie.de" && process.env.PRIVACY_PRODUCTION_ORIGIN) {
+        const response = await route.fetch({ url: (process.env.PRIVACY_LOCAL_ORIGIN || "http://127.0.0.1:4341") + url.pathname + url.search, headers: {...request.headers(), host: new URL(process.env.PRIVACY_LOCAL_ORIGIN || "http://127.0.0.1:4341").host} });
         return route.fulfill({ response });
       }
       return route.continue();
@@ -30,8 +30,8 @@ async function observe(context: BrowserContext, real = false) {
       resource: request.resourceType(), referer: request.headers().referer || "" });
     if (request.url() === SDK) return route.fulfill({ contentType: "application/javascript", body: real ? readFileSync(new URL("openai-sdk.js", root), "utf8") : fakeSDK });
     if (url.hostname === "bzrcdn.openai.com" && url.pathname.startsWith("/pixel-config/")) {
-      // Deliberately hostile configuration tests isolation, not account acceptance.
-      return route.fulfill({ headers: { "access-control-allow-origin": "*" }, json: { automatic_advanced_matching_enabled: true } });
+      // Fresh public account configuration; requests remain intercepted.
+      return route.fulfill({ headers: { "access-control-allow-origin": "*" }, json: JSON.parse(readFileSync(new URL("openai-pixel-config.json", root), "utf8")) });
     }
     if (real && url.hostname === "www.googletagmanager.com" && url.pathname === "/gtag/js") {
       const id = url.searchParams.get("id");
@@ -83,14 +83,16 @@ for (let mask = 0; mask < 32; mask++) test(`matrix ${String(mask).padStart(2, "0
   expect(hits).toEqual([]);
   const wanted = Object.fromEntries(services.map((name, bit) => [name, Boolean(mask & (1 << bit))]));
   await choose(page, wanted);
+  wanted.metaPixel = false; // The disabled service must reject attempted consent.
   await success(page);
   await settle(page);
   const state = await page.evaluate(() => (window as any).ArtbildConsent.services);
   for (const name of services) expect(state[name], name).toBe(wanted[name]);
   expect(hits.some(hit => hit.url.includes("id=G-TSWGFD1YKF"))).toBe(wanted.googleAnalytics);
   expect(hits.some(hit => hit.url.includes("id=AW-874983678"))).toBe(wanted.googleAds);
-  expect(hits.some(hit => hit.url.includes("/gtm.js"))).toBe(wanted.metaPixel || wanted.microsoftClarity);
+  expect(hits.some(hit => hit.url.includes("/gtm.js"))).toBe(wanted.metaPixel);
   expect(hits.some(hit => hit.url === SDK)).toBe(wanted.openaiAds);
+  expect(hits.some(hit => hit.url.includes("clarity.ms/tag/"))).toBe(wanted.microsoftClarity);
   const commands = await page.evaluate(() => (window as any).dataLayer.filter((v: any) => v[0] === "consent").map((v: any) => Array.from(v)));
   expect(commands.at(-1)[2]).toMatchObject({ analytics_storage: wanted.googleAnalytics ? "granted" : "denied",
     ad_storage: wanted.googleAds ? "granted" : "denied", ad_user_data: wanted.googleAds ? "granted" : "denied", ad_personalization: "denied" });
@@ -208,10 +210,11 @@ for (const choice of ["googleAnalytics", "googleAds", "both"]) test(`real transp
   await page.getByRole("button", { name: "NUR NOTWENDIGE", exact: true }).click();
   await choose(page, { ...none, googleAnalytics: choice !== "googleAds", googleAds: choice !== "googleAnalytics" });
   await settle(page);
-  expect(hits.filter(h => h.url.includes("44lFCI_K0KkYEP7hnKED")), "no lead on page load").toEqual([]);
+  expect(hits.filter(h => h.url.includes("J-MWCM7x9IsdEP7hnKED")), "no lead on page load").toEqual([]);
   await fill(page); await success(page); await settle(page);
   await test.info().attach("intercepted-google-requests", { body: JSON.stringify({ hits, cookies: await context.cookies() }), contentType: "application/json" });
   const combined = hits.map(h => `${h.url} ${h.body} ${h.referer}`).join("\n");
+  expect(combined).not.toContain("44lFCI_K0KkYEP7hnKED");
   for (const value of ["privacy-canary@example.test", "Privacy Canaryperson", "PRIVATE_FORM_CANARY", "2027-06-12"]) {
     for (const encoding of [value, encodeURIComponent(value), createHash("sha256").update(value.toLowerCase()).digest("hex")]) expect(combined.toLowerCase()).not.toContain(encoding.toLowerCase());
   }
@@ -221,15 +224,15 @@ for (const choice of ["googleAnalytics", "googleAds", "both"]) test(`real transp
     expect(hits.some(h => h.url.includes("/g/collect") && (h.url + h.body).includes("G-TSWGFD1YKF"))).toBe(true);
   }
   if (choice === "googleAds") expect(hits.filter(h => /google-analytics|G-TSWGFD1YKF/.test(h.url))).toEqual([]);
-  if (choice !== "googleAnalytics") expect(hits.some(h => (h.url + h.body).includes("44lFCI_K0KkYEP7hnKED"))).toBe(true);
+  if (choice !== "googleAnalytics") expect(hits.some(h => (h.url + h.body).includes("J-MWCM7x9IsdEP7hnKED"))).toBe(true);
 });
 
 for (let mask = 0; mask < 32; mask++) test(`real transport matrix ${mask} provider separation and data`, async ({ page, context }) => {
   const hits = await observe(context, true);
-  await page.goto("/kontakt/?email=privacy-canary%40example.test#PRIVATE_FRAGMENT");
+  await page.goto("/kontakt/");
   await page.getByRole("button", { name: "NUR NOTWENDIGE", exact: true }).click();
   const wanted = Object.fromEntries(services.map((name, bit) => [name, Boolean(mask & (1 << bit))]));
-  await choose(page, wanted); await fill(page); await success(page); await page.waitForTimeout(3500);
+  await choose(page, wanted); wanted.metaPixel = false; await fill(page); await success(page); await page.waitForTimeout(3500);
   await test.info().attach("real-recipients-cookies-storage", { body: JSON.stringify({ mask, wanted, hits,
     cookies: await context.cookies(), storage: await page.evaluate(() => ({ local: {...localStorage}, session: {...sessionStorage} })) }), contentType: "application/json" });
   for (const hit of hits) {
@@ -238,7 +241,7 @@ for (let mask = 0; mask < 32; mask++) test(`real transport matrix ${mask} provid
     else if (/facebook\.(net|com)$/.test(u.hostname)) expect(wanted.metaPixel).toBe(true);
     else if (/(clarity\.ms|bing\.com)$/.test(u.hostname)) expect(wanted.microsoftClarity).toBe(true);
     else if (u.hostname === "www.googletagmanager.com") {
-      if (u.pathname === "/gtm.js") expect(wanted.metaPixel || wanted.microsoftClarity).toBe(true);
+      if (u.pathname === "/gtm.js") expect(wanted.metaPixel).toBe(true);
       else if (u.searchParams.get("id") === "G-TSWGFD1YKF") expect(wanted.googleAnalytics).toBe(true);
       else if (u.searchParams.get("id") === "AW-874983678") expect(wanted.googleAds).toBe(true);
       else throw new Error(`Unexpected Google loader: ${hit.url}`);
@@ -247,7 +250,7 @@ for (let mask = 0; mask < 32; mask++) test(`real transport matrix ${mask} provid
     else throw new Error(`Unexpected recipient: ${hit.url}`);
   }
   if (wanted.metaPixel) expect(hits.some(h => /facebook\.com\/tr/.test(h.url)), "Meta must actually emit a measurement").toBe(true);
-  if (wanted.microsoftClarity) expect(hits.some(h => /clarity\.ms\/collect/.test(h.url)), "Clarity must actually emit a measurement").toBe(true);
+  if (wanted.microsoftClarity) await expect.poll(() => hits.some(h => /clarity\.ms\/collect/.test(h.url)), { message: "Clarity must actually emit a measurement", timeout: 12000 }).toBe(true);
   if (wanted.openaiAds) expect(hits.filter(h => h.url.startsWith("https://bzr.openai.com/") && h.body.includes("lead_created")), "OpenAI must emit exactly one lead").toHaveLength(1);
   const combined = JSON.stringify(hits).toLowerCase();
   for (const value of ["privacy-canary@example.test", "privacy canaryperson", "privacy canaryvenue", "PRIVATE_FORM_CANARY", "2027-06-12"]) {
@@ -269,4 +272,28 @@ test('consent dialog traps focus, restores its trigger, and Escape rejects', asy
 });
 test('standalone OpenAI document cannot create measurements',async({page,context})=>{
  const hits=await observe(context,true);await page.goto('/openai-conversion.html');await page.waitForTimeout(1000);expect(hits).toEqual([]);
+});
+
+
+test("Clarity excludes URLs and referrers containing parameters and dynamic filter pages", async ({page,context}) => {
+  const hits=await observe(context,true);
+  for (const path of ["/kontakt/?email=privacy-canary%40example.test", "/kontakt/#PRIVATE_FRAGMENT", "/portfolio/", "/kirchenfinder-hamburg/"]) {
+    await page.goto(path); await choose(page,{...none,microsoftClarity:true}); await settle(page);
+    expect(hits).toEqual([]);
+  }
+  await page.goto("/kontakt/",{referer:"https://artbild-fotografie.de/?email=privacy-canary%40example.test"});
+  await choose(page,{...none,microsoftClarity:true});await settle(page);expect(hits).toEqual([]);
+});
+
+test("real transport: Clarity records masked interactions and stops on cross-tab withdrawal", async ({page,context}) => {
+  const hits=await observe(context,true);await page.goto('/kontakt/');
+  await page.getByRole('button',{name:'NUR NOTWENDIGE',exact:true}).click();
+  await choose(page,{...none,microsoftClarity:true});await fill(page);
+  await expect.poll(()=>hits.some(h=>/clarity\.ms\/collect/.test(h.url)),{timeout:15000}).toBe(true);
+  const before=JSON.stringify(hits).toLowerCase();
+  for(const v of ['privacy-canary@example.test','private_form_canary','privacy canaryperson','2027-06-12'])expect(before).not.toContain(v);
+  const second=await context.newPage();await second.goto('/kontakt/');
+  await Promise.all([page.waitForEvent('domcontentloaded'),choose(second,none)]);await settle(page);
+  const count=hits.length;await page.locator('#contact-name').fill('PRIVATE_AFTER_WITHDRAWAL');await settle(page);
+  expect(hits).toHaveLength(count);expect((await context.cookies()).filter(c=>/^_cl/.test(c.name))).toEqual([]);
 });

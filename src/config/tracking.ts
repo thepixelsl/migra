@@ -50,10 +50,8 @@ const openaiAdsConfigured = /^[A-Za-z0-9_-]{8,100}$/.test(openaiAdsPixelId);
 const googleAdsId = String(import.meta.env.PUBLIC_GOOGLE_ADS_ID ?? productionTrackingDefaults.googleAdsId).trim();
 const googleAdsConversionLabel = String(import.meta.env.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL ?? productionTrackingDefaults.googleAdsConversionLabel).trim();
 const googleAdsConfigured = /^AW-\d+$/.test(googleAdsId) && /^[A-Za-z0-9_-]+$/.test(googleAdsConversionLabel);
-// A build must never bypass account/transport acceptance via a test env variable.
-const providerRelease = environment === "test" && import.meta.env.DEV
-  ? Object.fromEntries(Object.keys(trackingRelease).map(key => [key, true]))
-  : trackingRelease;
+// Tests exercise the same provider availability as the released build.
+const providerRelease = trackingRelease;
 const consentEnabled = environment !== "disabled"
   && (googleTrackingConfigured || googleAdsConfigured || openaiAdsConfigured);
 
@@ -67,6 +65,7 @@ export const trackingConfig = {
   allowedHosts: configuredHosts.length ? configuredHosts : defaultAllowedHosts,
   gtmContainerId,
   googleAnalyticsId,
+  clarityProjectId: productionTrackingDefaults.clarityProjectId,
   googleAdsId,
   googleAdsConversionLabel,
   googleAdsConfigured,
@@ -77,5 +76,5 @@ export const trackingConfig = {
   openaiAdsPixelId,
   openaiAdsConfigured,
   metaViaTagManager: true,
-  clarityViaTagManager: true,
+  clarityViaTagManager: false,
 } as const;

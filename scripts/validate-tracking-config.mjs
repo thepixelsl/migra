@@ -63,7 +63,7 @@ const adsLabel = String(buildEnvironment.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL ?? p
 if (adsId && !/^AW-\d+$/.test(adsId)) fail("PUBLIC_GOOGLE_ADS_ID muss eine AW-Kennung sein.");
 if (adsLabel && !/^[A-Za-z0-9_-]+$/.test(adsLabel)) fail("PUBLIC_GOOGLE_ADS_CONVERSION_LABEL hat ein unzulässiges Format.");
 if (environment === "production" && trackingRelease.googleAds && (!adsId || !adsLabel)) fail("Freigegebene Ads-Messung benötigt bestätigte ID und Conversion-Label.");
-if (environment === "production" && trackingRelease.googleAnalytics && ga4DataRetentionMonths !== "2") fail("Freigegebene Analytics-Messung benötigt die bestätigte Aufbewahrungsfrist von 2 Monaten.");
+if (environment === "production" && trackingRelease.googleAnalytics && ga4DataRetentionMonths !== productionTrackingDefaults.ga4DataRetentionMonths) fail("Analytics-Aufbewahrungsfrist muss zur bestätigten Kontokonfiguration und Datenschutzerklärung passen.");
 
 const configuredProviderCount = Object.values(values).filter(Boolean).length;
 if (configuredProviderCount === 1) {

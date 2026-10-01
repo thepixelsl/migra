@@ -14,12 +14,13 @@
   const hostAllowed = config.allowedHosts?.some(rule => rule.startsWith("*.") ? hostname.endsWith(rule.slice(1)) : hostname === rule);
   const providersEnabled = config.consentEnabled && config.environment !== "disabled" && hostAllowed;
   const configured = name => name === "openaiAds" ? config.openaiAdsConfigured
-    : name === "googleAds" ? config.googleAdsConfigured : config.googleTrackingConfigured;
+    : name === "googleAds" ? config.googleAdsConfigured
+    : name === "microsoftClarity" ? /^[a-z0-9]+$/.test(config.clarityProjectId || "") : config.googleTrackingConfigured;
   const available = name => Boolean(providersEnabled && configured(name) && config.providerRelease?.[name]);
   const readCookie = name => document.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(`${name}=`))?.slice(name.length + 1) || "";
   const normalize = services => {
     const next = Object.fromEntries(names.map(name => [name, services?.[name] === true && available(name)]));
-    next.googleTagManager = next.metaPixel || next.microsoftClarity;
+    next.googleTagManager = next.metaPixel;
     return next;
   };
   const readDecision = () => {
@@ -89,14 +90,23 @@
   window.gtag("set", { page_location: pageLocation, page_referrer: referrer });
   window.dataLayer.push({ event: "artbild_tracking_config", tracking_environment: config.environment,
     google_analytics_id: config.googleAnalyticsId, google_analytics_delivery: "direct",
-    meta_delivery: "google_tag_manager", clarity_delivery: "google_tag_manager",
+    meta_delivery: "google_tag_manager", clarity_delivery: "direct",
     consent_mode: "basic", consent_version: config.consentVersion });
   let channel;
   try { channel = new BroadcastChannel("artbild-consent"); } catch (_) {}
   const requested = new Set();
   let stopping = false;
   let lastStartedState = "";
-  const isAllowed = name => !stopping && readDecision()?.services?.[name] === true;
+  // Clarity records page/referrer URLs independently of DOM masking. Exclude
+  // parameterized URLs and pages whose filters alter URLs without navigation.
+  const safeClarityUrl = value => {
+    if (!value) return true;
+    try { const url = new URL(value); return !url.search && !url.hash; } catch (_) { return false; }
+  };
+  const clarityPageAllowed = safeClarityUrl(location.href) && safeClarityUrl(document.referrer)
+    && !/^\/(portfolio|kirchenfinder-hamburg)(\/|$)/.test(location.pathname);
+  const isAllowed = name => !stopping && readDecision()?.services?.[name] === true
+    && (name !== "microsoftClarity" || clarityPageAllowed);
   const stop = () => {
     stopping = true;
     window[`ga-disable-${config.googleAnalyticsId}`] = true;
@@ -148,10 +158,18 @@
         page_location: pageLocation, page_referrer: referrer });
       load(name, `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`, () => isAllowed(name));
     }
+    if (isAllowed("microsoftClarity") && !requested.has("microsoft-clarity")) {
+      // Mask immediately, including while a stricter project setting propagates.
+      document.documentElement.setAttribute("data-clarity-mask", "true");
+      window.clarity = window.clarity || function () { (window.clarity.q = window.clarity.q || []).push(arguments); };
+      window.clarity("consentv2", { ad_Storage: "denied", analytics_Storage: "granted" });
+      load("microsoft-clarity", `https://www.clarity.ms/tag/${config.clarityProjectId}`,
+        () => isAllowed("microsoftClarity"));
+    }
     if (state.googleTagManager) {
       if (!requested.has("google-tag-manager")) window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
       load("google-tag-manager", `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmContainerId)}`,
-        () => isAllowed("metaPixel") || isAllowed("microsoftClarity"));
+        () => isAllowed("metaPixel"));
     }
   };
   function sync() {

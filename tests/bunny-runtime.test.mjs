@@ -169,11 +169,13 @@ test("serves static pages, redirects directories, and preserves a real 404", asy
   const contentSecurityPolicy = homepage.headers.get("content-security-policy") || "";
   assert.match(contentSecurityPolicy, /script-src[^;]+https:\/\/\*\.clarity\.ms/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.clarity\.ms/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/www\.googleadservices\.com/);
+  assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/www\.google\.com/);
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/c\.bing\.com/);
   assert.doesNotMatch(contentSecurityPolicy, /https:\/\/(bzrcdn|bzr)\.openai\.com/);
   // GA4 may select a regional analytics.google.com collection endpoint.
   assert.match(contentSecurityPolicy, /connect-src[^;]+https:\/\/\*\.analytics\.google\.com/);
-  assert.doesNotMatch(contentSecurityPolicy, /https:\/\/\*\.google\.com|doubleclick\.net/);
+  assert.doesNotMatch(contentSecurityPolicy, /https:\/\/\*\.google\.com|https:\/\/\*\.doubleclick\.net/);
 
   const redirect = await fetch(`${baseUrl}/about`, { redirect: "manual" });
   assert.equal(redirect.status, 308);

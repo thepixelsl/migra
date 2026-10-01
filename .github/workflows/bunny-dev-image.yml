@@ -83,10 +83,10 @@ jobs:
             PUBLIC_TRACKING_ALLOWED_HOSTS=${{ vars.PUBLIC_TRACKING_ALLOWED_HOSTS || 'artbild-fotografie.de,www.artbild-fotografie.de' }}
             PUBLIC_GTM_CONTAINER_ID=${{ vars.PUBLIC_GTM_CONTAINER_ID || 'GTM-5TM37JC' }}
             PUBLIC_GA4_MEASUREMENT_ID=${{ vars.PUBLIC_GA4_MEASUREMENT_ID || 'G-TSWGFD1YKF' }}
-            PUBLIC_GA4_DATA_RETENTION_MONTHS=${{ vars.PUBLIC_GA4_DATA_RETENTION_MONTHS || '2' }}
+            PUBLIC_GA4_DATA_RETENTION_MONTHS=${{ vars.PUBLIC_GA4_DATA_RETENTION_MONTHS || '14' }}
             PUBLIC_GOOGLE_ADS_ID=${{ vars.PUBLIC_GOOGLE_ADS_ID || 'AW-874983678' }}
-            PUBLIC_GOOGLE_ADS_CONVERSION_LABEL=${{ vars.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL || '' }}
+            PUBLIC_GOOGLE_ADS_CONVERSION_LABEL=${{ vars.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL || 'J-MWCM7x9IsdEP7hnKED' }}
             PUBLIC_OPENAI_ADS_PIXEL_ID=${{ vars.PUBLIC_OPENAI_ADS_PIXEL_ID || '' }}
-            PUBLIC_CONSENT_VERSION=${{ '2026-09-30.1' }}
+            PUBLIC_CONSENT_VERSION=${{ '2026-10-01.1' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

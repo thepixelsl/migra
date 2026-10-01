@@ -1,7 +1,7 @@
 // Public SDK/configuration only. Never sends browser cookies, form data or conversions.
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
-const dir=new URL('../reports/ads-datenschutz-2026-09-30/evidence/',import.meta.url);
+const dir=new URL('../reports/tracking-activation-2026-10-01/evidence/',import.meta.url);
 await mkdir(dir,{recursive:true});
 const sources={
  'openai-sdk.js':'https://bzrcdn.openai.com/sdk/oaiq.min.js',
