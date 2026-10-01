@@ -83,14 +83,14 @@ for (let mask = 0; mask < 32; mask++) test(`matrix ${String(mask).padStart(2, "0
   expect(hits).toEqual([]);
   const wanted = Object.fromEntries(services.map((name, bit) => [name, Boolean(mask & (1 << bit))]));
   await choose(page, wanted);
-  wanted.metaPixel = false; // The disabled service must reject attempted consent.
   await success(page);
   await settle(page);
   const state = await page.evaluate(() => (window as any).ArtbildConsent.services);
   for (const name of services) expect(state[name], name).toBe(wanted[name]);
   expect(hits.some(hit => hit.url.includes("id=G-TSWGFD1YKF"))).toBe(wanted.googleAnalytics);
   expect(hits.some(hit => hit.url.includes("id=AW-874983678"))).toBe(wanted.googleAds);
-  expect(hits.some(hit => hit.url.includes("/gtm.js"))).toBe(wanted.metaPixel);
+  expect(hits.some(hit => hit.url.includes("/fbevents.js"))).toBe(wanted.metaPixel);
+  expect(hits.some(hit => hit.url.includes("/gtm.js"))).toBe(false);
   expect(hits.some(hit => hit.url === SDK)).toBe(wanted.openaiAds);
   expect(hits.some(hit => hit.url.includes("clarity.ms/tag/"))).toBe(wanted.microsoftClarity);
   const commands = await page.evaluate(() => (window as any).dataLayer.filter((v: any) => v[0] === "consent").map((v: any) => Array.from(v)));
@@ -232,7 +232,7 @@ for (let mask = 0; mask < 32; mask++) test(`real transport matrix ${mask} provid
   await page.goto("/kontakt/");
   await page.getByRole("button", { name: "NUR NOTWENDIGE", exact: true }).click();
   const wanted = Object.fromEntries(services.map((name, bit) => [name, Boolean(mask & (1 << bit))]));
-  await choose(page, wanted); wanted.metaPixel = false; await fill(page); await success(page); await page.waitForTimeout(3500);
+  await choose(page, wanted); await fill(page); await success(page); await page.waitForTimeout(3500);
   await test.info().attach("real-recipients-cookies-storage", { body: JSON.stringify({ mask, wanted, hits,
     cookies: await context.cookies(), storage: await page.evaluate(() => ({ local: {...localStorage}, session: {...sessionStorage} })) }), contentType: "application/json" });
   for (const hit of hits) {
@@ -296,4 +296,50 @@ test("real transport: Clarity records masked interactions and stops on cross-tab
   await Promise.all([page.waitForEvent('domcontentloaded'),choose(second,none)]);await settle(page);
   const count=hits.length;await page.locator('#contact-name').fill('PRIVATE_AFTER_WITHDRAWAL');await settle(page);
   expect(hits).toHaveLength(count);expect((await context.cookies()).filter(c=>/^_cl/.test(c.name))).toEqual([]);
+});
+
+test("Meta real SDK: one page view and confirmed lead, no form data, withdrawal in both tabs", async ({page,context}) => {
+  const hits=await observe(context,true);
+  await page.goto('/kontakt/?fbclid=SYNTHETIC_META_CLICK');
+  await page.getByRole('button',{name:'NUR NOTWENDIGE',exact:true}).click();
+  await fill(page); await success(page); await settle(page); expect(hits).toEqual([]);
+  await choose(page,{...none,metaPixel:true});
+  const events=()=>hits.filter(h=>new URL(h.url).hostname==='www.facebook.com' && new URL(h.url).pathname.startsWith('/tr'));
+  await expect.poll(()=>events().filter(h=>new URL(h.url).searchParams.get('ev')==='PageView').length,{timeout:12000}).toBe(1);
+  expect(events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead')).toHaveLength(0);
+  const id=randomUUID(); await success(page,id);await success(page,id);
+  await expect.poll(()=>events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead').length).toBe(1);
+  for(const hit of events()) {
+    const params=new URL(hit.url).searchParams;
+    expect(params.get('id')).toBe('532392580715017');
+    expect([...params.keys()].some(key=>key.startsWith('ud['))).toBe(false);
+  }
+  expect(events().find(h=>new URL(h.url).searchParams.get('ev')==='Lead')!.url).toContain(id);
+  const combined=JSON.stringify(hits).toLowerCase();
+  for(const value of ['privacy-canary@example.test','privacy canaryperson','privacy canaryvenue','PRIVATE_FORM_CANARY','2027-06-12']) {
+    for(const form of [value,encodeURIComponent(value),createHash('sha256').update(value.toLowerCase()).digest('hex')])expect(combined).not.toContain(form.toLowerCase());
+  }
+  expect(hits.some(h=>/google|clarity|openai/.test(new URL(h.url).hostname))).toBe(false);
+  const second=await context.newPage();await second.goto('/kontakt/');await settle(second);
+  await Promise.all([page.waitForEvent('domcontentloaded'),choose(second,none)]);await settle(page);
+  const count=hits.length;await success(page);await success(second);await settle(page);
+  expect(hits).toHaveLength(count);
+  for(const tab of [page,second])expect(await tab.evaluate(()=>Object.keys(localStorage).filter(k=>/^(_fb|lastExternalReferrer)/.test(k)))).toEqual([]);
+  expect((await context.cookies()).filter(c=>/^_fb/.test(c.name))).toEqual([]);
+  await test.info().attach('meta-real-sdk-requests',{body:JSON.stringify(hits),contentType:'application/json'});
+});
+
+test("Meta excludes private URLs and dynamic filters; late SDK cannot replay after withdrawal", async ({page,context}) => {
+  const hits=await observe(context,true);
+  for(const url of ['/kontakt/?email=privacy-canary%40example.test','/kontakt/#PRIVATE_FRAGMENT','/portfolio/','/kirchenfinder-hamburg/']) {
+    await page.goto(url);await choose(page,{...none,metaPixel:true});await success(page);await settle(page);expect(hits).toEqual([]);
+  }
+  await page.goto('/kontakt/',{referer:'https://artbild-fotografie.de/?email=privacy-canary%40example.test'});
+  await success(page);await settle(page);expect(hits).toEqual([]);
+  await choose(page,none);
+  let release!:()=>void; const pending=new Promise<void>(resolve=>{release=resolve});let requested=false;
+  await context.route('https://connect.facebook.net/en_US/fbevents.js',async route=>{requested=true;await pending;await route.fulfill({contentType:'application/javascript',body:'window.fbq.queue.forEach(a=>{if(a[0]==="trackSingle")fetch("https://www.facebook.com/tr/?ev="+a[2]);});'}).catch(()=>{});});
+  await page.goto('/kontakt/');await choose(page,{...none,metaPixel:true});await success(page);
+  await expect.poll(()=>requested).toBe(true);
+  await Promise.all([page.waitForEvent('domcontentloaded'),choose(page,none)]);release();await settle(page);expect(hits).toEqual([]);
 });

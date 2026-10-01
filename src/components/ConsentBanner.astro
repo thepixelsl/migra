@@ -2,7 +2,7 @@
 import { trackingConfig } from "../config/tracking";
 const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
 const allowed = (name: string) => trackingConfig.providerRelease[name] === true
-  && (name === "openaiAds" ? openaiAdsConfigured : name === "googleAds" ? trackingConfig.googleAdsConfigured : name === "microsoftClarity" ? Boolean(trackingConfig.clarityProjectId) : trackingConfig.googleTrackingConfigured);
+  && (name === "openaiAds" ? openaiAdsConfigured : name === "googleAds" ? trackingConfig.googleAdsConfigured : name === "microsoftClarity" ? Boolean(trackingConfig.clarityProjectId) : name === "metaPixel" ? Boolean(trackingConfig.metaPixelId) : trackingConfig.googleTrackingConfigured);
 const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
 ---
 
@@ -38,12 +38,12 @@ const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
       <h2 id="consent-title" tabindex="-1">COOKIE-EINSTELLUNGEN</h2>
       <p id="consent-summary">
         {!anyAvailable ? <>Die optionalen Statistik- und Werbedienste sind derzeit deaktiviert. Es werden keine dieser Messdienste geladen. Technisch notwendige Funktionen wie das Kontaktformular stehen euch weiterhin zur Verfügung.</> : openaiAdsConfigured ? <>
-          Mit Zustimmung nutzen wir Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel ist derzeit deaktiviert. OpenAI misst Anzeigen in ChatGPT. Daten können auch in den USA verarbeitet werden.
+          Mit Zustimmung nutzen wir Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel dient der Anzeigenmessung und personalisierter Werbung. OpenAI misst Anzeigen in ChatGPT. Daten können auch in den USA verarbeitet werden.
           OpenAI misst nur erfolgreich gesendete Anfragen und erhält keine Formularinhalte.
           Eure OpenAI-Auswahl widerspricht persönlicher Werbenutzung dieser Daten.
         </> : <>
           Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
-          Dienste: Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel ist derzeit deaktiviert. Dabei können Daten durch Google, Microsoft und Meta auch in
+          Dienste: Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel dient der Anzeigenmessung und personalisierter Werbung. Dabei können Daten durch Google, Microsoft und Meta auch in
           den USA verarbeitet werden.
         </>} Eure Auswahl könnt ihr jederzeit ändern.
       </p>
@@ -196,8 +196,10 @@ const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
                   <span aria-hidden="true"></span>
                 </label>
               </div>
-              <p><strong>Zweck:</strong> Messung von Kontaktaktionen, Zielgruppenbildung und Remarketing.</p>
-              <p><strong>Cookies:</strong> <code>_fbp</code> und <code>_fbc</code> · bis zu 90 Tage.</p>
+              <p><strong>Anbieter:</strong> Meta Platforms Ireland Limited.</p>
+              <p><strong>Zweck:</strong> Messung von Seitenaufrufen, Kontaktaktionen und erfolgreichen Anfragen; Zielgruppenbildung und Remarketing.</p>
+              <p>Keine Formularinhalte und kein erweiterter Datenabgleich. Eigene Meta-Cookies sind ausgeschaltet; vorhandene Meta-Cookies können nach Zustimmung genutzt werden, soweit euer Browser dies erlaubt.</p>
+              <p><a href="/datenschutz/#meta-pixel">Weitere Informationen zu Meta Pixel</a></p>
             </section>
             {<section class="consent-service-choice">
               <div class="consent-service-choice__heading">
@@ -445,7 +447,7 @@ const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
       const metaPixel = metaPixelInput instanceof HTMLInputElement && metaPixelInput.checked;
       save({
         services: {
-          googleTagManager: googleAnalytics || microsoftClarity || metaPixel,
+          googleTagManager: false,
           googleAnalytics,
           googleAds: googleAdsInput instanceof HTMLInputElement && googleAdsInput.checked && !googleAdsInput.disabled,
           microsoftClarity,

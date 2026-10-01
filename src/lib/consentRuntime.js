@@ -15,12 +15,13 @@
   const providersEnabled = config.consentEnabled && config.environment !== "disabled" && hostAllowed;
   const configured = name => name === "openaiAds" ? config.openaiAdsConfigured
     : name === "googleAds" ? config.googleAdsConfigured
+    : name === "metaPixel" ? /^\d+$/.test(config.metaPixelId || "")
     : name === "microsoftClarity" ? /^[a-z0-9]+$/.test(config.clarityProjectId || "") : config.googleTrackingConfigured;
   const available = name => Boolean(providersEnabled && configured(name) && config.providerRelease?.[name]);
   const readCookie = name => document.cookie.split(";").map(v => v.trim()).find(v => v.startsWith(`${name}=`))?.slice(name.length + 1) || "";
   const normalize = services => {
     const next = Object.fromEntries(names.map(name => [name, services?.[name] === true && available(name)]));
-    next.googleTagManager = next.metaPixel;
+    next.googleTagManager = false;
     return next;
   };
   const readDecision = () => {
@@ -43,7 +44,7 @@
   };
   const prefixes = {
     googleAnalytics: ["_ga", "_gid", "_gat"], googleAds: ["_gcl_", "_gac_"],
-    microsoftClarity: ["_clck", "_clsk"], metaPixel: ["_fbp", "_fbc"], openaiAds: ["__oppref", "__obref"],
+    microsoftClarity: ["_clck", "_clsk"], metaPixel: ["_fbp", "_fbc", "lastExternalReferrer"], openaiAds: ["__oppref", "__obref"],
   };
   const clean = state => {
     const revoked = names.filter(name => !state[name]).flatMap(name => prefixes[name]);
@@ -90,7 +91,7 @@
   window.gtag("set", { page_location: pageLocation, page_referrer: referrer });
   window.dataLayer.push({ event: "artbild_tracking_config", tracking_environment: config.environment,
     google_analytics_id: config.googleAnalyticsId, google_analytics_delivery: "direct",
-    meta_delivery: "google_tag_manager", clarity_delivery: "direct",
+    meta_delivery: "direct", clarity_delivery: "direct",
     consent_mode: "basic", consent_version: config.consentVersion });
   let channel;
   try { channel = new BroadcastChannel("artbild-consent"); } catch (_) {}
@@ -105,12 +106,29 @@
   };
   const clarityPageAllowed = safeClarityUrl(location.href) && safeClarityUrl(document.referrer)
     && !/^\/(portfolio|kirchenfinder-hamburg)(\/|$)/.test(location.pathname);
+  // Meta reads URLs itself. Only its opaque click ID may accompany a page URL;
+  // arbitrary query values, fragments and dynamic filter pages are excluded.
+  const safeMetaUrl = value => {
+    if (!value) return true;
+    try {
+      const url = new URL(value);
+      return !url.hash && [...url.searchParams].every(([key, value]) =>
+        key === "fbclid" && /^[A-Za-z0-9_-]{1,512}$/.test(value));
+    } catch (_) { return false; }
+  };
+  const metaPageAllowed = safeMetaUrl(location.href) && safeMetaUrl(document.referrer)
+    && !/^\/(portfolio|kirchenfinder-hamburg)(\/|$)/.test(location.pathname);
   const isAllowed = name => !stopping && readDecision()?.services?.[name] === true
-    && (name !== "microsoftClarity" || clarityPageAllowed);
+    && (name !== "microsoftClarity" || clarityPageAllowed)
+    && (name !== "metaPixel" || (metaPageAllowed && safeMetaUrl(location.href)));
   const stop = () => {
     stopping = true;
     window[`ga-disable-${config.googleAnalyticsId}`] = true;
     window.artbildOpenAIAds?.stop?.();
+    if (window.fbq) {
+      if (window.fbq.queue) window.fbq.queue.length = 0;
+      window.fbq("consent", "revoke");
+    }
     // Discard locally queued work. Do not emit new denied/cookieless pings.
     window.dataLayer.length = 0;
     document.querySelectorAll("[data-artbild-provider]").forEach(element => element.remove());
@@ -166,10 +184,20 @@
       load("microsoft-clarity", `https://www.clarity.ms/tag/${config.clarityProjectId}`,
         () => isAllowed("microsoftClarity"));
     }
-    if (state.googleTagManager) {
-      if (!requested.has("google-tag-manager")) window.dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
-      load("google-tag-manager", `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(config.gtmContainerId)}`,
-        () => isAllowed("metaPixel"));
+    if (isAllowed("metaPixel") && !requested.has("meta-pixel")) {
+      const fbq = window.fbq = function () {
+        if (fbq.callMethod) fbq.callMethod.apply(fbq, arguments);
+        else fbq.queue.push(arguments);
+      };
+      window._fbq = fbq;
+      fbq.push = fbq; fbq.loaded = true; fbq.version = "2.0"; fbq.queue = [];
+      fbq.disablePushState = true;
+      fbq("consent", "grant");
+      fbq("set", "autoConfig", false, config.metaPixelId);
+      // No advanced matching user data; account-side automatic matching is off.
+      fbq("init", config.metaPixelId);
+      fbq("trackSingle", config.metaPixelId, "PageView");
+      load("meta-pixel", "https://connect.facebook.net/en_US/fbevents.js", () => isAllowed("metaPixel"));
     }
   };
   function sync() {
@@ -232,10 +260,10 @@
     if (successfulLead(payload)) {
       if (metaLeads.has(payload.event_id)) return;
       metaLeads.add(payload.event_id);
-      window.fbq("track", "Lead", {}, { eventID: payload.event_id });
+      window.fbq("trackSingle", config.metaPixelId, "Lead", {}, { eventID: payload.event_id });
     }
-    else if (payload?.event === "contact_click") window.fbq("track", "Contact");
-    else if (payload?.event === "view_pricing") window.fbq("track", "ViewContent");
+    else if (payload?.event === "contact_click") window.fbq("trackSingle", config.metaPixelId, "Contact");
+    else if (payload?.event === "view_pricing") window.fbq("trackSingle", config.metaPixelId, "ViewContent");
   } };
   if (current) start();
 })();

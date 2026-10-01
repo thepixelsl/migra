@@ -4,6 +4,6 @@ export const trackingRelease = Object.freeze({
   googleAnalytics: true,
   googleAds: true,
   microsoftClarity: true,
-  metaPixel: false,
+  metaPixel: true,
   openaiAds: true,
 });

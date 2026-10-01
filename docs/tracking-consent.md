@@ -1,5 +1,13 @@
 # Consent, Google Analytics, Microsoft Clarity, Meta Pixel und OpenAI Ads
 
+> Stand 1. Oktober 2026: Die folgende frühere GTM-Einrichtungsanleitung ist historisch.
+> Maßgeblich ist [tracking-privacy.md](tracking-privacy.md): alle fünf Dienste werden
+> direkt und nach eigener Einwilligung geladen, GTM bleibt aus. Meta verwendet weder
+> automatischen erweiterten Abgleich noch automatische Events. OpenAI misst
+> ausschließlich bestätigte Anfragen in einem isolierten Frame ohne Formularzugriff.
+> Die aktuelle Einwilligungsversion ist `2026-10-01.2`.
+
+
 ## Architektur
 
 Die Website trennt Einwilligung, Ereignisse und Anbieter:

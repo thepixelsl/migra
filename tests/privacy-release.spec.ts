@@ -31,12 +31,12 @@ test('released build requires fresh consent and enables only the requested relea
  await page.evaluate(()=>(window as any).artbildConsentApi.setConsent({services:{microsoftClarity:true,metaPixel:true}}));
  await expect.poll(()=>requests.some(u=>u.includes('clarity.ms/tag/m73xkwijzj'))).toBe(true);
  const state=await page.evaluate(()=>(window as any).ArtbildConsent.services);
- expect(state.microsoftClarity).toBe(true);expect(state.metaPixel).toBe(false);
- expect(requests.every(u=>u.includes('clarity.ms/tag/'))).toBe(true);
- await Promise.all([page.waitForEvent('domcontentloaded'),page.evaluate(()=>(window as any).artbildConsentApi.setConsent({services:{microsoftClarity:false}}))]);
+ expect(state.microsoftClarity).toBe(true);expect(state.metaPixel).toBe(true);
+ expect(requests.some(u=>u.includes('/fbevents.js'))).toBe(true);expect(requests.every(u=>u.includes('clarity.ms/tag/') || u.includes('/fbevents.js'))).toBe(true);
+ await Promise.all([page.waitForEvent('domcontentloaded'),page.evaluate(()=>(window as any).artbildConsentApi.setConsent({services:{microsoftClarity:false,metaPixel:false}}))]);
  const count=requests.length;await page.waitForTimeout(400);expect(requests).toHaveLength(count);
 });
-test('public pages and settings show four consent-dependent services and actual retention',async({page,context,baseURL})=>{
+test('public pages and settings show five consent-dependent services and actual retention',async({page,context,baseURL})=>{
  const requests=await observe(context,baseURL!);
  for(const path of ['/','/kontakt/','/datenschutz/','/datenschutzerklaerung/','/fuer-agenten/']){
   const response=await page.goto(path);expect(response!.status()).toBeLessThan(400);
@@ -48,7 +48,7 @@ test('public pages and settings show four consent-dependent services and actual 
  await page.getByRole('button',{name:'EINSTELLUNGEN',exact:true}).click();
  await expect(page.locator('[data-consent-dialog]')).toBeVisible();
  await expect(page.locator('[data-consent-service]')).toHaveCount(5);
- for(const name of names){const input=page.locator(`[data-consent-service="${name}"]`);if(name==='metaPixel')await expect(input).toBeDisabled();else await expect(input).toBeEnabled();await expect(input).not.toBeChecked();}
+ for(const name of names){const input=page.locator(`[data-consent-service="${name}"]`);await expect(input).toBeEnabled();await expect(input).not.toBeChecked();}
  await page.setViewportSize({width:320,height:740});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  await page.screenshot({path:test.info().outputPath('released-settings.png')});expect(requests).toEqual([]);
 });

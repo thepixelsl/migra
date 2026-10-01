@@ -66,6 +66,7 @@ export const trackingConfig = {
   gtmContainerId,
   googleAnalyticsId,
   clarityProjectId: productionTrackingDefaults.clarityProjectId,
+  metaPixelId: productionTrackingDefaults.metaPixelId,
   googleAdsId,
   googleAdsConversionLabel,
   googleAdsConfigured,
@@ -75,6 +76,6 @@ export const trackingConfig = {
   googleTrackingConfigured,
   openaiAdsPixelId,
   openaiAdsConfigured,
-  metaViaTagManager: true,
+  metaViaTagManager: false,
   clarityViaTagManager: false,
 } as const;
