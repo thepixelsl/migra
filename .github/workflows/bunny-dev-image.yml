@@ -87,6 +87,6 @@ jobs:
             PUBLIC_GOOGLE_ADS_ID=${{ vars.PUBLIC_GOOGLE_ADS_ID || 'AW-874983678' }}
             PUBLIC_GOOGLE_ADS_CONVERSION_LABEL=${{ vars.PUBLIC_GOOGLE_ADS_CONVERSION_LABEL || 'J-MWCM7x9IsdEP7hnKED' }}
             PUBLIC_OPENAI_ADS_PIXEL_ID=${{ vars.PUBLIC_OPENAI_ADS_PIXEL_ID || '' }}
-            PUBLIC_CONSENT_VERSION=${{ '2026-10-01.2' }}
+            PUBLIC_CONSENT_VERSION=${{ '2026-10-01.3' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -24,7 +24,7 @@ async function observe(context:any,baseURL:string){
 }
 test('released build requires fresh consent and enables only the requested released service',async({page,context,baseURL})=>{
  const requests=await observe(context,baseURL!);
- await context.addCookies([{name:'artbild_consent',url:baseURL!,value:encodeURIComponent(JSON.stringify({version:'2026-09-30.1',updatedAt:new Date().toISOString(),openaiPersonalizationOptOut:true,services:Object.fromEntries(names.map(n=>[n,true]))}))}]);
+ await context.addCookies([{name:'artbild_consent',url:baseURL!,value:encodeURIComponent(JSON.stringify({version:'2026-10-01.2',updatedAt:new Date().toISOString(),openaiPersonalizationOptOut:true,services:Object.fromEntries(names.map(n=>[n,true]))}))}]);
  await page.goto('/kontakt/');await page.waitForTimeout(400);
  expect(requests).toEqual([]);await expect(page.locator('[data-consent-dialog]')).toBeVisible();
  await page.getByRole('button',{name:'NUR NOTWENDIGE',exact:true}).click();
@@ -44,7 +44,7 @@ test('public pages and settings show five consent-dependent services and actual 
  }
  await page.goto('/datenschutz/');const content=await page.locator('main').innerText();
  for(const service of ['Google Analytics','Google Ads','Meta Pixel','Microsoft Clarity','OpenAI Ads'])expect(content).toContain(service);
- expect(content).toContain('deaktiviert');expect(content).toContain('1. Oktober 2026');expect(content).toContain('14 Monate');
+ expect(content).toContain('deaktiviert');expect(content).toContain('1. Oktober 2026');expect(content).toContain('14 Monate');expect(content).toContain('_fbp');expect(content).toContain('_fbc');expect(content).not.toContain('ist im Meta-Konto ausgeschaltet');
  await page.getByRole('button',{name:'EINSTELLUNGEN',exact:true}).click();
  await expect(page.locator('[data-consent-dialog]')).toBeVisible();
  await expect(page.locator('[data-consent-service]')).toHaveCount(5);

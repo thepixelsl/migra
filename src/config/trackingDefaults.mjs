@@ -10,5 +10,5 @@ export const productionTrackingDefaults = Object.freeze({
   googleAdsId: "AW-874983678",
   googleAdsConversionLabel: "J-MWCM7x9IsdEP7hnKED",
   ga4DataRetentionMonths: "14",
-  consentVersion: "2026-10-01.2",
+  consentVersion: "2026-10-01.3",
 });

@@ -5,7 +5,7 @@
 > direkt und nach eigener Einwilligung geladen, GTM bleibt aus. Meta verwendet weder
 > automatischen erweiterten Abgleich noch automatische Events. OpenAI misst
 > ausschließlich bestätigte Anfragen in einem isolierten Frame ohne Formularzugriff.
-> Die aktuelle Einwilligungsversion ist `2026-10-01.2`.
+> Die aktuelle Einwilligungsversion ist `2026-10-01.3`.
 
 
 ## Architektur

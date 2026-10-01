@@ -45,7 +45,7 @@ async function observe(context: BrowserContext, real = false) {
       (url.hostname === "connect.facebook.net" && (/\/fbevents\.js$/.test(url.pathname) || url.pathname.startsWith("/signals/config/")))
       || (url.hostname === "www.clarity.ms" && url.pathname.startsWith("/tag/"))
       || (url.hostname === "scripts.clarity.ms" && /\/clarity\.js$/.test(url.pathname)))) {
-      const cache = new URL("sdk-cache/", root); mkdirSync(cache, { recursive: true });
+      const cache = new URL(process.env.PRIVACY_SDK_CACHE_URL || "sdk-cache/", root); mkdirSync(cache, { recursive: true });
       const file = new URL(createHash("sha256").update(request.url()).digest("hex") + ".js", cache);
       if (!existsSync(file)) {
         const response = await fetch(request.url());
@@ -303,15 +303,24 @@ test("Meta real SDK: one page view and confirmed lead, no form data, withdrawal 
   await page.goto('/kontakt/?fbclid=SYNTHETIC_META_CLICK');
   await page.getByRole('button',{name:'NUR NOTWENDIGE',exact:true}).click();
   await fill(page); await success(page); await settle(page); expect(hits).toEqual([]);
+  expect((await context.cookies()).filter(c=>/^_fb/.test(c.name))).toEqual([]);
   await choose(page,{...none,metaPixel:true});
   const events=()=>hits.filter(h=>new URL(h.url).hostname==='www.facebook.com' && new URL(h.url).pathname.startsWith('/tr'));
   await expect.poll(()=>events().filter(h=>new URL(h.url).searchParams.get('ev')==='PageView').length,{timeout:12000}).toBe(1);
   expect(events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead')).toHaveLength(0);
+  await expect.poll(async()=> (await context.cookies()).filter(c=>['_fbp','_fbc'].includes(c.name)).length).toBe(2);
+  const identifiers=Object.fromEntries((await context.cookies()).filter(c=>['_fbp','_fbc'].includes(c.name)).map(c=>[c.name,c.value]));
+  expect(identifiers._fbc).toContain('SYNTHETIC_META_CLICK');
+  for(const cookie of (await context.cookies()).filter(c=>['_fbp','_fbc'].includes(c.name))) {
+    expect(cookie.expires-Date.now()/1000).toBeGreaterThan(0);
+    expect(cookie.expires-Date.now()/1000).toBeLessThanOrEqual(90*86400+2);
+  }
   const id=randomUUID(); await success(page,id);await success(page,id);
   await expect.poll(()=>events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead').length).toBe(1);
   for(const hit of events()) {
     const params=new URL(hit.url).searchParams;
     expect(params.get('id')).toBe('532392580715017');
+    expect(params.get('fbp')).toBe(identifiers._fbp);expect(params.get('fbc')).toBe(identifiers._fbc);
     expect([...params.keys()].some(key=>key.startsWith('ud['))).toBe(false);
   }
   expect(events().find(h=>new URL(h.url).searchParams.get('ev')==='Lead')!.url).toContain(id);
@@ -321,6 +330,11 @@ test("Meta real SDK: one page view and confirmed lead, no form data, withdrawal 
   }
   expect(hits.some(h=>/google|clarity|openai/.test(new URL(h.url).hostname))).toBe(false);
   const second=await context.newPage();await second.goto('/kontakt/');await settle(second);
+  await success(second);
+  await expect.poll(()=>events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead').length).toBe(2);
+  const laterLead=new URL(events().filter(h=>new URL(h.url).searchParams.get('ev')==='Lead').at(-1)!.url).searchParams;
+  expect(laterLead.get('dl')).toBe('https://artbild-fotografie.de/kontakt/');
+  expect(laterLead.get('fbp')).toBe(identifiers._fbp);expect(laterLead.get('fbc')).toBe(identifiers._fbc);
   await Promise.all([page.waitForEvent('domcontentloaded'),choose(second,none)]);await settle(page);
   const count=hits.length;await success(page);await success(second);await settle(page);
   expect(hits).toHaveLength(count);
