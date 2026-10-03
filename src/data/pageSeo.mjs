@@ -288,7 +288,7 @@ export const pageSeo = {
   },
   "/hochzeitsfotograf-preise/": {
     keyword: "Hochzeitsfotograf Hamburg Preise",
-    description: "Hochzeitsfotograf Preise - Günstige Festpreisangebote für Deine Hochheitsreportage. Keine versteckten Kosten, keine Extrakosten.",
+    description: "Günstige Festpreisangebote für Deine Hochheitsreportage. Keine versteckten Kosten, keine Extrakosten",
     image: "src/assets/hochzeitsfotograf-preise/ART9896-1-1.jpg",
     alt: "Lachendes Paar im Gegenlicht bei einem Fotoshooting von Artbild-Fotografie",
     focalPoint: "top",
