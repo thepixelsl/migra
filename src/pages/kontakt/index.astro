@@ -751,6 +751,7 @@ const schemaGraph = {
 
         contactForm.addEventListener("submit", async (event) => {
           event.preventDefault();
+          if (submit instanceof HTMLButtonElement && submit.disabled) return;
 
           validateYear();
           if (!contactForm.reportValidity()) return;
@@ -785,6 +786,7 @@ const schemaGraph = {
             status.focus();
             window.dispatchEvent(new CustomEvent("artbild:form_success", {
               detail: {
+                eventId: crypto.randomUUID(),
                 formId: "kontakt_anfrage_form",
                 formType: "contact_request",
                 sectionId: "kontakt_anfrageformular",

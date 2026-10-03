@@ -22,7 +22,7 @@ test("homepage has one consistent Hamburg title and description", () => {
   assert.equal($("title").text(), homepageSeo.title);
   assert.equal($("meta[name='description']").length, 1);
   assert.equal($("meta[name='description']").attr("content"), homepageSeo.description);
-  assert.match(homepageSeo.description, /^Hochzeitsfotograf Hamburg:/);
+  assert.match(homepageSeo.description, /^Hochzeitsfotograf Hamburg\./);
   for (const [attribute, name, expected] of [
     ["property", "og:title", "Hochzeitsfotograf Hamburg"],
     ["property", "og:description", homepageSeo.description],

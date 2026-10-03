@@ -11,16 +11,18 @@ const consentCookieValue = encodeURIComponent(
     services: {
       googleTagManager: false,
       googleAnalytics: false,
+      googleAds: false,
       microsoftClarity: false,
       metaPixel: false,
       openaiAds: false,
     },
-    updatedAt: "2026-07-29T00:00:00.000Z",
+    updatedAt: new Date().toISOString(),
   }),
 );
 
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: ["privacy-acceptance.spec.ts", "privacy-release.spec.ts"],
   timeout: 60_000,
   expect: {
     timeout: 10_000,

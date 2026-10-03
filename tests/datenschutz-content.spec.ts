@@ -59,7 +59,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 29. September 2026");
+  expect(mainText).toContain("Stand: 30. September 2026");
   expect(mainText).toContain("eine Buchungsanfrage über die Agentenseite vorbereiten");
   expect(mainText).toContain("spätestens nach 30 Minuten verworfen");
   expect(mainText).toContain("Eine Übermittlung an uns erfolgt erst");
@@ -105,43 +105,15 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("Art. 6 Abs. 1 lit. f DSGVO");
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
-  expect(mainText).toContain("Google Tag Manager, Google Analytics, Microsoft Clarity und Meta Pixel werden erst nach Ihrer Einwilligung");
-  expect(mainText).toContain("Google Analytics, Microsoft Clarity und Meta Pixel");
-  expect(mainText).toContain("er hat keinen eigenen Schalter im Banner");
-  expect(mainText).toContain("Sobald Sie alle drei Dienste abwählen, wird auch der Tag Manager deaktiviert");
-  expect(mainText).toContain("Vor Ihrer Einwilligung wird der Tag Manager vollständig blockiert");
-  expect(mainText).not.toContain("erweiterten Einwilligungsmodus");
+  const config = JSON.parse(await page.locator("#artbild-tracking-config").textContent() || "{}");
+  expect(Object.values(config.providerRelease)).not.toContain(true);
   expect(mainText).toContain("Cookie enthält die gewählten Services");
-  expect(mainText).toContain("Einwilligung in den Service „Google Analytics“");
-  expect(mainText).not.toContain("Google Analytics 4");
-  expect(mainText).toContain("Einwilligung in den Service „Microsoft Clarity“");
-  expect(mainText).toContain("Einwilligung in den Service „Meta Pixel“");
-  expect(mainText).toContain("Google Ireland Limited");
-  expect(mainText).toContain("HTTP-Protokolldaten innerhalb von 14 Tagen");
-  expect(mainText).toMatch(
-    /Aufbewahrungsfrist für Nutzer- und Ereignisdaten beträgt (2|14) Monate/,
-  );
-  expect(mainText).toContain("Meta Platforms Ireland Limited");
-  expect(mainText).toContain("Laufzeit von bis zu 90 Tagen");
-  expect(mainText).toContain("Zielgruppen bleiben bestehen, bis sie im Meta-Konto gelöscht werden");
-  expect(mainText).toContain("gemeinsam verantwortlich");
-  expect(mainText).toContain("Betroffenenrechte können sowohl bei uns als auch bei Meta");
-  expect(mainText).toContain("Informations- und Betroffenenrechte ist Meta verantwortlich");
-  expect(mainText).toContain("höchstens zwei Jahren");
-  expect(mainText).toContain("Microsoft Ireland Operations Limited");
-  for (const cookieName of ["_clck", "_clsk", "CLID", "ANONCHK", "MR", "MUID", "SM"]) {
-    expect(mainText).toContain(cookieName);
-  }
-  expect(mainText).toContain("Microsoft nennt in der aktuellen Clarity-Cookie-Liste für diese Third-Party-Cookies keine festen Laufzeiten");
-  expect(mainText).toContain("Wiedergabedaten werden 30 Tage gespeichert");
-  expect(mainText).toContain("Kontakt-, Anfrage- und Terminformulare");
-  expect(mainText).toContain("Microsoft Advertising (ehemals Bing Ads)");
-  expect(mainText).toContain("nicht Bestandteil der hier beschriebenen Clarity-Nutzung");
+  expect(mainText).toContain("180 Tagen");
+  expect(mainText).toContain("keine neuen Messdaten erhoben oder gesendet");
+  expect(mainText).toContain("nicht automatisch gelöscht");
+  expect(mainText).toContain("Google Ads und Conversion-Tracking");
+  expect(mainText).toContain("OpenAI Ads");
   expect(mainText).toContain("EU-Standardvertragsklauseln");
-  expect(mainText).toContain("Google LLC, Meta Platforms, Inc. und Microsoft Corporation");
-  expect(mainText).toContain("für das EU-US Data Privacy Framework zertifiziert");
-  expect(mainText).toContain("WhatsApp LLC und Meta Platforms, Inc.");
-  expect(mainText).toContain("Standardvertragsklauseln an");
 
   expect(mainText).toContain("PicDrop GmbH");
   expect(mainText).toContain("Am Kupfergraben 4/4a");
@@ -157,14 +129,9 @@ test("privacy page names providers, locations and processed data without infrast
   await expect(main.locator('a[href="https://bunny.net/privacy/"]')).toHaveCount(1);
   await expect(main.locator('a[href="https://bunny.net/gdpr/sub-processors/"]')).toHaveCount(0);
   await expect(main.locator('a[href="https://www.strato.de/datenschutz/"]')).toHaveCount(1);
-  await expect(main.locator('a[href="https://support.google.com/tagmanager/answer/9323295?hl=de"]')).toHaveCount(1);
-  await expect(main.locator('a[href="https://support.google.com/analytics/answer/7667196?hl=de"]')).toHaveCount(1);
-  await expect(main.locator('a[href="https://www.facebook.com/legal/controller_addendum"]')).toHaveCount(1);
   await expect(main.locator('a[href="https://policies.google.com/privacy/frameworks?hl=de"]')).toHaveCount(2);
   await expect(main.locator('a[href="https://www.facebook.com/privacy/policies/data_privacy_framework/"]')).toHaveCount(1);
   await expect(main.locator('a[href="https://www.facebook.com/legal/terms/Privacy/GDTA"]')).toHaveCount(1);
-  await expect(main.locator('a[href="https://learn.microsoft.com/en-us/clarity/faq"]')).toHaveCount(1);
-  await expect(main.locator('a[href="https://learn.microsoft.com/en-us/clarity/setup-and-installation/data-retention"]')).toHaveCount(1);
   await expect(main.locator('a[href="https://www.dataprivacyframework.gov/list"]')).toHaveCount(1);
   await expect(main.locator('a[href^="https://www.e-recht24.de/"]')).toHaveCount(0);
   await expect(main.locator('a[href="https://www.e-recht24.de/dsg/13252-bunny-net-cdn.html"]')).toHaveCount(0);

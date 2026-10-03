@@ -6,7 +6,7 @@
   try {
     config = JSON.parse(document.getElementById("artbild-tracking-config")?.textContent || "{}");
   } catch (_) { return; }
-  if (!config.consentEnabled || !config.openaiAdsConfigured || config.environment === "disabled") return;
+  if (!config.consentEnabled || !config.providerRelease?.openaiAds || !config.openaiAdsConfigured || config.environment === "disabled") return;
   const hostname = window.location.hostname.toLowerCase();
   if (!config.allowedHosts?.some(rule => rule.startsWith("*.")
     ? hostname.endsWith(rule.slice(1)) : hostname === rule)) return;
@@ -17,8 +17,15 @@
     document.cookie = `__obref=; Path=/; Max-Age=0; SameSite=Lax${domain ? `; Domain=${domain}` : ""}${location.protocol === "https:" ? "; Secure" : ""}`;
   }
 
-  let frame;
-  let leadSent = false;
+  const frames = new Set();
+  const stop = () => {
+    for (const frame of frames) {
+      frame.contentWindow?.postMessage({ type: "artbild:openai:revoke" }, "*");
+      frame.remove();
+    }
+    frames.clear();
+  };
+  const sentLeads = new Set();
   let capturedLanding = false;
   const granted = () => window.ArtbildConsent?.services?.openaiAds === true
     && window.artbildConsentApi?.isServiceAllowed?.("openaiAds") === true;
@@ -31,8 +38,7 @@
   const updateConsent = () => {
     if (!granted()) {
       // Removing the entire sandbox also discards a pending SDK download/queue.
-      frame?.remove();
-      frame = undefined;
+      stop();
       return;
     }
     if (!capturedLanding) {
@@ -47,16 +53,19 @@
   };
   window.artbildOpenAIAds = {
     updateConsent,
+    stop,
     track(payload) {
-      if (leadSent || !granted() || payload?.event !== "form_success"
-        || payload.form_type !== "contact_request" || payload.form_id !== "kontakt_anfrage_form") return;
+      if (!granted() || payload?.event !== "form_success"
+        || payload.form_type !== "contact_request" || payload.form_id !== "kontakt_anfrage_form"
+        || !/^[a-f0-9-]{36}$/.test(payload.event_id || "") || sentLeads.has(payload.event_id)) return;
       try {
-        leadSent = true;
+        sentLeads.add(payload.event_id);
         updateConsent();
         const url = new URL("/openai-conversion.html", window.location.origin);
         const reference = attribution();
         if (reference && reference.length <= 2048) url.searchParams.set("oppref", reference);
-        frame = document.createElement("iframe");
+        const frame = document.createElement("iframe");
+        frames.add(frame);
         frame.hidden = true;
         frame.title = "Anzeigenmessung";
         frame.dataset.artbildProvider = "openai-ads";

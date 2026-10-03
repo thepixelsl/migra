@@ -1,11 +1,15 @@
 ---
 import { trackingConfig } from "../config/tracking";
 const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
+const allowed = (name: string) => trackingConfig.providerRelease[name] === true
+  && (name === "openaiAds" ? openaiAdsConfigured : name === "googleAds" ? trackingConfig.googleAdsConfigured : name === "microsoftClarity" ? Boolean(trackingConfig.clarityProjectId) : name === "metaPixel" ? Boolean(trackingConfig.metaPixelId) : trackingConfig.googleTrackingConfigured);
+const anyAvailable = Object.keys(trackingConfig.providerRelease).some(allowed);
 ---
 
 <dialog
   class="consent-dialog"
   data-consent-dialog
+  data-consent-available={anyAvailable ? "true" : "false"}
   aria-modal="true"
   aria-labelledby="consent-title"
   aria-describedby="consent-summary"
@@ -33,14 +37,13 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
       >
       <h2 id="consent-title" tabindex="-1">COOKIE-EINSTELLUNGEN</h2>
       <p id="consent-summary">
-        {openaiAdsConfigured ? <>
-          Mit Zustimmung nutzen Google, Microsoft, Meta und OpenAI Daten für Statistik und Werbung, auch in den USA.
+        {!anyAvailable ? <>Die optionalen Statistik- und Werbedienste sind derzeit deaktiviert. Es werden keine dieser Messdienste geladen. Technisch notwendige Funktionen wie das Kontaktformular stehen euch weiterhin zur Verfügung.</> : openaiAdsConfigured ? <>
+          Mit Zustimmung nutzen wir Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel dient der Anzeigenmessung und personalisierter Werbung. OpenAI misst Anzeigen in ChatGPT. Daten können auch in den USA verarbeitet werden.
           OpenAI misst nur erfolgreich gesendete Anfragen und erhält keine Formularinhalte.
           Eure OpenAI-Auswahl widerspricht persönlicher Werbenutzung dieser Daten.
         </> : <>
           Schön, dass Du da bist. Mit Deiner Zustimmung nutzen wir optionale
-          Analyse- und Marketingdienste, um unsere Website und Werbung zu
-          verbessern. Dabei können Daten durch Google, Microsoft und Meta auch in
+          Dienste: Google Analytics und Microsoft Clarity zur Nutzungsanalyse, Google Ads zur Anzeigenmessung. Meta Pixel dient der Anzeigenmessung und personalisierter Werbung. Dabei können Daten durch Google, Microsoft und Meta auch in
           den USA verarbeitet werden.
         </>} Eure Auswahl könnt ihr jederzeit ändern.
       </p>
@@ -116,23 +119,23 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
           <div class="consent-card__details-body">
             <section class="consent-service-choice">
               <div class="consent-service-choice__heading">
-                <h5>Google Analytics</h5>
+                <h5>Google Analytics{!allowed("googleAnalytics") && " · derzeit deaktiviert"}</h5>
                 <label class="consent-switch consent-switch--service">
                   <span class="visually-hidden">Google Analytics erlauben</span>
-                  <input type="checkbox" data-consent-service="googleAnalytics">
+                  <input type="checkbox" data-consent-service="googleAnalytics" disabled={!allowed("googleAnalytics")}>
                   <span aria-hidden="true"></span>
                 </label>
               </div>
               <p><strong>Zweck:</strong> Reichweitenmessung und Auswertung ausgewählter Interaktionen.</p>
-              <p><strong>Cookies:</strong> <code>_ga</code> und <code>_ga_*</code> · bis zu 2 Jahre.</p>
+              <p><strong>Cookies:</strong> <code>_ga</code> und <code>_ga_*</code> · höchstens 180 Tage.</p>
             </section>
 
             <section class="consent-service-choice">
               <div class="consent-service-choice__heading">
-                <h5>Microsoft Clarity</h5>
+                <h5>Microsoft Clarity{!allowed("microsoftClarity") && " · derzeit deaktiviert"}</h5>
                 <label class="consent-switch consent-switch--service">
                   <span class="visually-hidden">Microsoft Clarity erlauben</span>
-                  <input type="checkbox" data-consent-service="microsoftClarity">
+                  <input type="checkbox" data-consent-service="microsoftClarity" disabled={!allowed("microsoftClarity")}>
                   <span aria-hidden="true"></span>
                 </label>
               </div>
@@ -154,7 +157,7 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
         <div class="consent-card__heading">
           <div>
             <h4>Marketing</h4>
-            <p class="consent-card__status">Meta Pixel{openaiAdsConfigured ? " und OpenAI Ads" : ""}</p>
+            <p class="consent-card__status">Google Ads, Meta Pixel und OpenAI Ads</p>
           </div>
           <label class="consent-switch">
             <span class="visually-hidden">Marketing erlauben</span>
@@ -172,22 +175,38 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
           <div class="consent-card__details-body">
             <section class="consent-service-choice">
               <div class="consent-service-choice__heading">
-                <h5>Meta Pixel</h5>
+                <h5>Google Ads{!allowed("googleAds") && " · derzeit deaktiviert"}</h5>
                 <label class="consent-switch consent-switch--service">
-                  <span class="visually-hidden">Meta Pixel erlauben</span>
-                  <input type="checkbox" data-consent-service="metaPixel">
+                  <span class="visually-hidden">Google Ads erlauben</span>
+                  <input type="checkbox" data-consent-service="googleAds" disabled={!allowed("googleAds")}>
                   <span aria-hidden="true"></span>
                 </label>
               </div>
-              <p><strong>Zweck:</strong> Messung von Kontaktaktionen, Zielgruppenbildung und Remarketing.</p>
-              <p><strong>Cookies:</strong> <code>_fbp</code> und <code>_fbc</code> · bis zu 90 Tage.</p>
+              <p><strong>Anbieter:</strong> Google Ireland Limited.</p>
+              <p><strong>Zweck:</strong> Erfolgreich gesendete Kontaktanfragen Google-Anzeigen zuordnen. Keine personalisierte Google-Werbung.</p>
+              <p><strong>Cookies:</strong> <code>_gcl_*</code> · höchstens 90 Tage. Anzeigenkennung, bereinigte Seitenadresse und technische Verbindungsdaten werden für die Messung verwendet.</p>
+              <p><a href="/datenschutz/#google-ads">Weitere Informationen zu Google Ads</a></p>
             </section>
-            {openaiAdsConfigured && <section class="consent-service-choice">
+            <section class="consent-service-choice">
               <div class="consent-service-choice__heading">
-                <h5>OpenAI Ads</h5>
+                <h5>Meta Pixel{!allowed("metaPixel") && " · derzeit deaktiviert"}</h5>
+                <label class="consent-switch consent-switch--service">
+                  <span class="visually-hidden">Meta Pixel erlauben</span>
+                  <input type="checkbox" data-consent-service="metaPixel" disabled={!allowed("metaPixel")}>
+                  <span aria-hidden="true"></span>
+                </label>
+              </div>
+              <p><strong>Anbieter:</strong> Meta Platforms Ireland Limited.</p>
+              <p><strong>Zweck:</strong> Messung von Seitenaufrufen, Kontaktaktionen und erfolgreichen Anfragen; Zielgruppenbildung und Remarketing.</p>
+              <p>Keine Formularinhalte und kein erweiterter Datenabgleich. Nach eurer Meta-Einwilligung nutzen wir die eigenen Cookies _fbp (Browserkennung) und _fbc (Anzeigenklickkennung, falls vorhanden) für bis zu 90 Tage; bei weiterer Nutzung kann diese Laufzeit erneuert werden. Beim Widerruf entfernen wir diese Cookies. Meta kann auch vorhandene Cookies auf seinen eigenen Domains nutzen, soweit euer Browser dies erlaubt.</p>
+              <p><a href="/datenschutz/#meta-pixel">Weitere Informationen zu Meta Pixel</a></p>
+            </section>
+            {<section class="consent-service-choice">
+              <div class="consent-service-choice__heading">
+                <h5>OpenAI Ads{!allowed("openaiAds") && " · derzeit deaktiviert"}</h5>
                 <label class="consent-switch consent-switch--service">
                   <span class="visually-hidden">OpenAI Ads erlauben</span>
-                  <input type="checkbox" data-consent-service="openaiAds">
+                  <input type="checkbox" data-consent-service="openaiAds" disabled={!allowed("openaiAds")}>
                   <span aria-hidden="true"></span>
                 </label>
               </div>
@@ -205,6 +224,7 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
 
       <div class="consent-dialog__save-actions">
         <button type="button" data-consent-save>AUSWAHL SPEICHERN</button>
+        <button type="button" data-consent-choice="necessary">ALLE ABLEHNEN</button>
         <button type="button" data-consent-choice="all">ALLE AKZEPTIEREN</button>
       </div>
     </section>
@@ -245,9 +265,10 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
     const marketingInput = dialog.querySelector('[data-consent-group="marketing"]');
     const googleAnalyticsInput = dialog.querySelector('[data-consent-service="googleAnalytics"]');
     const microsoftClarityInput = dialog.querySelector('[data-consent-service="microsoftClarity"]');
+    const googleAdsInput = dialog.querySelector('[data-consent-service="googleAds"]');
     const metaPixelInput = dialog.querySelector('[data-consent-service="metaPixel"]');
     const openaiAdsInput = dialog.querySelector('[data-consent-service="openaiAds"]');
-    const marketingServices = [metaPixelInput, openaiAdsInput]
+    const marketingServices = [googleAdsInput, metaPixelInput, openaiAdsInput]
       .filter((input) => input instanceof HTMLInputElement);
     const serviceInputs = [googleAnalyticsInput, microsoftClarityInput, ...marketingServices]
       .filter((input) => input instanceof HTMLInputElement);
@@ -290,6 +311,7 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
         metaPixelInput.checked = services.metaPixel === true
           || (services.metaPixel === undefined && state.marketing === true);
       }
+      if (googleAdsInput instanceof HTMLInputElement) googleAdsInput.checked = services.googleAds === true;
       if (openaiAdsInput instanceof HTMLInputElement) {
         openaiAdsInput.checked = services.openaiAds === true;
       }
@@ -321,17 +343,17 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
     statisticsInput?.addEventListener("change", () => {
       if (!(statisticsInput instanceof HTMLInputElement)) return;
       if (googleAnalyticsInput instanceof HTMLInputElement) {
-        googleAnalyticsInput.checked = statisticsInput.checked;
+        googleAnalyticsInput.checked = !googleAnalyticsInput.disabled && statisticsInput.checked;
       }
       if (microsoftClarityInput instanceof HTMLInputElement) {
-        microsoftClarityInput.checked = statisticsInput.checked;
+        microsoftClarityInput.checked = !microsoftClarityInput.disabled && statisticsInput.checked;
       }
       statisticsInput.indeterminate = false;
     });
 
     marketingInput?.addEventListener("change", () => {
       if (!(marketingInput instanceof HTMLInputElement)) return;
-      marketingServices.forEach((input) => { input.checked = marketingInput.checked; });
+      marketingServices.forEach((input) => { input.checked = !input.disabled && marketingInput.checked; });
       marketingInput.indeterminate = false;
     });
 
@@ -376,6 +398,7 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
         services: {
           googleTagManager: false,
           googleAnalytics: false,
+          googleAds: false,
           microsoftClarity: false,
           metaPixel: false,
           openaiAds: false,
@@ -387,10 +410,11 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
       save({
         services: {
           googleTagManager: true,
-          googleAnalytics: true,
-          microsoftClarity: true,
-          metaPixel: true,
-          openaiAds: openaiAdsInput instanceof HTMLInputElement,
+          googleAnalytics: googleAnalyticsInput instanceof HTMLInputElement && !googleAnalyticsInput.disabled,
+          googleAds: googleAdsInput instanceof HTMLInputElement && !googleAdsInput.disabled,
+          microsoftClarity: microsoftClarityInput instanceof HTMLInputElement && !microsoftClarityInput.disabled,
+          metaPixel: metaPixelInput instanceof HTMLInputElement && !metaPixelInput.disabled,
+          openaiAds: openaiAdsInput instanceof HTMLInputElement && !openaiAdsInput.disabled,
         },
       });
     };
@@ -423,8 +447,9 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
       const metaPixel = metaPixelInput instanceof HTMLInputElement && metaPixelInput.checked;
       save({
         services: {
-          googleTagManager: googleAnalytics || microsoftClarity || metaPixel,
+          googleTagManager: false,
           googleAnalytics,
+          googleAds: googleAdsInput instanceof HTMLInputElement && googleAdsInput.checked && !googleAdsInput.disabled,
           microsoftClarity,
           metaPixel,
           openaiAds: openaiAdsInput instanceof HTMLInputElement && openaiAdsInput.checked,
@@ -464,15 +489,13 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
         && element.getClientRects().length > 0
       ));
       if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
+      // Include the initially focused heading: Safari otherwise lets Shift+Tab
+      // escape the dialog before a button has received focus.
+      const index = focusable.indexOf(document.activeElement);
+      const next = index < 0 ? (event.shiftKey ? focusable.length - 1 : 0)
+        : (index + (event.shiftKey ? -1 : 1) + focusable.length) % focusable.length;
+      event.preventDefault();
+      focusable[next].focus();
     });
 
     window.addEventListener("artbild:consent_settings_open", () => openDialog(true));
@@ -484,8 +507,10 @@ const openaiAdsConfigured = trackingConfig.openaiAdsConfigured;
       }
       if (window.ArtbildConsent?.hasDecision) {
         settingsButton.hidden = false;
-      } else {
+      } else if (dialog.dataset.consentAvailable === "true") {
         openDialog(false);
+      } else {
+        settingsButton.hidden = false;
       }
     };
 
