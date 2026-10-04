@@ -43,7 +43,7 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
         </div>
         <span class="home-standesamt-feature__cta">
           Standesämter &amp; Trauorte entdecken
-          <span aria-hidden="true">↗</span>
+          <span aria-hidden="true">↗&#xFE0E;</span>
         </span>
       </div>
 
@@ -52,7 +52,7 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
           src={standesamtFinderImage}
           alt="Braut im fließenden Hochzeitskleid auf einem Hotelbett im Hotel Atlantic Hamburg"
           widths={[360, 480, 640, 768, 960, 1280]}
-          sizes="(max-width: 620px) min(calc(86vw - 55px), 360px), (max-width: 959px) min(calc(82vw - 36px), 560px), (max-width: 1180px) 52vw, 620px"
+          sizes="(min-width: 621px) and (max-width: 1180px) and (orientation: portrait) calc(42.24vw + 38px), (max-width: 620px) min(calc(86vw - 55px), 360px), (max-width: 959px) min(calc(82vw - 36px), 560px), (max-width: 1180px) 52vw, 620px"
           loading="lazy"
           decoding="async"
           format="webp"
@@ -358,6 +358,105 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
       bottom: 0;
       left: 0;
       font-size: 9px;
+    }
+  }
+
+  @media (min-width: 621px) and (max-width: 1180px) and (orientation: portrait) {
+    .home-standesamt-feature {
+      width: calc(100% - 12vw);
+      padding-top: 48px;
+      padding-bottom: 60px;
+    }
+
+    .home-standesamt-feature__card {
+      max-width: 960px;
+    }
+
+    .home-standesamt-feature__link {
+      display: grid;
+      grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+      align-items: center;
+    }
+
+    .home-standesamt-feature__media {
+      z-index: 1;
+      grid-area: 1 / 1;
+      width: calc(100% + 38px);
+      max-width: none;
+      height: clamp(590px, 74vw, 690px);
+      aspect-ratio: auto;
+      margin: 0;
+      overflow: visible;
+      box-shadow: none;
+    }
+
+    .home-standesamt-feature__copy {
+      z-index: 2;
+      grid-area: 1 / 2;
+      width: 100%;
+      min-height: 0;
+      margin: 0;
+      padding: 38px 32px 40px;
+      align-items: flex-start;
+      text-align: left;
+      box-shadow: none;
+    }
+
+    .home-standesamt-feature__eyebrow {
+      margin: 0 0 20px;
+      font-size: 9px;
+      letter-spacing: .16em;
+      line-height: 1.7;
+    }
+
+    .home-standesamt-feature h2 {
+      max-width: 15ch;
+      font-size: clamp(32px, 4.15vw, 38px);
+      letter-spacing: -.022em;
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    .home-standesamt-feature__text {
+      max-width: 36ch;
+      margin-top: 24px;
+    }
+
+    .home-standesamt-feature__text p {
+      font-size: 15px;
+      line-height: 1.72;
+    }
+
+    .home-standesamt-feature__cta {
+      min-height: 48px;
+      align-items: center;
+      gap: 14px;
+      margin-top: 28px;
+      font-size: 10px;
+      letter-spacing: .1em;
+      line-height: 1.6;
+    }
+
+    .home-standesamt-feature__cta span {
+      flex: none;
+      font-family: Arial, sans-serif;
+      font-size: 20px;
+      font-variant-emoji: text;
+    }
+
+    .home-standesamt-feature__media figcaption {
+      top: calc(100% + 14px);
+      right: auto;
+      bottom: auto;
+      left: 0;
+      width: auto;
+      margin: 0;
+      padding: 0;
+      background: none;
+      color: #6f6a64;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .12em;
     }
   }
 </style>
