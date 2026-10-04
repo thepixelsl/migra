@@ -1,0 +1,175 @@
+---
+interface Props {
+  termsHref?: string;
+}
+
+// Supply the published conditions page before releasing the offer.
+const { termsHref } = Astro.props;
+---
+
+<section class="thank-you" id="dankeschoen" aria-labelledby="thank-you-title">
+  <div class="thank-you__copy">
+    <p class="thank-you__eyebrow">Für eure Lieblingsbilder</p>
+    <h2 id="thank-you-title">10 % Dankeschön</h2>
+    <p class="thank-you__invitation">10 eurer schönsten Bilder.{" "}<br />10 % Rabatt.</p>
+    <p class="thank-you__text">Für zehn eurer schönsten Bilder, die ich zeigen darf, sage ich mit <span class="thank-you__percent">10 %</span> Rabatt vielen lieben Dank! Wenn euch die Idee gefällt, suchen wir nach der Hochzeit gemeinsam die passenden Bilder aus.</p>
+  </div>
+
+  <div class="thank-you__calculator" data-thank-you-calculator hidden>
+    <p class="thank-you__eyebrow">Euer Dankeschön in Euro</p>
+    <label for="thank-you-total">Euer Gesamtpreis</label>
+    <div class="thank-you__field">
+      <input
+        id="thank-you-total"
+        type="text"
+        inputmode="decimal"
+        autocomplete="off"
+        spellcheck="false"
+        placeholder="z. B. 1.992"
+        aria-describedby="thank-you-hint thank-you-error"
+      />
+      <span aria-hidden="true">€</span>
+    </div>
+    <p class="thank-you__hint" id="thank-you-hint">Tragt den Gesamtpreis eures Fotopakets ein.</p>
+    <p class="thank-you__error" id="thank-you-error" aria-live="polite" hidden>Bitte gebt einen gültigen Preis ein, zum Beispiel 1.992 oder 1.992,50.</p>
+    <output for="thank-you-total" aria-live="polite" aria-atomic="true">
+      <span class="thank-you__result-label">Mit 10 % Dankeschön</span>
+      <strong data-thank-you-price aria-label="Noch kein Preis berechnet">…</strong>
+      <span class="thank-you__saving" data-thank-you-saving>Hier seht ihr euren Preis mit Rabatt.</span>
+    </output>
+  </div>
+
+  <noscript><p class="thank-you__fallback">Euer Preis mit Dankeschön entspricht 90 % des regulären Gesamtpreises. Bei 1.992 € sind das 1.792,80 €.</p></noscript>
+
+  <div class="thank-you__conditions">
+    <p>Die <span class="thank-you__percent">10 %</span> gelten für den regulären Gesamtpreis eures Fotopakets. Der Rabatt wird gutgeschrieben, sobald für alle zehn Bilder die Einwilligungen aller erkennbar abgebildeten Personen zur Veröffentlichung auf meiner Website vorliegen.</p>
+    {termsHref && <a href={termsHref}>Bedingungen zum 10 % Dankeschön</a>}
+  </div>
+</section>
+
+<script>
+  import { calculateThankYouDiscount, parseEuroCents } from "../lib/thankYouDiscount.mjs";
+
+  const formatter = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" });
+  document.querySelectorAll<HTMLElement>("[data-thank-you-calculator]").forEach((calculator) => {
+    const input = calculator.querySelector<HTMLInputElement>("input");
+    const price = calculator.querySelector<HTMLElement>("[data-thank-you-price]");
+    const saving = calculator.querySelector<HTMLElement>("[data-thank-you-saving]");
+    const error = calculator.querySelector<HTMLElement>(".thank-you__error");
+    if (!input || !price || !saving || !error) return;
+
+    let hasBlurred = false;
+    const update = () => {
+      const cents = parseEuroCents(input.value);
+      const result = cents === null ? null : calculateThankYouDiscount(cents);
+      const invalid = input.value.trim() !== "" && result === null;
+      input.setAttribute("aria-invalid", String(invalid && hasBlurred));
+      error.hidden = !(invalid && hasBlurred);
+
+      if (result) {
+        price.textContent = formatter.format(result.discountedCents / 100);
+        price.removeAttribute("aria-label");
+        saving.textContent = `Ihr spart ${formatter.format(result.savingCents / 100)}.`;
+      } else {
+        price.textContent = "…";
+        price.setAttribute("aria-label", "Noch kein Preis berechnet");
+        saving.textContent = invalid ? "Prüft bitte euren eingegebenen Preis." : "Hier seht ihr euren Preis mit Rabatt.";
+      }
+    };
+
+    input.addEventListener("input", update);
+    input.addEventListener("blur", () => {
+      hasBlurred = true;
+      update();
+    });
+    update();
+    calculator.hidden = false;
+  });
+</script>
+
+<style>
+  .thank-you {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 40px clamp(32px, 5vw, 72px);
+    margin: clamp(64px, 8vw, 104px) 0;
+    padding: clamp(32px, 5vw, 64px);
+    background: var(--pricing-paper, #f5f2ed);
+    color: var(--pricing-text, #44484e);
+    scroll-margin-top: 32px;
+  }
+  .thank-you__copy, .thank-you__calculator { min-width: 0; }
+  .thank-you__eyebrow {
+    margin: 0 0 24px;
+    font-family: "Raleway", Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+  .thank-you h2 {
+    margin: 0;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(36px, 4vw, 52px);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+  .thank-you__invitation {
+    margin: 24px 0;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.35;
+  }
+  .thank-you__text { margin: 0; font-size: 18px; line-height: 1.75; }
+  .thank-you__percent { white-space: nowrap; }
+  .thank-you__calculator { padding-left: clamp(24px, 3vw, 42px); border-left: 1px solid #d5d0c8; }
+  .thank-you__calculator[hidden], .thank-you__error[hidden] { display: none; }
+  .thank-you label { display: block; margin-bottom: 12px; font-size: 18px; line-height: 1.5; }
+  .thank-you__field { display: flex; align-items: center; border-bottom: 1px solid #8a8278; }
+  .thank-you__field:focus-within { outline: 2px solid #65584a; outline-offset: 5px; }
+  .thank-you input {
+    width: 100%;
+    min-width: 0;
+    min-height: 56px;
+    padding: 8px 12px 8px 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: 30px;
+    line-height: 1.3;
+  }
+  .thank-you input:focus { outline: none; }
+  .thank-you input::placeholder { color: #746e65; opacity: 1; }
+  .thank-you__field > span { font-family: "Gilda Display", Georgia, serif; font-size: 26px; }
+  .thank-you__hint, .thank-you__error { margin: 12px 0 0; font-size: 15px; line-height: 1.55; }
+  .thank-you__error { color: #923b2d; }
+  .thank-you output { display: grid; gap: 12px; margin-top: 32px; }
+  .thank-you__result-label { font-size: 16px; line-height: 1.5; }
+  .thank-you output strong {
+    font-family: "Gilda Display", Georgia, serif;
+    font-size: clamp(36px, 3.8vw, 52px);
+    font-weight: 400;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+  .thank-you__saving { font-size: 16px; line-height: 1.6; }
+  .thank-you__conditions { grid-column: 1 / -1; padding-top: 24px; border-top: 1px solid #d5d0c8; }
+  .thank-you__conditions p, .thank-you__fallback { margin: 0; font-size: 15px; line-height: 1.65; }
+  .thank-you__conditions a { display: inline-flex; align-items: center; min-height: 44px; margin-top: 12px; color: inherit; font-size: 15px; text-underline-offset: 5px; }
+  .thank-you__conditions a:focus-visible { outline: 2px solid #65584a; outline-offset: 5px; }
+  @media (max-width: 900px) {
+    .thank-you { grid-template-columns: 1fr; gap: 32px; }
+    .thank-you__calculator { padding: 28px 0 0; border-left: 0; border-top: 1px solid #d5d0c8; }
+  }
+  @media (max-width: 620px) {
+    .thank-you { padding: 32px 22px; margin: 64px 0; }
+    .thank-you h2 { font-size: 36px; }
+    .thank-you__eyebrow { margin-bottom: 20px; }
+    .thank-you__invitation { font-size: 26px; }
+    .thank-you input { font-size: 28px; }
+    .thank-you output strong { font-size: clamp(32px, 9vw, 42px); }
+  }
+</style>

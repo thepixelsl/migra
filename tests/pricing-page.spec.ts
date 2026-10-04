@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { mkdirSync } from "node:fs";
+import { pageSeo } from "../src/data/pageSeo.mjs";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 const screenshotDirectory = "screenshots/qa-pricing-page";
@@ -10,7 +11,7 @@ test("pricing content and structured offers describe the same booking terms", as
   await expect(page.locator("h1")).toHaveCount(1);
   await expect(page.locator(".pricing-hero h1")).toHaveText("Hochzeitsfotograf Hamburg Preise");
   await expect(page).toHaveTitle("Hochzeitsfotograf Hamburg Preise");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /ab 299.*1 Stunde.*RAW-bearbeitet.*Norddeutschland inklusive/);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", pageSeo["/hochzeitsfotograf-preise/"].description);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /\bindex\b/);
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", "https://artbild-fotografie.de/hochzeitsfotograf-preise/");
   await expect(page.getByRole("heading", { level: 2, name: "Pakete und Leistungen im Überblick" })).toBeVisible();
