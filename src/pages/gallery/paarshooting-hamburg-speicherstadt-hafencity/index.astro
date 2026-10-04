@@ -18,14 +18,15 @@ const images = selection.map((item) => {
   if (!image) throw new Error(`Missing couple gallery image: ${item.file}`);
   return { ...item, image, format: "webp" as const, aspect: "natural" as const };
 });
-const groups = Array.from({ length: 8 }, (_, index) => images.filter((item) => item.group === index + 1));
-const hero = images.find((item) => item.number === 4248)!;
+const groups = Array.from({ length: 10 }, (_, index) => images.filter((item) => item.group === index + 1));
+const hero = images.find((item) => item.number === 4706)!;
+const metaImage = images.find((item) => item.number === 4839)!;
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery/paarshooting-hamburg-speicherstadt-hafencity/";
 const pageUrl = `${siteUrl}${pagePath}`;
 const title = "Paarshooting Hamburg: Speicherstadt & HafenCity | Domenic & Liza";
-const description = "Paarshooting in Hamburg mit Domenic und Liza: natürliche Paarfotos in der Speicherstadt und HafenCity an einem Septembernachmittag. Entdeckt die Galerie.";
-const primaryImage = new URL(hero.image.src, siteUrl).href;
+const description = "Paarshooting Hamburg mit Domenic & Liza: Speicherstadt, HafenCity und Kehrwiederspitze. Tipps für Paarfotos am Hübenerkai, an den Terrassen und mit Elbphilharmonie.";
+const primaryImage = new URL(metaImage.image.src, siteUrl).href;
 const breadcrumbs = [
   { label: "Startseite", href: "/" },
   { label: "Portfolio", href: "/portfolio/" },
@@ -41,11 +42,11 @@ const schema = {
       author: { "@type": "Person", name: "York Augustin", url: `${siteUrl}/about/` },
       publisher: { "@type": "Organization", name: "Artbild-Fotografie", url: siteUrl },
       image: primaryImage, mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
-      keywords: ["Paarshooting Hamburg", "Paar Fotoshooting Hamburg", "Speicherstadt Hamburg", "HafenCity Hamburg"],
-      about: [{ "@type": "Place", name: "Speicherstadt Hamburg" }, { "@type": "Place", name: "HafenCity Hamburg" }] },
+      keywords: ["Paarshooting Hamburg", "Paar Fotoshooting Hamburg", "Verlobungsshooting Hamburg", "Speicherstadt Hamburg", "HafenCity Hamburg", "Marco Polo Terrassen Hamburg", "Strandkai Hamburg", "Elbphilharmonie Hamburg", "Michel Hamburg"],
+      about: ["Speicherstadt Hamburg", "HafenCity Hamburg", "Jungfernbrücke", "Kehrwiedersteg", "Hübenerkai", "Strandkai", "Marco-Polo-Terrassen", "Kehrwiederspitze", "Elbphilharmonie", "Flussschifferkirche", "Hauptkirche St. Michaelis"].map((name) => ({ "@type": "Place", name })) },
     { "@type": "ImageObject", "@id": `${pageUrl}#primaryimage`, url: primaryImage, contentUrl: primaryImage,
-      caption: hero.alt, width: hero.image.width, height: hero.image.height },
-    ...["Speicherstadt", "HafenCity"].map((location) => ({
+      caption: metaImage.alt, width: metaImage.image.width, height: metaImage.image.height },
+    ...["Speicherstadt", "HafenCity", "Kehrwiederspitze"].map((location) => ({
       "@type": "ImageGallery", "@id": `${pageUrl}#${location.toLowerCase()}-gallery`,
       name: `${location} Hamburg – Domenic & Liza`, isPartOf: { "@id": `${pageUrl}#webpage` },
       image: images.filter((item) => item.location === location).map((item, index) => ({
@@ -73,15 +74,16 @@ const schema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:image" content={primaryImage} />
-    <meta property="og:image:alt" content={hero.alt} />
+    <meta property="og:image:alt" content={metaImage.alt} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={primaryImage} />
+    <meta name="twitter:image:alt" content={metaImage.alt} />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body class="gallery-template couple-hamburg-page">
-    <a class="skip-link" href="#paarshooting">Zur Geschichte</a>
+    <a class="skip-link" href="#paarshooting">Zur Paarshooting-Galerie</a>
     <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
     <main id="paarshooting">
       <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
@@ -89,14 +91,15 @@ const schema = {
         <header class="couple-hero">
           <div class="couple-hero__copy">
             <p class="handwritten" aria-hidden="true">Domenic &amp; Liza</p>
-            <p class="eyebrow">Eine Liebesgeschichte · September 2026</p>
+            <p class="eyebrow">Paarfotos mit Domenic &amp; Liza · September 2026</p>
             <h1>Paarshooting <br />in Hamburg</h1>
             <p class="couple-hero__places">Speicherstadt &amp; HafenCity</p>
-            <p class="intro">Ein schöner Septembernachmittag, die Stadt am Wasser und zwei Menschen, die sich nah sind. Mit Domenic und Liza ging es durch die Speicherstadt und weiter in die HafenCity – von rotem Backstein bis zum offenen Blick auf die Elbe.</p>
+            <p class="intro">Für ein Paarshooting in Hamburg lassen sich die Speicherstadt und die HafenCity gut verbinden. An den Fleeten fotografieren wir zwischen Backsteinspeichern und historischen Brücken. Rund um Hübenerkai, Strandkai und Marco-Polo-Terrassen kommen moderne Gebäude und Hafenblicke dazu. An der Kehrwiederspitze könnt Ihr Euch Paarfotos mit der Elbphilharmonie wünschen. Die Fotos von Domenic und Liza entstanden an einem Septembernachmittag.</p>
             <nav class="chapter-nav" aria-label="Kapitel dieser Paarshooting-Galerie">
               <a href="#speicherstadt"><span>01</span> Speicherstadt</a>
               <a href="#hafencity"><span>02</span> HafenCity</a>
-              <a href="#hamburg-entdecken"><span>03</span> Hamburg entdecken</a>
+              <a href="#kehrwiederspitze"><span>03</span> Kehrwiederspitze</a>
+              <a href="#hamburg-entdecken"><span>04</span> Hamburg entdecken</a>
             </nav>
           </div>
           <figure class="couple-hero__photo">
@@ -107,64 +110,78 @@ const schema = {
 
         <section id="speicherstadt" class="chapter" aria-labelledby="speicherstadt-title">
           <header class="story-copy story-copy--chapter">
-            <div><p class="eyebrow">01 / Speicherstadt</p><h2 id="speicherstadt-title">Paarshooting in der Speicherstadt Hamburg</h2></div>
-            <div class="copy"><p>Zwischen den roten Speichern, den Brücken und dem Wasser finden wir viele kleine Orte für Paarfotos. Mal ist die Stadt ganz nah, mal wird sie zu einem weichen Hintergrund. Domenic und Liza stehen am Geländer, schauen sich an, lachen und lassen den Nachmittag auf sich wirken.</p><p>Für ein Paarshooting in Hamburg mag ich genau diesen Wechsel: ein Bild, das den Ort erzählt, und danach eines, in dem nur Eure Nähe zählt.</p></div>
+            <div><p class="eyebrow">01 / Speicherstadt</p><h2 id="speicherstadt-title">Paarshooting in der Speicherstadt</h2></div>
+            <div class="copy"><p>Die Speicherstadt Hamburg passt zu Euch, wenn Ihr Euch Paarfotos mit Backstein, Brücken und Wasser wünscht. An der Jungfernbrücke über dem Zollkanal liegen die Altstadt und die historischen Speicher direkt nebeneinander. Die Fußgängerbrücke und die benachbarte Kannengießerbrücke sind gute Ausgangspunkte für ein Shooting in diesem Teil der Speicherstadt.</p><p>Auf der Brücke teilen wir den Platz mit Spaziergängern. Für Eure Paarfotos wählen wir deshalb freie Stellen und lassen andere Menschen passieren. Wenn Ihr Euch vor der Kamera noch unsicher fühlt, beginnen wir mit einfachen Anregungen zum Stehen und Gehen. Ihr braucht keine Erfahrung vor der Kamera.</p></div>
           </header>
-          <GalleryImageGrid columns={[groups[0]]} galleryId="domenic-liza-01" label="Speicherstadt – an den Brücken" />
-
-          <section class="story-copy" aria-labelledby="zusammen-title">
-            <div><p class="eyebrow">Blicke &amp; Berührungen</p><h3 id="zusammen-title">Einfach zusammen sein.</h3></div>
-            <div class="copy"><p>Eine Hand am Gesicht, ein Kuss, ein kurzer Blick nach unten. Die feinen Gesten erzählen oft am meisten. Bei einem Paar-Fotoshooting in Hamburg gebe ich Euch Raum für solche Momente und helfe Euch mit kleinen Anregungen, wenn Ihr Euch vor der Kamera erst zurechtfinden möchtet.</p><p>Die Stahlträger der Brücken und die schmalen Gassen geben den Bildern einen Rahmen. Ihr füllt ihn mit Eurer eigenen Art, miteinander zu sein. Auch für ein <a href="/gallery/lovebirds-am-elbstrand/">Verlobungsshooting in Hamburg</a> ist ein gemeinsamer Nachmittag draußen eine schöne Gelegenheit, Euch vor der Kamera kennenzulernen.</p></div>
-          </section>
-          <GalleryImageGrid columns={[groups[1]]} galleryId="domenic-liza-02" label="Speicherstadt – Nähe und Torbögen" />
+          <GalleryImageGrid columns={[groups[0]]} galleryId="domenic-liza-01" label="Speicherstadt – Jungfernbrücke und Zollkanal" />
 
           <section class="story-copy" aria-labelledby="backstein-title">
-            <div><p class="eyebrow">Ein Ort mit Geschichte</p><h3 id="backstein-title">Backstein, Fleete <br />und ein Stück Hamburg.</h3></div>
-            <div class="copy"><p>Die Speicherstadt Hamburg entstand zwischen 1883 und 1927 als Lagerhausviertel des Hafens. Ihre neugotischen Backsteinfassaden wirken bis heute so geschlossen, weil das Quartier als zusammenhängendes Ensemble geplant wurde. Seit 2015 gehört es gemeinsam mit dem Kontorhausviertel und dem Chilehaus zum UNESCO-Welterbe.</p><p>Für die Fotografie sind vor allem die Perspektiven spannend: ein dunkler Durchgang, dahinter eine helle Fassade; ein Fleet, dessen Linien den Blick in die Tiefe führen. So bekommt jedes Paarfoto einen anderen Rhythmus.</p><a class="text-link source-link" href="https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-kultur-und-medien/themen/unesco-welterbe/welterbe-erklaert-speicherstadt-105900" target="_blank" rel="noopener">Die Geschichte der Speicherstadt bei hamburg.de ↗</a></div>
+            <div><p class="eyebrow">Tageszeit &amp; Licht</p><h3 id="backstein-title">Licht in den Gassen der Speicherstadt</h3></div>
+            <div class="copy"><p>Die Speicherstadt entstand zwischen 1883 und 1927 als Lagerhausviertel. Die hohen Backsteinspeicher stehen dicht an den Fleeten; dadurch liegen einzelne Wege und Fassaden auch an sonnigen Tagen im Schatten. Für Euer Shooting wählen wir die Tageszeit passend zu den gewünschten Brücken und Blickrichtungen.</p><p>Wünscht Ihr Euch weicheres Licht, suchen wir schattige Bereiche oder planen den Termin näher am Abend. Für sonnige Paarfotos können wir auf die offeneren Brücken wechseln. Wolken sind ebenfalls gut zum Fotografieren geeignet. Die Uhrzeit stimmen wir für Euren Termin ab, denn das Licht verändert sich mit der Jahreszeit.</p><a class="text-link source-link" href="https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-kultur-und-medien/themen/unesco-welterbe/welterbe-erklaert-speicherstadt-105900" target="_blank" rel="noopener">Hintergrund zur Speicherstadt bei hamburg.de ↗</a></div>
           </section>
-          <GalleryImageGrid columns={[groups[2]]} galleryId="domenic-liza-03" label="Speicherstadt – Backstein und Fleete" />
+          <GalleryImageGrid columns={[groups[1]]} galleryId="domenic-liza-02" label="Speicherstadt – am Kehrwiederfleet" />
 
           <section class="story-copy" aria-labelledby="weiter-title">
-            <div><p class="eyebrow">Vom Fleet Richtung Elbe</p><h3 id="weiter-title">Noch ein Blick zurück.</h3></div>
-            <div class="copy"><p>Ein Blick entlang der Speicher, noch ein gemeinsames Bild auf der Brücke – dann geht es weiter. Zum Schluss dieses Kapitels reichen Liza und Domenic jeweils eine Hand in Richtung Kamera. Kleine Perspektivwechsel machen aus einer Serie eine persönliche Erinnerung.</p><p>Vielen Dank Euch beiden, dass ich diese Bilder zeigen darf. Eure Galerie verbindet zwei Seiten Hamburgs, die sich auf einem gemeinsamen Spaziergang wunderbar fotografieren lassen.</p></div>
+            <div><p class="eyebrow">Zwei Orte in einem Shooting</p><h3 id="weiter-title">Von der Speicherstadt in die HafenCity</h3></div>
+            <div class="copy"><p>Wenn Ihr Speicherstadt und HafenCity kombinieren möchtet, bietet sich ein Weg vom Kehrwiedersteg über Am Sandtorkai und Großer Grasbrook zu den Marco-Polo-Terrassen an. Damit verbindet Ihr die historischen Speicher mit den Plätzen und Promenaden der westlichen HafenCity.</p><p>Für ein Paarshooting in Hamburg mit beiden Orten planen wir den Fußweg mit ein. Bequeme Schuhe sind auf dem Pflaster und den Treppen hilfreich. Möchtet Ihr für die Fotos andere Schuhe tragen, nehmt sie einfach zusätzlich mit. Wenn Ihr lieber an einer einzigen Location bleiben möchtet, legen wir vorab fest, welcher Teil der Strecke Euch am besten gefällt.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[3]]} galleryId="domenic-liza-04" label="Speicherstadt – Abschied von den Speichern" />
+          <GalleryImageGrid columns={[groups[2]]} galleryId="domenic-liza-03" label="Speicherstadt – Brücken und Speicher am Fleet" />
         </section>
 
         <section id="hafencity" class="chapter" aria-labelledby="hafencity-title">
           <header class="story-copy story-copy--chapter">
-            <div><p class="eyebrow">02 / HafenCity</p><h2 id="hafencity-title">Paarfotos in der HafenCity Hamburg</h2></div>
-            <div class="copy"><p>Mit der HafenCity verändert sich die Kulisse. Glasfassaden, klare Linien und mehr Himmel über dem Wasser geben den Bildern Luft. Domenic und Liza bleiben im Mittelpunkt; die moderne Architektur bildet einen ruhigen Gegenpol zu den Backsteinspeichern.</p><p>Wer ein Fotoshooting in Hamburg plant und sowohl historische als auch moderne Stadtbilder mag, findet hier zwei unterschiedliche Bildwelten dicht beieinander.</p></div>
+            <div><p class="eyebrow">02 / HafenCity</p><h2 id="hafencity-title">Paarshooting in der HafenCity</h2></div>
+            <div class="copy"><p>In der HafenCity Hamburg liegen rund um den Grasbrookhafen mehrere Orte für Paarfotos nah beieinander. An den Marco-Polo-Terrassen seht Ihr über das Hafenbecken zu den Gebäuden am Dalmannkai. Der Marco-Polo-Tower mit seinen gedrehten Etagen und das frühere Unilever-Haus helfen Euch, den Bereich auf dem Stadtplan zu finden.</p><p>Die HafenCity eignet sich für Euch, wenn Ihr moderne Architektur und Wasser auf Euren Fotos möchtet. Vor dem Shooting besprechen wir, ob Ihr lieber an den Terrassen, am Hübenerkai oder direkt am Elbufer fotografiert werden möchtet. Davon hängen unser Treffpunkt und die weitere Strecke ab.</p></div>
           </header>
-          <GalleryImageGrid columns={[groups[4]]} galleryId="domenic-liza-05" label="HafenCity – Architektur und Wasser" />
+          <GalleryImageGrid columns={[groups[3]]} galleryId="domenic-liza-04" label="HafenCity – am Grasbrookhafen" />
 
           <section class="story-copy" aria-labelledby="licht-title">
-            <div><p class="eyebrow">Nachmittagslicht am Wasser</p><h3 id="licht-title">Nähe, mit weitem Blick.</h3></div>
-            <div class="copy"><p>Das Licht streift durch die Haare, das Wasser bleibt hell im Hintergrund. Zwischen den weiten Ansichten entstehen nahe Portraits: ein Kuss, Lizas Lächeln, Domenics Blick über ihre Schulter. Diese Mischung macht Paarfotos in Hamburg für mich lebendig.</p><p>Für Euer eigenes Paarshooting stimmen wir Ort und Tageszeit gemeinsam ab. Ich schaue, wie das Licht an den Fassaden und am Ufer fällt, und suche mit Euch die passenden Perspektiven.</p></div>
+            <div><p class="eyebrow">Promenaden am Wasser</p><h3 id="licht-title">Hübenerkai und Strandkai</h3></div>
+            <div class="copy"><p>Der Hübenerkai liegt am Grasbrookhafen, auf der Nordseite der Strandkai-Halbinsel. Von hier aus blickt Ihr auf die Gebäude am Dalmannkai. Die Promenade auf der Südseite führt an der Elbe entlang und bietet den Blick auf den Hafen.</p><p>Der Strandkai in Hamburg ist eine gute Ergänzung, wenn Ihr neben Stadtansichten auch Paarfotos mit viel Wasser im Hintergrund möchtet. An den offenen Promenaden kann es windiger sein als zwischen den Speichern. Nehmt für die Wege und Pausen eine Jacke mit, auch wenn Ihr sie auf den Fotos ausziehen möchtet.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[5]]} galleryId="domenic-liza-06" label="HafenCity – nahe Paarportraits im Nachmittagslicht" />
+          <GalleryImageGrid columns={[groups[4]]} galleryId="domenic-liza-05" label="HafenCity – Strandkai und Elbufer" />
 
           <section class="story-copy" aria-labelledby="bewegung-title">
-            <div><p class="eyebrow">Ein wenig Bewegung</p><h3 id="bewegung-title">Ein Schritt. <br />Eine Drehung. <br />Ein Lachen.</h3></div>
-            <div class="copy"><p>Domenic dreht Liza unter seinem Arm, hebt sie hoch, beide lachen. Wenn Bewegung ins Shooting kommt, verändern sich Ausdruck und Körpersprache ganz von selbst. Die Bilder am Wasser zeigen, wie schön sich spielerische Momente und ruhige Paarportraits ergänzen.</p><p>Ihr müsst dafür keine Posen einstudieren. Ein kleiner Spaziergang oder eine gemeinsame Drehung kann schon ein guter Anfang sein. Wir finden heraus, was sich für Euch leicht und vertraut anfühlt.</p></div>
+            <div><p class="eyebrow">Shooting draußen</p><h3 id="bewegung-title">Licht und Kleidung am Elbufer</h3></div>
+            <div class="copy"><p>Für ein Paarshooting draußen in Hamburg schauen wir neben der Wettervorhersage auch auf den Sonnenstand. Am offenen Strandkai gibt es weniger Schatten durch die Speichergebäude. Wenn Ihr Euch Licht von hinten oder seitlich wünscht, wählen wir die Uhrzeit und die Blickrichtung entsprechend. Ein Septembernachmittag ist dabei anders zu planen als ein Termin im Juni.</p><p>Tragt Kleidung, in der Ihr Euch auch beim Gehen und Sitzen wohlfühlt. Auf den Promenaden wechseln sich Pflaster, Stufen und glatte Beläge ab. Für die Auswahl Eurer Outfits könnt Ihr mir vorab Fotos schicken; dann schauen wir gemeinsam, was zu den Backsteinfassaden der Speicherstadt oder den helleren Gebäuden der HafenCity passt.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[6]]} galleryId="domenic-liza-07" label="HafenCity – Bewegung und gemeinsames Lachen" />
+          <GalleryImageGrid columns={[groups[5]]} galleryId="domenic-liza-06" label="HafenCity – Paarshooting am Elbufer" />
 
           <section class="story-copy" aria-labelledby="erinnerung-title">
-            <div><p class="eyebrow">Domenic &amp; Liza</p><h3 id="erinnerung-title">Euer gemeinsamer Nachmittag.</h3></div>
-            <div class="copy"><p>Zum Abschluss werden die Bilder wieder ruhiger. Liza legt den Kopf an Domenics Schulter, die beiden sitzen am Wasser und schauen gemeinsam in die Kamera. Aus den unterschiedlichen Orten und Momenten wird eine Geschichte, die zu ihnen gehört.</p><p>Wünscht Ihr Euch auch ein Paarshooting in Hamburg – in der Speicherstadt, in der HafenCity oder an einem Ort, der Euch etwas bedeutet? Erzählt mir von Euch und Euren Ideen.</p><a class="text-link" href="/kontakt/">Euer Paarshooting in Hamburg anfragen <span aria-hidden="true">→</span></a></div>
+            <div><p class="eyebrow">Treppen &amp; Holzdecks</p><h3 id="erinnerung-title">Paarfotos an den Marco-Polo-Terrassen</h3></div>
+            <div class="copy"><p>Die Marco-Polo-Terrassen in Hamburg liegen am Grasbrookhafen. Mit Holzdecks, Stufen und Bäumen bieten sie auch Plätze für Paarfotos im Sitzen. Wenn Ihr Euch einen Termin mit kurzen Wegen wünscht, können wir die Terrassen mit der angrenzenden Promenade am Hübenerkai verbinden.</p><p>Auch für ein <a href="/gallery/lovebirds-am-elbstrand/">Verlobungsshooting in Hamburg</a> kommen diese Orte infrage. Schreibt mir, welche Location Euch gefällt, wann Ihr Zeit habt und ob Ihr Speicherstadt und HafenCity kombinieren möchtet. Dann besprechen wir die passende Strecke und Tageszeit für Euer Paarshooting.</p><a class="text-link" href="/kontakt/">Paarshooting in Hamburg anfragen <span aria-hidden="true">→</span></a></div>
           </section>
-          <GalleryImageGrid columns={[groups[7]]} galleryId="domenic-liza-08" label="HafenCity – ruhiger Ausklang am Wasser" />
+          <GalleryImageGrid columns={[groups[6]]} galleryId="domenic-liza-07" label="HafenCity – Marco-Polo-Terrassen" />
+        </section>
+
+        <section id="kehrwiederspitze" class="chapter" aria-labelledby="kehrwiederspitze-title">
+          <header class="story-copy story-copy--chapter">
+            <div><p class="eyebrow">03 / Kehrwiederspitze</p><h2 id="kehrwiederspitze-title">Paarshooting mit Blick auf die Elbphilharmonie</h2></div>
+            <div class="copy"><p>Die Kehrwiederspitze am westlichen Ende der Speicherstadt eignet sich für Euch, wenn Ihr Wasser und die Elbphilharmonie Hamburg auf Euren Paarfotos möchtet. Vom Sandtorkai aus lässt sich dieser Bereich mit einem Shooting in der HafenCity verbinden. Wir können hier zur Elbphilharmonie fotografieren oder den Blick über den Hafen als Hintergrund wählen.</p><p>Für Eure Anreise kommt die U-Bahn-Station Baumwall infrage. Seit 2026 werden die Kaimauern an der Kehrwiederspitze saniert, mit Änderungen an der Wegeführung. Den genauen Treffpunkt und die zugänglichen Fotoplätze stimmen wir deshalb kurz vor Eurem Termin ab.</p><a class="text-link source-link" href="https://www.hamburg.de/politik-und-verwaltung/behoerden/finanzbehoerde/aktuelles/sanierung-der-kaimauern-an-der-kehrwiederspitze-1146216" target="_blank" rel="noopener">Hamburg informiert zur Sanierung und Anreise ↗</a></div>
+          </header>
+          <GalleryImageGrid columns={[groups[7]]} galleryId="domenic-liza-08" label="Kehrwiederspitze – Paarfotos mit Elbphilharmonie und Hafenblick" />
+
+          <section class="story-copy" aria-labelledby="barkassen-title">
+            <div><p class="eyebrow">Auf dem Wasser feiern</p><h3 id="barkassen-title">Barkassenfahrt und Hochzeit im Hamburger Hafen</h3></div>
+            <div class="copy"><p>Wenn Ihr nach Eurem Paarshooting eine Barkassenfahrt plant, stimmt die Abfahrtszeit vorher mit dem Fototermin ab. Auch für eine Hochzeitsfeier oder den Transfer Eurer Gäste kommt eine private Fahrt infrage. <a href="https://www.barkassenvermietung-hamburg.com/barkasse-mieten/hochzeiten.html" target="_blank" rel="noopener">Barkassenbetrieb Bülow</a> nennt die Kehrwiederspitze ausdrücklich als möglichen Ein- und Ausstieg für Hochzeitsfahrten. <a href="https://www.barkassen-meyer.de/schiff-charter/trauungen-hochzeiten" target="_blank" rel="noopener">Barkassen-Meyer</a> bietet ebenfalls Hochzeitsfeiern und Fahrten zur Hochzeitslocation an; den Anleger vereinbart Ihr mit der Reederei.</p><p>Gebt bei Eurer Anfrage die Gästezahl, den gewünschten Einstieg und die Fahrtdauer an. Wenn Eure Paarfotos vor dem Ablegen entstehen sollen, planen wir Zeit für den Weg zum Schiff mit ein. Klärt mit dem Anbieter auch, ob Eure gewünschte Route durch die Fleete der Speicherstadt beim Wasserstand an Eurem Termin möglich ist.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[8]]} galleryId="domenic-liza-09" label="Kehrwiederspitze – Paarfotos am Hafenufer" />
+
+          <section class="story-copy" aria-labelledby="michel-title">
+            <div><p class="eyebrow">Blick zum Binnenhafen</p><h3 id="michel-title">Flussschifferkirche und Michel</h3></div>
+            <div class="copy"><p>Die Flussschifferkirche liegt im Binnenhafen an der Hohen Brücke 2. Wenn Ihr Euch eine Trauung auf dem Wasser wünscht, ist das Kirchenschiff eine Adresse für Eure Planung. Der Verein informiert über <a href="https://www.flussschifferkirche.de/de/raumvergabe-amtshandlungen/amtshandlungen" target="_blank" rel="noopener">Hochzeiten an Bord der Flussschifferkirche</a>. Besprecht dort zuerst Euren Termin und den Ablauf; anschließend können wir die Paarfotos in der Umgebung und einen möglichen Barkassentransfer darauf abstimmen.</p><p>Auch der Michel in Hamburg ist von der Kehrwiederspitze aus zu sehen. Der 132 Meter hohe Turm der Hauptkirche St. Michaelis gehört zur Stadtsilhouette. Wenn Ihr ihn auf Euren Paarfotos möchtet, können wir an diesem Teil des Ufers bleiben. Für einen gemeinsamen Ausflug nach dem Shooting findet Ihr auf der <a href="https://www.st-michaelis.de/michel-besuch/bauwerk/turm" target="_blank" rel="noopener">Website des Michel</a> Informationen zum Turmbesuch.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[9]]} galleryId="domenic-liza-10" label="Kehrwiederspitze – Paarfotos mit Flussschifferkirche und Michel" />
         </section>
 
         <section id="hamburg-entdecken" class="story-copy light-story" aria-labelledby="lichtkunst-title">
-          <div><p class="eyebrow">03 / Hamburg entdecken</p><h2 id="lichtkunst-title">Wenn die Speicherstadt zu leuchten beginnt.</h2></div>
-          <div class="copy"><p>Unser Shooting fand am Nachmittag statt. Nach Einbruch der Dunkelheit zeigt die Speicherstadt eine weitere Seite: Die Beleuchtung betont Giebel, Brücken und die plastischen Details der Fassaden. Das Lichtkunstkonzept von Michael Batz entwickelte sich aus einer temporären Inszenierung für das Theaterprojekt „Mozart. Amerika“ von 1999.</p><p>Spannend ist auch die Geschichte hinter dem Licht: Mitglieder, Spender und Brückenpaten unterstützten den Verein Licht-Kunst-Speicherstadt über viele Jahre. Zu den dokumentierten Patenschaften gehören beispielsweise die Brooksbrücke und die Jungfernbrücke.</p><p>Seit 2025 übernimmt die HHLA dauerhaft die Verantwortung für die Fassadenbeleuchtung. Der Verein widmet sich inzwischen neuen Lichtkunstprojekten. Wenn Euch die Idee einer Patenschaft oder einer Unterstützung gefällt, fragt dort nach den aktuellen Möglichkeiten.</p><div class="source-links"><a class="text-link" href="https://licht-kunst-speicherstadt.de/vereinsmitglieder-und-paten/" target="_blank" rel="noopener">Licht-Kunst-Speicherstadt: Mitglieder &amp; Patenschaften ↗</a><a class="text-link source-link" href="https://licht-kunst-speicherstadt.de/lichtkunst/" target="_blank" rel="noopener">Mehr zum Lichtkunstkonzept ↗</a><a class="text-link source-link" href="https://hhla.de/medien/news/detailansicht/zukunft-der-beleuchtung-des-unesco-welterbes-hamburger-speicherstadt-gesichert" target="_blank" rel="noopener">HHLA: Zukunft der Speicherstadtbeleuchtung ↗</a></div></div>
+          <div><p class="eyebrow">04 / Nach dem Shooting</p><h2 id="lichtkunst-title">Speicherstadt am Abend: Lichtkunst und Patenschaften</h2></div>
+          <div class="copy"><p>Wenn Ihr nach Eurem Paarshooting noch in Hamburg bleiben möchtet, lohnt sich ein Spaziergang durch die Speicherstadt am Abend. Die beleuchteten Fassaden lassen sich dann von den Brücken aus ansehen. Die Fotos mit Domenic und Liza entstanden bei Tageslicht. Wünscht Ihr Euch Paarfotos mit der Beleuchtung, planen wir dafür Zeit nach Einbruch der Dunkelheit ein.</p><p>Das Lichtkonzept stammt von Michael Batz. Der Verein Licht-Kunst-Speicherstadt finanzierte die Beleuchtung über viele Jahre durch Beiträge, Spenden und Brückenpatenschaften, unter anderem für die Jungfernbrücke. Seit 2025 trägt die HHLA dauerhaft die Verantwortung für die Fassadenbeleuchtung.</p><p>Wenn Ihr Euch für eine Patenschaft oder andere Unterstützung interessiert, findet Ihr beim Verein die Geschichte der Brückenpaten und einen Kontakt für aktuelle Möglichkeiten.</p><div class="source-links"><a class="text-link" href="https://licht-kunst-speicherstadt.de/vereinsmitglieder-und-paten/" target="_blank" rel="noopener">Licht-Kunst-Speicherstadt: Mitglieder &amp; Patenschaften ↗</a><a class="text-link source-link" href="https://licht-kunst-speicherstadt.de/lichtkunst/" target="_blank" rel="noopener">Das Lichtkonzept der Speicherstadt ↗</a><a class="text-link source-link" href="https://hhla.de/medien/news/detailansicht/zukunft-der-beleuchtung-des-unesco-welterbes-hamburger-speicherstadt-gesichert" target="_blank" rel="noopener">HHLA zur Fassadenbeleuchtung ↗</a></div></div>
         </section>
 
         <aside class="travel-link" aria-labelledby="travel-title">
           <a href="/gallery/hamburg/" aria-label="Hamburg Fotografie: Travel-Galerie ansehen"><Image src={hamburgTravel} widths={[500, 800, 1200]} sizes="(max-width: 767px) calc(100vw - 48px), 48vw" format="webp" alt="Hamburger Architektur und Spiegelungen im Wasser zur blauen Stunde" loading="lazy" /></a>
-          <div><p class="eyebrow">Hamburg Fotografie · Travel</p><h2 id="travel-title">Noch mehr Hamburg.</h2><p>Wenn Ihr nach dieser Galerie weiter durch die Stadt streifen möchtet: In meiner Hamburg-Fotografie findet Ihr Stadtansichten, Architektur und Wasser – auch im Licht des Abends.</p><a class="text-link" href="/gallery/hamburg/">Zur Hamburg-Fotografie <span aria-hidden="true">→</span></a></div>
+          <div><p class="eyebrow">Hamburg Fotografie · Travel</p><h2 id="travel-title">Weitere Fotoorte in Hamburg</h2><p>Wenn Ihr für Euer Paarshooting noch zwischen mehreren Hamburger Orten überlegt, schaut auch in meine Hamburg-Travel-Galerie. Dort findet Ihr Stadt- und Hafenansichten sowie Architektur bei Tages- und Abendlicht. Schickt mir gern den Link zu einem Motiv, dessen Umgebung Euch für Eure Paarfotos gefällt.</p><a class="text-link" href="/gallery/hamburg/">Hamburg-Fotografie ansehen <span aria-hidden="true">→</span></a></div>
         </aside>
         <nav class="related-links" aria-label="Weitere Paarshootings und Portfolio"><a href="/gallery/lovebirds-am-elbstrand/">Paarshooting am Elbstrand</a><a href="/gallery/paarshooting-mallorca/">Paarshooting auf Mallorca</a><a href="/portfolio/">Zurück zum Portfolio</a></nav>
       </article>
@@ -212,6 +229,19 @@ const schema = {
   .related-links a { color: #30333b; font: 14px/1.6 "Gilda Display", Georgia, serif; text-underline-offset: 5px; }
   a:focus-visible { outline: 2px solid #7b6555; outline-offset: 6px; }
   @media (max-width: 900px) { .couple-hero { gap: 40px; } .story-copy { gap: 40px; } }
+  @media (min-width: 768px) {
+    :global(.couple-hamburg-page #kehrwiederspitze .masonry-gallery) {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      height: auto !important;
+    }
+    :global(.couple-hamburg-page #kehrwiederspitze .masonry-gallery__item) {
+      position: static;
+      width: auto !important;
+      height: auto !important;
+      transform: none !important;
+    }
+  }
   @media (max-width: 767px) {
     .couple-hero { width: calc(100% - 48px); grid-template-columns: 1fr; gap: 24px; margin-bottom: 64px; }
     .couple-hero__copy { display: contents; }

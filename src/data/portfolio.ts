@@ -27,7 +27,7 @@ import brautpaarZuerich from "../assets/brautpaar-zuerich/ART_8515-Bearbeitet-sc
 import editorialLondon from "../assets/editorial-london/ART_7899-Bearbeitet.jpg";
 import parisBridalEditorial from "../assets/paris-bridal-editorial/ART_4765.jpg";
 import valerieTim from "../assets/valerie-und-tim/ART_4449.jpg";
-import domenicLiza from "../assets/paarshooting-speicherstadt-hafencity/speicherstadt-hamburg-paarshooting-4248.webp";
+import domenicLiza from "../assets/paarshooting-speicherstadt-hafencity/hafencity-hamburg-paarfotos-4706.webp";
 
 export type PortfolioFilter = "All" | "Travel" | "Hochzeit" | "Peoplefotografie";
 
@@ -50,7 +50,7 @@ const entries: PortfolioEntry[] = [
     date: "26.09.2026",
     href: "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
     image: domenicLiza,
-    alt: "Liza und Domenic umarmen sich auf einer Brücke über dem Fleet in der Speicherstadt",
+    alt: "Domenic und Liza umarmen sich am Geländer am Elbufer in der HafenCity",
     aspect: "portrait",
   },
   {

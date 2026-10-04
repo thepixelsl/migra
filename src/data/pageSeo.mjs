@@ -8,8 +8,8 @@
 export const pageSeo = {
   "/gallery/paarshooting-hamburg-speicherstadt-hafencity/": {
     keyword: "Paarshooting Hamburg Speicherstadt",
-    image: "src/assets/paarshooting-speicherstadt-hafencity/speicherstadt-hamburg-paarshooting-4248.webp",
-    alt: "Liza und Domenic umarmen sich auf einer Brücke über dem Fleet in der Speicherstadt",
+    image: "src/assets/paarshooting-speicherstadt-hafencity/hafencity-hamburg-paarfotos-4839.webp",
+    alt: "Liza und Domenic küssen sich im Gegenlicht am Wasser in der HafenCity",
     fit: "contain",
   },
   "/kirchenfinder-hamburg/": {
