@@ -1,0 +1,235 @@
+---
+import { Image } from "astro:assets";
+import FaviconHead from "../../../components/FaviconHead.astro";
+import MobileNavigation from "../../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../../components/Breadcrumbs.astro";
+import GalleryImageGrid from "../../../components/GalleryImageGrid.astro";
+import selection from "../../../data/paarshootingSpeicherstadt.json";
+import hamburgTravel from "../../../assets/travel-galleries/hamburg/ART_4908-Bearbeitet.jpg";
+import "../../../styles/global.css";
+
+const modules = import.meta.glob("../../../assets/paarshooting-speicherstadt-hafencity/*.webp", {
+  eager: true, import: "default",
+}) as Record<string, ImageMetadata>;
+const byFile = Object.fromEntries(Object.entries(modules).map(([path, image]) => [path.split("/").pop(), image]));
+const images = selection.map((item) => {
+  const image = byFile[item.file];
+  if (!image) throw new Error(`Missing couple gallery image: ${item.file}`);
+  return { ...item, image, format: "webp" as const, aspect: "natural" as const };
+});
+const groups = Array.from({ length: 8 }, (_, index) => images.filter((item) => item.group === index + 1));
+const hero = images.find((item) => item.number === 4248)!;
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pagePath = "/gallery/paarshooting-hamburg-speicherstadt-hafencity/";
+const pageUrl = `${siteUrl}${pagePath}`;
+const title = "Paarshooting Hamburg: Speicherstadt & HafenCity | Domenic & Liza";
+const description = "Paarshooting in Hamburg mit Domenic und Liza: natürliche Paarfotos in der Speicherstadt und HafenCity an einem Septembernachmittag. Entdeckt die Galerie.";
+const primaryImage = new URL(hero.image.src, siteUrl).href;
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "Portfolio", href: "/portfolio/" },
+  { label: "Domenic & Liza · Hamburg", href: pagePath },
+];
+const schema = {
+  "@context": "https://schema.org", "@graph": [
+    { "@type": "WebPage", "@id": `${pageUrl}#webpage`, url: pageUrl, name: title, description,
+      inLanguage: "de", datePublished: "2026-10-04", dateModified: "2026-10-04",
+      breadcrumb: { "@id": `${pageUrl}#breadcrumb` }, primaryImageOfPage: { "@id": `${pageUrl}#primaryimage` } },
+    { "@type": "Article", "@id": `${pageUrl}#article`, headline: "Paarshooting in Hamburg – Domenic & Liza",
+      description, datePublished: "2026-10-04", dateModified: "2026-10-04", inLanguage: "de",
+      author: { "@type": "Person", name: "York Augustin", url: `${siteUrl}/about/` },
+      publisher: { "@type": "Organization", name: "Artbild-Fotografie", url: siteUrl },
+      image: primaryImage, mainEntityOfPage: { "@id": `${pageUrl}#webpage` },
+      keywords: ["Paarshooting Hamburg", "Paar Fotoshooting Hamburg", "Speicherstadt Hamburg", "HafenCity Hamburg"],
+      about: [{ "@type": "Place", name: "Speicherstadt Hamburg" }, { "@type": "Place", name: "HafenCity Hamburg" }] },
+    { "@type": "ImageObject", "@id": `${pageUrl}#primaryimage`, url: primaryImage, contentUrl: primaryImage,
+      caption: hero.alt, width: hero.image.width, height: hero.image.height },
+    ...["Speicherstadt", "HafenCity"].map((location) => ({
+      "@type": "ImageGallery", "@id": `${pageUrl}#${location.toLowerCase()}-gallery`,
+      name: `${location} Hamburg – Domenic & Liza`, isPartOf: { "@id": `${pageUrl}#webpage` },
+      image: images.filter((item) => item.location === location).map((item, index) => ({
+        "@type": "ImageObject", position: index + 1, caption: item.alt,
+        contentUrl: new URL(item.image.src, siteUrl).href, width: item.image.width, height: item.image.height,
+      })),
+    })),
+  ],
+};
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FaviconHead />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:type" content="article" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:site_name" content="Artbild-Fotografie" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={primaryImage} />
+    <meta property="og:image:alt" content={hero.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={primaryImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body class="gallery-template couple-hamburg-page">
+    <a class="skip-link" href="#paarshooting">Zur Geschichte</a>
+    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <main id="paarshooting">
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+      <article class="couple-story">
+        <header class="couple-hero">
+          <div class="couple-hero__copy">
+            <p class="handwritten" aria-hidden="true">Domenic &amp; Liza</p>
+            <p class="eyebrow">Eine Liebesgeschichte · September 2026</p>
+            <h1>Paarshooting <br />in Hamburg</h1>
+            <p class="couple-hero__places">Speicherstadt &amp; HafenCity</p>
+            <p class="intro">Ein schöner Septembernachmittag, die Stadt am Wasser und zwei Menschen, die sich nah sind. Mit Domenic und Liza ging es durch die Speicherstadt und weiter in die HafenCity – von rotem Backstein bis zum offenen Blick auf die Elbe.</p>
+            <nav class="chapter-nav" aria-label="Kapitel dieser Paarshooting-Galerie">
+              <a href="#speicherstadt"><span>01</span> Speicherstadt</a>
+              <a href="#hafencity"><span>02</span> HafenCity</a>
+              <a href="#hamburg-entdecken"><span>03</span> Hamburg entdecken</a>
+            </nav>
+          </div>
+          <figure class="couple-hero__photo">
+            <Image src={hero.image} widths={[460, 720, 1000, 1400]} sizes="(max-width: 767px) calc(100vw - 48px), 38vw" format="webp" quality={88} loading="eager" fetchpriority="high" alt={hero.alt} />
+            <figcaption>Domenic &amp; Liza · Hamburg, September 2026</figcaption>
+          </figure>
+        </header>
+
+        <section id="speicherstadt" class="chapter" aria-labelledby="speicherstadt-title">
+          <header class="story-copy story-copy--chapter">
+            <div><p class="eyebrow">01 / Speicherstadt</p><h2 id="speicherstadt-title">Paarshooting in der Speicherstadt Hamburg</h2></div>
+            <div class="copy"><p>Zwischen den roten Speichern, den Brücken und dem Wasser finden wir viele kleine Orte für Paarfotos. Mal ist die Stadt ganz nah, mal wird sie zu einem weichen Hintergrund. Domenic und Liza stehen am Geländer, schauen sich an, lachen und lassen den Nachmittag auf sich wirken.</p><p>Für ein Paarshooting in Hamburg mag ich genau diesen Wechsel: ein Bild, das den Ort erzählt, und danach eines, in dem nur Eure Nähe zählt.</p></div>
+          </header>
+          <GalleryImageGrid columns={[groups[0]]} galleryId="domenic-liza-01" label="Speicherstadt – an den Brücken" />
+
+          <section class="story-copy" aria-labelledby="zusammen-title">
+            <div><p class="eyebrow">Blicke &amp; Berührungen</p><h3 id="zusammen-title">Einfach zusammen sein.</h3></div>
+            <div class="copy"><p>Eine Hand am Gesicht, ein Kuss, ein kurzer Blick nach unten. Die feinen Gesten erzählen oft am meisten. Bei einem Paar-Fotoshooting in Hamburg gebe ich Euch Raum für solche Momente und helfe Euch mit kleinen Anregungen, wenn Ihr Euch vor der Kamera erst zurechtfinden möchtet.</p><p>Die Stahlträger der Brücken und die schmalen Gassen geben den Bildern einen Rahmen. Ihr füllt ihn mit Eurer eigenen Art, miteinander zu sein. Auch für ein <a href="/gallery/lovebirds-am-elbstrand/">Verlobungsshooting in Hamburg</a> ist ein gemeinsamer Nachmittag draußen eine schöne Gelegenheit, Euch vor der Kamera kennenzulernen.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[1]]} galleryId="domenic-liza-02" label="Speicherstadt – Nähe und Torbögen" />
+
+          <section class="story-copy" aria-labelledby="backstein-title">
+            <div><p class="eyebrow">Ein Ort mit Geschichte</p><h3 id="backstein-title">Backstein, Fleete <br />und ein Stück Hamburg.</h3></div>
+            <div class="copy"><p>Die Speicherstadt Hamburg entstand zwischen 1883 und 1927 als Lagerhausviertel des Hafens. Ihre neugotischen Backsteinfassaden wirken bis heute so geschlossen, weil das Quartier als zusammenhängendes Ensemble geplant wurde. Seit 2015 gehört es gemeinsam mit dem Kontorhausviertel und dem Chilehaus zum UNESCO-Welterbe.</p><p>Für die Fotografie sind vor allem die Perspektiven spannend: ein dunkler Durchgang, dahinter eine helle Fassade; ein Fleet, dessen Linien den Blick in die Tiefe führen. So bekommt jedes Paarfoto einen anderen Rhythmus.</p><a class="text-link source-link" href="https://www.hamburg.de/politik-und-verwaltung/behoerden/behoerde-fuer-kultur-und-medien/themen/unesco-welterbe/welterbe-erklaert-speicherstadt-105900" target="_blank" rel="noopener">Die Geschichte der Speicherstadt bei hamburg.de ↗</a></div>
+          </section>
+          <GalleryImageGrid columns={[groups[2]]} galleryId="domenic-liza-03" label="Speicherstadt – Backstein und Fleete" />
+
+          <section class="story-copy" aria-labelledby="weiter-title">
+            <div><p class="eyebrow">Vom Fleet Richtung Elbe</p><h3 id="weiter-title">Noch ein Blick zurück.</h3></div>
+            <div class="copy"><p>Ein Blick entlang der Speicher, noch ein gemeinsames Bild auf der Brücke – dann geht es weiter. Zum Schluss dieses Kapitels reichen Liza und Domenic jeweils eine Hand in Richtung Kamera. Kleine Perspektivwechsel machen aus einer Serie eine persönliche Erinnerung.</p><p>Vielen Dank Euch beiden, dass ich diese Bilder zeigen darf. Eure Galerie verbindet zwei Seiten Hamburgs, die sich auf einem gemeinsamen Spaziergang wunderbar fotografieren lassen.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[3]]} galleryId="domenic-liza-04" label="Speicherstadt – Abschied von den Speichern" />
+        </section>
+
+        <section id="hafencity" class="chapter" aria-labelledby="hafencity-title">
+          <header class="story-copy story-copy--chapter">
+            <div><p class="eyebrow">02 / HafenCity</p><h2 id="hafencity-title">Paarfotos in der HafenCity Hamburg</h2></div>
+            <div class="copy"><p>Mit der HafenCity verändert sich die Kulisse. Glasfassaden, klare Linien und mehr Himmel über dem Wasser geben den Bildern Luft. Domenic und Liza bleiben im Mittelpunkt; die moderne Architektur bildet einen ruhigen Gegenpol zu den Backsteinspeichern.</p><p>Wer ein Fotoshooting in Hamburg plant und sowohl historische als auch moderne Stadtbilder mag, findet hier zwei unterschiedliche Bildwelten dicht beieinander.</p></div>
+          </header>
+          <GalleryImageGrid columns={[groups[4]]} galleryId="domenic-liza-05" label="HafenCity – Architektur und Wasser" />
+
+          <section class="story-copy" aria-labelledby="licht-title">
+            <div><p class="eyebrow">Nachmittagslicht am Wasser</p><h3 id="licht-title">Nähe, mit weitem Blick.</h3></div>
+            <div class="copy"><p>Das Licht streift durch die Haare, das Wasser bleibt hell im Hintergrund. Zwischen den weiten Ansichten entstehen nahe Portraits: ein Kuss, Lizas Lächeln, Domenics Blick über ihre Schulter. Diese Mischung macht Paarfotos in Hamburg für mich lebendig.</p><p>Für Euer eigenes Paarshooting stimmen wir Ort und Tageszeit gemeinsam ab. Ich schaue, wie das Licht an den Fassaden und am Ufer fällt, und suche mit Euch die passenden Perspektiven.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[5]]} galleryId="domenic-liza-06" label="HafenCity – nahe Paarportraits im Nachmittagslicht" />
+
+          <section class="story-copy" aria-labelledby="bewegung-title">
+            <div><p class="eyebrow">Ein wenig Bewegung</p><h3 id="bewegung-title">Ein Schritt. <br />Eine Drehung. <br />Ein Lachen.</h3></div>
+            <div class="copy"><p>Domenic dreht Liza unter seinem Arm, hebt sie hoch, beide lachen. Wenn Bewegung ins Shooting kommt, verändern sich Ausdruck und Körpersprache ganz von selbst. Die Bilder am Wasser zeigen, wie schön sich spielerische Momente und ruhige Paarportraits ergänzen.</p><p>Ihr müsst dafür keine Posen einstudieren. Ein kleiner Spaziergang oder eine gemeinsame Drehung kann schon ein guter Anfang sein. Wir finden heraus, was sich für Euch leicht und vertraut anfühlt.</p></div>
+          </section>
+          <GalleryImageGrid columns={[groups[6]]} galleryId="domenic-liza-07" label="HafenCity – Bewegung und gemeinsames Lachen" />
+
+          <section class="story-copy" aria-labelledby="erinnerung-title">
+            <div><p class="eyebrow">Domenic &amp; Liza</p><h3 id="erinnerung-title">Euer gemeinsamer Nachmittag.</h3></div>
+            <div class="copy"><p>Zum Abschluss werden die Bilder wieder ruhiger. Liza legt den Kopf an Domenics Schulter, die beiden sitzen am Wasser und schauen gemeinsam in die Kamera. Aus den unterschiedlichen Orten und Momenten wird eine Geschichte, die zu ihnen gehört.</p><p>Wünscht Ihr Euch auch ein Paarshooting in Hamburg – in der Speicherstadt, in der HafenCity oder an einem Ort, der Euch etwas bedeutet? Erzählt mir von Euch und Euren Ideen.</p><a class="text-link" href="/kontakt/">Euer Paarshooting in Hamburg anfragen <span aria-hidden="true">→</span></a></div>
+          </section>
+          <GalleryImageGrid columns={[groups[7]]} galleryId="domenic-liza-08" label="HafenCity – ruhiger Ausklang am Wasser" />
+        </section>
+
+        <section id="hamburg-entdecken" class="story-copy light-story" aria-labelledby="lichtkunst-title">
+          <div><p class="eyebrow">03 / Hamburg entdecken</p><h2 id="lichtkunst-title">Wenn die Speicherstadt zu leuchten beginnt.</h2></div>
+          <div class="copy"><p>Unser Shooting fand am Nachmittag statt. Nach Einbruch der Dunkelheit zeigt die Speicherstadt eine weitere Seite: Die Beleuchtung betont Giebel, Brücken und die plastischen Details der Fassaden. Das Lichtkunstkonzept von Michael Batz entwickelte sich aus einer temporären Inszenierung für das Theaterprojekt „Mozart. Amerika“ von 1999.</p><p>Spannend ist auch die Geschichte hinter dem Licht: Mitglieder, Spender und Brückenpaten unterstützten den Verein Licht-Kunst-Speicherstadt über viele Jahre. Zu den dokumentierten Patenschaften gehören beispielsweise die Brooksbrücke und die Jungfernbrücke.</p><p>Seit 2025 übernimmt die HHLA dauerhaft die Verantwortung für die Fassadenbeleuchtung. Der Verein widmet sich inzwischen neuen Lichtkunstprojekten. Wenn Euch die Idee einer Patenschaft oder einer Unterstützung gefällt, fragt dort nach den aktuellen Möglichkeiten.</p><div class="source-links"><a class="text-link" href="https://licht-kunst-speicherstadt.de/vereinsmitglieder-und-paten/" target="_blank" rel="noopener">Licht-Kunst-Speicherstadt: Mitglieder &amp; Patenschaften ↗</a><a class="text-link source-link" href="https://licht-kunst-speicherstadt.de/lichtkunst/" target="_blank" rel="noopener">Mehr zum Lichtkunstkonzept ↗</a><a class="text-link source-link" href="https://hhla.de/medien/news/detailansicht/zukunft-der-beleuchtung-des-unesco-welterbes-hamburger-speicherstadt-gesichert" target="_blank" rel="noopener">HHLA: Zukunft der Speicherstadtbeleuchtung ↗</a></div></div>
+        </section>
+
+        <aside class="travel-link" aria-labelledby="travel-title">
+          <a href="/gallery/hamburg/" aria-label="Hamburg Fotografie: Travel-Galerie ansehen"><Image src={hamburgTravel} widths={[500, 800, 1200]} sizes="(max-width: 767px) calc(100vw - 48px), 48vw" format="webp" alt="Hamburger Architektur und Spiegelungen im Wasser zur blauen Stunde" loading="lazy" /></a>
+          <div><p class="eyebrow">Hamburg Fotografie · Travel</p><h2 id="travel-title">Noch mehr Hamburg.</h2><p>Wenn Ihr nach dieser Galerie weiter durch die Stadt streifen möchtet: In meiner Hamburg-Fotografie findet Ihr Stadtansichten, Architektur und Wasser – auch im Licht des Abends.</p><a class="text-link" href="/gallery/hamburg/">Zur Hamburg-Fotografie <span aria-hidden="true">→</span></a></div>
+        </aside>
+        <nav class="related-links" aria-label="Weitere Paarshootings und Portfolio"><a href="/gallery/lovebirds-am-elbstrand/">Paarshooting am Elbstrand</a><a href="/gallery/paarshooting-mallorca/">Paarshooting auf Mallorca</a><a href="/portfolio/">Zurück zum Portfolio</a></nav>
+      </article>
+    </main>
+    <footer class="gallery-footer"><a class="gallery-logo" href="/" aria-label="Artbild-Fotografie Startseite"><img src="/images/logo-artbild-black.png" width="1200" height="480" alt="Artbild Fotografie" loading="lazy" /></a><nav aria-label="Footer"><a href="/kontakt/">Kontakt</a><a href="/blog/">Blog</a><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutzerklärung</a></nav><p>Copyright York Augustin. Alle Rechte vorbehalten.</p></footer>
+  </body>
+</html>
+
+<style>
+  :global(.couple-hamburg-page) { background: #fff; color: #30333b; }
+  .skip-link { position: fixed; top: -100px; left: 24px; z-index: 1000; padding: 14px; background: #fff; }
+  .skip-link:focus { top: 16px; }
+  .couple-story { padding-top: clamp(40px, 5vw, 80px); }
+  .couple-hero { width: min(1240px, calc(100% - 80px)); margin: 0 auto 100px; display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(48px, 7vw, 100px); align-items: center; }
+  .handwritten { font: clamp(54px, 5.5vw, 88px)/1.15 "Bestermind", Georgia, serif; margin: 0 0 32px; }
+  .eyebrow { font: 600 10px/1.7 "Raleway", Arial, sans-serif; letter-spacing: .19em; text-transform: uppercase; color: #7b6555; margin: 0 0 20px; }
+  h1, h2, h3 { font-family: "Gilda Display", Georgia, serif; font-weight: 400; margin: 0; }
+  h1 { font-size: clamp(48px, 5.1vw, 78px); line-height: 1.1; }
+  .couple-hero__places { font-size: 22px; margin: 24px 0; }
+  .intro, .copy, .travel-link p:not(.eyebrow) { color: #605d59; font: 18px/1.85 "Gilda Display", Georgia, serif; }
+  .couple-hero .intro { max-width: 540px; text-align: left; }
+  .couple-hero__photo { margin: 0; }
+  .couple-hero__photo :global(img) { width: 100%; height: auto; display: block; }
+  figcaption { margin-top: 16px; font: 9px/1.6 "Raleway", Arial, sans-serif; letter-spacing: .15em; text-transform: uppercase; color: #716b66; text-align: right; }
+  .chapter-nav { display: flex; flex-wrap: wrap; gap: 16px 24px; border-top: 1px solid #e5e0db; padding-top: 24px; margin-top: 30px; }
+  .chapter-nav a { color: #30333b; font: 11px/1.7 "Raleway", Arial, sans-serif; text-decoration: none; }
+  .chapter-nav span { color: #7b6555; padding-right: 6px; }
+  .chapter, #hamburg-entdecken { scroll-margin-top: 110px; }
+  .story-copy { background: #fff; width: min(1100px, calc(100% - 96px)); margin: 0 auto; padding: clamp(64px, 7vw, 106px) 0 8px; display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(40px, 7vw, 100px); align-items: start; }
+  .story-copy--chapter { padding-top: 78px; border-top: 1px solid #e5e0db; }
+  h2 { font-size: clamp(34px, 3.5vw, 52px); line-height: 1.17; }
+  h3 { font-size: clamp(32px, 3.1vw, 46px); line-height: 1.2; }
+  .copy p { margin: 0 0 20px; text-align: left; }
+  .copy p:last-child { margin-bottom: 0; }
+  :global(.couple-hamburg-page .gallery-image-grid) { width: min(1280px, calc(100vw - 64px)); margin-top: 46px; --masonry-gap: 28px; }
+  .chapter + .chapter { margin-top: 100px; }
+  .text-link { display: inline-block; color: #30333b; font: 600 11px/1.9 "Raleway", Arial, sans-serif; letter-spacing: .07em; text-decoration: underline; text-underline-offset: 6px; }
+  .source-link { font-size: 10px; font-weight: 400; letter-spacing: .02em; }
+  .source-links { display: flex; flex-direction: column; align-items: start; gap: 14px; margin-top: 30px; }
+  .light-story { margin-top: 90px; border-top: 1px solid #e5e0db; }
+  .travel-link { width: min(1200px, calc(100% - 80px)); margin: 110px auto 80px; display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(40px, 6vw, 86px); align-items: center; }
+  .travel-link :global(img) { display: block; width: 100%; height: auto; }
+  .travel-link h2 { margin-bottom: 24px; }
+  .related-links { width: min(1200px, calc(100% - 80px)); margin: 0 auto 80px; display: flex; flex-wrap: wrap; justify-content: center; gap: 28px; padding: 30px 0; border-block: 1px solid #e5e0db; }
+  .related-links a { color: #30333b; font: 14px/1.6 "Gilda Display", Georgia, serif; text-underline-offset: 5px; }
+  a:focus-visible { outline: 2px solid #7b6555; outline-offset: 6px; }
+  @media (max-width: 900px) { .couple-hero { gap: 40px; } .story-copy { gap: 40px; } }
+  @media (max-width: 767px) {
+    .couple-hero { width: calc(100% - 48px); grid-template-columns: 1fr; gap: 24px; margin-bottom: 64px; }
+    .couple-hero__copy { display: contents; }
+    .couple-hero .handwritten { order: 1; font-size: 58px; margin: 0; text-align: center; }
+    .couple-hero .eyebrow { order: 2; margin: 0; text-align: center; }
+    h1 { order: 3; font-size: clamp(46px, 11vw, 68px); text-align: center; }
+    .couple-hero__places { order: 4; margin: 0; text-align: center; }
+    .couple-hero__photo { order: 5; width: min(100%, 420px); margin: 8px auto; }
+    .couple-hero .intro { order: 6; margin: 0 auto; font-size: 17px; text-align: center; }
+    .chapter-nav { order: 7; justify-content: center; gap: 14px 18px; margin-top: 0; }
+    figcaption { text-align: center; font-size: 8px; }
+    .story-copy { width: calc(100% - 48px); grid-template-columns: 1fr; gap: 28px; padding-top: 64px; }
+    .copy { font-size: 17px; }
+    .story-copy--chapter { padding-top: 52px; }
+    :global(.couple-hamburg-page .gallery-image-grid) { width: calc(100vw - 48px); margin-top: 32px; --masonry-gap: 24px; }
+    .chapter + .chapter { margin-top: 64px; }
+    .light-story { margin-top: 64px; }
+    .travel-link { width: calc(100% - 48px); grid-template-columns: 1fr; gap: 36px; margin: 70px auto 50px; }
+    .related-links { width: calc(100% - 48px); gap: 20px; margin-bottom: 50px; }
+  }
+</style>

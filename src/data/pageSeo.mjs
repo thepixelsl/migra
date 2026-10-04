@@ -6,6 +6,12 @@
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
 export const pageSeo = {
+  "/gallery/paarshooting-hamburg-speicherstadt-hafencity/": {
+    keyword: "Paarshooting Hamburg Speicherstadt",
+    image: "src/assets/paarshooting-speicherstadt-hafencity/speicherstadt-hamburg-paarshooting-4248.webp",
+    alt: "Liza und Domenic umarmen sich auf einer Brücke über dem Fleet in der Speicherstadt",
+    fit: "contain",
+  },
   "/kirchenfinder-hamburg/": {
     keyword: "Kirchen Hochzeit Hamburg",
     image: "src/assets/kirchenfinder/kirche-alt-rahlstedt.jpg",
