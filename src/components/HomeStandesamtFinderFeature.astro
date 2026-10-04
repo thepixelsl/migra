@@ -1,6 +1,6 @@
 ---
 import { Image } from "astro:assets";
-import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463-Bearbeitet-1-scaled.jpg";
+import standesamtFinderImage from "../assets/home/standesamtfinder-brautportrait.webp";
 ---
 
 <section
@@ -51,12 +51,12 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
         <Image
           src={standesamtFinderImage}
           alt="Braut im fließenden Hochzeitskleid auf einem Hotelbett im Hotel Atlantic Hamburg"
-          widths={[360, 480, 640, 768, 960, 1280]}
-          sizes="(min-width: 621px) and (max-width: 1180px) and (orientation: portrait) calc(42.24vw + 38px), (max-width: 620px) min(calc(86vw - 55px), 360px), (max-width: 959px) min(calc(82vw - 36px), 560px), (max-width: 1180px) 52vw, 620px"
+          widths={[360, 480, 640, 768, 960, 1280, 1600]}
+          sizes="(min-width: 621px) and (max-width: 1180px) and (orientation: portrait) calc(42.24vw + 38px), (max-width: 620px) min(calc(86vw - 55px), 360px), (max-width: 959px) min(calc(82vw - 36px), 560px), (max-width: 1180px) 52vw, 462px"
           loading="lazy"
           decoding="async"
           format="webp"
-          quality={86}
+          quality={95}
         />
         <figcaption>Brautportrait · Hotel Atlantic Hamburg</figcaption>
       </figure>
@@ -451,6 +451,51 @@ import standesamtFinderImage from "../assets/braut-fotoshooting-hamburg/ART_9463
       left: 0;
       width: auto;
       margin: 0;
+      padding: 0;
+      background: none;
+      color: #6f6a64;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .12em;
+    }
+  }
+
+  @media (min-width: 1181px) and (hover: hover) and (pointer: fine),
+    (min-width: 1367px) {
+    .home-standesamt-feature__card {
+      max-width: 1040px;
+    }
+
+    .home-standesamt-feature__link {
+      display: grid;
+      grid-template-columns: minmax(0, 42fr) minmax(0, 58fr);
+      align-items: center;
+    }
+
+    .home-standesamt-feature__media {
+      width: min(calc(100% + 38px), 462px);
+      height: auto;
+      aspect-ratio: 2 / 3;
+      justify-self: end;
+      margin: 0 -38px 0 0;
+      overflow: visible;
+    }
+
+    .home-standesamt-feature__media :global(img) {
+      object-fit: contain;
+      object-position: center;
+    }
+
+    .home-standesamt-feature__link:hover .home-standesamt-feature__media :global(img) {
+      transform: none;
+    }
+
+    .home-standesamt-feature__media figcaption {
+      top: calc(100% + 14px);
+      right: auto;
+      bottom: auto;
+      left: 0;
+      width: auto;
       padding: 0;
       background: none;
       color: #6f6a64;
