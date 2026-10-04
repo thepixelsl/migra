@@ -38,6 +38,7 @@ export type PortfolioEntry = {
   date: string;
   href: string;
   image: ImageMetadata;
+  imageQuality?: number;
   alt: string;
   aspect: "square" | "portrait" | "landscape";
 };
@@ -50,6 +51,7 @@ const entries: PortfolioEntry[] = [
     date: "26.09.2026",
     href: "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
     image: domenicLiza,
+    imageQuality: 88,
     alt: "Domenic und Liza umarmen sich am Geländer am Elbufer in der HafenCity",
     aspect: "portrait",
   },
