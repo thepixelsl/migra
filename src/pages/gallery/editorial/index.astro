@@ -31,10 +31,13 @@ const modulesByFile = Object.fromEntries(
 
 const featuredFiles = [
   "ART_9706-Bearbeitet-Bearbeitet.jpg",
+  "ART_2884-Bearbeitet.jpg",
   "ART_9806-Bearbeitet.jpg",
+  "ART_3704-Bearbeitet.jpg",
   "ART_6856-Bearbeitet.jpg",
   "ART_7380-Bearbeitet.jpg",
   "editorial-portrait-hamburg-blumenstrauss-nahaufnahme.jpg",
+  "ART_3065-Bearbeitet-Bearbeitet.jpg",
   "editorial-fotoshooting-hamburg-rathaus-querformat.jpg",
   "editorial-portrait-hamburg-balkon-schwarzes-kleid.jpg",
   "editorial-portrait-hamburger-rathaus-blumenstrauss.jpg",
@@ -49,6 +52,12 @@ const galleryFiles = [
 ];
 
 const altByFile: Record<string, string> = {
+  "ART_2884-Bearbeitet.jpg":
+    "Editorial Portrait einer Frau im dunklen Nadelstreifenanzug an einer grauen Tür",
+  "ART_3704-Bearbeitet.jpg":
+    "Editorial Portrait einer Frau im schwarzen Top an einem hellen Geländer vor Bäumen",
+  "ART_3065-Bearbeitet-Bearbeitet.jpg":
+    "Editorial Portrait einer Frau im Nadelstreifenanzug mit schwarzer Handtasche an einer hellen Fassade",
   "ART_9706-Bearbeitet-Bearbeitet.jpg":
     "Editorial Portrait einer Frau in weißem Top vor urbaner Architektur in Hamburg",
   "ART_9806-Bearbeitet.jpg":
@@ -168,7 +177,7 @@ const schemaGraph = {
         "Portraits Hamburg",
       ],
       datePublished: "2019-07-08T09:26:18+02:00",
-      dateModified: "2026-08-22T00:00:00+02:00",
+      dateModified: "2026-10-05T00:00:00+02:00",
       author: {
         "@type": "Person",
         name: "York Augustin",
@@ -249,7 +258,7 @@ const schemaGraph = {
       name: title,
       description,
       datePublished: "2019-07-08T09:26:18+02:00",
-      dateModified: "2026-08-02T16:38:35+02:00",
+      dateModified: "2026-10-05T00:00:00+02:00",
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
@@ -284,7 +293,7 @@ const schemaGraph = {
     <meta property="og:url" content={pageUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
     <meta property="article:published_time" content="2019-07-08T09:26:18+02:00">
-    <meta property="article:modified_time" content="2026-08-02T16:38:35+02:00">
+    <meta property="article:modified_time" content="2026-10-05T00:00:00+02:00">
     <meta property="og:image" content={primaryImage}>
     <meta property="og:image:width" content={heroImage.width}>
     <meta property="og:image:height" content={heroImage.height}>

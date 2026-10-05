@@ -26,7 +26,7 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
   )).toBeVisible();
   await expect(page.getByText("Portraitserie", { exact: true })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: "Wenn ein Portrait nicht posiert wirken muss" })).toHaveCount(0);
-  await expect(page.locator("[data-gallery-trigger='editorial']")).toHaveCount(91);
+  await expect(page.locator("[data-gallery-trigger='editorial']")).toHaveCount(94);
 
   const state = await page.evaluate(() => {
     const schemas = [...document.querySelectorAll<HTMLScriptElement>(
@@ -80,8 +80,8 @@ test("desktop Editorial gallery has SEO structure, local images and lightbox", a
   expect(state.centers.story).toBe(0);
   expect(state.centers.gallery).toBe(0);
   expect(state.missingAlt).toBe(0);
-  expect(state.lazyImages).toBe(91);
-  expect(state.naturalItems).toBe(91);
+  expect(state.lazyImages).toBe(94);
+  expect(state.naturalItems).toBe(94);
   expect(state.heroLoading).toBe("eager");
   expect(state.heroPriority).toBe("high");
   expect(state.overflow).toBe(0);
