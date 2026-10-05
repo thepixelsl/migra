@@ -346,6 +346,10 @@ const collectionSchema = {
     text-transform: uppercase;
   }
 
+  .journal-masthead .eyebrow {
+    margin-bottom: 33px;
+  }
+
   h1 {
     margin: 0;
     color: #252932;
@@ -372,6 +376,10 @@ const collectionSchema = {
     padding: 0;
     color: inherit;
     text-decoration: none;
+  }
+
+  .pinned-post + .pinned-post {
+    margin-top: clamp(82px, 9vw, 120px);
   }
 
   .pinned-post__media {
@@ -665,6 +673,10 @@ const collectionSchema = {
 
     .journal-posts {
       gap: 64px;
+    }
+
+    .pinned-post + .pinned-post {
+      margin-top: 64px;
     }
 
     .journal-card__link {
