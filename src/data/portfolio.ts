@@ -39,6 +39,7 @@ export type PortfolioEntry = {
   href: string;
   image: ImageMetadata;
   imageQuality?: number;
+  hubImage?: boolean;
   alt: string;
   aspect: "square" | "portrait" | "landscape";
 };

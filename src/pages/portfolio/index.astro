@@ -9,8 +9,17 @@ import PortfolioGrid from "../../components/PortfolioGrid.astro";
 import EditorialReviewQuote from "../../components/EditorialReviewQuote.astro";
 import { googleReviews } from "../../data/reviews";
 import { portfolioEntries, portfolioFilters } from "../../data/portfolio";
+import hubPublications from "../../data/hub-publications.json";
 
-const portfolioPageEntries = [...portfolioEntries];
+const portfolioPageEntries = [
+  ...hubPublications.filter(entry => ["gallery","webstory"].includes(entry.kind) && entry.heroImage).map(entry => ({
+    title:entry.title,href:entry.path,category:entry.kind === "webstory" ? "Web Story" : entry.category,
+    filter:/reise|travel/i.test(entry.category) ? "Travel" : /hochzeit|wedding/i.test(entry.category) ? "Hochzeit" : "Peoplefotografie",
+    date:new Intl.DateTimeFormat("de-DE").format(new Date(entry.datePublished)),
+    image:{...entry.heroImage,format:"webp"},alt:entry.heroImage.alt,hubImage:true,
+  })),
+  ...portfolioEntries,
+];
 const editorialIndex = portfolioPageEntries.findIndex(
   (entry) => entry.href === "/gallery/editorial/",
 );

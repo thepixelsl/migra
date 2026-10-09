@@ -11,10 +11,20 @@ on:
         options:
           - development
           - production
+      deploy:
+        description: Publish a reviewed Hub release to the existing Bunny app
+        required: false
+        default: false
+        type: boolean
+      hub_release:
+        description: Reviewed Hub release ID
+        required: false
+        default: ""
+        type: string
 
 concurrency:
   group: bunny-image-${{ inputs.target }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -42,7 +52,7 @@ jobs:
         run: npm ci
 
       - name: Test Bunny runtime
-        run: npm run test:bunny
+        run: npm run test:bunny && node --test tests/hub-bunny-state.test.mjs
 
       - name: Test migrated HTML sanitizer
         run: npm run test:migration-sanitizer
@@ -66,9 +76,10 @@ jobs:
             type=raw,value=dev,enable=${{ inputs.target == 'development' }}
             type=sha,prefix=sha-,enable=${{ inputs.target == 'development' }}
             type=raw,value=production,enable=${{ inputs.target == 'production' }}
-            type=sha,prefix=prod-sha-,enable=${{ inputs.target == 'production' }}
+            type=sha,format=long,prefix=prod-sha-,enable=${{ inputs.target == 'production' }}
 
       - name: Build and push linux/amd64 image
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -78,6 +89,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           provenance: false
           build-args: |
+            HUB_RELEASE_ID=${{ inputs.deploy && inputs.hub_release || '' }}
             PUBLIC_SITE_URL=${{ inputs.target == 'production' && 'https://artbild-fotografie.de' || 'https://mc-k5f22r07h0.bunny.run' }}
             PUBLIC_TRACKING_ENV=${{ vars.PUBLIC_TRACKING_ENV || 'production' }}
             PUBLIC_TRACKING_ALLOWED_HOSTS=${{ vars.PUBLIC_TRACKING_ALLOWED_HOSTS || 'artbild-fotografie.de,www.artbild-fotografie.de' }}
@@ -90,3 +102,12 @@ jobs:
             PUBLIC_CONSENT_VERSION=${{ '2026-10-01.3' }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Publish reviewed Hub release to Bunny
+        if: inputs.deploy && inputs.target == 'production' && startsWith(github.ref_name, 'hub-release/')
+        env:
+          BUNNYNET_API_KEY: ${{ secrets.BUNNYNET_API_KEY }}
+          HUB_RELEASE_ID: ${{ inputs.hub_release }}
+          HUB_IMAGE_TAG: prod-sha-${{ github.sha }}
+          HUB_IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
+        run: node scripts/deploy-hub-bunny.mjs

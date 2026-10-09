@@ -47,7 +47,8 @@ const imageAspect =
     data-journey-stage="auswahl"
   >
     <figure class="portfolio-overview-card__figure">
-      <Image
+      {entry.hubImage ? <img src={entry.image.src} width={entry.image.width} height={entry.image.height}
+        alt={entry.alt} loading={priority ? "eager" : "lazy"} decoding="async" /> : <Image
         src={entry.image}
         alt={entry.alt}
         widths={[320, 520, 760]}
@@ -56,7 +57,7 @@ const imageAspect =
         loading={priority ? "eager" : "lazy"}
         fetchpriority={priority ? "high" : "auto"}
         decoding="async"
-      />
+      />}
     </figure>
     <div class="portfolio-overview-card__body">
       <p class="portfolio-overview-card__meta">

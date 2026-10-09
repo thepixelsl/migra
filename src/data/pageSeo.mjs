@@ -5,6 +5,7 @@
  * Paths are source files, never transient Astro build hashes.
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
+import hubPublications from './hub-publications.json' with {type:'json'};
 export const pageSeo = {
   "/gallery/paarshooting-hamburg-speicherstadt-hafencity/": {
     keyword: "Paarshooting Hamburg Speicherstadt",
@@ -393,3 +394,11 @@ export const pageSeo = {
     focalPoint: "top",
   },
 };
+
+for (const entry of hubPublications) {
+  if (Object.hasOwn(pageSeo,entry.path)) throw new Error('Hub address conflicts with an existing SEO page: '+entry.path);
+  if (!entry.heroImage?.src?.startsWith('/hub-assets/') || !entry.metaTitle || !entry.description)
+    throw new Error('Incomplete Hub metadata: '+entry.path);
+  pageSeo[entry.path]={title:entry.metaTitle,description:entry.description,
+    image:'public'+entry.heroImage.src,alt:entry.heroImage.alt,keyword:''};
+}

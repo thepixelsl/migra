@@ -5,6 +5,7 @@ import MobileNavigation from "../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import migratedPages from "../../data/migratedPages.json";
+import hubPublications from "../../data/hub-publications.json";
 import { colorProofingPost, journalPosts } from "../../data/journalPosts";
 import { shouldListBlogPost } from "../../lib/blogIndexPolicy";
 import "../../styles/global.css";
@@ -113,7 +114,7 @@ const getCardImage = (entry: MigratedPost) => {
     .filter(isCardImage)
     .sort((left, right) => getImageArea(right) - getImageArea(left))[0];
 };
-const blogPosts = [...journalPosts, ...(migratedPages as MigratedPost[])]
+const blogPosts = [...journalPosts, ...(migratedPages as MigratedPost[]), ...(hubPublications as MigratedPost[])]
   .filter(shouldListBlogPost)
   .sort(
     (left, right) =>

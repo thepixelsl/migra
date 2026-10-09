@@ -1,0 +1,48 @@
+---
+import FaviconHead from './FaviconHead.astro';
+import MobileNavigation from './MobileNavigation.astro';
+import DesktopNavigation from './DesktopNavigation.astro';
+import '../styles/global.css';
+const { entry } = Astro.props;
+const canonical = new URL(entry.path, Astro.site || 'https://artbild-fotografie.de/').href;
+const image = entry.heroImage ? new URL(entry.heroImage.src, canonical).href : undefined;
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{entry.metaTitle}</title>
+    <meta name="description" content={entry.description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={entry.metaTitle} />
+    <meta property="og:description" content={entry.description} />
+    <meta property="og:url" content={canonical} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(entry.schema).replace(/</g,'\\u003c')} />
+    <style is:inline set:html={entry.css} />
+  </head>
+  <body>
+    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <main set:html={entry.contentHtml} />
+    <footer class="hub-page-footer">
+      <a href={entry.kind === 'gallery' ? '/portfolio/' : '/blog/'}>Weitere Geschichten</a>
+      <a href="/kontakt/">Kontakt</a>
+      <a href="/impressum/">Impressum</a>
+      <a href="/datenschutz/">Datenschutz</a>
+    </footer>
+    <script>
+      import { installGalleryBehavior } from '../lib/hub-gallery.mjs';
+      const surface = document.querySelector('.article-surface');
+      if (surface) installGalleryBehavior(surface);
+    </script>
+  </body>
+</html>
+<style>
+  .hub-page-footer{display:flex;flex-wrap:wrap;justify-content:center;gap:24px;padding:40px 24px;font:12px Raleway,Arial,sans-serif}
+  .hub-page-footer a{color:inherit}
+</style>
