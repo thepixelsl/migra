@@ -1,0 +1,129 @@
+---
+import FaviconHead from "../../components/FaviconHead.astro";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import MonitorTestPattern from "../../components/MonitorTestPattern.astro";
+import "../../styles/global.css";
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
+const pageUrl = `${siteUrl}/bildschirm-check/`;
+const title = "Bildschirm-Check: Hochzeitsfotos zu Hause ansehen | ARTBILD";
+const description = "Prüft mit dem ARTBILD-Graustufentest, ob euer Bildschirm helle und dunkle Details zeigt. Mit einfacher Anleitung zum Betrachten eurer Hochzeitsfotos.";
+const breadcrumbs = [{ label: "Startseite", href: "/" }, { label: "Bildschirm-Check", href: "/bildschirm-check/" }];
+const schema = { "@context": "https://schema.org", "@type": "WebPage", "@id": `${pageUrl}#webpage`, url: pageUrl, name: title, description, inLanguage: "de-DE" };
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <FaviconHead />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href={pageUrl} />
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replaceAll("<", "\\u003c")} />
+  </head>
+  <body>
+    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <main>
+      <Breadcrumbs items={breadcrumbs} siteUrl={siteUrl} currentUrl={pageUrl} />
+      <div class="screen-shell">
+        <header class="screen-hero">
+          <p class="screen-eyebrow">Für eure Bilder zu Hause</p>
+          <h1>Eure Hochzeitsfotos.<br />Bis ins Detail.</h1>
+          <p class="screen-intro">Die feine Spitze im Brautkleid, die Falten im dunklen Anzug: Mit diesem Bildschirm-Check seht ihr, ob euer Gerät helle und dunkle Abstufungen zeigt.</p>
+          <a class="screen-button" href="#test">Zum Bildschirm-Check <span aria-hidden="true">↓</span></a>
+          <p class="screen-caption">Etwa eine Minute · auf Computer, Tablet und Smartphone</p>
+        </header>
+
+        <section class="screen-preparation" aria-labelledby="vorbereitung">
+          <h2 id="vorbereitung">Bevor ihr beginnt</h2>
+          <ol>
+            <li><strong>Ruhiges Licht.</strong> Vermeidet direkte Sonne und Spiegelungen auf dem Bildschirm. Schaut möglichst gerade auf das Display.</li>
+            <li><strong>Neutrale Darstellung.</strong> Schaltet Nachtmodus, Blaulichtfilter und automatische Farbanpassungen wie True Tone für die Betrachtung aus. Wählt am Monitor, falls vorhanden, „Standard“ oder „sRGB“ und deaktiviert dynamischen Kontrast.</li>
+            <li><strong>Angenehme Helligkeit.</strong> Stellt die Helligkeit passend zum Raum ein. Weiß soll hell wirken, euch aber nicht blenden. Es gibt keinen passenden Prozentwert für alle Geräte.</li>
+          </ol>
+        </section>
+
+        <section class="screen-test" aria-labelledby="test">
+          <div class="screen-test__heading">
+            <div><p class="screen-eyebrow">Ein Blick auf helle und dunkle Details</p><h2 id="test">Der Graustufentest</h2></div>
+            <button class="screen-button screen-button--outline" type="button" data-open-screen-test hidden>Test groß anzeigen <span aria-hidden="true">↗</span></button>
+          </div>
+          <MonitorTestPattern prefix="page" />
+          <p class="screen-test__download">Für die eigene Bildergalerie: <a href="/downloads/artbild-bildschirm-check.png" download>Testbild herunterladen (PNG)</a></p>
+        </section>
+
+        <section class="screen-reading" aria-labelledby="ergebnis">
+          <h2 id="ergebnis">Was ihr daraus ablesen könnt</h2>
+          <div class="screen-reading__columns">
+            <div><h3>Die Abstufungen sind sichtbar</h3><p>Euer Bildschirm zeigt in diesem Test helle und dunkle Unterschiede. Das ist eine gute Orientierung für Details in euren Fotos. Es bestätigt keine exakte Helligkeit oder Farbtreue.</p></div>
+            <div><h3>Mehrere Felder verschwinden</h3><p>Prüft zuerst Raumlicht, Blickwinkel und den gewählten Bildmodus. Passt die Helligkeit behutsam an. Wenn Felder weiter verschmelzen, lässt sich das oft nicht allein mit dem Helligkeitsregler lösen. Vergleicht die Darstellung auf einem anderen Gerät.</p></div>
+          </div>
+          <p class="screen-limit"><strong>Eine Orientierung für zu Hause.</strong> Das Testbild misst weder die tatsächliche Leuchtdichte noch die Farbgenauigkeit. Für eine genaue Kalibrierung braucht es ein geeignetes Messgerät. Verändert eure fertigen Fotos deshalb nicht allein aufgrund der Darstellung auf einem einzelnen Bildschirm.</p>
+        </section>
+
+        <section class="screen-next" aria-labelledby="bilder-geniessen">
+          <h2 id="bilder-geniessen">Jetzt sind eure Erinnerungen dran.</h2>
+          <p>Öffnet eure Hochzeitsgalerie auf demselben Gerät und bei ähnlichem Raumlicht. Wenn ihr eure Lieblingsbilder als Fotobuch oder Druck genießen möchtet, findet ihr hier meine Hinweise zur Druckvorbereitung.</p>
+          <a href="/hochzeitsfotos-drucken-color-proofing/">Hochzeitsfotos drucken &amp; Color-Proofing <span aria-hidden="true">→</span></a>
+        </section>
+        <p class="screen-sources">Mehr zum Hintergrund: <a href="https://www.eizo.de/monitortest/">EIZO Monitortest</a> · <a href="https://www.eizo.de/farbmanagement-kalibrierung/alles-ueber-monitor-kalibrierung">Monitorkalibrierung</a> · <a href="https://support.apple.com/de-de/109351">Helligkeit und Farbanpassungen bei Apple</a></p>
+        <footer class="gallery-footer screen-footer"><span>ARTBILD-Fotografie · York Augustin</span><nav aria-label="Rechtliches"><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a><a href="/kontakt/">Kontakt</a></nav></footer>
+      </div>
+    </main>
+    <dialog class="screen-dialog" aria-labelledby="screen-dialog-title">
+      <div class="screen-dialog__inner">
+        <header class="screen-dialog__header"><h2 id="screen-dialog-title">ARTBILD · Bildschirm-Check</h2><button type="button" class="screen-button screen-button--outline" data-close-screen-test>Schließen <span aria-hidden="true">×</span></button></header>
+        <MonitorTestPattern prefix="dialog" />
+        <p class="screen-dialog__note">Passt die Helligkeit am Gerät an, ohne dass Weiß blendet. Der Check ist eine Orientierung und keine Kalibrierung.</p>
+      </div>
+    </dialog>
+  </body>
+</html>
+
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>(".screen-dialog");
+  const open = document.querySelector<HTMLButtonElement>("[data-open-screen-test]");
+  const close = document.querySelector<HTMLButtonElement>("[data-close-screen-test]");
+  if (dialog && open && close && typeof dialog.showModal === "function") {
+    open.hidden = false;
+    open.addEventListener("click", () => { dialog.showModal(); document.documentElement.classList.add("screen-test-open"); });
+    close.addEventListener("click", () => dialog.close());
+    dialog.addEventListener("close", () => { document.documentElement.classList.remove("screen-test-open"); open.focus({ preventScroll: true }); });
+  }
+</script>
+
+<style>
+  .screen-shell{width:min(1100px,calc(100% - 64px));margin-inline:auto;color:#303030}
+  .screen-hero{max-width:810px;margin-inline:auto;padding:70px 0 76px;text-align:center}
+  .screen-eyebrow{font-family:"Raleway",Arial,sans-serif;text-transform:uppercase;letter-spacing:.19em;font-size:11px;line-height:1.6;margin:0 0 20px;color:#59544e}
+  h1,h2,h3{font-family:"Gilda Display",Georgia,serif;font-weight:400;letter-spacing:-.018em}
+  h1{font-size:clamp(43px,5.4vw,76px);line-height:1.12;margin:0 0 26px}
+  h2{font-size:clamp(29px,3vw,39px);line-height:1.2;margin:0 0 26px;scroll-margin-top:24px}
+  h3{font-size:25px;line-height:1.3;margin:0 0 14px}
+  p{margin:0 0 22px}.screen-intro{max-width:640px;margin:0 auto 32px;font-size:21px;line-height:1.7}
+  .screen-button{display:inline-flex;justify-content:center;align-items:center;gap:18px;min-height:48px;padding:13px 23px;background:#242424;color:#fff;border:1px solid #242424;font-family:"Raleway",Arial,sans-serif;font-size:13px;font-weight:600;line-height:1.5;text-decoration:none;cursor:pointer;border-radius:0}
+  .screen-button[hidden]{display:none}.screen-button--outline{background:transparent;color:#242424}.screen-button:hover{background:#404040;color:#fff}
+  .screen-shell :is(a,button):focus-visible,.screen-dialog button:focus-visible{outline:2px solid #242424;outline-offset:5px}
+  .screen-caption{margin:18px 0 0;font-family:"Raleway",Arial,sans-serif;font-size:12px;color:#59544e}
+  .screen-preparation{border-block:1px solid #dfd8cf;padding:38px 0 30px;margin-bottom:70px}
+  .screen-preparation ol{list-style:none;counter-reset:preparation;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;margin:0;padding:0}
+  .screen-preparation li{counter-increment:preparation;font-size:16px;line-height:1.7}
+  .screen-preparation li::before{content:"0" counter(preparation);display:block;font-family:"Raleway",Arial,sans-serif;font-size:12px;letter-spacing:.12em;color:#59544e;margin-bottom:12px}
+  .screen-preparation strong{display:block;font-family:"Raleway",Arial,sans-serif;font-size:14px;margin-bottom:8px}
+  .screen-test__heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:28px}.screen-test__heading h2{margin-bottom:0}.screen-test__heading .screen-eyebrow{margin-bottom:10px}
+  .screen-test__download{font-family:"Raleway",Arial,sans-serif;font-size:12px;margin:18px 0 0;line-height:1.7}
+  .screen-reading{padding:72px 0}.screen-reading__columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:54px}.screen-reading__columns p{font-size:18px}
+  .screen-limit{border-top:1px solid #dfd8cf;padding-top:24px;margin:20px 0 0;font-size:16px}.screen-next{background:#f5f2ed;padding:42px 48px;max-width:850px;margin-inline:auto}.screen-next p{font-size:18px}.screen-next>a{font-size:16px}
+  .screen-sources{font-family:"Raleway",Arial,sans-serif;font-size:11px;line-height:1.9;color:#59544e;margin:38px 0 0}
+  .screen-footer{display:flex;justify-content:space-between;gap:24px;margin-top:36px;padding:24px 0 36px;border-top:1px solid #dfd8cf;font-family:"Raleway",Arial,sans-serif;font-size:12px}.screen-footer nav{display:flex;flex-wrap:wrap;gap:20px}
+  .screen-dialog{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:24px;border:0;background:#b8b8b8;color:#171717;overflow:auto}
+  .screen-dialog::backdrop{background:#b8b8b8}.screen-dialog__inner{max-width:1300px;margin:auto}.screen-dialog__header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:14px}.screen-dialog__header h2{font-size:22px;margin:0}.screen-dialog__note{font-family:"Raleway",Arial,sans-serif;font-size:13px;margin:20px 0 0}
+  :global(html.screen-test-open){overflow:hidden}
+  @media(max-width:800px){.screen-preparation ol{grid-template-columns:minmax(0,1fr);gap:24px}.screen-reading__columns{gap:30px}.screen-preparation{margin-bottom:48px}.screen-test__heading{align-items:flex-start;flex-direction:column}.screen-hero{padding:48px 0 55px}}
+  @media(max-width:600px){.screen-shell{width:calc(100% - 40px)}.screen-hero{text-align:left;padding-top:38px}.screen-intro{font-size:19px}.screen-eyebrow{font-size:10px}.screen-reading{padding:48px 0}.screen-reading__columns{grid-template-columns:minmax(0,1fr);gap:18px}.screen-next{padding:30px 24px}.screen-footer{flex-direction:column}.screen-dialog{padding:16px}.screen-dialog__header h2{font-size:18px}.screen-dialog__header .screen-button{padding:10px 13px;font-size:12px}.screen-caption{font-size:11px}}
+  @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}}
+</style>

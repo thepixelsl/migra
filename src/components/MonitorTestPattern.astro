@@ -1,0 +1,51 @@
+---
+const { prefix = "screen" } = Astro.props;
+const steps = [0, 26, 51, 77, 102, 128, 153, 179, 204, 230, 255];
+const groups = [
+  { key: "dark", title: "Dunkle Details", note: "Wie die Falten in einem dunklen Anzug.", values: [8, 16, 24, 32, 48] },
+  { key: "light", title: "Helle Details", note: "Wie die Struktur in einem weißen Brautkleid.", values: [247, 239, 231, 223, 207] },
+];
+---
+<div class="monitor-pattern">
+  <section class="monitor-scale" aria-labelledby={`${prefix}-scale-title`}>
+    <h3 id={`${prefix}-scale-title`}>Von Schwarz bis Weiß</h3>
+    <div class="monitor-scale__steps" role="img" aria-label="Elf Graustufen von reinem Schwarz bis reinem Weiß. Benachbarte Felder sollten unterscheidbar sein.">
+      {steps.map((value) => <span data-tone={value} style={`background-color:rgb(${value},${value},${value})`}></span>)}
+    </div>
+    <div class="monitor-scale__labels" aria-hidden="true"><span>Schwarz</span><span>Weiß</span></div>
+    <p>Ihr solltet die elf Stufen voneinander unterscheiden können.</p>
+  </section>
+  <div class="monitor-detail-grid">
+    {groups.map((group) => (
+      <section class="monitor-detail" aria-labelledby={`${prefix}-${group.key}-title`}>
+        <h3 id={`${prefix}-${group.key}-title`}>{group.title}</h3>
+        <p class="monitor-detail__note">{group.note}</p>
+        <div class:list={["monitor-detail__field", `monitor-detail__field--${group.key}`]} role="img" aria-label={`Fünf nummerierte ${group.key === "dark" ? "dunkelgraue Felder auf schwarzem" : "hellgraue Felder auf weißem"} Hintergrund. Feld 1 hat den kleinsten Unterschied zum Hintergrund.`}>
+          {group.values.map((value, index) => (
+            <div class="monitor-detail__item">
+              <span class="monitor-detail__patch" data-tone={value} style={`background-color:rgb(${value},${value},${value})`}></span>
+              <span class="monitor-detail__number" aria-hidden="true">{index + 1}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+  <p class="monitor-pattern__hint"><strong>Schaut auf die Flächen, nicht nur auf die Zahlen.</strong> Die Felder 2 bis 5 sollten sich vom Hintergrund abheben. Feld 1 ist absichtlich sehr zart und kann je nach Bildschirm und Raumlicht schwer erkennbar sein.</p>
+</div>
+
+<style>
+  .monitor-pattern{background:#b8b8b8;color:#171717;padding:clamp(22px,4vw,46px);font-family:"Raleway",Arial,sans-serif;line-height:1.55;color-scheme:light}
+  h3{font-family:"Gilda Display",Georgia,serif;font-size:clamp(23px,2.2vw,30px);font-weight:400;line-height:1.2;margin:0 0 16px}
+  p{font-size:14px;margin:12px 0 0}
+  .monitor-scale__steps{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));height:clamp(65px,10vw,112px)}
+  .monitor-scale__labels{display:flex;justify-content:space-between;font-size:12px;margin-top:9px}
+  .monitor-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;margin-top:34px}
+  .monitor-detail{min-width:0}.monitor-detail h3{margin-bottom:8px}.monitor-detail__note{margin:0 0 16px;font-size:13px}
+  .monitor-detail__field{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:clamp(8px,1.5vw,18px);padding:clamp(16px,2.2vw,26px)}
+  .monitor-detail__field--dark{background:#000;color:#fff}.monitor-detail__field--light{background:#fff;color:#171717}
+  .monitor-detail__patch{display:block;width:100%;aspect-ratio:1;min-height:28px;border:0;box-shadow:none;opacity:1;filter:none}
+  .monitor-detail__number{display:block;text-align:center;font-size:12px;line-height:1;margin-top:14px}
+  .monitor-pattern__hint{max-width:790px;margin-top:28px;font-size:14px}
+  @media(max-width:650px){.monitor-detail-grid{grid-template-columns:minmax(0,1fr);gap:28px}.monitor-detail__field{gap:14px;padding:22px}.monitor-pattern__hint{font-size:13px}}
+</style>
