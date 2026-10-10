@@ -83,6 +83,14 @@ export const pageSeo = {
     image: "src/assets/hochzeitsfotos-drucken-color-proofing/brautpaarportrait.jpg",
     alt: "Brautpaar im Hotelzimmer: Braut im Spitzenkleid und Bräutigam mit Fliege",
   },
+  "/bildschirm-check/": {
+    keyword: "Bildschirm Graustufentest Hochzeitsfotos",
+    title: "Bildschirm-Check: Hochzeitsfotos zu Hause ansehen | ARTBILD",
+    description: "Prüft mit dem ARTBILD-Graustufentest, ob euer Bildschirm helle und dunkle Details zeigt. Mit einfacher Anleitung zum Betrachten eurer Hochzeitsfotos.",
+    image: "public/downloads/artbild-bildschirm-check.png",
+    alt: "ARTBILD-Bildschirm-Check mit elf Graustufen sowie hellen und dunklen Testfeldern",
+    fit: "contain",
+  },
   "/blog/": {
     keyword: "Hochzeit Hamburg Tipps",
     description: "Hochzeit in Hamburg planen: Tipps zu Getting Ready, Locations und Trauterminen, dazu Hochzeitsreportagen und Fotowissen im Blog von Artbild-Fotografie.",
