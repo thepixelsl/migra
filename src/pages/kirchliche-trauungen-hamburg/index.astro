@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import KirchenLayout from '../../layouts/KirchenLayout.astro';
+import organ from '../../assets/kirchenfinder/st-michaelis-orgel.webp';
+import { finderPath, guidePath, churchPortraits } from '../../data/kirchen';
+const pagePath = '/kirchliche-trauungen-hamburg/';
+const title = 'Kirchliche Trauungen in Hamburg – Übersicht | Artbild';
+const description = 'Kirchlich heiraten in Hamburg: Kirchen finden, Anmeldung und Ablauf planen und Hochzeitsfotos abstimmen. Übersicht mit Kirchenfinder und Ratgeber.';
+const imageAlt = 'Orgel mit silbernen Pfeifen und vergoldeten Figuren in St. Michaelis in Hamburg';
+---
+<KirchenLayout title={title} description={description} pagePath={pagePath} image={organ.src} imageAlt={imageAlt} modified="2026-10-10" breadcrumbs={[{label:'Startseite',href:'/'},{label:'Blog & Planung',href:'/blog/'},{label:'Kirchliche Trauungen',href:pagePath}]}>
+  <div class="church-wrap church-overview">
+    <header class="church-hero">
+      <p class="church-eyebrow">Kirchen finden · Trauung planen · Erinnerungen bewahren</p>
+      <h1>Kirchliche Trauungen<span>in Hamburg.</span></h1>
+      <p class="church-hero__lead">Eine Kirche, die zu Euch passt. Ein Gottesdienst, den Ihr gemeinsam gestaltet. Hier findet Ihr den Einstieg in die Planung Eurer kirchlichen Hochzeit.</p>
+      <nav aria-label="Themen dieser Übersicht"><ul class="church-jump-links"><li><a href="#planung">Eure nächsten Schritte</a></li><li><a href="#kirchenportraits">Hamburger Kirchen</a></li><li><a href="#hochzeitsfotos">Hochzeitsfotografie</a></li></ul></nav>
+    </header>
+    <section class="church-intro" aria-labelledby="overview-intro-title">
+      <figure><Image src={organ} alt={imageAlt} widths={[420,680,960,1400,1703]} sizes="(max-width: 700px) calc(100vw - 48px), 508px" format="webp" quality={88} loading="eager" fetchpriority="high" /><figcaption>Orgel in St. Michaelis, Hamburg · Foto: York Augustin</figcaption></figure>
+      <div class="church-intro__copy">
+        <p class="church-eyebrow">Euer Ja in der Kirche</p>
+        <h2 id="overview-intro-title">Raum für Eure<br />kirchliche Hochzeit.</h2>
+        <p>Orgelmusik, der Einzug und das gemeinsame Trauversprechen gehören für viele Paare zu diesem Tag. Welche Kirche Ihr wählt und wie Ihr dort feiern könnt, besprecht Ihr direkt mit der Gemeinde.</p>
+        <p>Der Kirchenfinder führt Euch zu örtlichen Kontakten und Informationen. Der Ratgeber hilft Euch bei Anmeldung, Unterlagen, Musik und Ablauf. Hier sind beide Wege an einem Ort gebündelt.</p>
+        <a class="church-text-link" href={finderPath+'st-michaelis-michel/'}>St. Michaelis als Traukirche kennenlernen →</a>
+      </div>
+    </section>
+    <section id="planung" class="church-section" aria-labelledby="overview-planning-title">
+      <p class="church-eyebrow">Eure nächsten Schritte</p><h2 id="overview-planning-title">Was möchtet Ihr zuerst klären?</h2>
+      <div class="church-featured church-featured--numbered">
+        <article><span class="church-number">01</span><div><h3>Eine Kirche finden</h3><p>Hamburger Kirchen und kirchliche Trauorte mit Ansprechpartnern, Anmeldewegen und örtlichen Quellen vergleichen.</p><a class="church-text-link" href={finderPath}>Zum Kirchenfinder →</a></div></article>
+        <article><span class="church-number">02</span><div><h3>Die Trauung planen</h3><p>Antworten zu Voraussetzungen, Unterlagen, Kosten und Gottesdienst. Die Einzelheiten stimmt Ihr mit Eurem Pfarrteam ab.</p><a class="church-text-link" href={guidePath}>Zum Trauungsratgeber →</a></div></article>
+        <article><span class="church-number">03</span><div><h3>Die Fotos besprechen</h3><p>Einzug, Auszug, Gratulationen und Paarfotos in Euren Tag einplanen. Aufnahmen während des Gottesdienstes klären wir mit der Gemeinde.</p><a class="church-text-link" href="#hochzeitsfotos">Zur fotografischen Begleitung →</a></div></article>
+      </div>
+    </section>
+    <section id="kirchenportraits" class="church-section church-reader" aria-labelledby="overview-churches-title">
+      <p class="church-eyebrow">Kirchen kennenlernen</p><h2 id="overview-churches-title">Ein genauerer Blick auf Eure Wunschkirche.</h2>
+      <p>Diese Kirchenportraits bündeln die recherchierten Informationen für Eure Anmeldung. Weitere evangelische und katholische Kirchen findet Ihr im Verzeichnis.</p>
+      <ul class="church-examples">{churchPortraits.map(church => <li><h3><a href={church.url}>{church.name}</a></h3></li>)}</ul>
+      <a class="church-button" href={finderPath}>Alle Kirchen & Trauorte vergleichen</a>
+    </section>
+    <section id="hochzeitsfotos" class="church-cta" aria-labelledby="overview-photo-title">
+      <p class="church-eyebrow">Hochzeitsfotografie · Hamburg</p><h2 id="overview-photo-title">Erinnerungen an Euer Ja.</h2>
+      <p>Schreibt mir, wann und in welcher Kirche Ihr heiraten möchtet. Dann besprechen wir Eure Hochzeitsreportage, die erlaubten Aufnahmen und die Zeit für Paar- und Gruppenfotos.</p>
+      <a class="church-button" href="/kontakt/">Kirchliche Hochzeit anfragen</a>
+      <p><a class="church-text-link" href="/gallery-category/hochzeit/">Hochzeitsreportagen ansehen →</a></p>
+    </section>
+  </div>
+</KirchenLayout>
+<style>
+  .church-overview :global(.church-intro img) { aspect-ratio: auto; height: auto; object-fit: contain; }
+  .church-overview :global(section[id]) { scroll-margin-top: 110px; }
+</style>

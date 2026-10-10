@@ -36,38 +36,11 @@
     "alt": "Liza und Domenic lächeln einander in einer schmalen Speicherstadtgasse an"
   },
   {
-    "file": "speicherstadt-hamburg-paarshooting-4132.webp",
-    "sourceFile": "ART_4132.jpg",
-    "number": 4132,
-    "location": "Speicherstadt",
-    "sequence": 5,
-    "group": 2,
-    "alt": "Paarportrait vor den roten Speichern und dem Fleet in Hamburg"
-  },
-  {
-    "file": "speicherstadt-hamburg-paarshooting-4170.webp",
-    "sourceFile": "ART_4170.jpg",
-    "number": 4170,
-    "location": "Speicherstadt",
-    "sequence": 6,
-    "group": 2,
-    "alt": "Liza und Domenic berühren sich Stirn an Stirn vor den Speichern"
-  },
-  {
-    "file": "speicherstadt-hamburg-paarshooting-4185.webp",
-    "sourceFile": "ART_4185.jpg",
-    "number": 4185,
-    "location": "Speicherstadt",
-    "sequence": 7,
-    "group": 2,
-    "alt": "Domenic trägt Liza mit Blick entlang eines Speicherstadtfleets"
-  },
-  {
     "file": "speicherstadt-hamburg-paarshooting-4190.webp",
     "sourceFile": "ART_4190.jpg",
     "number": 4190,
     "location": "Speicherstadt",
-    "sequence": 8,
+    "sequence": 5,
     "group": 3,
     "alt": "Blick über das Wasser zwischen den Backsteinfassaden der Speicherstadt"
   },
@@ -76,7 +49,7 @@
     "sourceFile": "ART_4218.jpg",
     "number": 4218,
     "location": "Speicherstadt",
-    "sequence": 9,
+    "sequence": 6,
     "group": 3,
     "alt": "Liza und Domenic sitzen lachend vor einer Backsteinfassade"
   },
@@ -85,7 +58,7 @@
     "sourceFile": "ART_4248.jpg",
     "number": 4248,
     "location": "Speicherstadt",
-    "sequence": 10,
+    "sequence": 7,
     "group": 3,
     "alt": "Liza und Domenic umarmen sich auf einer Brücke über dem Fleet"
   },
@@ -94,7 +67,7 @@
     "sourceFile": "ART_4275.jpg",
     "number": 4275,
     "location": "Speicherstadt",
-    "sequence": 11,
+    "sequence": 8,
     "group": 3,
     "alt": "Kuss von Liza und Domenic vor der Stahlkonstruktion einer Brücke"
   },
@@ -103,7 +76,7 @@
     "sourceFile": "ART_4287-Bearbeitet.jpg",
     "number": 4287,
     "location": "Speicherstadt",
-    "sequence": 12,
+    "sequence": 9,
     "group": 3,
     "alt": "Liza lächelt und hält eine Hand auf der Speicherstadtbrücke"
   },
@@ -112,7 +85,7 @@
     "sourceFile": "ART_4289.jpg",
     "number": 4289,
     "location": "Speicherstadt",
-    "sequence": 13,
+    "sequence": 10,
     "group": 3,
     "alt": "Domenic reicht lächelnd eine Hand auf der Brücke in der Speicherstadt"
   },
@@ -121,7 +94,7 @@
     "sourceFile": "ART_4312.jpg",
     "number": 4312,
     "location": "HafenCity",
-    "sequence": 14,
+    "sequence": 11,
     "group": 4,
     "alt": "Liza und Domenic am Wasser vor moderner Architektur der HafenCity"
   },
@@ -130,7 +103,7 @@
     "sourceFile": "ART_4325.jpg",
     "number": 4325,
     "location": "HafenCity",
-    "sequence": 15,
+    "sequence": 12,
     "group": 4,
     "alt": "Blick über die Schultern des Paares auf HafenCityfassaden am Wasser"
   },
@@ -139,7 +112,7 @@
     "sourceFile": "ART_4345.jpg",
     "number": 4345,
     "location": "HafenCity",
-    "sequence": 16,
+    "sequence": 13,
     "group": 4,
     "alt": "Liza und Domenic küssen sich im Sonnenlicht am HafenCityufer"
   },
@@ -148,34 +121,16 @@
     "sourceFile": "ART_4360.jpg",
     "number": 4360,
     "location": "HafenCity",
-    "sequence": 17,
+    "sequence": 14,
     "group": 4,
     "alt": "Das Paar lacht am Ufer mit moderner HafenCityarchitektur im Hintergrund"
-  },
-  {
-    "file": "hafencity-hamburg-paarfotos-4381.webp",
-    "sourceFile": "ART_4381.jpg",
-    "number": 4381,
-    "location": "HafenCity",
-    "sequence": 18,
-    "group": 4,
-    "alt": "Liza und Domenic im Gegenlicht auf einer Promenade am Wasser"
-  },
-  {
-    "file": "hafencity-hamburg-paarfotos-4434.webp",
-    "sourceFile": "ART_4434.jpg",
-    "number": 4434,
-    "location": "HafenCity",
-    "sequence": 19,
-    "group": 4,
-    "alt": "Liza und Domenic schauen sich vor der Elbe lächelnd an"
   },
   {
     "file": "hafencity-hamburg-paarfotos-4487.webp",
     "sourceFile": "ART_4487.jpg",
     "number": 4487,
     "location": "HafenCity",
-    "sequence": 20,
+    "sequence": 15,
     "group": 5,
     "alt": "Nahaufnahme eines Kusses von Liza und Domenic am Wasser"
   },
@@ -184,7 +139,7 @@
     "sourceFile": "ART_4498.jpg",
     "number": 4498,
     "location": "HafenCity",
-    "sequence": 21,
+    "sequence": 16,
     "group": 5,
     "alt": "Liza und Domenic halten sich vor der weiten Elbe in den Armen"
   },
@@ -193,7 +148,7 @@
     "sourceFile": "ART_4523.jpg",
     "number": 4523,
     "location": "HafenCity",
-    "sequence": 22,
+    "sequence": 17,
     "group": 5,
     "alt": "Liza legt die Hände an Domenics Gesicht bei einem Kuss"
   },
@@ -202,7 +157,7 @@
     "sourceFile": "ART_4564.jpg",
     "number": 4564,
     "location": "HafenCity",
-    "sequence": 23,
+    "sequence": 18,
     "group": 5,
     "alt": "Liza lächelt über Domenics Schulter in die Kamera"
   },
@@ -211,7 +166,7 @@
     "sourceFile": "ART_4575.jpg",
     "number": 4575,
     "location": "HafenCity",
-    "sequence": 24,
+    "sequence": 19,
     "group": 5,
     "alt": "Domenic blickt lächelnd über Lizas Schulter in die Kamera"
   },
@@ -220,7 +175,7 @@
     "sourceFile": "ART_4596.jpg",
     "number": 4596,
     "location": "HafenCity",
-    "sequence": 25,
+    "sequence": 20,
     "group": 5,
     "alt": "Domenic dreht Liza auf der HafenCitypromenade unter seinem Arm"
   },
@@ -229,7 +184,7 @@
     "sourceFile": "ART_4611.jpg",
     "number": 4611,
     "location": "HafenCity",
-    "sequence": 26,
+    "sequence": 21,
     "group": 6,
     "alt": "Domenic hebt Liza beim Paarshooting an der Promenade hoch"
   },
@@ -238,7 +193,7 @@
     "sourceFile": "ART_4633.jpg",
     "number": 4633,
     "location": "HafenCity",
-    "sequence": 27,
+    "sequence": 22,
     "group": 6,
     "alt": "Liza lacht in Domenics Umarmung am HafenCityufer"
   },
@@ -247,7 +202,7 @@
     "sourceFile": "ART_4675.jpg",
     "number": 4675,
     "location": "HafenCity",
-    "sequence": 28,
+    "sequence": 23,
     "group": 6,
     "alt": "Liza und Domenic tanzen auf dem Pflaster vor der Elbe"
   },
@@ -256,7 +211,7 @@
     "sourceFile": "ART_4706.jpg",
     "number": 4706,
     "location": "HafenCity",
-    "sequence": 29,
+    "sequence": 24,
     "group": 6,
     "alt": "Domenic und Liza umarmen sich am Geländer am Elbufer in der HafenCity"
   },
@@ -265,7 +220,7 @@
     "sourceFile": "ART_4741.jpg",
     "number": 4741,
     "location": "HafenCity",
-    "sequence": 30,
+    "sequence": 25,
     "group": 6,
     "alt": "Liza und Domenic lachen auf dem Kopfsteinpflaster am Wasser"
   },
@@ -274,7 +229,7 @@
     "sourceFile": "ART_4776.jpg",
     "number": 4776,
     "location": "HafenCity",
-    "sequence": 31,
+    "sequence": 26,
     "group": 6,
     "alt": "Liza und Domenic küssen sich vor der Elbe"
   },
@@ -283,7 +238,7 @@
     "sourceFile": "ART_4812.jpg",
     "number": 4812,
     "location": "HafenCity",
-    "sequence": 32,
+    "sequence": 27,
     "group": 7,
     "alt": "Liza und Domenic umarmen sich im Gegenlicht neben einer HafenCityfassade"
   },
@@ -292,7 +247,7 @@
     "sourceFile": "ART_4839.jpg",
     "number": 4839,
     "location": "HafenCity",
-    "sequence": 33,
+    "sequence": 28,
     "group": 7,
     "alt": "Liza und Domenic küssen sich im Gegenlicht am Wasser in der HafenCity"
   },
@@ -301,7 +256,7 @@
     "sourceFile": "ART_4861.jpg",
     "number": 4861,
     "location": "HafenCity",
-    "sequence": 34,
+    "sequence": 29,
     "group": 7,
     "alt": "Liza legt ihren Kopf an Domenics Schulter mit der HafenCity im Hintergrund"
   },
@@ -310,7 +265,7 @@
     "sourceFile": "ART_4888.jpg",
     "number": 4888,
     "location": "HafenCity",
-    "sequence": 35,
+    "sequence": 30,
     "group": 7,
     "alt": "Domenic und Liza sitzen zusammen am Ufer der HafenCity"
   },
@@ -319,7 +274,7 @@
     "sourceFile": "ART_4909.jpg",
     "number": 4909,
     "location": "HafenCity",
-    "sequence": 36,
+    "sequence": 31,
     "group": 7,
     "alt": "Domenic und Liza sitzen am Wasser in der HafenCity, Liza umarmt Domenic von hinten",
     "sourceFolder": "vorschau2"
@@ -329,7 +284,7 @@
     "sourceFile": "ART_4933.jpg",
     "number": 4933,
     "location": "HafenCity",
-    "sequence": 37,
+    "sequence": 32,
     "group": 7,
     "alt": "Liza lacht in Domenics Armen am Wasser in der HafenCity"
   },
@@ -339,7 +294,7 @@
     "sourceFolder": "vorschau2",
     "number": 5008,
     "location": "Kehrwiederspitze",
-    "sequence": 38,
+    "sequence": 33,
     "group": 8,
     "alt": "Domenic und Liza küssen sich im Gegenlicht an der Kehrwiederspitze"
   },
@@ -349,7 +304,7 @@
     "sourceFolder": "vorschau2",
     "number": 5082,
     "location": "Kehrwiederspitze",
-    "sequence": 39,
+    "sequence": 34,
     "group": 8,
     "alt": "Domenic hält Liza im Arm vor der Elbphilharmonie an der Kehrwiederspitze"
   },
@@ -359,7 +314,7 @@
     "sourceFolder": "vorschau2",
     "number": 5101,
     "location": "Kehrwiederspitze",
-    "sequence": 40,
+    "sequence": 35,
     "group": 9,
     "alt": "Domenic und Liza stehen im Gegenlicht an der Hafenpromenade der Kehrwiederspitze"
   },
@@ -369,7 +324,7 @@
     "sourceFolder": "vorschau2",
     "number": 5110,
     "location": "Kehrwiederspitze",
-    "sequence": 41,
+    "sequence": 36,
     "group": 9,
     "alt": "Liza und Domenic umarmen sich am Geländer an der Kehrwiederspitze"
   },
@@ -379,7 +334,7 @@
     "sourceFolder": "vorschau2",
     "number": 5112,
     "location": "Kehrwiederspitze",
-    "sequence": 42,
+    "sequence": 37,
     "group": 10,
     "alt": "Blick von der Kehrwiederspitze auf die Flussschifferkirche und den Michel, Liza im Vordergrund"
   },
@@ -389,7 +344,7 @@
     "sourceFolder": "vorschau2",
     "number": 5135,
     "location": "Kehrwiederspitze",
-    "sequence": 43,
+    "sequence": 38,
     "group": 10,
     "alt": "Domenic und Liza im unscharfen Vordergrund mit dem Michel, der Hauptkirche St. Michaelis, dahinter"
   }

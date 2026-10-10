@@ -6,11 +6,11 @@ import Breadcrumbs from '../components/Breadcrumbs.astro';
 import '../styles/global.css';
 import '../styles/kirchen.css';
 import { finderPath, guidePath, kirchenStand } from '../data/kirchen';
-const { title, description, pagePath, breadcrumbs, image, graph = [], collection = false } = Astro.props;
+const { title, description, pagePath, breadcrumbs, image, imageAlt, modified = kirchenStand, graph = [], collection = false } = Astro.props;
 const siteUrl = Astro.site?.toString().replace(/\/$/,'') ?? 'https://artbild-fotografie.de';
 const pageUrl = `${siteUrl}${pagePath}`;
 const schema = { '@context':'https://schema.org', '@graph':[
-  { '@type':collection?'CollectionPage':'WebPage', '@id':`${pageUrl}#webpage`, url:pageUrl, name:title, description, inLanguage:'de', dateModified:kirchenStand, breadcrumb:{'@id':`${pageUrl}#breadcrumb`}, ...(image?{primaryImageOfPage:{'@type':'ImageObject',url:new URL(image,siteUrl).href}}:{}) }, ...graph,
+  { '@type':collection?'CollectionPage':'WebPage', '@id':`${pageUrl}#webpage`, url:pageUrl, name:title, description, inLanguage:'de', dateModified:modified, breadcrumb:{'@id':`${pageUrl}#breadcrumb`}, ...(image?{primaryImageOfPage:{'@type':'ImageObject',url:new URL(image,siteUrl).href, ...(imageAlt?{caption:imageAlt}:{})}}:{}) }, ...graph,
 ] };
 ---
 <!doctype html>
@@ -30,6 +30,7 @@ const schema = { '@context':'https://schema.org', '@graph':[
     <meta property="og:description" content={description} />
     <meta property="og:url" content={pageUrl} />
     {image && <meta property="og:image" content={new URL(image,siteUrl).href} />}
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
     <meta name="twitter:card" content={image?'summary_large_image':'summary'} />
     {collection && <link rel="alternate" type="application/json" href={`${finderPath}daten.json`} title="Kirchenfinder: Kontakte, Buchungswege und Quellen" />}
     {collection && <link rel="alternate" type="text/markdown" href={`${finderPath}kompakt.md`} title="Kirchenfinder als Text" />}

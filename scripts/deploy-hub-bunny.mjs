@@ -27,6 +27,10 @@ while(Date.now()<deadline) {
     redirect:'error',signal:AbortSignal.timeout(20000),headers:{'Cache-Control':'no-cache'}});
   const marker=current.ok?await current.json().catch(()=>null):null;
   if(confirmedBunnyState(updated,overview,{tag,digest,oldPods}) && marker?.id===id) {
+    console.log(JSON.stringify({appId,container,tag,digest,status:updated.status,oldPodsRemoved:true,
+      regions:(overview.regions||[]).map(region=>({region:region.regionId||region.name,
+        pods:(region.pods||[]).map(pod=>({id:pod.id||pod.podId,status:pod.status,
+          containers:pod.containers.map(c=>({status:c.status,image:c.imageDisplay||c.image}))}))}))}));
     complete=true;break;
   }
   await new Promise(resolve=>setTimeout(resolve,5000));

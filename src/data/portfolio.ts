@@ -27,7 +27,7 @@ import brautpaarZuerich from "../assets/brautpaar-zuerich/ART_8515-Bearbeitet-sc
 import editorialLondon from "../assets/editorial-london/ART_7899-Bearbeitet.jpg";
 import parisBridalEditorial from "../assets/paris-bridal-editorial/ART_4765.jpg";
 import valerieTim from "../assets/valerie-und-tim/ART_4449.jpg";
-import domenicLiza from "../assets/paarshooting-speicherstadt-hafencity/hafencity-hamburg-paarfotos-4706.webp";
+import domenicLiza from "../assets/paarshooting-speicherstadt-hafencity/kehrwiederspitze-hamburg-paarshooting-5008.webp";
 
 export type PortfolioFilter = "All" | "Travel" | "Hochzeit" | "Peoplefotografie";
 
@@ -53,7 +53,7 @@ const entries: PortfolioEntry[] = [
     href: "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
     image: domenicLiza,
     imageQuality: 88,
-    alt: "Domenic und Liza umarmen sich am Geländer am Elbufer in der HafenCity",
+    alt: "Domenic und Liza küssen sich im Gegenlicht an der Kehrwiederspitze",
     aspect: "portrait",
   },
   {

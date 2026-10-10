@@ -7,6 +7,14 @@
  */
 import hubPublications from './hub-publications.json' with {type:'json'};
 export const pageSeo = {
+  "/kirchliche-trauungen-hamburg/": {
+    keyword: "Kirchliche Trauungen Hamburg",
+    title: "Kirchliche Trauungen in Hamburg – Übersicht | Artbild",
+    description: "Kirchlich heiraten in Hamburg: Kirchen finden, Anmeldung und Ablauf planen und Hochzeitsfotos abstimmen. Übersicht mit Kirchenfinder und Ratgeber.",
+    image: "src/assets/kirchenfinder/st-michaelis-orgel.webp",
+    alt: "Orgel mit silbernen Pfeifen und vergoldeten Figuren in St. Michaelis in Hamburg",
+    fit: "contain",
+  },
   "/gallery/paarshooting-hamburg-speicherstadt-hafencity/": {
     keyword: "Paarshooting Hamburg Speicherstadt",
     image: "src/assets/paarshooting-speicherstadt-hafencity/hafencity-hamburg-paarfotos-4839.webp",
