@@ -188,6 +188,15 @@ export const desktopNavigationItems: NavigationItem[] = [
         userIntent: "fotografenwahl_vorbereiten",
         journeyStage: "information",
       },
+      {
+        label: "Bildschirm-Check",
+        href: "/bildschirm-check/",
+        trackingId: "desktop_screen_check",
+        ctaType: "navigation",
+        contentTopic: "bildschirm_check",
+        userIntent: "hochzeitsbilder_betrachten",
+        journeyStage: "information",
+      },
     ],
   },
   {
@@ -302,6 +311,15 @@ export const mobileNavigationGroups: NavigationGroup[] = [
         ctaType: "navigation",
         contentTopic: "hochzeitsratgeber",
         userIntent: "ratgeber_lesen",
+        journeyStage: "information",
+      },
+      {
+        label: "Bildschirm-Check",
+        href: "/bildschirm-check/",
+        trackingId: "mobile_screen_check",
+        ctaType: "navigation",
+        contentTopic: "bildschirm_check",
+        userIntent: "hochzeitsbilder_betrachten",
         journeyStage: "information",
       },
       {
