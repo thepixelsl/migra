@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "id": "ce04ba82-9303-47be-b34e-2ecd3f708e6a",
+    "kind": "webstory",
+    "path": "/web-stories/eppendorf/",
+    "type": "webstory",
+    "title": "Fotoshooting in Hamburg-Eppendorf",
+    "metaTitle": "Fotoshooting in Hamburg-Eppendorf",
+    "description": "Fotoshooting und Editorial Shootings in Hamburg-Eppendorf mit professionellem Styling und Make-up, ideal für individuelle Portraitbilder und Look-Veränderungen.",
+    "category": "Web Story",
+    "datePublished": "2026-10-10T10:39:43.037Z",
+    "dateModified": "2026-10-10T10:39:46.101Z",
+    "heroImage": {
+      "id": "d38651ca-f501-4dd3-bf87-fa70874953c9",
+      "src": "/hub-assets/ce04ba82-9303-47be-b34e-2ecd3f708e6a/poster.jpg",
+      "alt": "Junge Frau mit langem braunem Haar und schwarzem ärmellosem Top steht seitlich an einem weißen metallischen Geländer im Freien und blickt in die Kamera",
+      "caption": "",
+      "location": "Hamburg-Eppendorf",
+      "focus": 50,
+      "width": 720,
+      "height": 960
+    }
+  }
+]
