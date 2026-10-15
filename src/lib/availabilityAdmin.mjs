@@ -70,7 +70,7 @@ function chart(rows, emptyMessage, device = false) {
   const figure = el('figure', undefined, 'usage-chart');
   const grouped = rows.length > 6 ? [...rows.slice(0,5), {label:'Weitere', value:rows.slice(5).reduce((n,row) => n+row.value,0)}] : rows;
   const total = grouped.reduce((n,row) => n+row.value,0);
-  if (!total) { figure.append(el('div','—','usage-chart-empty'),el('figcaption',emptyMessage)); return figure; }
+  if (!total) { figure.append(el('div','-','usage-chart-empty'),el('figcaption',emptyMessage)); return figure; }
   const ns = 'http://www.w3.org/2000/svg'; const svg = document.createElementNS(ns,'svg'); svg.setAttribute('viewBox','0 0 200 200'); svg.setAttribute('class','usage-donut'); svg.setAttribute('role','group'); svg.setAttribute('aria-label',`${number(total)} Abfragen, Anteile nach Kategorie`);
   const tooltip = el('p',`${number(total)} Abfragen`,'usage-chart-value'); tooltip.setAttribute('aria-live','polite');
   const legend = el('figcaption',undefined,'usage-legend'); let offset = 0;
@@ -129,7 +129,7 @@ export function renderAvailabilityStatistics(root, statistics, { blockedDates = 
     });
     content.replaceChildren(table(state.mode==='manual'?['Rang','Wunschtermin','Abfragen ↓','Desktop','Mobil','Tablet','Gerät unklar']:['Rang','Wunschtermin','Abfragen ↓','Netzbeleg','Gemeldet','Unklar','Abgewiesen'],rows,'Termine nach Anzahl der Abfragen'));
     const pagination=el('div',undefined,'usage-pagination');const prev=button('← Zurück',()=>{page--;draw();});const next=button('Weiter →',()=>{page++;draw();});prev.disabled=page===0;next.disabled=page===maxPage;
-    pagination.append(el('span',dates.length?`${page*10+1}–${Math.min(page*10+10,dates.length)} von ${number(dates.length)} Terminen`:'0 Termine'),prev,next);content.append(pagination);
+    pagination.append(el('span',dates.length?`${page*10+1}-${Math.min(page*10+10,dates.length)} von ${number(dates.length)} Terminen`:'0 Termine'),prev,next);content.append(pagination);
     content.append(el('p',state.mode==='manual'?'Nach Anzahl der Abfragen sortiert, keine eindeutigen Personen. Wiederholungen zählen mit; die Rangfolge zeigt beobachtetes Interesse, keine Buchungsprognose.':'Bot-, Client- und unklare Abrufe werden getrennt von manueller Nachfrage gezählt. Breite Kalenderabrufe können diese Rangfolge prägen.','usage-note'));
   }
   draw();

@@ -41,7 +41,7 @@ export function adminAuthPage({ stage = "password", csrf = "", error = "", secre
   } else if (stage === "backup") {
     heading = "Wiederherstellungscodes sichern";
     intro = "Mit diesen Codes erhalten Sie wieder Zugang, wenn Ihr Authenticator verloren geht. Jeder Code funktioniert nur einmal.";
-    const download = `Artbild-Fotografie – Wiederherstellungscodes\n\n${codes.join("\n")}\n\nJeder Code funktioniert nur einmal. Zusammen mit dem Passwort sicher und getrennt vom Authenticator aufbewahren.\n`;
+    const download = `Artbild-Fotografie - Wiederherstellungscodes\n\n${codes.join("\n")}\n\nJeder Code funktioniert nur einmal. Zusammen mit dem Passwort sicher und getrennt vom Authenticator aufbewahren.\n`;
     content = `<ul class="codes">${codes.map((code) => `<li><code>${escapeHtml(code)}</code></li>`).join("")}</ul>
       <a class="download" download="artbild-wiederherstellungscodes.txt" href="data:text/plain;charset=utf-8,${encodeURIComponent(download)}">Codes als Textdatei speichern</a>
       <p>Nach dem Fortfahren werden diese Codes nicht erneut angezeigt. Speichern Sie sie an einem sicheren Ort, getrennt von Ihrem Authenticator.</p>

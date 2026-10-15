@@ -46,7 +46,7 @@ export type PortfolioEntry = {
 
 const entries: PortfolioEntry[] = [
   {
-    title: "Domenic & Liza – Paarshooting Hamburg",
+    title: "Domenic & Liza - Paarshooting Hamburg",
     category: "Couples · Speicherstadt & HafenCity",
     filter: "Hochzeit",
     date: "26.09.2026",

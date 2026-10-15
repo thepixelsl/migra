@@ -4,7 +4,7 @@ export function GET(){
   const siteUrl=(import.meta.env.SITE||'https://artbild-fotografie.de').replace(/\/$/,'');
   const data=churchDirectoryData(siteUrl);
   const markdown=[
-    '# Kirchenfinder Hamburg – Kontakte und Anmeldung','',`Kanonische Übersicht: ${data.canonicalUrl}`,`Quellen geprüft: ${data.checkedOn}`,data.scope,'',
+    '# Kirchenfinder Hamburg - Kontakte und Anmeldung','',`Kanonische Übersicht: ${data.canonicalUrl}`,`Quellen geprüft: ${data.checkedOn}`,data.scope,'',
     'Freie Termine sind nicht bekannt. Diese Informationen erzeugen keine Reservierung. Verbindliche Absprachen erfolgen mit der jeweiligen Gemeinde. Eine Anfrage bei Artbild-Fotografie betrifft ausschließlich fotografische Leistungen.','',
     ...data.churches.flatMap(church=>[
       `## ${church.name}`,`${church.area} · ${church.denomination} · ${church.type}`,`Anleitung: ${church.url}`,'',
@@ -21,7 +21,7 @@ export function GET(){
       ...(church.schedule?[`Trauzeiten: ${church.schedule}`]:[]),...(church.costs?[`Kosten: ${church.costs}`]:[]),...(church.photography?[`Fotografie: ${church.photography}`]:[]),...(church.localRules?[`Weitere Absprachen: ${church.localRules}`]:[]),'',
       'Offene Fragen:',...church.questionsToClarify.map(x=>`- ${x}`),'','Quellen:',...church.sources.map(s=>`- [${s.title}](${s.url})`),'',
     ]),
-    '## Weitere katholische Standorte – keine bestätigten Trauorte','',
+    '## Weitere katholische Standorte - keine bestätigten Trauorte','',
     'Diese Orte sind nicht als belegte Trauangebote gezählt. Ein fehlender öffentlicher Traubeleg bedeutet nicht, dass dort keine Hochzeit möglich ist. Schließungen und Umnutzungen sind gesondert bezeichnet.','',
     ...data.additionalResearch.flatMap(entry=>[
       `### ${entry.name} · ${entry.area}`,`Recherche-Status: ${entry.status}`,entry.note,

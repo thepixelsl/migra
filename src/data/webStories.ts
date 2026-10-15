@@ -16,7 +16,7 @@ const photo = (name: string, alt: string, width = 1200, height = 1800): StoryPho
 
 export const hamburgCoupleStory = {
   slug: "paarshooting-hamburg-september-2026",
-  title: "Paarshooting in Hamburg – aus der Schweiz an die Elbe",
+  title: "Paarshooting in Hamburg - aus der Schweiz an die Elbe",
   description: "Ein Paar aus der Schweiz entdeckt Hamburg beim Paarshooting: Septemberlicht an der Stadthausbrücke und gemeinsame Momente am Brunnen im Rathausinnenhof.",
   poster: `${base}poster-portrait.webp`,
   pages: [

@@ -9,7 +9,7 @@ import hubPublications from './hub-publications.json' with {type:'json'};
 export const pageSeo = {
   "/kirchliche-trauungen-hamburg/": {
     keyword: "Kirchliche Trauungen Hamburg",
-    title: "Kirchliche Trauungen in Hamburg – Übersicht | Artbild",
+    title: "Kirchliche Trauungen in Hamburg - Übersicht | Artbild",
     description: "Kirchlich heiraten in Hamburg: Kirchen finden, Anmeldung und Ablauf planen und Hochzeitsfotos abstimmen. Übersicht mit Kirchenfinder und Ratgeber.",
     image: "src/assets/kirchenfinder/st-michaelis-orgel.webp",
     alt: "Orgel mit silbernen Pfeifen und vergoldeten Figuren in St. Michaelis in Hamburg",
@@ -178,7 +178,7 @@ export const pageSeo = {
   },
   "/gallery/editorial/": {
     keyword: "Portraitfotografie Hamburg",
-    description: "Portraitfotografie Hamburg: Natürliche, magazinartige Portraits von Hamburgerinnen und Hamburgern – auch ohne Kameraerfahrung. Editorial-Galerie ansehen.",
+    description: "Portraitfotografie Hamburg: Natürliche, magazinartige Portraits von Hamburgerinnen und Hamburgern - auch ohne Kameraerfahrung. Editorial-Galerie ansehen.",
     image: "src/assets/editorial/ART_9706-Bearbeitet-Bearbeitet.jpg",
     alt: "Editorial-Portrait einer Frau auf einer Hamburger Straße",
   },

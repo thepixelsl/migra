@@ -25,7 +25,7 @@ Wir sind rundum zufrieden und haben alle Bilder bereits nach zwei Wochen erhalte
     author: "Florian Cole",
     rating: 5,
     publishedLabel: "vor 6 Monaten",
-    text: "Lieber York, danke, dass du uns an unserem Hochzeitstag so entspannt begleitet hast. Schon beim Kennenlernshooting hast du uns das Gefühl gegeben, dass wir uns nicht verstellen müssen – das war für uns echt wichtig. Am Hochzeitstag warst du überall und trotzdem nie aufdringlich, viele Gäste haben später sogar gesagt, sie hätten gar nicht gemerkt, dass du Fotos machst. Genau so wollten wir es, und trotzdem hast du alle wichtigen Momente eingefangen. Danke!",
+    text: "Lieber York, danke, dass du uns an unserem Hochzeitstag so entspannt begleitet hast. Schon beim Kennenlernshooting hast du uns das Gefühl gegeben, dass wir uns nicht verstellen müssen - das war für uns echt wichtig. Am Hochzeitstag warst du überall und trotzdem nie aufdringlich, viele Gäste haben später sogar gesagt, sie hätten gar nicht gemerkt, dass du Fotos machst. Genau so wollten wir es, und trotzdem hast du alle wichtigen Momente eingefangen. Danke!",
     excerpt:
       "Am Hochzeitstag warst du überall und trotzdem nie aufdringlich, viele Gäste haben später sogar gesagt, sie hätten gar nicht gemerkt, dass du Fotos machst. Genau so wollten wir es, und trotzdem hast du alle wichtigen Momente eingefangen.",
     sourceUrl: "https://maps.app.goo.gl/ePJdAqaN5AbVskWh6?g_st=ic",

@@ -365,7 +365,7 @@
     },
     {
       "id": "michel",
-      "name": "Hauptkirche St. Michaelis – Michel",
+      "name": "Hauptkirche St. Michaelis - Michel",
       "area": "Neustadt",
       "scope": "Hamburg",
       "venueType": "Kirche",
@@ -1196,7 +1196,7 @@
       ],
       "checkedOn": "2026-09-27",
       "liveAvailability": null,
-      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns - mit Datum, Uhrzeit und Wunschkirche.",
       "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
       "building": {
         "status": "works_announced",
@@ -1221,7 +1221,7 @@
       ],
       "checkedOn": "2026-09-27",
       "liveAvailability": null,
-      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns - mit Datum, Uhrzeit und Wunschkirche.",
       "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
       "building": {
         "status": "not_individually_verified",
@@ -1244,7 +1244,7 @@
       ],
       "checkedOn": "2026-09-27",
       "liveAvailability": null,
-      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns - mit Datum, Uhrzeit und Wunschkirche.",
       "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
       "building": {
         "status": "not_individually_verified",
@@ -1267,7 +1267,7 @@
       ],
       "checkedOn": "2026-09-27",
       "liveAvailability": null,
-      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns - mit Datum, Uhrzeit und Wunschkirche.",
       "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
       "building": {
         "status": "not_individually_verified",
@@ -1290,7 +1290,7 @@
       ],
       "checkedOn": "2026-09-27",
       "liveAvailability": null,
-      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns – mit Datum, Uhrzeit und Wunschkirche.",
+      "highlight": "Die Hochzeitsanfrage geht an Pastor Bruns - mit Datum, Uhrzeit und Wunschkirche.",
       "offerNote": "Die Pfarrei veröffentlicht einen Anmeldeweg für Trauungen. Für diese einzelne Kirche nennt sie keine eigene Zusage oder Terminregel. Lasst Euch deshalb ausdrücklich bestätigen, dass Eure Trauung hier stattfinden kann.",
       "building": {
         "status": "not_individually_verified",
@@ -1592,7 +1592,7 @@
     },
     {
       "id": "michel",
-      "name": "Hauptkirche St. Michaelis – Michel",
+      "name": "Hauptkirche St. Michaelis - Michel",
       "sourceIds": [
         "michel"
       ],
@@ -1602,7 +1602,7 @@
         "email": "pastorat@st-michaelis.de"
       },
       "steps": [
-        "Fragt Euren Wunschtermin möglichst früh im Gemeindebüro an – telefonisch oder per E-Mail an das Pfarramt.",
+        "Fragt Euren Wunschtermin möglichst früh im Gemeindebüro an - telefonisch oder per E-Mail an das Pfarramt.",
         "Nach der Anmeldung bekommt Ihr die Termine für das Trauseminar. Die Teilnahme gehört im Michel verpflichtend zur Vorbereitung.",
         "Reicht die angeforderten Unterlagen und Angaben spätestens vier Wochen vor der Trauung ein. Heiratet Ihr erst kurz vorher standesamtlich, bringt die Eheurkunde am Trautag im Original mit."
       ],
@@ -2268,7 +2268,7 @@
     },
     {
       "id": "kath-ansgar",
-      "name": "St. Ansgar – St. Joseph und St. Theresien",
+      "name": "St. Ansgar - St. Joseph und St. Theresien",
       "sourceIds": [
         "kath-ansgar-ehe",
         "kath-ansgar-bueros",
@@ -2622,13 +2622,13 @@
     },
     {
       "id": "kath-johannis",
-      "name": "St. Johannis – maronitische Trauungen",
+      "name": "St. Johannis - maronitische Trauungen",
       "sourceIds": [
         "kath-franziskus-maroniten",
         "kath-franziskus-bueros"
       ],
       "contact": {
-        "role": "Gemeindebüro St. Johannis – Vermittlung zur maronitischen Gemeinde",
+        "role": "Gemeindebüro St. Johannis - Vermittlung zur maronitischen Gemeinde",
         "phone": "040 5247355 50",
         "email": "buerosteilshoop@st-franziskus-hamburg.de"
       },
@@ -2682,7 +2682,7 @@
     {
       "id": "obergalster",
       "url": "https://kircheoberalsterbergstedt.de/service",
-      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Service",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt - Service",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2694,7 +2694,7 @@
     {
       "id": "eppendorf",
       "url": "https://www.st-johannis-eppendorf.de/gemeindeleben/trauungen/",
-      "title": "Sag einfach „Ja“ – St. Johannis Eppendorf",
+      "title": "Sag einfach „Ja“ - St. Johannis Eppendorf",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2742,19 +2742,19 @@
     {
       "id": "mariendom",
       "url": "https://www.mariendomhamburg.de/domgemeinde/trauung/",
-      "title": "Trauung – St. Marien-Dom Hamburg",
+      "title": "Trauung - St. Marien-Dom Hamburg",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "harvestehude",
       "url": "https://stjohannis.hamburg/amtshandlungen/trauung/",
-      "title": "Kirche St. Johannis Harvestehude, Hamburg – Trauung",
+      "title": "Kirche St. Johannis Harvestehude, Hamburg - Trauung",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "marmstorf",
       "url": "https://kirchemarmstorf.de/buero/beratung-amtshandlungen/",
-      "title": "Beratung / Amtshandlungen – Auferstehungskirche Marmstorf",
+      "title": "Beratung / Amtshandlungen - Auferstehungskirche Marmstorf",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2766,7 +2766,7 @@
     {
       "id": "obergalster-orte",
       "url": "https://kircheoberalsterbergstedt.de/gemeinde/",
-      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Gemeinde",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt - Gemeinde",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2784,13 +2784,13 @@
     {
       "id": "ohlstedt-brand",
       "url": "https://kircheoberalsterbergstedt.de/?catid=18&id=125%3Abrand-in-der-matthias-claudius-kirche-in-wohldorf-ohlstedt&view=article",
-      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Wiederaufbau der Matthias-Claudius-Kirche (Stand August 2026)",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt - Wiederaufbau der Matthias-Claudius-Kirche (Stand August 2026)",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "bergstedt-wiedereroeffnung",
       "url": "https://kircheoberalsterbergstedt.de/kalender/eventdetail/376/-/festgottesdienst-zur-wiedereroeffnung-der-bergstedter-kirche-anschliessend-empfang-und-adventsmarkt",
-      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt – Festgottesdienst zur Wiedereröffnung der Bergstedter Kirche (anschließend Empfang und Adventsmarkt)",
+      "title": "Ev.-Luth. Kirchengemeinde Oberalster-Bergstedt - Festgottesdienst zur Wiedereröffnung der Bergstedter Kirche (anschließend Empfang und Adventsmarkt)",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2802,7 +2802,7 @@
     {
       "id": "vierlanden",
       "url": "https://www.kirche-in-vierlanden.de/lebensstationen",
-      "title": "Kirche in Vierlanden – Lebensstationen",
+      "title": "Kirche in Vierlanden - Lebensstationen",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2814,7 +2814,7 @@
     {
       "id": "finkenwerder",
       "url": "https://kirchesuederelbe.de/finkenwerder/feiern-im-leben/trauung/",
-      "title": "Trauung – Kirche Süderelbe",
+      "title": "Trauung - Kirche Süderelbe",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2832,7 +2832,7 @@
     {
       "id": "vierlanden-kontakt",
       "url": "https://www.kirche-in-vierlanden.de/kontakt/",
-      "title": "Kirche in Vierlanden – Kontakt",
+      "title": "Kirche in Vierlanden - Kontakt",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2844,13 +2844,13 @@
     {
       "id": "moorburg",
       "url": "https://kirchesuederelbe.de/moorburg/feiern-im-leben/trauung/",
-      "title": "Trauung – Kirche Süderelbe",
+      "title": "Trauung - Kirche Süderelbe",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "vierlanden-61",
       "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-nicolai-zu-altengamme",
-      "title": "Kirche in Vierlanden – St. Nicolai Altengamme",
+      "title": "Kirche in Vierlanden - St. Nicolai Altengamme",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2862,25 +2862,25 @@
     {
       "id": "vierlanden-63",
       "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-severini-kirchwerder",
-      "title": "Kirche in Vierlanden – St. Severini Kirchwerder",
+      "title": "Kirche in Vierlanden - St. Severini Kirchwerder",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "vierlanden-62",
       "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-johannis-zu-curslack",
-      "title": "Kirche in Vierlanden – St. Johannis zu Curslack",
+      "title": "Kirche in Vierlanden - St. Johannis zu Curslack",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "vierlanden-64",
       "url": "https://www.kirche-in-vierlanden.de/gemeinden/st-johannis-zu-neuengamme",
-      "title": "Kirche in Vierlanden – St. Johannis Neuengamme",
+      "title": "Kirche in Vierlanden - St. Johannis Neuengamme",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "altenwerder-gemeindebrief",
       "url": "https://kirchesuederelbe.de/wp-content/uploads/GB-SEPT-NOV-2025-WEB.pdf",
-      "title": "Gemeindebrief September–November 2025, gedruckte Seiten 8–9",
+      "title": "Gemeindebrief September-November 2025, gedruckte Seiten 8-9",
       "checkedOn": "2026-09-27"
     },
     {
@@ -2892,7 +2892,7 @@
     {
       "id": "jacobi-bauplanung",
       "url": "https://jacobus.de/fileadmin/vox_downloads/voxjacobi2602.pdf",
-      "title": "Vox Jacobi April–Juni 2026, insbesondere gedruckte Seite 7",
+      "title": "Vox Jacobi April-Juni 2026, insbesondere gedruckte Seite 7",
       "checkedOn": "2026-09-27"
     },
     {
@@ -3132,19 +3132,19 @@
     {
       "id": "kath-elisabeth-marien",
       "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/st-marien/",
-      "title": "St. Marien, Hamburg-Bergedorf – Pfarrei Heilige Elisabeth",
+      "title": "St. Marien, Hamburg-Bergedorf - Pfarrei Heilige Elisabeth",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "kath-elisabeth-christophorus",
       "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/st-christophorus/",
-      "title": "St. Christophorus, Hamburg-Lohbrügge – Pfarrei Heilige Elisabeth",
+      "title": "St. Christophorus, Hamburg-Lohbrügge - Pfarrei Heilige Elisabeth",
       "checkedOn": "2026-09-27"
     },
     {
       "id": "kath-elisabeth-stein",
       "url": "https://pfarrei-heilige-elisabeth.de/gemeinden/edith-stein-kirche/",
-      "title": "Edith-Stein, Hamburg-Neuallermöhe – Pfarrei Heilige Elisabeth",
+      "title": "Edith-Stein, Hamburg-Neuallermöhe - Pfarrei Heilige Elisabeth",
       "checkedOn": "2026-09-27"
     },
     {

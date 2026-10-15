@@ -1,8 +1,23 @@
 {
-  "title": "Aktuelle Website mit manuellem Hub-Deploy",
+  "title": "Artbild: Gedankenstriche auf allen Seiten durch Bindestriche ersetzt",
   "paths": [
     "/portfolio/",
     "/kirchliche-trauungen-hamburg/",
-    "/gallery/paarshooting-hamburg-speicherstadt-hafencity/"
+    "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
+    "/about/",
+    "/hochzeitsfotograf-preise/",
+    "/hochzeitsfotograf-ratgeber/",
+    "/standesamt-hamburg/",
+    "/kirchenfinder-hamburg/",
+    "/kirchliche-trauung-hamburg/",
+    "/datenschutz/",
+    "/newsletter/",
+    "/gallery/getting-ready-hamburg/",
+    "/braut-fotoshooting-fraser-suites-hamburg/",
+    "/hochzeitsfotos-drucken-color-proofing/",
+    "/luminanzmasken-photoshop-aktion/",
+    "/web-stories/paarshooting-hamburg-september-2026/",
+    "/web-stories/eppendorf/",
+    "/fuer-agenten/"
   ]
 }

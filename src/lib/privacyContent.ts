@@ -88,7 +88,7 @@ const claritySection = numberedSection(
 
 const openaiAdsSection = numberedSection(
   "openai-ads",
-  "OpenAI Ads – Messung von Anzeigen in ChatGPT",
+  "OpenAI Ads - Messung von Anzeigen in ChatGPT",
   `<p>${trackingConfig.providerRelease.openaiAds ? "Nach Ihrer Einwilligung in „OpenAI Ads“ messen wir" : "OpenAI Ads ist derzeit deaktiviert. Nach Freigabe und Ihrer gesonderten Einwilligung dient der Dienst folgender Messung: Wir messen"} ausschließlich erfolgreich übermittelte Kontaktanfragen, um sie Anzeigen in ChatGPT zuzuordnen. Für Daten aus dem Europäischen Wirtschaftsraum ist nach den OpenAI-Werbebedingungen OpenAI Ireland Limited zuständig. Die Einwilligung ist unabhängig von Google, Microsoft und Meta und keine Voraussetzung für eine Kontaktanfrage.</p>
 <p>Unser Messcode meldet erst nach bestätigter Annahme durch unseren Server eine erfolgreiche Kontaktanfrage. Eingabefelder werden von der OpenAI-Messung nicht ausgelesen. E-Mail-Adresse, Name, Telefonnummer, Nachricht, Hochzeitstermin, Veranstaltungsort und sonstige Formularinhalte werden dafür nicht an OpenAI übermittelt. Übertragen werden das Ereignis „Anfrage erfolgreich gesendet“, eine gegebenenfalls vorhandene Anzeigenkennung, der Ereigniszeitpunkt und die feste Adresse unserer Messseite ohne Abfrageparameter und Fragment. Das Pixel kann innerhalb dieser einzelnen Messung eine vorübergehende Zufallskennung erzeugen. Beim Verbindungsaufbau fallen technische Daten wie IP-Adresse und Browserangaben an.</p>
 <p>Das OpenAI-Skript wird erst nach erfolgreichem Absenden in einem isolierten Bereich ohne Zugriff auf das Kontaktformular geladen. Seitenaufrufe, Eingaben und fehlgeschlagene Sendeversuche werden damit nicht an OpenAI gemeldet.</p>

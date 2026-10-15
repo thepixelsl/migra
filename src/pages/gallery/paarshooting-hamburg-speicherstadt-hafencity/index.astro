@@ -37,7 +37,7 @@ const schema = {
     { "@type": "WebPage", "@id": `${pageUrl}#webpage`, url: pageUrl, name: title, description,
       inLanguage: "de", datePublished: "2026-10-04", dateModified: "2026-10-10",
       breadcrumb: { "@id": `${pageUrl}#breadcrumb` }, primaryImageOfPage: { "@id": `${pageUrl}#primaryimage` } },
-    { "@type": "Article", "@id": `${pageUrl}#article`, headline: "Paarshooting in Hamburg – Domenic & Liza",
+    { "@type": "Article", "@id": `${pageUrl}#article`, headline: "Paarshooting in Hamburg - Domenic & Liza",
       description, datePublished: "2026-10-04", dateModified: "2026-10-10", inLanguage: "de",
       author: { "@type": "Person", name: "York Augustin", url: `${siteUrl}/about/` },
       publisher: { "@type": "Organization", name: "Artbild-Fotografie", url: siteUrl },
@@ -48,7 +48,7 @@ const schema = {
       caption: metaImage.alt, width: metaImage.image.width, height: metaImage.image.height },
     ...["Speicherstadt", "HafenCity", "Kehrwiederspitze"].map((location) => ({
       "@type": "ImageGallery", "@id": `${pageUrl}#${location.toLowerCase()}-gallery`,
-      name: `${location} Hamburg – Domenic & Liza`, isPartOf: { "@id": `${pageUrl}#webpage` },
+      name: `${location} Hamburg - Domenic & Liza`, isPartOf: { "@id": `${pageUrl}#webpage` },
       image: images.filter((item) => item.location === location).map((item, index) => ({
         "@type": "ImageObject", position: index + 1, caption: item.alt,
         contentUrl: new URL(item.image.src, siteUrl).href, width: item.image.width, height: item.image.height,
@@ -113,12 +113,12 @@ const schema = {
             <div><p class="eyebrow">01 / Speicherstadt</p><h2 id="speicherstadt-title">Zwischen Backstein und Fleeten</h2></div>
             <div class="copy"><p>Unser Paarshooting beginnt in der Speicherstadt. Zwischen den roten Fassaden, schmalen Gassen und Brücken finden wir Plätze für die ersten Portraits von Domenic und Liza.</p><p>Ihr braucht keine Erfahrung vor der Kamera. Wir beginnen mit einfachen Anregungen zum Stehen und Gehen und lassen Euch Zeit, im Shooting anzukommen.</p></div>
           </header>
-          <GalleryImageGrid columns={[groups[0]]} galleryId="domenic-liza-01" label="Speicherstadt – Jungfernbrücke und Zollkanal" />
+          <GalleryImageGrid columns={[groups[0]]} galleryId="domenic-liza-01" label="Speicherstadt - Jungfernbrücke und Zollkanal" />
           <section class="story-copy" aria-labelledby="backstein-title">
             <div><p class="eyebrow">Brücken &amp; Wasser</p><h3 id="backstein-title">Paarfotos am Fleet</h3></div>
             <div class="copy"><p>Auf den Brücken öffnet sich der Blick entlang der Speicher. Domenic und Liza sitzen, lachen und begegnen sich vor den Backsteinfassaden. Wir wechseln zwischen nahen Portraits und Bildern, die mehr von der Umgebung zeigen.</p><p>Die Plätze teilen wir mit Spaziergängern. Wir wählen freie Stellen und lassen andere Menschen passieren.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[2]]} galleryId="domenic-liza-03" label="Speicherstadt – Brücken und Speicher am Fleet" />
+          <GalleryImageGrid columns={[groups[2]]} galleryId="domenic-liza-03" label="Speicherstadt - Brücken und Speicher am Fleet" />
         </section>
 
         <section id="hafencity" class="chapter" aria-labelledby="hafencity-title">
@@ -126,22 +126,22 @@ const schema = {
             <div><p class="eyebrow">02 / HafenCity</p><h2 id="hafencity-title">Vom Fleet an die Elbe</h2></div>
             <div class="copy"><p>Von der Speicherstadt gehen wir weiter in die HafenCity. Moderne Fassaden und offene Promenaden verändern den Hintergrund unserer Paarfotos. Am Grasbrookhafen kommt mehr Licht und Weite ins Bild.</p><p>Wenn Ihr beide Orte verbinden möchtet, planen wir die Fußwege mit ein. Treffpunkt und Strecke stimmen wir auf Eure Lieblingsmotive ab.</p></div>
           </header>
-          <GalleryImageGrid columns={[groups[3]]} galleryId="domenic-liza-04" label="HafenCity – am Grasbrookhafen" />
+          <GalleryImageGrid columns={[groups[3]]} galleryId="domenic-liza-04" label="HafenCity - am Grasbrookhafen" />
           <section class="story-copy" aria-labelledby="ufer-title">
             <div><p class="eyebrow">Hübenerkai &amp; Strandkai</p><h3 id="ufer-title">Nähe am Wasser</h3></div>
             <div class="copy"><p>Am Hübenerkai liegt der Grasbrookhafen vor uns. Die südliche Promenade am Strandkai führt entlang der Elbe. Hier stehen die Umarmungen und Küsse von Domenic und Liza im Mittelpunkt, mit dem Wasser im Hintergrund.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[4]]} galleryId="domenic-liza-05" label="HafenCity – Strandkai und Elbufer" />
+          <GalleryImageGrid columns={[groups[4]]} galleryId="domenic-liza-05" label="HafenCity - Strandkai und Elbufer" />
           <section class="story-copy" aria-labelledby="bewegung-title">
             <div><p class="eyebrow">Paarshooting am Elbufer</p><h3 id="bewegung-title">Lachen, tanzen, loslassen</h3></div>
             <div class="copy"><p>Zwischendurch kommt Bewegung in das Shooting: Domenic dreht Liza unter seinem Arm, die beiden tanzen und lachen miteinander. Solche kleinen Anregungen geben Euch etwas zu tun und lassen Raum für Eure eigenen Gesten.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[5]]} galleryId="domenic-liza-06" label="HafenCity – Paarshooting am Elbufer" />
+          <GalleryImageGrid columns={[groups[5]]} galleryId="domenic-liza-06" label="HafenCity - Paarshooting am Elbufer" />
           <section class="story-copy" aria-labelledby="terrassen-title">
             <div><p class="eyebrow">Marco-Polo-Terrassen</p><h3 id="terrassen-title">Eine Pause am Ufer</h3></div>
             <div class="copy"><p>An den Marco-Polo-Terrassen wird es ruhiger. Stufen und Plätze am Wasser bieten Motive im Sitzen. Gegenlicht fällt zwischen die Fassaden, während Liza sich an Domenic lehnt.</p><p>Für kurze Wege lassen sich die Terrassen mit der angrenzenden Promenade am Hübenerkai verbinden.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[6]]} galleryId="domenic-liza-07" label="HafenCity – Marco-Polo-Terrassen" />
+          <GalleryImageGrid columns={[groups[6]]} galleryId="domenic-liza-07" label="HafenCity - Marco-Polo-Terrassen" />
         </section>
 
         <section id="kehrwiederspitze" class="chapter" aria-labelledby="kehrwiederspitze-title">
@@ -149,23 +149,23 @@ const schema = {
             <div><p class="eyebrow">03 / Kehrwiederspitze</p><h2 id="kehrwiederspitze-title">Ein Kuss im Gegenlicht</h2></div>
             <div class="copy"><p>Zum Abschluss geht es an die Kehrwiederspitze. Domenic und Liza küssen sich im warmen Gegenlicht; hinter ihnen liegen Wasser und Hafen. Mit wenigen Schritten ändern sich Perspektive und Hintergrund.</p><p>Für Eure Paarfotos können wir den Blick zur Elbphilharmonie oder über den Hafen wählen. Den Treffpunkt und die zugänglichen Plätze stimmen wir kurz vor Eurem Termin ab.</p></div>
           </header>
-          <GalleryImageGrid columns={[groups[7]]} galleryId="domenic-liza-08" label="Kehrwiederspitze – Paarfotos mit Elbphilharmonie und Hafenblick" />
+          <GalleryImageGrid columns={[groups[7]]} galleryId="domenic-liza-08" label="Kehrwiederspitze - Paarfotos mit Elbphilharmonie und Hafenblick" />
           <section class="story-copy" aria-labelledby="gegenlicht-title">
             <div><p class="eyebrow">Licht am Hafen</p><h3 id="gegenlicht-title">Noch einen Moment bleiben</h3></div>
-            <div class="copy"><p>Am Geländer halten wir den Moment fest, bevor wir den Blick zurück auf Hamburg richten. Für Gegenlichtaufnahmen stimmen wir Tageszeit und Blickrichtung auf Euren Termin ab – das Licht verändert sich mit der Jahreszeit.</p></div>
+            <div class="copy"><p>Am Geländer halten wir den Moment fest, bevor wir den Blick zurück auf Hamburg richten. Für Gegenlichtaufnahmen stimmen wir Tageszeit und Blickrichtung auf Euren Termin ab - das Licht verändert sich mit der Jahreszeit.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[8]]} galleryId="domenic-liza-09" label="Kehrwiederspitze – Paarfotos am Hafenufer" />
+          <GalleryImageGrid columns={[groups[8]]} galleryId="domenic-liza-09" label="Kehrwiederspitze - Paarfotos am Hafenufer" />
           <section class="story-copy" aria-labelledby="michel-title">
             <div><p class="eyebrow">Hamburger Stadtsilhouette</p><h3 id="michel-title">Flussschifferkirche und Michel</h3></div>
             <div class="copy"><p>Die letzten Bilder verbinden Domenic und Liza mit der Umgebung: die Flussschifferkirche im Binnenhafen und der Michel hinter dem Paar. Wenn Ihr Euch eine kirchliche Hochzeit in Hamburg wünscht, findet Ihr <a href="/kirchliche-trauungen-hamburg/">Kirchen und Planungshilfen in der Übersicht</a>.</p></div>
           </section>
-          <GalleryImageGrid columns={[groups[9]]} galleryId="domenic-liza-10" label="Kehrwiederspitze – mit Flussschifferkirche und Michel" />
+          <GalleryImageGrid columns={[groups[9]]} galleryId="domenic-liza-10" label="Kehrwiederspitze - mit Flussschifferkirche und Michel" />
         </section>
 
         <section id="hamburg-entdecken" class="story-copy light-story" aria-labelledby="planung-title">
           <div><p class="eyebrow">Euer Paarshooting in Hamburg</p><h2 id="planung-title">So planen wir Eure Bilder</h2></div>
           <div class="copy">
-            <p>Schreibt mir, welche Orte Euch gefallen und wann Ihr Zeit habt. Dann besprechen wir Strecke, Licht und Kleidung – auch für ein <a href="/gallery/lovebirds-am-elbstrand/">Verlobungsshooting in Hamburg</a>.</p>
+            <p>Schreibt mir, welche Orte Euch gefallen und wann Ihr Zeit habt. Dann besprechen wir Strecke, Licht und Kleidung - auch für ein <a href="/gallery/lovebirds-am-elbstrand/">Verlobungsshooting in Hamburg</a>.</p>
             <details class="shooting-tip"><summary>Kleidung, Wege und Wetter</summary><p>Tragt Kleidung, in der Ihr Euch beim Gehen und Sitzen wohlfühlt. Bequeme Schuhe helfen auf Pflaster und Treppen; nehmt Eure Fotoschuhe bei Bedarf zusätzlich mit. Am offenen Elbufer ist eine Jacke für die Wege und Pausen hilfreich. Wetter und Sonnenstand prüfen wir passend zu Eurem Termin.</p></details>
             <details class="shooting-tip"><summary>Anreise zur Kehrwiederspitze</summary><p>Die U-Bahn-Station Baumwall kommt für die Anreise infrage. Hinweise zu Bauarbeiten und Wegeführung findet Ihr bei <a href="https://www.hamburg.de/politik-und-verwaltung/behoerden/finanzbehoerde/aktuelles/sanierung-der-kaimauern-an-der-kehrwiederspitze-1146216" target="_blank" rel="noopener">Hamburg zur Kehrwiederspitze</a>. Den konkreten Treffpunkt vereinbaren wir kurz vor dem Shooting.</p></details>
             <details class="shooting-tip"><summary>Barkassenfahrt oder Hochzeit am Hafen</summary><p>Wenn Ihr eine Fahrt nach dem Shooting plant, stimmen wir den Fototermin auf die Abfahrt ab. Möglichkeiten für Hochzeitsfahrten beschreiben <a href="https://www.barkassenvermietung-hamburg.com/barkasse-mieten/hochzeiten.html" target="_blank" rel="noopener">Barkassenbetrieb Bülow</a> und <a href="https://www.barkassen-meyer.de/schiff-charter/trauungen-hochzeiten" target="_blank" rel="noopener">Barkassen-Meyer</a>. Einstieg, Fahrtdauer und mögliche Route klärt Ihr mit der Reederei.</p></details>

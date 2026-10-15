@@ -504,11 +504,11 @@ function inferPageType(route) {
 
 function socialImageAlt({ title, location, venue, label }) {
   const context = [venue, location].filter(Boolean).join(", ");
-  return cleanText(`${label}: ${title}${context ? ` – ${context}` : ""}`);
+  return cleanText(`${label}: ${title}${context ? ` - ${context}` : ""}`);
 }
 
 function cleanTitle(value) {
-  const title = cleanText(value).replace(/\s*[|–—]\s*Artbild(?:-Fotografie| Fotografie).*$/i, "");
+  const title = cleanText(value).replace(/\s*[|–—-]\s*Artbild(?:-Fotografie| Fotografie).*$/i, "");
   return title || "Artbild-Fotografie";
 }
 

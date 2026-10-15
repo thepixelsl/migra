@@ -114,7 +114,7 @@
       const lastNumber = lastVisibleIndex + 1;
       const visibleRange = firstNumber === lastNumber
         ? String(firstNumber)
-        : `${firstNumber}–${lastNumber}`;
+        : `${firstNumber}-${lastNumber}`;
 
       cards.forEach((card, index) => {
         setCardAccessibility(card, index >= activeIndex && index <= lastVisibleIndex);

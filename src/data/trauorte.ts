@@ -142,7 +142,7 @@ const researchedTrauorte: Trauort[] = [
     category: "museum",
     officeName: "Standesamt Wandsbek",
     address: {
-      street: "Im Alten Dorfe 46–48",
+      street: "Im Alten Dorfe 46-48",
       postalCode: "22359",
       city: "Hamburg",
     },
@@ -750,7 +750,7 @@ const researchedTrauorte: Trauort[] = [
     name: "Wassermühle Karoxbostel",
     region: "umland",
     category: "muehle",
-    officeName: "Standesamt Seevetal–Neu Wulmstorf",
+    officeName: "Standesamt Seevetal-Neu Wulmstorf",
     address: {
       street: "Karoxbosteler Chaussee 51",
       postalCode: "21218",
@@ -765,7 +765,7 @@ const researchedTrauorte: Trauort[] = [
         actor: "standesamt",
         label: "Trautermin reservieren",
         description:
-          "Verfügbarkeit beim Standesamt Seevetal–Neu Wulmstorf erfragen und Trautermin dort reservieren.",
+          "Verfügbarkeit beim Standesamt Seevetal-Neu Wulmstorf erfragen und Trautermin dort reservieren.",
         url: "https://www.seevetal.de/portal/seiten/sie-wollen-heiraten--10000764-20200.html",
       },
       {
@@ -929,7 +929,7 @@ const researchedTrauorte: Trauort[] = [
       },
     ],
     reservationWindow: "Die Trauung muss innerhalb von sechs Monaten nach der Prüfung stattfinden.",
-    authorityFee: "50–80 € für die Prüfung und 150 € für die Trauung.",
+    authorityFee: "50-80 € für die Prüfung und 150 € für die Trauung.",
     venueFee: "170 € Raummiete; Gastronomie zusätzlich nach Angebot.",
     capacityNote: "Der Betreiber nennt eine Kapazität von bis zu 40 Personen.",
     officialAuthorityUrl:

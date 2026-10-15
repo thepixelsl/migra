@@ -22,7 +22,7 @@ export const standesaemter: Standesamt[] = [
     id: "hamburg-nord",
     name: "Standesamt Hamburg-Nord",
     location: "Eppendorf",
-    street: "Kümmellstraße 5–7 / Robert-Koch-Straße 17",
+    street: "Kümmellstraße 5-7 / Robert-Koch-Straße 17",
     postalCode: "20249",
     city: "Hamburg",
     phones: [
@@ -75,7 +75,7 @@ export const standesaemter: Standesamt[] = [
     id: "hamburg-mitte",
     name: "Standesamt Hamburg-Mitte",
     location: "Neustadt",
-    street: "Caffamacherreihe 1–3",
+    street: "Caffamacherreihe 1-3",
     postalCode: "20355",
     city: "Hamburg",
     phones: [
@@ -94,7 +94,7 @@ export const standesaemter: Standesamt[] = [
     id: "eimsbuettel",
     name: "Standesamt Eimsbüttel",
     location: "Eimsbüttel",
-    street: "Grindelberg 62–66",
+    street: "Grindelberg 62-66",
     postalCode: "20144",
     city: "Hamburg",
     phones: [
