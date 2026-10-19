@@ -10,6 +10,7 @@ import ThankYouDiscount from "../../components/ThankYouDiscount.astro";
 import { googleReviews } from "../../data/reviews";
 import { weddingBookingHoursRule, weddingGalleryMonths, weddingPackages } from "../../data/weddingPackages";
 import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
+import { PACKAGE_NAMES } from "../../lib/pricingTracking.mjs";
 import { pageSeo } from "../../data/pageSeo.mjs";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
@@ -457,6 +458,8 @@ const schemaGraph = {
                 aria-labelledby={`paket-${item.id}-name paket-${item.id}-title`}
                 aria-describedby={item.showIntro === false ? undefined : `paket-${item.id}-intro`}
                 data-schema-id={`${pageUrl}#angebot-${item.id}`}
+                data-pricing-package={PACKAGE_NAMES[item.id]}
+                data-pricing-hours={item.minimumHours === item.maximumHours ? item.minimumHours : undefined}
               >
                 <figure aria-label={`${item.name} Beispielbild`}>
                   <Image

@@ -89,6 +89,16 @@
   const pageLocation = location.origin + location.pathname;
   const referrer = (() => { try { return new URL(document.referrer).origin; } catch (_) { return ""; } })();
   window.gtag("set", { page_location: pageLocation, page_referrer: referrer });
+  // Only the pricing campaign's enumerated source/medium may survive URL redaction.
+  // Never forward arbitrary UTM values (which may contain names or email addresses).
+  const pricingCampaign = (() => {
+    if (location.pathname !== "/hochzeitsfotograf-preise/") return {};
+    const query = new URLSearchParams(location.search);
+    const source = query.get("utm_source")?.toLowerCase();
+    const medium = query.get("utm_medium")?.toLowerCase();
+    if (!["google", "instagram", "ig"].includes(source) || !["organic", "cpc", "social", "paid_social"].includes(medium)) return {};
+    return { campaign_source: source === "ig" ? "instagram" : source, campaign_medium: medium, campaign_name: "pricing" };
+  })();
   window.dataLayer.push({ event: "artbild_tracking_config", tracking_environment: config.environment,
     google_analytics_id: config.googleAnalyticsId, google_analytics_delivery: "direct",
     meta_delivery: "direct", clarity_delivery: "direct",
@@ -170,6 +180,7 @@
       if (!state[name] || requested.has(name)) continue;
       window.gtag("js", new Date());
       window.gtag("config", id, { send_page_view: name === "googleAnalytics",
+        ...(name === "googleAnalytics" ? pricingCampaign : {}),
         allow_google_signals: false, allow_ad_personalization_signals: false,
         cookie_expires: name === "googleAnalytics" ? lifetime : 90 * 86400,
         cookie_update: false, cookie_flags: `SameSite=Lax${secure ? ";Secure" : ""}`,

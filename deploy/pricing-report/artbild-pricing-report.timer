@@ -1,0 +1,11 @@
+[Unit]
+Description=Artbild Preisseite - taegliche private API-Datenerfassung
+
+[Timer]
+OnCalendar=*-*-* 07:50:00 Europe/Berlin
+Persistent=true
+AccuracySec=30s
+Unit=artbild-pricing-report.service
+
+[Install]
+WantedBy=timers.target

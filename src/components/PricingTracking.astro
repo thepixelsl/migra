@@ -1,0 +1,6 @@
+<script>
+  import { initializePricingTracking } from "../lib/pricingTracking.mjs";
+  const init = () => initializePricingTracking();
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init, { once: true });
+  else init();
+</script>

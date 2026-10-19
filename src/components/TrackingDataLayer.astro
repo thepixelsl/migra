@@ -1,11 +1,13 @@
 ---
 import ConsentBanner from "./ConsentBanner.astro";
 import { trackingConfig } from "../config/tracking";
+import PricingTracking from "./PricingTracking.astro";
 ---
 
 {trackingConfig.consentEnabled && (
   <>
     <ConsentBanner />
+    {['/hochzeitsfotograf-preise/', '/kontakt/'].includes(Astro.url.pathname) && <PricingTracking />}
     <script is:inline>
   (() => {
     if (window.__artbildTrackingReady) return;
@@ -273,6 +275,16 @@ import { trackingConfig } from "../config/tracking";
       });
       if (!eventPayload.event) return;
 
+      // Pricing attribution is a closed schema; never accept free text, URLs or form fields.
+      if (["price_package_view", "price_package_click", "price_calculator_change", "price_contact_click", "generate_lead"].includes(eventPayload.event)) {
+        if (!analyticsGranted || payload.measurement_page !== "hochzeitsfotograf_preise") return;
+        eventPayload.measurement_page = "hochzeitsfotograf_preise";
+        if (["pure_moments", "standesamt", "rundum_sorglos"].includes(payload.package_name)) eventPayload.package_name = payload.package_name;
+        if (Number.isInteger(payload.hours) && payload.hours >= 1 && payload.hours <= 10) eventPayload.hours = payload.hours;
+        if (["contact_form", "secure_contact", "email", "phone", "whatsapp", "contact_section"].includes(payload.contact_channel)) eventPayload.contact_channel = payload.contact_channel;
+        if (["package_card", "calculator", "example", "hero", "page_bottom", "navigation", "footer", "page"].includes(payload.cta_position)) eventPayload.cta_position = payload.cta_position;
+      }
+
       eventPayload.consent_analytics = analyticsGranted
         ? "granted"
         : "denied";
@@ -282,7 +294,12 @@ import { trackingConfig } from "../config/tracking";
       eventPayload.consent_clarity = clarityGranted
         ? "granted"
         : "denied";
-      if (analyticsGranted) {
+      // The existing GA4 rule copies kontakt_anfrage_form/form_success to
+      // generate_lead. Pricing has its own attributed generate_lead, so do not
+      // also feed that rule. Other pages and marketing delivery retain form_success.
+      const attributedPricingSuccess = payload.event === "form_success" && payload.form_id === "kontakt_anfrage_form"
+        && window.artbildPricingTracking?.hasAttributedContact?.() === true;
+      if (analyticsGranted && !attributedPricingSuccess) {
         const { event, ...parameters } = eventPayload;
         window.gtag?.("event", event, { ...parameters, send_to: trackingConfiguration.googleAnalyticsId });
       }

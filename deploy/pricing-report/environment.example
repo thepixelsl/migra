@@ -1,0 +1,10 @@
+# Nur außerhalb des Repository als ~/.config/artbild-pricing-report/environment (0600).
+# Node 22+ muss im PATH des Benutzer-systemd verfügbar sein (ggf. PATH explizit setzen).
+PRICING_GOOGLE_CREDENTIALS=/home/artbild/.config/artbild-pricing-report/google-readonly.json
+PRICING_GA4_PROPERTY_ID=254198096
+PRICING_REPORT_DIR=/home/artbild/.local/share/artbild-pricing-reports
+# Vorhandene Keyword-MCP-Zugänge privat auf dem Server einrichten/neu autorisieren.
+PRICING_KEYWORD_CONFIG_DIR=/home/artbild/.config/artbild-keyword-mcp
+PRICING_ADS_API_VERSION=v23
+# Erst nach bestätigter Veröffentlichung setzen, ISO-8601-Zeitpunkt.
+PRICING_TRACKING_LIVE_SINCE=
