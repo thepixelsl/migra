@@ -62,6 +62,8 @@ Keyword Planner nutzt optional die vorhandenen privaten `artbild-keyword-mcp`-Da
 
 Der Benutzer hat festgelegt: **Google Analytics versendet den Bericht direkt an `info@artbild-fotografie.de`; keine tägliche ChatGPT-Ausführung.** Eine bestehende ChatGPT-Aufgabe wurde nicht verändert und keine neue angelegt. Eine Drittanbieter-Anbindung ist für diesen Versand nicht vorgesehen.
 
+Die bestehende ChatGPT-Aufgabe kann über den öffentlichen Share-Link nicht deaktiviert werden. Die Browserprüfung zeigt einen abgemeldeten ChatGPT-Zustand und keine private Aufgabenverwaltung. Ihre Abschaltung bleibt deshalb offen und muss im angemeldeten ChatGPT-Konto erfolgen; der Share-Link bzw. die Behauptung im geteilten Chat ist kein aktueller Zeitplan-Nachweis.
+
 `npm run report:pricing` schreibt optional zur separaten API-Auswertung `latest.json`, `latest.md` und datierte private Dateien. Unvollständiger Bericht: Exitcode 2; harter Betriebsfehler: Exitcode 1. `deploy/pricing-report` enthält einen noch nicht installierten Benutzer-systemd-Timer zur privaten API-Erfassung um 07:50 Europe/Berlin. Er versendet keine E-Mail und steuert keinen GA4-Versand. Er berücksichtigt Sommer-/Winterzeit und holt einen ausgefallenen Lauf nach.
 
 Für die API-Erfassung auf dem erreichbaren GEEKOM: Quellstand synchronisieren, private Google-Dateien und externe `environment` einrichten, privates Berichtsverzeichnis vorher anlegen, Units nach `~/.config/systemd/user/` kopieren, `daemon-reload`, einmaliger Service-Test, dann Timer aktivieren. Die Unit verwendet die vorhandene Hub-Node-Laufzeit. Vorher `systemd-analyze --user verify` und den Kalenderausdruck prüfen; anschließend Timer, Exitstatus und echten Folgelauf verifizieren. Keine Hub-Software ersetzen.
