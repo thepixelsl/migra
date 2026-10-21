@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM node:22-alpine AS dependencies
+FROM node:24.22.1-alpine AS dependencies
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -30,7 +30,7 @@ ENV PUBLIC_OPENAI_ADS_PIXEL_ID=${PUBLIC_OPENAI_ADS_PIXEL_ID}
 ENV PUBLIC_CONSENT_VERSION=${PUBLIC_CONSENT_VERSION}
 RUN npm run build && HUB_RELEASE_ID="$HUB_RELEASE_ID" node scripts/mark-hub-release.mjs
 
-FROM node:22-alpine AS runtime
+FROM node:24.22.1-alpine AS runtime
 WORKDIR /app
 
 LABEL org.opencontainers.image.source="https://github.com/thepixelsl/migra"

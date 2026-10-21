@@ -1,24 +1,14 @@
 {
-  "title": "Artbild: SEO- und Conversion-Tracking der Preisseite",
+  "title": "Sicherheitsupdates für Astro, Bildverarbeitung und Mailversand",
   "paths": [
-    "/portfolio/",
-    "/kirchliche-trauungen-hamburg/",
-    "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
-    "/about/",
+    "/",
+    "/kontakt/",
     "/hochzeitsfotograf-preise/",
-    "/hochzeitsfotograf-ratgeber/",
+    "/portfolio/",
+    "/gallery/editorial/",
+    "/gallery/paarshooting-mallorca/",
+    "/blog/",
     "/standesamt-hamburg/",
-    "/kirchenfinder-hamburg/",
-    "/kirchliche-trauung-hamburg/",
-    "/datenschutz/",
-    "/newsletter/",
-    "/gallery/getting-ready-hamburg/",
-    "/braut-fotoshooting-fraser-suites-hamburg/",
-    "/hochzeitsfotos-drucken-color-proofing/",
-    "/luminanzmasken-photoshop-aktion/",
-    "/web-stories/paarshooting-hamburg-september-2026/",
-    "/web-stories/eppendorf/",
-    "/fuer-agenten/",
-    "/kontakt/"
+    "/web-stories/eppendorf/"
   ]
 }

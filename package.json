@@ -25,24 +25,27 @@
     "deploy:worker": "npm run build && wrangler deploy --config wrangler.worker.toml",
     "preview": "astro preview --host 127.0.0.1",
     "start:bunny": "node server/bunny-server.mjs",
-    "test:bunny": "node --test tests/bunny-runtime.test.mjs tests/admin-mfa.test.mjs tests/wordpress-redirects.test.mjs tests/agent-availability-trial.test.mjs tests/availability-observations.test.mjs",
+    "test:bunny": "node --test tests/bunny-runtime.test.mjs tests/bunny-mailer.test.mjs tests/admin-mfa.test.mjs tests/wordpress-redirects.test.mjs tests/agent-availability-trial.test.mjs tests/availability-observations.test.mjs",
     "test:migration-sanitizer": "node --test tests/migrated-html-sanitizer.test.mjs",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
     "astro": "astro"
   },
   "dependencies": {
-    "@libsql/client": "^0.15.15",
-    "astro": "^7.1.6",
-    "nodemailer": "^9.0.4",
+    "@libsql/client": "^0.18.0",
+    "astro": "^7.4.1",
+    "nodemailer": "^10.1.7",
     "otpauth": "9.5.2",
     "qrcode": "1.5.4"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.0",
+    "@playwright/test": "^1.64.1",
     "amphtml-validator": "^1.0.38",
     "cheerio": "^1.2.0",
-    "sharp": "^0.35.3",
-    "wrangler": "^4.111.0"
+    "sharp": "^0.35.5",
+    "wrangler": "^4.151.3"
+  },
+  "engines": {
+    "node": ">=24.22.1"
   }
 }
