@@ -1,10 +1,12 @@
 {
-  "title": "Sicherheitsupdates für Astro, Bildverarbeitung und Mailversand",
+  "title": "Astro 7.4.2 und vollständige Bildnachweise der Galerie-Übersichten",
   "paths": [
     "/",
     "/kontakt/",
     "/hochzeitsfotograf-preise/",
     "/portfolio/",
+    "/gallery-category/hochzeit/",
+    "/gallery-category/travel/",
     "/gallery/editorial/",
     "/gallery/paarshooting-mallorca/",
     "/blog/",

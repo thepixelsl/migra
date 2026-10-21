@@ -38,10 +38,12 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     if (types(node).includes("Person") && node.name === "York Augustin") return ids.person;
     return null;
   };
-  const isReviewedGallery = (node) => {
+  const isReviewedPhotoCollection = (node) => {
     try {
       const url = new URL(node.url || node["@id"]);
-      return url.origin === origin && Object.hasOwn(pageSeo, url.pathname)
+      const reviewedType = types(node).includes("ImageGallery")
+        || (types(node).includes("CollectionPage") && url.pathname.startsWith("/gallery-category/"));
+      return reviewedType && url.origin === origin && Object.hasOwn(pageSeo, url.pathname)
         && [node.creator, node.author, node.publisher, node.provider].every((value) =>
           !value || [].concat(value).every((identity) => ownIds.has(identity["@id"])));
     } catch { return false; }
@@ -50,8 +52,8 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     if (!types(photo).includes("ImageObject")) return photo;
     try {
       const url = new URL(photo.contentUrl || photo.url);
-      // Reviewed Artbild gallery photos only, never arbitrary same-origin
-      // images, logos, external images or a conflicting existing attribution.
+      // Reviewed Artbild gallery photos and gallery-category covers only,
+      // never arbitrary images, logos or a conflicting existing attribution.
       if (url.origin !== origin || !/^\/(?:_astro|gallery|migrated-assets)\/.*\.(?:webp|jpe?g|png|avif)$/i.test(url.pathname)) return photo;
       if (Object.entries(credits).some(([key, value]) => photo[key] !== undefined && !isDeepStrictEqual(photo[key], value))) return photo;
       return { ...photo, ...photoCredits(origin) };
@@ -73,7 +75,7 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     // Offer ordering is already determined by itemListElement. `position` is
     // not an Offer property (it belongs on ListItem/CreativeWork).
     if (types(node).includes("Offer")) delete node.position;
-    if (types(node).includes("ImageGallery") && isReviewedGallery(node) && node.image) {
+    if (isReviewedPhotoCollection(node) && node.image) {
       node.image = Array.isArray(node.image) ? node.image.map(creditGalleryPhoto) : creditGalleryPhoto(node.image);
     }
     return node;

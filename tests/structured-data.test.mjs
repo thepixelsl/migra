@@ -114,6 +114,36 @@ test("gallery credits preserve foreign rights and do not claim arbitrary images 
   assert.deepEqual(result.slice(2, 5), fixture.slice(2, 5));
 });
 
+test("reviewed gallery category covers receive credits inside portfolio lists without claiming unrelated collections", () => {
+  const own = {
+    "@type": "ImageObject", contentUrl: `${origin}/_astro/ART_4632.new-build-hash.webp`,
+    thumbnailUrl: `${origin}/_astro/ART_4632.responsive-hash.webp`, caption: "Brautpaar mit Schleier", width: 1600,
+  };
+  const foreignCreator = { ...own, creator: { "@type": "Person", name: "Another photographer" } };
+  const foreignLicense = { ...own, license: "https://example.com/license" };
+  const external = { ...own, contentUrl: "https://example.com/cover.webp" };
+  const logo = { ...own, contentUrl: `${origin}/images/partner-logo.png` };
+  const collection = (url, image, extra = {}) => ({
+    "@type": "CollectionPage", url, provider: { "@id": ids.business }, image, ...extra,
+  });
+  const nested = collection(`${origin}/gallery-category/hochzeit/`, [own, foreignCreator, foreignLicense, external, logo]);
+  const single = collection(`${origin}/gallery-category/travel/`, own);
+  const unreviewed = collection(`${origin}/gallery-category/unreviewed/`, own);
+  const unrelated = collection(`${origin}/impressum/`, own);
+  const foreignCollection = collection(`${origin}/gallery-category/hochzeit/`, own, { author: { "@type": "Person", name: "Another photographer" } });
+  const otherType = { ...single, "@type": "WebPage" };
+  const fixture = [structuredClone(homePhoto), {
+    "@type": "ItemList", itemListElement: [{ "@type": "ListItem", position: 1, item: nested }],
+  }, single, unreviewed, unrelated, foreignCollection, otherType];
+  const $ = load(`<html><head><link rel="canonical" href="${origin}/"><script type="application/ld+json">${serializeSchema(fixture)}</script></head><body></body></html>`);
+  const result = normalizeStructuredData($, "/", { origin, homepageImage: homePhoto, portraitImage: `${origin}/images/portrait-riverside.webp` });
+  assert.deepEqual(result[1].itemListElement[0].item.image[0], { ...own, ...photoCredits(origin) });
+  assert.deepEqual(result[1].itemListElement[0].item.image.slice(1), [foreignCreator, foreignLicense, external, logo]);
+  assert.deepEqual(result[2].image, { ...own, ...photoCredits(origin) });
+  assert.deepEqual(result.slice(3, 7), fixture.slice(3, 7));
+  assert.deepEqual(normalizeStructuredData($, "/", { origin, homepageImage: homePhoto, portraitImage: `${origin}/images/portrait-riverside.webp` }), result);
+});
+
 test("both price and agent pages model hourly prices and minimum duration, not a false total", () => {
   for (const route of ["/hochzeitsfotograf-preise/", "/fuer-agenten/"]) {
     const page = pages.find((item) => item.card.route === route);
