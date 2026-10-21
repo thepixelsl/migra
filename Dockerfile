@@ -1,6 +1,17 @@
 # syntax=docker/dockerfile:1
 
-FROM node:24.22.1-alpine AS dependencies
+# The new security release is available from nodejs.org before all Docker
+# platforms have been published. Pin the available base and verify the official
+# linux/amd64 runtime explicitly instead of retaining its older Node binary.
+FROM node:24.22.0-bookworm-slim@sha256:91acba91b842bec0bf7ea6f5e09c644c7ccad72c4996ed9616d861d1c7cd60d4 AS node-base
+ADD --checksum=sha256:eb6728e77c576a35162c122c45ccadf224d89ff00abc8dae46cc2897c6002d7c https://nodejs.org/dist/v24.22.1/node-v24.22.1-linux-x64.tar.gz /tmp/node-runtime.tar.gz
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/include/node \
+    && tar -xzf /tmp/node-runtime.tar.gz --strip-components=1 -C /usr/local \
+    && rm /tmp/node-runtime.tar.gz \
+    && node -e "if (process.version !== 'v24.22.1') process.exit(1)"
+ENV NODE_VERSION=24.22.1
+
+FROM node-base AS dependencies
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -30,7 +41,7 @@ ENV PUBLIC_OPENAI_ADS_PIXEL_ID=${PUBLIC_OPENAI_ADS_PIXEL_ID}
 ENV PUBLIC_CONSENT_VERSION=${PUBLIC_CONSENT_VERSION}
 RUN npm run build && HUB_RELEASE_ID="$HUB_RELEASE_ID" node scripts/mark-hub-release.mjs
 
-FROM node:24.22.1-alpine AS runtime
+FROM node-base AS runtime
 WORKDIR /app
 
 LABEL org.opencontainers.image.source="https://github.com/thepixelsl/migra"
