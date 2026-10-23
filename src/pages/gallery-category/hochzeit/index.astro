@@ -6,6 +6,8 @@ import DesktopNavigation from "../../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import PortfolioCard from "../../../components/PortfolioCard.astro";
 import { portfolioEntries } from "../../../data/portfolio";
+import hubPublications from "../../../data/hub-publications.json";
+import { portfolioPublications } from "../../../lib/hub-portfolio.mjs";
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery-category/hochzeit/";
@@ -15,7 +17,16 @@ const description =
   "Hochzeitsreportagen aus Hamburg und Norddeutschland: Trauung, Paarbilder und Feier in zusammenhängenden Galerien. Dazu Getting Ready und Editorials entdecken.";
 const logoUrl = `${siteUrl}/images/logo-artbild-black.png`;
 
-const weddingEntries = portfolioEntries.filter((entry) => entry.filter === "Hochzeit");
+const weddingEntries = [
+  ...portfolioPublications(hubPublications)
+    .filter((entry) => /hochzeit|wedding/i.test(entry.category))
+    .map((entry) => ({
+      title: entry.title, href: entry.path, category: entry.category, filter: "Hochzeit",
+      date: new Intl.DateTimeFormat("de-DE").format(new Date(entry.datePublished)),
+      image: { ...entry.heroImage, format: "webp" }, alt: entry.heroImage.alt, hubImage: true,
+    })),
+  ...portfolioEntries.filter((entry) => entry.filter === "Hochzeit"),
+];
 const primaryEntry = weddingEntries[0];
 const primaryImageUrl = primaryEntry ? new URL(primaryEntry.image.src, siteUrl).href : logoUrl;
 

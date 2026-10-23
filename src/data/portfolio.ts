@@ -48,7 +48,7 @@ const entries: PortfolioEntry[] = [
   {
     title: "Domenic & Liza - Paarshooting Hamburg",
     category: "Couples · Speicherstadt & HafenCity",
-    filter: "Hochzeit",
+    filter: "Peoplefotografie",
     date: "26.09.2026",
     href: "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
     image: domenicLiza,
