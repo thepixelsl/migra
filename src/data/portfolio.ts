@@ -99,7 +99,7 @@ const entries: PortfolioEntry[] = [
   {
     title: "Brautpaar-Editorial Fraser Suites Hamburg",
     category: "Styled Editorial",
-    filter: "Peoplefotografie",
+    filter: "Hochzeit",
     date: "04.07.2026",
     href: "/gallery/elopement-hochzeit-fraser-suites-hamburg/",
     image: elopementFraserSuitesHamburg,
@@ -349,6 +349,21 @@ const parseGermanDate = (date: string) => {
 export const portfolioEntries = [...entries].sort(
   (left, right) => parseGermanDate(right.date) - parseGermanDate(left.date),
 );
+
+// Fraser Suites übernimmt den bisherigen Platz von Hochzeitsfotos Hamburg.
+const fraserSuitesPath = "/gallery/elopement-hochzeit-fraser-suites-hamburg/";
+const hochzeitsfotosPath = "/gallery/hochzeitsfotos-hamburg/";
+const fraserSuitesIndex = portfolioEntries.findIndex(
+  (entry) => entry.href === fraserSuitesPath,
+);
+if (fraserSuitesIndex >= 0 && portfolioEntries.some((entry) => entry.href === hochzeitsfotosPath)) {
+  const [fraserSuites] = portfolioEntries.splice(fraserSuitesIndex, 1);
+  const hochzeitsfotosIndex = portfolioEntries.findIndex(
+    (entry) => entry.href === hochzeitsfotosPath,
+  );
+  const [hochzeitsfotos] = portfolioEntries.splice(hochzeitsfotosIndex, 1, fraserSuites);
+  portfolioEntries.push(hochzeitsfotos);
+}
 
 export const portfolioFilterSlug = (filter: PortfolioFilter) =>
   filter === "All"
