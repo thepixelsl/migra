@@ -273,7 +273,7 @@ const schemaGraph = {
     </header>
 
     <main>
-      <article class:list={["migrated-article", { "is-gallery": isGallery, "is-post": page.type === "post", "is-nd-filter-table": isNdFilterTablePage, "is-luminance": isLuminancePage }]}>
+      <article class:list={["migrated-article", { "is-gallery": isGallery, "has-image-series": hasGallery && !isSingleImageGallery, "is-post": page.type === "post", "is-nd-filter-table": isNdFilterTablePage, "is-luminance": isLuminancePage }]}>
         <nav class="migrated-breadcrumb" aria-label="Breadcrumb">
           <a href="/">Startseite</a>
           <span aria-hidden="true">/</span>
@@ -868,6 +868,35 @@ const schemaGraph = {
 
   }
 
+  @media (min-width: 768px) {
+    .migrated-article.has-image-series {
+      width: var(--gallery-story-width);
+    }
+    .has-image-series .migrated-content,
+    .has-image-series .migrated-gallery,
+    .has-image-series .migrated-gallery > div,
+    .has-image-series .migrated-gallery > .migrated-kicker,
+    .has-image-series .migrated-gallery h2 {
+      width: 100%;
+      margin-inline: 0;
+      transform: none;
+    }
+  }
+  @media (min-width: 1024px) {
+    .has-image-series .migrated-content > div {
+      column-count: 2;
+      column-gap: clamp(40px, 5vw, 80px);
+      orphans: 3;
+      widows: 3;
+    }
+    .has-image-series .migrated-content :global(h2),
+    .has-image-series .migrated-content :global(h3) {
+      break-after: avoid-column;
+    }
+    .has-image-series .migrated-content :global(table) {
+      column-span: all;
+    }
+  }
   @media (max-width: 767px) {
     .migrated-gallery > div {
       width: calc(100vw - 64px);

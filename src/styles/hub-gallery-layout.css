@@ -47,20 +47,27 @@
   }
 }
 
-/* Published Hub entries also carry their saved gallery CSS inline. Keep this
-   website-level desktop sizing effective with previously saved entries. */
-@media (min-width: 1441px) {
+/* Saved entries carry their original CSS inline. Use the same outer frame for
+   copy, cover and image series, including entries saved with "reading" width.
+   Split single-column prose on desktop to keep its line length comfortable. */
+@media (min-width: 768px) {
   body .article-surface.content-gallery .article-heading,
-  body .article-surface.content-gallery .article-cover {
-    width: min(calc(1240px + var(--desktop-gallery-extra, 0px)), calc(100% - 80px));
-  }
-  body .article-surface.content-gallery .block-inner {
-    width: min(calc(1100px + var(--desktop-gallery-extra, 0px)), calc(100% - 96px));
-  }
-  body .article-surface.content-gallery .width-reading .block-inner {
-    max-width: calc(690px + var(--desktop-reading-extra, 0px));
-  }
+  body .article-surface.content-gallery .article-cover,
+  body .article-surface.content-gallery .block-inner,
+  body .article-surface.content-gallery .width-reading .block-inner,
   body .article-surface.content-gallery .block-gallery.width-wide .block-inner {
-    width: min(calc(1280px + var(--desktop-gallery-extra, 0px)), calc(100% - 64px));
+    width: var(--gallery-story-width);
+    max-width: none;
+  }
+}
+@media (min-width: 1024px) {
+  body .article-surface.content-gallery .block-text .layout-single .rich-text {
+    column-count: 2;
+    column-gap: clamp(40px, 5vw, 80px);
+    orphans: 3;
+    widows: 3;
+  }
+  body .article-surface.content-gallery .block-text .layout-single .rich-text p {
+    margin-top: 0;
   }
 }

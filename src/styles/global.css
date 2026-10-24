@@ -9,10 +9,10 @@
   /* Let desktop sections grow with wide screens; keep the established widths
      through 1440px and the individual text columns at their readable measure. */
   --desktop-width-extra: clamp(0px, calc(60vw - 864px), 720px);
-  /* Reading columns and image series grow together instead of jumping from
-     a narrow paragraph to a viewport-wide gallery. */
   --desktop-gallery-extra: calc(var(--desktop-width-extra) / 2);
   --desktop-reading-extra: calc(var(--desktop-width-extra) / 4);
+  /* One outer frame for a photo story's copy and image series. */
+  --gallery-story-width: min(calc(1280px + var(--desktop-gallery-extra) / 2), calc(100vw - 64px));
   --max: calc(1290px + var(--desktop-width-extra));
   --home-mobile-gutter: 32px;
   background: var(--paper);
