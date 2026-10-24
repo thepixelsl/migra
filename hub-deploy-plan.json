@@ -1,10 +1,11 @@
 {
-  "title": "Hub-Galerien: Bildserien wie Speicherstadt und HafenCity auf 1.280 px verbreitert",
+  "title": "Gezielter Bunny-Cache-Abgleich nach manueller Hub-Veröffentlichung",
   "paths": [
     "/",
     "/portfolio/",
     "/gallery-category/hochzeit/",
     "/gallery/brautpaar-le-meridien-hamburg/",
-    "/gallery/paarshooting-hamburg-speicherstadt-hafencity/"
+    "/gallery/paarshooting-hamburg-speicherstadt-hafencity/",
+    "/web-stories/eppendorf/"
   ]
 }

@@ -52,7 +52,7 @@ jobs:
         run: npm ci
 
       - name: Test Bunny runtime
-        run: npm run test:bunny && node --test tests/hub-bunny-state.test.mjs
+        run: npm run test:bunny && node --test tests/hub-bunny-state.test.mjs tests/hub-bunny-cache.test.mjs
 
       - name: Test migrated HTML sanitizer
         run: npm run test:migration-sanitizer
@@ -111,3 +111,10 @@ jobs:
           HUB_IMAGE_TAG: prod-sha-${{ github.sha }}
           HUB_IMAGE_DIGEST: ${{ steps.build.outputs.digest }}
         run: node scripts/deploy-hub-bunny.mjs
+
+      - name: Refresh reviewed Hub pages in Bunny CDN
+        if: success() && inputs.deploy && inputs.target == 'production' && startsWith(github.ref_name, 'hub-release/')
+        env:
+          BUNNYNET_API_KEY: ${{ secrets.BUNNYNET_API_KEY }}
+          HUB_RELEASE_ID: ${{ inputs.hub_release }}
+        run: node scripts/refresh-hub-bunny-cache.mjs

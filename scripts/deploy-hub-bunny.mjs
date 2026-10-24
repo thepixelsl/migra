@@ -36,4 +36,4 @@ while(Date.now()<deadline) {
   await new Promise(resolve=>setTimeout(resolve,5000));
 }
 if(!complete) throw new Error('Bunny revision is not yet publicly confirmed; do not retry deployment without checking the live state');
-console.log('Artbild Hub release publicly confirmed: '+id);
+console.log('Bunny container and release marker confirmed: '+id);
