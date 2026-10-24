@@ -1,3 +1,5 @@
+@import "./content-frames.css";
+
 :root {
   color-scheme: light;
   --ink: #171717;
@@ -11,11 +13,18 @@
   --desktop-width-extra: clamp(0px, calc(60vw - 864px), 720px);
   --desktop-gallery-extra: calc(var(--desktop-width-extra) / 2);
   --desktop-reading-extra: calc(var(--desktop-width-extra) / 4);
-  /* One outer frame for a photo story's copy and image series. */
-  --gallery-story-width: min(calc(1280px + var(--desktop-gallery-extra) / 2), calc(100vw - 64px));
+  /* Shared outer frame for editorial sections, including photo stories. */
+  --content-frame-width: min(calc(1280px + var(--desktop-gallery-extra) / 2), calc(100vw - 64px));
+  --gallery-story-width: var(--content-frame-width);
   --max: calc(1290px + var(--desktop-width-extra));
   --home-mobile-gutter: 32px;
   background: var(--paper);
+}
+
+@media (min-width: 768px) and (max-width: 1366px) {
+  :root {
+    --content-frame-width: min(1280px, calc(100vw - 80px));
+  }
 }
 
 @font-face {

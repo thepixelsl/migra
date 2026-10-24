@@ -1,0 +1,231 @@
+/* Shared outer frames for the site's independently authored page templates.
+   The frame includes all columns of a section; individual pictures, cards and
+   short headings keep their own proportions. Full-bleed backgrounds stay full
+   bleed. Specificity also covers the older scoped template styles. */
+@media (min-width: 768px) {
+  html:root main :is(
+    .content-frame, .intro.section-narrow, .flo-block, .home-about-york__inner,
+    .home-lower-section:not(.vendor-section), .vendor-section > .section-heading,
+    .about-hero__panel, .about-section, .about-image-band,
+    .about-wedding-guide, .about-faq, .about-portfolio,
+    .screen-shell, .fraser-hero, .fraser-copy,
+    .zurich-hero, .zurich-intro, .zurich-section,
+    .bridal-hero, .bridal-intro, .bridal-vendors, .bridal-context, .bridal-faq,
+    .gr-guide-hero, .gr-guide-split, .gr-guide-image-band, .gr-guide-checklist,
+    .gr-guide-gallery, .gr-guide-faq, .gr-guide-cta,
+    .hotel-suite-hero, .hotel-suite-intro, .hotel-suite-feature,
+    .hotel-suite-checklist, .hotel-suite-hotels, .hotel-suite-story,
+    .hotel-suite-designers, .hotel-suite-gallery-intro, .hotel-suite-faq,
+    .hotel-suite-cta, .hotel-suite-related,
+    .wedding-category-hero, .wedding-category-intro, .wedding-overview-grid,
+    .wedding-category-guide, .wedding-category-cta,
+    .barberhouse-hero, .barberhouse-story, .barberhouse-meta,
+    .barberhouse-service, .barberhouse-related,
+    .destination-hero, .destination-story, .destination-meta,
+    .destination-service, .destination-related,
+    .london-hero, .london-story, .london-meta, .london-service, .london-related,
+    .editorial-hero, .editorial-story, .editorial-meta,
+    .editorial-service, .editorial-related,
+    .couture-hero, .couture-story, .couture-meta, .couture-service, .couture-related,
+    .getting-ready-hero, .getting-ready-intro, .getting-ready-guide,
+    .bridal-story, .bridal-cta, .bridal-meta, .bridal-service, .bridal-related,
+    .jahrhunderthalle-hero, .jahrhunderthalle-intro, .jahrhunderthalle-feature,
+    .jahrhunderthalle-architecture, .jahrhunderthalle-location,
+    .lower-saxony-hero, .lower-saxony-story, .lower-saxony-meta,
+    .lower-saxony-service, .lower-saxony-related,
+    .wedding-hero, .wedding-copy, .wedding-discover,
+    .lovebirds-hero, .lovebirds-copy, .lovebirds-contact, .lovebirds-instagram,
+    .couple-hero, .story-copy, .travel-link, .related-links,
+    .mallorca-hero, .mallorca-copy, .mallorca-instagram,
+    .travel-hero, .travel-context,
+    .altona-hero, .altona-story, .altona-traukalender, .altona-offer,
+    .steffi-hero, .steffi-story, .steffi-meta, .steffi-service, .steffi-related,
+    .atlantic-hero, .atlantic-story, .atlantic-meta, .atlantic-service, .atlantic-related,
+    .paris-hero, .paris-story, .paris-meta, .paris-service, .paris-related,
+    .visagist-hero, .visagist-intro, .visagist-faq, .visagist-related,
+    .stylist-hero, .stylist-collaboration, .stylist-cta, .stylist-related,
+    .mistakes-article, .pricing, .advice-shell, .proofing-shell,
+    .legal-hero, .legal-layout, .church-wrap,
+    .contact-shell, .contact-context, .tfp-hero, .tfp-intro, .tfp-details, .tfp-board,
+    .secure-copy, .secure-mail-cta, .secure-featured, .standesamt-finder,
+    .journal-article, .strasbourg-hero, .strasbourg-intro,
+    .strasbourg-story, .strasbourg-gallery-intro,
+    .migrated-article:not(.is-luminance),
+    .editorial-review, .story-language-cta
+  ) {
+    width: min(var(--content-frame-width), 100%);
+    max-width: none;
+    margin-inline: auto;
+  }
+
+  /* These are inner sections of an already bounded frame. */
+  html:root main :is(
+    .prose-frame, .proofing-text-section, .screen-next, .church-reader, .church-guide-body,
+    .church-portrait-body, .church-explainer, .church-cta,
+    .wedding-copy__inner, .lovebirds-copy__inner,
+    .editorial-story__copy, .destination-story__copy--single,
+    .journal-article .article-flow, .migrated-content,
+    .home-standesamt-feature__card, .planning-grid, .planning-section__intro,
+    .hotel-suite-intro .hotel-suite-copy, .fraser-copy__body,
+    .pricing-section-heading, .nd-filter-table__copy,
+    .migrated-gallery, .migrated-funnel
+  ) {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+  }
+
+  html:root main .migrated-gallery > :is(div, h2, .migrated-kicker) {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    transform: none;
+  }
+  html:root main .migrated-hero.has-no-image {
+    width: 100%;
+    max-width: none;
+  }
+  html:root main .migrated-article.is-luminance .migrated-content {
+    width: 100%;
+  }
+  html:root main .migrated-article.is-luminance .luminance-download {
+    width: 100%;
+    max-width: none;
+  }
+  html:root main .proofing-print-planning {
+    padding-inline: 0;
+    background: transparent;
+    border-top: 1px solid var(--line);
+  }
+  html:root main .wedding-copy,
+  html:root main .lovebirds-copy {
+    padding-inline: clamp(24px, 3vw, 48px);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Balance prose between headings, so the reading order stays local to each
+     section rather than running down one very long newspaper column. */
+  html:root main :is(
+    .section-prose, .proofing-text-section .proofing-section-copy,
+    .fraser-copy, .bridal-intro, .strasbourg-intro,
+    .hotel-suite-intro .hotel-suite-copy, .nd-filter-table__copy,
+    .editorial-story__copy, .destination-story__copy--single,
+    .wedding-copy__inner, .lovebirds-copy__inner > section,
+    .migrated-article:not(.is-luminance) .migrated-content > div
+  ) {
+    column-count: 2;
+    column-gap: clamp(40px, 5vw, 80px);
+    orphans: 3;
+    widows: 3;
+  }
+  html:root main .destination-story__copy--single {
+    display: block;
+  }
+  html:root main :is(
+    .section-prose, .proofing-text-section .proofing-section-copy,
+    .fraser-copy, .bridal-intro, .strasbourg-intro,
+    .wedding-copy__inner, .lovebirds-copy__inner > section,
+    .migrated-content, .nd-filter-table__copy
+  ) :is(h2, h3) {
+    column-span: all;
+    break-after: avoid-column;
+  }
+  html:root main :is(
+    .proofing-text-section .proofing-section-copy,
+    .fraser-copy, .bridal-intro, .strasbourg-intro,
+    .wedding-copy__inner, .lovebirds-copy__inner > section,
+    .editorial-story__copy, .destination-story__copy--single
+  ) p {
+    margin-top: 0;
+  }
+
+  /* Directory, contact and guide layouts use two complete content groups,
+     keeping lists, forms and disclosure controls intact. */
+  html:root main :is(.church-portrait-body .church-booking, .church-explainer) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 64px;
+    align-items: start;
+  }
+  html:root main .church-explainer > div + div {
+    margin-top: 0;
+  }
+  html:root main .church-portrait-body .church-booking > .church-contact,
+  html:root main .church-portrait-body .church-booking > .church-evidence,
+  html:root main .church-portrait-body .church-booking > .church-sources {
+    grid-column: 1;
+  }
+  html:root main .church-portrait-body .church-booking > .church-questions {
+    grid-column: 2;
+    grid-row: 1 / span 4;
+  }
+  html:root main .church-directory {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 64px;
+    align-items: start;
+  }
+  html:root main .church-question__answer {
+    max-width: none;
+    columns: 24rem 2;
+    column-gap: 48px;
+  }
+  html:root main .church-guide-body .church-section {
+    columns: 2;
+    column-gap: 64px;
+  }
+  html:root main .church-guide-body .church-section > :is(h2, .church-eyebrow) {
+    column-span: all;
+  }
+  html:root main .church-guide-body .church-section > p {
+    max-width: none;
+  }
+  html:root main .church-journey > li {
+    break-inside: avoid-column;
+  }
+  html:root main .church-filter {
+    grid-template-columns: minmax(0, 2fr) repeat(2, minmax(0, 1fr));
+  }
+  html:root main .church-filter > div:first-child {
+    grid-column: auto;
+  }
+
+  html:root main :is(.screen-next, .wedding-category-guide, .mallorca-copy) {
+    text-align: left;
+  }
+  html:root main :is(.screen-next, .wedding-category-guide, .mallorca-copy) > p {
+    max-width: 72ch;
+  }
+  html:root main .journal-article .article-flow p {
+    max-width: none;
+  }
+  html:root main .journal-article .article-section {
+    columns: 2;
+    column-gap: 64px;
+  }
+  html:root main .journal-article .article-section > h2 {
+    column-span: all;
+  }
+  html:root main :is(.pricing-section-heading, .planning-section__intro) {
+    display: grid;
+    grid-template-columns: minmax(0, .7fr) minmax(0, 1fr);
+    gap: 0 clamp(40px, 6vw, 100px);
+    text-align: left;
+  }
+  html:root main :is(.pricing-section-heading, .planning-section__intro) > :is(.pricing-kicker, .eyebrow) {
+    grid-column: 1;
+  }
+  html:root main :is(.pricing-section-heading, .planning-section__intro) > h2 {
+    grid-column: 1;
+    grid-row: 2 / span 3;
+  }
+  html:root main :is(.pricing-section-heading, .planning-section__intro) > p:not(.pricing-kicker):not(.eyebrow) {
+    grid-column: 2;
+    max-width: none;
+    margin-inline: 0;
+  }
+  html:root main .planning-section__intro h2::after {
+    margin-inline: 0;
+  }
+}
