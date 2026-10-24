@@ -42,4 +42,7 @@
     grid-column: auto;
     padding: 0;
   }
+  .article-surface.content-gallery .overlay-copy {
+    margin-inline: 0;
+  }
 }
