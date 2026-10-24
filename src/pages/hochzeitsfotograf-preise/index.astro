@@ -444,14 +444,8 @@ const schemaGraph = {
             <h2 id="packages-title">Pakete und Leistungen im Überblick</h2>
             <p>{weddingBookingHoursRule}</p>
           </div>
-          <aside class="pricing-delivery" aria-labelledby="delivery-title">
-            <h3 id="delivery-title">Bildübergabe &amp; Bearbeitungszeit</h3>
-            <p>{deliveryNotes.timing}</p>
-            <p>{deliveryNotes.exception}</p>
-            <p>{deliveryNotes.retouch}</p>
-          </aside>
           <div class="pricing-package-grid">
-            {packages.map((item) => (
+            {packages.map((item, index) => (
               <article
                 class={`pricing-package is-${item.imageOrientation}`}
                 id={`paket-${item.id}`}
@@ -464,8 +458,8 @@ const schemaGraph = {
                 <figure aria-label={`${item.name} Beispielbild`}>
                   <Image
                     src={item.image}
-                    widths={[240, 323, 520, 760].filter((width) => width <= item.image.width)}
-                    sizes="(max-width: 387px) calc(100vw - 84px), 323px"
+                    widths={[323, 420, 640, 840].filter((width) => width <= item.image.width)}
+                    sizes="(max-width: 620px) calc(100vw - 56px), (max-width: 1099px) 360px, 420px"
                     format="webp"
                     quality={88}
                     loading="lazy"
@@ -473,6 +467,7 @@ const schemaGraph = {
                   />
                 </figure>
                 <div class="pricing-package__body">
+                  <p class="pricing-package__index"><span aria-hidden="true">0{index + 1} / </span>{item.duration}</p>
                   <h3 id={`paket-${item.id}-name`}>{item.name}</h3>
                   <p class="pricing-package__price" id={`paket-${item.id}-title`}>{item.priceLabel}</p>
                   {item.showIntro !== false && <p id={`paket-${item.id}-intro`}>{item.intro}</p>}
@@ -484,6 +479,17 @@ const schemaGraph = {
               </article>
             ))}
           </div>
+          <aside class="pricing-delivery" aria-labelledby="delivery-title">
+            <div>
+              <p class="pricing-kicker">Nach eurer Hochzeit</p>
+              <h3 id="delivery-title">Bildübergabe &amp; Bearbeitungszeit</h3>
+            </div>
+            <div class="pricing-copy">
+              <p>{deliveryNotes.timing}</p>
+              <p>{deliveryNotes.exception}</p>
+              <p>{deliveryNotes.retouch}</p>
+            </div>
+          </aside>
         </section>
 
         <div class="pricing-price-context" id="preisgestaltung">
@@ -787,7 +793,7 @@ const schemaGraph = {
 </script>
 
 <style>
-  :global(.pricing-page) { --pricing-paper: #f5f2ed; --pricing-text: #44484e; }
+  :global(.pricing-page) { --pricing-paper: #fff; --pricing-text: #44484e; background: #fff; }
   :global(.pricing-page .gallery-nav--stacked) { padding: 28px 0 30px; }
   :global(.pricing-page .site-breadcrumb) { margin-top: 12px; margin-bottom: 0; }
   .pricing { width: min(1180px, calc(100% - clamp(64px, 12vw, 180px))); margin: 0 auto; padding: clamp(36px, 5vw, 72px) 0 100px; }
@@ -820,19 +826,28 @@ const schemaGraph = {
   .pricing-text-link, .pricing-example__links a, .pricing-related a { color: var(--pricing-text); text-underline-offset: 5px; line-height: 1.6; }
   .pricing-text-link { display: inline-block; padding: 8px 0; font-size: 17px; }
   .pricing-section-heading { max-width: 760px; margin: 0 auto 46px; text-align: center; }
-  .pricing-packages { position: relative; padding: clamp(38px, 5vw, 70px) clamp(24px, 3vw, 42px); background: var(--pricing-paper); }
-  .pricing-delivery { display: grid; gap: 12px; margin: 0 0 46px; padding: clamp(20px, 3vw, 32px); border: 1px solid #d5d0c8; background: #fff; }
-  .pricing-delivery h3 { font-size: clamp(24px, 2.2vw, 30px); }
-  .pricing-delivery p { margin: 0; color: var(--pricing-text); font-size: 18px; line-height: 1.65; }
-  .pricing-package-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(26px, 3.2vw, 46px); }
-  .pricing-package { min-width: 0; }
-  .pricing-package figure { margin: 0 auto 28px; width: 100%; max-width: 323px; background: #e8e3dc; }
+  .pricing-packages { position: relative; background: #fff; }
+  .pricing-packages > .pricing-section-heading { margin-bottom: clamp(54px, 7vw, 90px); }
+  .pricing-delivery { display: grid; grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: clamp(35px, 7vw, 100px); margin-top: clamp(70px, 8vw, 110px); }
+  .pricing-delivery h3 { max-width: 350px; font-size: clamp(28px, 2.8vw, 38px); line-height: 1.3; }
+  .pricing-delivery .pricing-copy { font-size: 18px; }
+  .pricing-delivery .pricing-copy p:last-child { margin-bottom: 0; }
+  .pricing-package-grid { display: grid; gap: clamp(70px, 8vw, 110px); }
+  .pricing-package { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(40px, 6vw, 90px); align-items: start; min-width: 0; padding-top: clamp(40px, 5vw, 64px); border-top: 1px solid #dedbd5; }
+  .pricing-package:nth-child(even) { grid-template-columns: minmax(0, 1.2fr) minmax(0, .8fr); }
+  .pricing-package:nth-child(even) figure { order: 2; }
+  .pricing-package figure { margin: 0; width: 100%; max-width: 420px; background: #fff; }
   .pricing-package figure :global(img) { display: block; width: 100%; height: auto; object-fit: contain; }
-  .pricing-package__body h3 { min-height: 2.5em; font-size: clamp(23px, 2vw, 29px); line-height: 1.25; text-align: center; }
-  .pricing-package__price { margin: 18px 0 24px; padding-bottom: 24px; border-bottom: 1px solid #d5d0c8; color: var(--pricing-text); font-size: clamp(24px, 2.25vw, 32px); line-height: 1.4; text-align: center; }
-  .pricing-package__body > p:not(.pricing-package__price) { color: var(--pricing-text); font-size: 17px; line-height: 1.55; margin: 0 0 20px; }
-  .pricing-package ul { display: grid; gap: 10px; padding: 0; margin: 0; list-style: none; color: var(--pricing-text); font-family: "Gilda Display", Georgia, serif; font-size: 17px; line-height: 1.55; }
-  .pricing-package__contact { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; margin-top: 28px; padding: 12px 0; border-top: 1px solid #d5d0c8; color: var(--pricing-text); font-size: 16px; text-decoration: none; }
+  .pricing-package__body { min-width: 0; }
+  .pricing-package__index { margin: 0 0 22px; color: #68655f; font-family: "Raleway", Arial, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .17em; line-height: 1.6; text-transform: uppercase; }
+  .pricing-package__index span { margin-right: 10px; }
+  .pricing-package__body h3 { max-width: 560px; font-size: clamp(34px, 3.3vw, 46px); line-height: 1.18; letter-spacing: -.025em; }
+  .pricing-package__price { margin: 18px 0 26px; color: var(--pricing-text); font-size: clamp(27px, 2.4vw, 34px); line-height: 1.35; }
+  .pricing-package__body > p:not(.pricing-package__price):not(.pricing-package__index) { max-width: 480px; color: var(--pricing-text); font-size: 19px; line-height: 1.65; margin: 0 0 28px; }
+  .pricing-package ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 30px; padding: 0; margin: 0; list-style: none; color: var(--pricing-text); font-family: "Gilda Display", Georgia, serif; font-size: 17px; line-height: 1.6; }
+  .pricing-package li { padding-top: 12px; border-top: 1px solid #eeece8; }
+  .pricing-package__contact { display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-height: 48px; margin-top: 30px; padding: 12px 0; border-bottom: 1px solid #8a8278; color: var(--pricing-text); font-family: "Raleway", Arial, sans-serif; font-size: 10px; font-weight: 600; letter-spacing: .13em; line-height: 1.6; text-decoration: none; text-transform: uppercase; }
+  .pricing-package__contact:hover { border-color: var(--pricing-text); }
   .pricing-package__contact span { font-family: Arial, sans-serif; }
   .pricing :global(.editorial-review) { width: 100%; background: var(--pricing-paper); }
   .pricing :global(.editorial-review blockquote p) { overflow-wrap: break-word; }
@@ -892,13 +907,12 @@ const schemaGraph = {
     .pricing-hero__copy { max-width: 640px; margin: 0 auto; }
     .pricing-hero__actions { justify-content: center; }
     .pricing-hero__image { max-width: 400px; }
-    .pricing-intro, .pricing-split { grid-template-columns: 1fr; gap: 28px; }
-    .pricing-package-grid { grid-template-columns: 1fr; gap: 60px; }
-    .pricing-package { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1fr); gap: 32px; align-items: start; }
-    .pricing-package figure { margin: 0; }
-    .pricing-package__body h3 { min-height: 0; font-size: 28px; text-align: left; }
-    .pricing-package__price { text-align: left; }
-    .pricing-package ul { font-size: 17px; }
+    .pricing-intro, .pricing-split, .pricing-delivery { grid-template-columns: 1fr; gap: 28px; }
+    .pricing-package, .pricing-package:nth-child(even) { grid-template-columns: minmax(0, .7fr) minmax(0, 1fr); gap: 36px; }
+    .pricing-package:nth-child(even) figure { order: 0; }
+    .pricing-package figure { max-width: 360px; }
+    .pricing-package__body h3 { font-size: 34px; }
+    .pricing-package ul { grid-template-columns: 1fr; gap: 10px; }
     .pricing-faq { grid-template-columns: 1fr; }
     .pricing-faq__media { width: min(323px, 75%); margin: 0 auto; }
   }
@@ -908,7 +922,7 @@ const schemaGraph = {
   }
   @media (max-width: 620px) {
     .pricing { width: calc(100% - 56px); padding-top: 30px; padding-bottom: 70px; }
-    .pricing-hero, .pricing-intro, .pricing-split, .pricing-package-grid, .pricing-example-grid, .pricing-faq { grid-template-columns: 1fr; }
+    .pricing-hero, .pricing-intro, .pricing-split, .pricing-delivery, .pricing-package, .pricing-package:nth-child(even), .pricing-example-grid, .pricing-faq { grid-template-columns: 1fr; }
     .pricing-hero { gap: 34px; text-align: center; }
     .pricing h1 { font-size: clamp(31px, 8.6vw, 46px); line-height: 1.2; letter-spacing: -.045em; }
     .pricing h2 { font-size: 32px; }
@@ -918,13 +932,15 @@ const schemaGraph = {
     .pricing-hero__image { max-width: 350px; }
     .pricing-toc { justify-content: center; gap: 4px 20px; }
     .pricing-toc a { font-size: 16px; }
-    .pricing-intro, .pricing-split { gap: 24px; }
-    .pricing-packages { margin-inline: -4px; padding: 34px 18px; }
-    .pricing-package-grid { gap: 54px; }
-    .pricing-package figure { width: min(100%, 330px); }
-    .pricing-package__body h3 { min-height: 0; font-size: 29px; }
+    .pricing-intro, .pricing-split, .pricing-delivery { gap: 24px; }
+    .pricing-package-grid { gap: 64px; }
+    .pricing-package { gap: 34px; padding-top: 34px; }
+    .pricing-package figure { max-width: 400px; margin: 0 auto; }
+    .pricing-package:nth-child(even) figure { order: 0; }
+    .pricing-package__body h3 { font-size: 36px; }
     .pricing-package__price { font-size: 30px; }
-    .pricing-package ul, .pricing-package__body > p:not(.pricing-package__price) { font-size: 18px; }
+    .pricing-package ul { grid-template-columns: 1fr; gap: 10px; font-size: 18px; }
+    .pricing-package__body > p:not(.pricing-package__price):not(.pricing-package__index) { font-size: 18px; }
     .pricing :global(.editorial-review) { padding: 30px 18px; }
     .pricing :global(.editorial-review__slide) { padding: 24px 18px; }
     .pricing-calculator { grid-template-columns: 1fr; padding: 26px 20px; gap: 26px; }
