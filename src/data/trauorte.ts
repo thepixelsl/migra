@@ -410,16 +410,16 @@ const researchedTrauorte: Trauort[] = [
       city: "Hamburg",
     },
     bookingMode: "standesamt-and-venue",
-    bookingModeLabel: "Standesamt plus RathausService",
+    bookingModeLabel: "Online-Traukalender und RathausService",
     status: "on-request",
     statusLabel: "Besondere Termine",
     bookingSteps: [
       {
         actor: "standesamt",
-        label: "Trautermin anfragen",
+        label: "Trautermin online reservieren",
         description:
-          "Verfügbarkeit ausschließlich beim Standesamt Hamburg-Mitte prüfen.",
-        url: "https://www.hamburg.de/politik-und-verwaltung/senat/rathaus-hamburg/heiraten-im-rathaus-238502",
+          "Im Hamburger Traukalender das Standesamt Hamburg-Mitte wählen und die verfügbaren Rathaus-Termine prüfen.",
+        url: hamburgCalendarUrl,
       },
       {
         actor: "venue",
@@ -430,20 +430,26 @@ const researchedTrauorte: Trauort[] = [
       },
     ],
     ceremonyDays:
-      "Trauungen finden nur an besonders veröffentlichten Terminen statt; aktuelle Verfügbarkeit beim Standesamt Hamburg-Mitte prüfen.",
-    authorityFee: "300 € für die Trauung, zusätzlich zu den regulären Gebühren.",
-    venueFee: "200 € für die Raumnutzung durch den RathausService.",
+      "Trauungen an den amtlich veröffentlichten Freitagen; freie Zeitfenster und Freischaltung im Online-Traukalender prüfen.",
+    reservationWindow:
+      "Für spätere Termine 2027, insbesondere November und Dezember, öffnet das Buchungsfenster ein Jahr vor dem jeweiligen Datum.",
+    authorityFee: "322,40 € für die Trauung, zusätzlich zu Anmeldung und Urkunden.",
+    venueFee: "300 € gesondertes Nutzungsentgelt des RathausService.",
     officialAuthorityUrl:
       "https://www.hamburg.de/politik-und-verwaltung/senat/rathaus-hamburg/heiraten-im-rathaus-238502",
-    bookingUrl:
-      "https://www.hamburg.de/politik-und-verwaltung/senat/rathaus-hamburg/heiraten-im-rathaus-238502",
+    bookingUrl: hamburgCalendarUrl,
     sources: [
       {
         label: "Hamburger Rathaus",
         url: "https://www.hamburg.de/politik-und-verwaltung/senat/rathaus-hamburg/heiraten-im-rathaus-238502",
       },
+      { label: "Hamburger Traukalender", url: hamburgCalendarUrl },
+      {
+        label: "Amtliche Rathaus-Termine 2027",
+        url: "https://www.hamburg.de/politik-und-verwaltung/behoerden/senatskanzlei/aktuelles/pressemeldungen/heiraten-im-hamburger-rathaus-hochzeitstermine-fuer-2027-1228548",
+      },
     ],
-    lastVerified: "2026-07-31",
+    lastVerified: "2026-10-24",
     schemaType: "EventVenue",
     includeInSchema: true,
   },
