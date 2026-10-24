@@ -3,6 +3,8 @@ import FaviconHead from './FaviconHead.astro';
 import MobileNavigation from './MobileNavigation.astro';
 import DesktopNavigation from './DesktopNavigation.astro';
 import '../styles/global.css';
+// Also apply the gallery widths to previews built before the Hub update is installed.
+import '../styles/hub-gallery-layout.css';
 const { entry } = Astro.props;
 const canonical = new URL(entry.path, Astro.site || 'https://artbild-fotografie.de/').href;
 const image = entry.heroImage ? new URL(entry.heroImage.src, canonical).href : undefined;
