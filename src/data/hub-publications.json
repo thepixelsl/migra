@@ -1,5 +1,51 @@
 [
   {
+    "id": "05b46b1a-2c0c-44b2-8562-1ed89173ff51",
+    "kind": "webstory",
+    "path": "/web-stories/paarshooting/",
+    "type": "webstory",
+    "showInPortfolio": false,
+    "title": "Paarshooting in Hamburg",
+    "metaTitle": "Paarshooting in Hamburg – Hafenliebe",
+    "description": "Erleben Sie die schönsten Momente bei einem Paarshooting in Hamburg am Hafen. Halten Sie Ihre Liebe und Erinnerungen lebendig mit stimmungsvollen Fotos.",
+    "category": "Web Story",
+    "datePublished": "2026-10-24T08:05:27.455Z",
+    "dateModified": "2026-10-24T10:37:19.381Z",
+    "heroImage": {
+      "id": "5f6a96da-0657-44b4-b0da-0ccf0c879bdb",
+      "src": "/hub-assets/05b46b1a-2c0c-44b2-8562-1ed89173ff51/poster.jpg",
+      "alt": "Paar in inniger Umarmung vor der Elbphilharmonie in Hamburg, der Mann hebt die Frau, beide lächeln sich an.",
+      "caption": "",
+      "location": "Kehrwiederspitze",
+      "focus": 50,
+      "width": 720,
+      "height": 960
+    }
+  },
+  {
+    "id": "b99f6814-ec77-468e-969a-3ce735527164",
+    "kind": "gallery",
+    "path": "/gallery/brautpaar-le-meridien-hamburg/",
+    "type": "gallery",
+    "showInPortfolio": true,
+    "title": "Hochzeit im Le Méridien",
+    "metaTitle": "Elopement Wedding Editorial im Le Méridien Hamburg",
+    "description": "Brautpaarshooting bei schlechtem Wetter in Hamburg. Es ist immer gut einen Plan B zu haben. Ich zeige Euch eine elegante und smarte Möglichkeit.",
+    "category": "Hochzeit",
+    "datePublished": "2026-10-23T05:21:52.361Z",
+    "dateModified": "2026-10-24T10:37:30.860Z",
+    "heroImage": {
+      "id": "1af0add0-375e-4395-acc0-05fed78920b4",
+      "src": "/hub-assets/b99f6814-ec77-468e-969a-3ce735527164/brautpaar-le-meridien-hamburg-9f9566a02b7ab15a.webp",
+      "alt": "Bräutigam trägt lachend die Braut im weißen Hochzeitskleid auf einem Bett in einem modernen Hotelzimmer im Le Meridien Hamburg.",
+      "caption": "",
+      "location": "Le Meridien Hamburg",
+      "focus": 50,
+      "width": 2000,
+      "height": 1333
+    }
+  },
+  {
     "id": "ce04ba82-9303-47be-b34e-2ecd3f708e6a",
     "kind": "webstory",
     "path": "/web-stories/eppendorf/",
@@ -10,7 +56,7 @@
     "description": "Fotoshooting und Editorial Shootings in Hamburg-Eppendorf mit professionellem Styling und Make-up, ideal für individuelle Portraitbilder und Look-Veränderungen.",
     "category": "Web Story",
     "datePublished": "2026-10-10T10:39:43.037Z",
-    "dateModified": "2026-10-22T20:17:19.411Z",
+    "dateModified": "2026-10-24T10:37:32.874Z",
     "heroImage": {
       "id": "d38651ca-f501-4dd3-bf87-fa70874953c9",
       "src": "/hub-assets/ce04ba82-9303-47be-b34e-2ecd3f708e6a/poster.jpg",
