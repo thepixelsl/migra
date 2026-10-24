@@ -10,7 +10,7 @@
     "description": "Fotoshooting und Editorial Shootings in Hamburg-Eppendorf mit professionellem Styling und Make-up, ideal für individuelle Portraitbilder und Look-Veränderungen.",
     "category": "Web Story",
     "datePublished": "2026-10-10T10:39:43.037Z",
-    "dateModified": "2026-10-22T20:17:19.411Z",
+    "dateModified": "2026-10-24T03:47:56.829Z",
     "heroImage": {
       "id": "d38651ca-f501-4dd3-bf87-fa70874953c9",
       "src": "/hub-assets/ce04ba82-9303-47be-b34e-2ecd3f708e6a/poster.jpg",
@@ -20,6 +20,29 @@
       "focus": 50,
       "width": 720,
       "height": 960
+    }
+  },
+  {
+    "id": "b99f6814-ec77-468e-969a-3ce735527164",
+    "kind": "gallery",
+    "path": "/gallery/brautpaar-le-meridien-hamburg/",
+    "type": "gallery",
+    "showInPortfolio": true,
+    "title": "Hochzeit im Le Méridien",
+    "metaTitle": "Elopement Wedding Editorial im Le Méridien Hamburg",
+    "description": "Brautpaarshooting bei schlechtem Wetter in Hamburg. Es ist immer gut einen Plan B zu haben. Ich zeige Euch eine elegante und smarte Möglichkeit.",
+    "category": "Hochzeit",
+    "datePublished": "2026-10-23T05:21:52.361Z",
+    "dateModified": "2026-10-24T03:48:08.956Z",
+    "heroImage": {
+      "id": "1af0add0-375e-4395-acc0-05fed78920b4",
+      "src": "/hub-assets/b99f6814-ec77-468e-969a-3ce735527164/brautpaar-le-meridien-hamburg-9f9566a02b7ab15a.webp",
+      "alt": "Bräutigam trägt lachend die Braut im weißen Hochzeitskleid auf einem Bett in einem modernen Hotelzimmer im Le Meridien Hamburg.",
+      "caption": "",
+      "location": "Le Meridien Hamburg",
+      "focus": 50,
+      "width": 2000,
+      "height": 1333
     }
   }
 ]
