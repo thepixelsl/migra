@@ -829,7 +829,7 @@ const schemaGraph = {
   }
 
   .contact-page main {
-    width: min(1080px, calc(100% - 40px));
+    width: min(calc(1080px + var(--desktop-width-extra, 0px)), calc(100% - 40px));
     margin: 0 auto;
     padding: clamp(26px, 5vw, 70px) 0 clamp(76px, 9vw, 132px);
   }
@@ -1198,7 +1198,7 @@ const schemaGraph = {
   }
 
   .contact-footer {
-    width: min(1080px, calc(100% - 40px));
+    width: min(calc(1080px + var(--desktop-width-extra, 0px)), calc(100% - 40px));
     margin: 0 auto;
     padding: 26px 0 44px;
     display: flex;

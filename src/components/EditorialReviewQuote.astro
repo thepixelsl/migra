@@ -298,7 +298,7 @@ const reviewSlides = reviews.filter(Boolean);
     --review-bronze: #966a49;
     --review-surface: rgb(255 255 255 / .66);
     --review-border: rgb(70 62 54 / .1);
-    width: min(1180px, calc(100% - 44px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(76px, 9vw, 132px) auto;
     padding: clamp(42px, 5vw, 68px) clamp(24px, 4.5vw, 58px);
     display: grid;

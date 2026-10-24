@@ -1,7 +1,7 @@
 /* Léon-inspired white canvas, with related information kept in one reading column. */
 .church-page{--church-paper:#fff;--church-ink:#252525;--church-muted:#606060;--church-line:#dededb;--church-accent:#4d4d49;background:#fff;color:var(--church-ink);font:16px/1.8 Raleway,Arial,sans-serif}
 .church-page .gallery-header{background:#fff}
-.church-page .site-breadcrumb{width:min(1080px,calc(100% - 96px));color:var(--church-muted);font-size:10px;line-height:1.8}
+.church-page .site-breadcrumb{width:min(calc(1080px + var(--desktop-width-extra, 0px)),calc(100% - 96px));color:var(--church-muted);font-size:10px;line-height:1.8}
 .church-page h1,.church-page h2,.church-page h3,.church-page h4{font-family:'Gilda Display',Georgia,serif;font-weight:400;line-height:1.2;margin:0 0 22px;letter-spacing:0;overflow-wrap:break-word}
 .church-page h1{font-size:clamp(46px,5.4vw,76px)}
 .church-page h2{font-size:clamp(32px,3.5vw,46px)}
@@ -9,7 +9,7 @@
 .church-page p{margin:0 0 20px}.church-page a{text-underline-offset:5px;text-decoration-thickness:1px}.church-page a:hover{color:var(--church-accent)}
 .church-page :is(a,button,input,select,summary):focus-visible{outline:2px solid #555;outline-offset:5px}
 .church-page [hidden]{display:none!important}.church-skip{position:absolute;left:20px;top:-150px;z-index:10000;background:white;padding:16px}.church-skip:focus{top:12px}
-.church-wrap{width:min(1080px,calc(100% - 96px));margin-inline:auto}
+.church-wrap{width:min(calc(1080px + var(--desktop-width-extra, 0px)),calc(100% - 96px));margin-inline:auto}
 .church-reader,.church-guide-body,.church-portrait-body{width:min(100%,780px);margin-inline:auto}
 .church-eyebrow{font:600 10px/1.8 Raleway,Arial,sans-serif!important;letter-spacing:.2em;text-transform:uppercase;color:var(--church-muted);margin-bottom:24px!important}
 .church-hero{padding:80px 0 100px;text-align:center}.church-hero h1{max-width:900px;margin:0 auto 28px}.church-hero h1 span{display:block}

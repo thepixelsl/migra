@@ -367,7 +367,7 @@ const schemaGraph = {
   }
 
   .wedding-category-intro {
-    width: min(1040px, calc(100% - 44px));
+    width: min(calc(1040px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(72px, 8vw, 124px) auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -399,7 +399,7 @@ const schemaGraph = {
   }
 
   .wedding-overview-grid {
-    width: min(1120px, calc(100% - 44px));
+    width: min(calc(1120px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(82px, 9vw, 142px) auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

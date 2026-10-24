@@ -492,7 +492,7 @@ const schemaGraph = {
   }
 
   .altona-hero {
-    width: min(1080px, calc(100% - 44px));
+    width: min(calc(1080px + var(--desktop-gallery-extra, 0px)), calc(100% - 44px));
     margin: 0 auto;
     text-align: center;
   }
@@ -526,7 +526,7 @@ const schemaGraph = {
   }
 
   .altona-hero__intro {
-    width: min(760px, 100%);
+    width: min(calc(760px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 28px auto 0;
     color: #69635d;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -535,7 +535,7 @@ const schemaGraph = {
   }
 
   .altona-story {
-    width: min(1120px, calc(100% - 52px));
+    width: min(calc(1120px + var(--desktop-gallery-extra, 0px)), calc(100% - 52px));
     margin: clamp(86px, 9vw, 132px) auto 0;
     padding: clamp(54px, 6vw, 84px);
     background: #f4f1ed;
@@ -553,7 +553,7 @@ const schemaGraph = {
   }
 
   .altona-story h2 {
-    width: min(820px, 100%);
+    width: min(calc(820px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 20px 0 38px;
     color: #292c35;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -652,7 +652,7 @@ const schemaGraph = {
   }
 
   .altona-meta {
-    width: min(1170px, calc(100% - 48px));
+    width: min(calc(1170px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin: 46px auto 0;
     padding-top: 24px;
     display: flex;
@@ -696,7 +696,7 @@ const schemaGraph = {
   }
 
   .altona-offer > p:not(.altona-offer__kicker) {
-    width: min(720px, 100%);
+    width: min(calc(720px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 0 auto;
     color: #68625c;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -748,7 +748,7 @@ const schemaGraph = {
   }
 
   .altona-related {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin: 0 auto clamp(100px, 10vw, 148px);
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));

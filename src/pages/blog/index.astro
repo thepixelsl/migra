@@ -231,8 +231,8 @@ const collectionSchema = {
             <Image
               src={trauterminCardImage}
               alt={trauterminCardImageAlt}
-              widths={[420, 640, 900]}
-              sizes="(max-width: 900px) calc(100vw - 40px), 520px"
+              widths={[420, 640, 900, 1280, 1600].filter(width => width <= trauterminCardImage.width)}
+              sizes="(max-width: 900px) calc(100vw - 40px), (min-width: 1441px) min(calc(30vw + 88px), 880px), 520px"
               loading="eager"
               decoding="async"
               format="webp"
@@ -250,7 +250,7 @@ const collectionSchema = {
         </a>
 
         <a class="pinned-post" href="/kirchenfinder-hamburg/" aria-label="Zum Kirchenfinder Hamburg" data-track-event="cta_click" data-cta-id="blog_church_finder" data-cta-type="planning_tool" data-section-id="blog_index" data-content-topic="kirchenfinder_hamburg" data-user-intent="traukirche_finden" data-journey-stage="planung">
-          <span class="pinned-post__media"><Image src={kirchenCardImage} alt="Kirche Alt-Rahlstedt im Gegenlicht" widths={[420,640,900]} sizes="(max-width: 900px) calc(100vw - 40px), 520px" loading="lazy" format="webp" /></span>
+          <span class="pinned-post__media"><Image src={kirchenCardImage} alt="Kirche Alt-Rahlstedt im Gegenlicht" widths={[420,640,900,1280,1600].filter(width => width <= kirchenCardImage.width)} sizes="(max-width: 900px) calc(100vw - 40px), (min-width: 1441px) min(calc(30vw + 88px), 880px), 520px" loading="lazy" format="webp" /></span>
           <span class="pinned-post__body"><span class="pinned-post__label">Kirchlich heiraten</span><strong>Ein Ort für Euer Ja.</strong><span class="pinned-post__description">Kirchen in Hamburg finden, die richtigen Menschen ansprechen und Eure Anmeldung vorbereiten.</span><span class="pinned-post__cta">Zum Kirchenfinder</span></span>
         </a>
 
@@ -313,7 +313,7 @@ const collectionSchema = {
   }
 
   .journal-index {
-    width: min(1140px, calc(100% - 48px));
+    width: min(calc(1140px + var(--desktop-width-extra, 0px)), calc(100% - 48px));
     margin: 0 auto clamp(96px, 12vw, 168px);
     padding: clamp(50px, 7vw, 88px) 0 0;
   }
@@ -385,7 +385,7 @@ const collectionSchema = {
 
   .pinned-post__media {
     display: block;
-    width: min(100%, 520px);
+    width: min(100%, calc(520px + var(--desktop-width-extra, 0px) / 2));
     overflow: hidden;
     justify-self: start;
     background: #f3efe9;
@@ -524,7 +524,7 @@ const collectionSchema = {
 
   .journal-card--color-proofing .journal-card__image {
     width: 100%;
-    max-width: 323px;
+    max-width: calc(323px + var(--desktop-width-extra, 0px) / 4);
     justify-self: center;
   }
 

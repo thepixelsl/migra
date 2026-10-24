@@ -351,7 +351,7 @@ const schemaGraph = {
 
   .secure-breadcrumb,
   .secure-contact {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 48px));
     margin-inline: auto;
   }
 
@@ -674,7 +674,7 @@ const schemaGraph = {
 
   .secure-hero {
     position: relative;
-    width: min(1180px, calc(100% - 140px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 140px));
     min-height: clamp(420px, 36vw, 520px);
     margin: 0 auto;
     padding: 0;
@@ -733,7 +733,7 @@ const schemaGraph = {
   }
 
   .secure-copy {
-    width: min(1180px, calc(100% - 140px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 140px));
     margin: 0 auto;
     padding: clamp(64px, 7vw, 96px) clamp(46px, 4.8vw, 72px) clamp(72px, 8vw, 112px);
   }
@@ -807,7 +807,7 @@ const schemaGraph = {
   }
 
   .secure-mail-cta {
-    width: min(1180px, calc(100% - 140px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 140px));
     margin: 0 auto;
     padding: clamp(56px, 7vw, 88px) clamp(46px, 5vw, 76px);
     display: grid;
@@ -857,7 +857,7 @@ const schemaGraph = {
   }
 
   .secure-featured {
-    width: min(1180px, calc(100% - 140px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 140px));
     margin: clamp(62px, 8vw, 112px) auto 0;
     display: grid;
     grid-template-columns: minmax(0, 1.16fr) minmax(0, .84fr);

@@ -228,7 +228,7 @@ const collectionSchema = {
   }
 
   .portfolio-breadcrumb {
-    width: min(1040px, calc(100% - 44px));
+    width: min(calc(1040px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(52px, 6vw, 86px) auto 0;
     display: flex;
     gap: 10px;
@@ -278,7 +278,7 @@ const collectionSchema = {
   }
 
   .portfolio-funnel {
-    width: min(1040px, calc(100% - 44px));
+    width: min(calc(1040px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(120px, 13vw, 210px) auto 0;
     display: grid;
     grid-template-columns: 1fr;

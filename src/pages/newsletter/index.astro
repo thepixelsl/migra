@@ -310,7 +310,7 @@ const schemaGraph = {
   .tfp-hero,
   .tfp-intro,
   .tfp-details {
-    width: min(1240px, calc(100% - 72px));
+    width: min(calc(1240px + var(--desktop-width-extra, 0px)), calc(100% - 72px));
     margin-inline: auto;
   }
 
@@ -516,7 +516,7 @@ const schemaGraph = {
   }
 
   .tfp-board {
-    width: min(1380px, calc(100% - 36px));
+    width: min(calc(1380px + var(--desktop-width-extra, 0px)), calc(100% - 36px));
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(0, 1.08fr) minmax(360px, .92fr);

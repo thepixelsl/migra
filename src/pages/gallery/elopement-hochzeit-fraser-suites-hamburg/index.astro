@@ -478,7 +478,7 @@ const schemaGraph = {
   }
 
   .elopement-hero {
-    width: min(1320px, calc(100% - 72px));
+    width: min(calc(1320px + var(--desktop-gallery-extra, 0px)), calc(100% - 72px));
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(320px, .68fr) minmax(0, 1.32fr);
@@ -536,7 +536,7 @@ const schemaGraph = {
   }
 
   .elopement-intro {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(92px, 9vw, 142px) auto 0;
     padding: clamp(62px, 7vw, 92px);
     display: grid;
@@ -578,7 +578,7 @@ const schemaGraph = {
   }
 
   .elopement-feature {
-    width: min(1180px, calc(100% - 92px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(86px, 9vw, 132px) auto 0;
     display: grid;
     grid-template-columns: minmax(260px, .58fr) minmax(0, .78fr);
@@ -595,7 +595,7 @@ const schemaGraph = {
   }
 
   .elopement-meta {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: 44px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -619,7 +619,7 @@ const schemaGraph = {
   }
 
   .elopement-location {
-    width: min(1180px, calc(100% - 92px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(104px, 10vw, 164px) auto 0;
     display: grid;
     grid-template-columns: minmax(260px, .56fr) minmax(0, 1fr);
@@ -669,7 +669,7 @@ const schemaGraph = {
   }
 
   .elopement-guide {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(100px, 10vw, 152px) auto 0;
     padding: clamp(58px, 7vw, 92px) 0;
     display: grid;
@@ -707,7 +707,7 @@ const schemaGraph = {
   }
 
   .elopement-related {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: 70px auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

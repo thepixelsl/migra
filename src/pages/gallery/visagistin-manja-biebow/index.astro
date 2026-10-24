@@ -415,7 +415,7 @@ const schemaGraph = {
   }
 
   .visagist-breadcrumb {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin: clamp(26px, 4vw, 52px) auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -439,7 +439,7 @@ const schemaGraph = {
   }
 
   .visagist-hero {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin: clamp(44px, 6vw, 82px) auto 0;
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(280px, 0.72fr);
@@ -532,7 +532,7 @@ const schemaGraph = {
   .visagist-intro,
   .visagist-faq,
   .visagist-related {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin: clamp(76px, 9vw, 132px) auto 0;
   }
 

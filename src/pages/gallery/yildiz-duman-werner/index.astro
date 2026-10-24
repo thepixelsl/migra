@@ -361,7 +361,7 @@ const schemaGraph = {
   .stylist-collaboration,
   .stylist-faq,
   .stylist-related {
-    width: min(1180px, calc(100% - 48px));
+    width: min(calc(1180px + var(--desktop-gallery-extra, 0px)), calc(100% - 48px));
     margin-inline: auto;
   }
 
@@ -602,7 +602,7 @@ const schemaGraph = {
   }
 
   .stylist-faq > p.stylist-source-note {
-    max-width: 820px;
+    max-width: calc(820px + var(--desktop-reading-extra, 0px));
     margin: clamp(28px, 3vw, 36px) 0 0;
     font-size: 0.96rem;
     line-height: 1.65;

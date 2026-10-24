@@ -559,7 +559,7 @@ const schemaGraph = {
   .jahrhunderthalle-architecture,
   .jahrhunderthalle-location,
   .jahrhunderthalle-guide {
-    width: min(1320px, calc(100% - 72px));
+    width: min(calc(1320px + var(--desktop-gallery-extra, 0px)), calc(100% - 72px));
     margin-inline: auto;
   }
 
@@ -627,7 +627,7 @@ const schemaGraph = {
   }
 
   .jahrhunderthalle-intro {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(90px, 9vw, 142px) auto 0;
     padding: clamp(58px, 7vw, 92px);
     display: grid;
@@ -699,7 +699,7 @@ const schemaGraph = {
   }
 
   .jahrhunderthalle-meta {
-    width: min(1140px, calc(100% - 72px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 72px));
     margin: 58px auto 0;
     padding-top: 24px;
     border-top: 1px solid #dfd7cf;
@@ -746,7 +746,7 @@ const schemaGraph = {
   }
 
   .jahrhunderthalle-related {
-    width: min(1140px, calc(100% - 72px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 72px));
     margin: 72px auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

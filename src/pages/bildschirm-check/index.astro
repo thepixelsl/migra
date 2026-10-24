@@ -97,7 +97,7 @@ const schema = { "@context": "https://schema.org", "@type": "WebPage", "@id": `$
 </script>
 
 <style>
-  .screen-shell{width:min(1100px,calc(100% - 64px));margin-inline:auto;color:#303030}
+  .screen-shell{width:min(calc(1100px + var(--desktop-width-extra, 0px)),calc(100% - 64px));margin-inline:auto;color:#303030}
   .screen-hero{max-width:810px;margin-inline:auto;padding:70px 0 76px;text-align:center}
   .screen-eyebrow{font-family:"Raleway",Arial,sans-serif;text-transform:uppercase;letter-spacing:.19em;font-size:11px;line-height:1.6;margin:0 0 20px;color:#59544e}
   h1,h2,h3{font-family:"Gilda Display",Georgia,serif;font-weight:400;letter-spacing:-.018em}

@@ -458,8 +458,8 @@ const schemaGraph = {
                 <figure aria-label={`${item.name} Beispielbild`}>
                   <Image
                     src={item.image}
-                    widths={[323, 420, 640, 840].filter((width) => width <= item.image.width)}
-                    sizes="(max-width: 620px) calc(100vw - 56px), 323px"
+                    widths={[323, 420, 640, 840, 1040].filter((width) => width <= item.image.width)}
+                    sizes="(max-width: 620px) calc(100vw - 56px), (min-width: 1441px) min(calc(15vw + 107px), 503px), 323px"
                     format="webp"
                     quality={88}
                     loading="lazy"
@@ -796,7 +796,7 @@ const schemaGraph = {
   :global(.pricing-page) { --pricing-paper: #fff; --pricing-text: #44484e; background: #fff; }
   :global(.pricing-page .gallery-nav--stacked) { padding: 28px 0 30px; }
   :global(.pricing-page .site-breadcrumb) { margin-top: 12px; margin-bottom: 0; }
-  .pricing { width: min(1180px, calc(100% - clamp(64px, 12vw, 180px))); margin: 0 auto; padding: clamp(36px, 5vw, 72px) 0 100px; }
+  .pricing { width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - clamp(64px, 12vw, 180px))); margin: 0 auto; padding: clamp(36px, 5vw, 72px) 0 100px; }
   .pricing section[id], .pricing article[id] { scroll-margin-top: 32px; }
   .pricing-hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(38px, 6vw, 90px); align-items: center; }
   .pricing-hero__copy { min-width: 0; }
@@ -834,7 +834,7 @@ const schemaGraph = {
   .pricing-delivery .pricing-copy p:last-child { margin-bottom: 0; }
   .pricing-package-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(30px, 4vw, 58px); }
   .pricing-package { display: flex; flex-direction: column; min-width: 0; }
-  .pricing-package figure { margin: 0 auto 36px; width: 100%; max-width: 323px; background: #fff; }
+  .pricing-package figure { margin: 0 auto 36px; width: 100%; max-width: calc(323px + var(--desktop-width-extra, 0px) / 4); background: #fff; }
   .pricing-package figure :global(img) { display: block; width: 100%; height: auto; object-fit: contain; }
   .pricing-package__body { display: flex; flex-direction: column; flex: 1; min-width: 0; }
   .pricing-package__index { margin: 0 0 20px; color: #68655f; font-family: "Raleway", Arial, sans-serif; font-size: 10px; font-weight: 500; letter-spacing: .17em; line-height: 1.6; text-align: center; text-transform: uppercase; }

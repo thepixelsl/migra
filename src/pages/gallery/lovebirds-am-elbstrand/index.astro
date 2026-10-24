@@ -387,7 +387,7 @@ const schemaGraph = {
   }
 
   .lovebirds-hero {
-    width: min(1040px, calc(100% - 44px));
+    width: min(calc(1040px + var(--desktop-gallery-extra, 0px)), calc(100% - 44px));
     margin: 0 auto;
     text-align: center;
   }
@@ -420,7 +420,7 @@ const schemaGraph = {
   }
 
   .lovebirds-share {
-    width: min(1140px, calc(100% - 140px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 140px));
     margin: 36px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -447,12 +447,12 @@ const schemaGraph = {
   }
 
   .lovebirds-copy {
-    width: min(1040px, calc(100% - 120px));
+    width: min(calc(1040px + var(--desktop-gallery-extra, 0px)), calc(100% - 120px));
     margin: clamp(110px, 12vw, 170px) auto 0;
   }
 
   .lovebirds-copy__inner {
-    width: min(760px, 100%);
+    width: min(calc(760px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 0 auto;
   }
 
@@ -511,7 +511,7 @@ const schemaGraph = {
   }
 
   .lovebirds-contact {
-    width: min(1140px, calc(100% - 120px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 120px));
     margin: clamp(112px, 12vw, 170px) auto 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
@@ -606,7 +606,7 @@ const schemaGraph = {
   }
 
   .lovebirds-instagram {
-    width: min(760px, calc(100% - 44px));
+    width: min(calc(760px + var(--desktop-reading-extra, 0px)), calc(100% - 44px));
     margin: clamp(102px, 11vw, 160px) auto clamp(96px, 10vw, 142px);
     text-align: center;
   }

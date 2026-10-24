@@ -323,12 +323,12 @@ const schemaGraph = {
   }
 
   .fraser-breadcrumbs {
-    width: min(1500px, calc(100% - 72px));
+    width: min(calc(1500px + var(--desktop-width-extra, 0px)), calc(100% - 72px));
     margin: 0 auto clamp(70px, 8vw, 118px);
   }
 
   .fraser-hero {
-    width: min(1180px, calc(100% - 44px));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: 0 auto;
     text-align: center;
   }
@@ -417,7 +417,7 @@ const schemaGraph = {
   }
 
   .fraser-gallery__heading {
-    width: min(1500px, calc(100% - 72px));
+    width: min(calc(1500px + var(--desktop-width-extra, 0px)), calc(100% - 72px));
     margin: 0 auto clamp(54px, 6vw, 88px);
     text-align: center;
   }

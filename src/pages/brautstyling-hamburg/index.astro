@@ -415,7 +415,7 @@ const schemaGraph = {
   }
 
   .bridal-breadcrumb {
-    width: min(1160px, calc(100% - 44px));
+    width: min(calc(1160px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(48px, 5vw, 78px) auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -435,7 +435,7 @@ const schemaGraph = {
   }
 
   .bridal-hero {
-    width: min(1240px, calc(100% - 72px));
+    width: min(calc(1240px + var(--desktop-width-extra, 0px)), calc(100% - 72px));
     margin: clamp(60px, 7vw, 108px) auto 0;
     display: grid;
     grid-template-columns: minmax(0, 1.03fr) minmax(320px, .86fr);
@@ -521,7 +521,7 @@ const schemaGraph = {
   }
 
   .bridal-vendors {
-    width: min(1180px, calc(100% - clamp(44px, 8vw, 126px)));
+    width: min(calc(1180px + var(--desktop-width-extra, 0px)), calc(100% - clamp(44px, 8vw, 126px)));
     margin: clamp(72px, 8vw, 118px) auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -612,7 +612,7 @@ const schemaGraph = {
   }
 
   .bridal-context {
-    width: min(1080px, calc(100% - 44px));
+    width: min(calc(1080px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(104px, 12vw, 172px) auto 0;
     padding: clamp(46px, 6vw, 82px);
     display: grid;
@@ -630,7 +630,7 @@ const schemaGraph = {
   }
 
   .bridal-faq {
-    width: min(1080px, calc(100% - 44px));
+    width: min(calc(1080px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(88px, 9vw, 136px) auto 0;
   }
 
@@ -660,7 +660,7 @@ const schemaGraph = {
   }
 
   .bridal-related {
-    width: min(1080px, calc(100% - 44px));
+    width: min(calc(1080px + var(--desktop-width-extra, 0px)), calc(100% - 44px));
     margin: clamp(88px, 10vw, 150px) auto 0;
     display: grid;
     border-top: 1px solid #e5ded6;

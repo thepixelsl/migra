@@ -421,7 +421,7 @@ const schemaGraph = {
     color: var(--advice-ink);
   }
 
-  .advice-shell { width: min(1240px, calc(100% - 112px)); margin-inline: auto; }
+  .advice-shell { width: min(calc(1240px + var(--desktop-width-extra, 0px)), calc(100% - 112px)); margin-inline: auto; }
   .advice-page main { padding: 0; }
   .advice-page :is(h1, h2, h3, p, figure, ol) { margin: 0; }
   .advice-page :is(h1, h2, h3) {

@@ -376,7 +376,7 @@ const schemaGraph = {
   }
 
   .mallorca-intro {
-    width: min(720px, 100%);
+    width: min(calc(720px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 26px auto 0;
     color: #655f59;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -385,7 +385,7 @@ const schemaGraph = {
   }
 
   .mallorca-share {
-    width: min(1140px, calc(100% - 140px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 140px));
     margin: 36px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -412,7 +412,7 @@ const schemaGraph = {
   }
 
   .mallorca-copy {
-    width: min(820px, calc(100% - 44px));
+    width: min(calc(820px + var(--desktop-reading-extra, 0px)), calc(100% - 44px));
     margin: clamp(112px, 12vw, 170px) auto 0;
     padding: clamp(48px, 6vw, 82px);
     background: #f3f1ec;
@@ -453,7 +453,7 @@ const schemaGraph = {
   }
 
   .mallorca-instagram {
-    width: min(760px, calc(100% - 44px));
+    width: min(calc(760px + var(--desktop-reading-extra, 0px)), calc(100% - 44px));
     margin: clamp(102px, 11vw, 160px) auto clamp(96px, 10vw, 142px);
     text-align: center;
   }

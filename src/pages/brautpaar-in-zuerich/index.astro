@@ -357,7 +357,7 @@ const schemaGraph = {
   .zurich-hero,
   .zurich-intro,
   .zurich-section {
-    width: min(1140px, calc(100% - 72px));
+    width: min(calc(1140px + var(--desktop-width-extra, 0px)), calc(100% - 72px));
     margin-inline: auto;
   }
 
@@ -467,7 +467,7 @@ const schemaGraph = {
   }
 
   .zurich-meta {
-    width: min(1140px, calc(100% - 48px));
+    width: min(calc(1140px + var(--desktop-width-extra, 0px)), calc(100% - 48px));
     margin: 46px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -523,7 +523,7 @@ const schemaGraph = {
   }
 
   .zurich-related {
-    width: min(1140px, calc(100% - 48px));
+    width: min(calc(1140px + var(--desktop-width-extra, 0px)), calc(100% - 48px));
     margin: 0 auto clamp(100px, 10vw, 150px);
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

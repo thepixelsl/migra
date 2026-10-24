@@ -323,7 +323,7 @@ const schemaGraph = {
   }
 
   .getting-ready-hero {
-    width: min(1260px, calc(100% - 72px));
+    width: min(calc(1260px + var(--desktop-gallery-extra, 0px)), calc(100% - 72px));
     margin: 0 auto;
     display: grid;
     grid-template-columns: minmax(320px, .72fr) minmax(0, 1.28fr);
@@ -378,7 +378,7 @@ const schemaGraph = {
   }
 
   .getting-ready-intro {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(92px, 9vw, 142px) auto 0;
     padding: clamp(62px, 7vw, 92px);
     display: grid;
@@ -411,7 +411,7 @@ const schemaGraph = {
   }
 
   .getting-ready-meta {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: 44px auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -434,7 +434,7 @@ const schemaGraph = {
   }
 
   .getting-ready-guide {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: clamp(100px, 10vw, 152px) auto 0;
     padding: clamp(58px, 7vw, 92px) 0;
     display: grid;
@@ -472,7 +472,7 @@ const schemaGraph = {
   }
 
   .getting-ready-related {
-    width: min(1140px, calc(100% - 92px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 92px));
     margin: 70px auto 0;
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));

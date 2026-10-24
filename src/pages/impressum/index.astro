@@ -359,7 +359,7 @@ const schemaGraph = {
   .legal-breadcrumb,
   .legal-hero,
   .legal-layout {
-    width: min(1120px, calc(100% - 48px));
+    width: min(calc(1120px + var(--desktop-width-extra, 0px)), calc(100% - 48px));
     margin-inline: auto;
   }
 

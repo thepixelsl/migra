@@ -293,7 +293,7 @@ const schemaGraph = {
   }
 
   .travel-breadcrumb {
-    width: min(1140px, calc(100% - 44px));
+    width: min(calc(1140px + var(--desktop-gallery-extra, 0px)), calc(100% - 44px));
     margin: clamp(48px, 5vw, 78px) auto 0;
     display: flex;
     flex-wrap: wrap;
@@ -344,7 +344,7 @@ const schemaGraph = {
   }
 
   .travel-hero p {
-    width: min(720px, 100%);
+    width: min(calc(720px + var(--desktop-reading-extra, 0px)), 100%);
     margin: 30px auto 0;
     color: #625d58;
     font-family: "Gilda Display", "Playfair Display", Georgia, serif;
@@ -353,7 +353,7 @@ const schemaGraph = {
   }
 
   .travel-feature {
-    width: min(1280px, calc(100% - 44px));
+    width: min(calc(1280px + var(--desktop-gallery-extra, 0px)), calc(100% - 44px));
     margin: clamp(58px, 7vw, 98px) auto 0;
     background: #eee9e3;
     overflow: hidden;

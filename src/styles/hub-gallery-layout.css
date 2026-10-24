@@ -1,27 +1,27 @@
 /* Gallery widths match the Speicherstadt / HafenCity photo story.
    Container queries keep the Hub editor and the public page in agreement. */
 .article-surface.content-gallery .article-heading {
-  width: min(1240px, calc(100% - 80px));
+  width: min(calc(1240px + var(--desktop-gallery-extra, 0px)), calc(100% - 80px));
   max-width: none;
   margin-inline: auto;
   padding-inline: 0;
 }
 .article-surface.content-gallery .article-cover {
-  width: min(1240px, calc(100% - 80px));
+  width: min(calc(1240px + var(--desktop-gallery-extra, 0px)), calc(100% - 80px));
   margin: 0 auto 36px;
 }
 .article-surface.content-gallery .content-block {
   padding-inline: 0;
 }
 .article-surface.content-gallery .block-inner {
-  width: min(1100px, calc(100% - 96px));
+  width: min(calc(1100px + var(--desktop-gallery-extra, 0px)), calc(100% - 96px));
   max-width: none;
 }
 .article-surface.content-gallery .width-reading .block-inner {
-  max-width: 690px;
+  max-width: calc(690px + var(--desktop-reading-extra, 0px));
 }
 .article-surface.content-gallery .block-gallery.width-wide .block-inner {
-  width: min(1280px, calc(100% - 64px));
+  width: min(calc(1280px + var(--desktop-gallery-extra, 0px)), calc(100% - 64px));
 }
 .article-surface.content-gallery .gallery-layout-masonry,
 .article-surface.content-gallery .gallery-layout-pairs {
@@ -44,5 +44,23 @@
   }
   .article-surface.content-gallery .overlay-copy {
     margin-inline: 0;
+  }
+}
+
+/* Published Hub entries also carry their saved gallery CSS inline. Keep this
+   website-level desktop sizing effective with previously saved entries. */
+@media (min-width: 1441px) {
+  body .article-surface.content-gallery .article-heading,
+  body .article-surface.content-gallery .article-cover {
+    width: min(calc(1240px + var(--desktop-gallery-extra, 0px)), calc(100% - 80px));
+  }
+  body .article-surface.content-gallery .block-inner {
+    width: min(calc(1100px + var(--desktop-gallery-extra, 0px)), calc(100% - 96px));
+  }
+  body .article-surface.content-gallery .width-reading .block-inner {
+    max-width: calc(690px + var(--desktop-reading-extra, 0px));
+  }
+  body .article-surface.content-gallery .block-gallery.width-wide .block-inner {
+    width: min(calc(1280px + var(--desktop-gallery-extra, 0px)), calc(100% - 64px));
   }
 }
