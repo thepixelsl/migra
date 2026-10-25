@@ -2,5 +2,8 @@
   "key": "a44f12c6665bc2447793b669badc3ada",
   "runtimePaths": [
     "/agenten-test/"
-  ]
+  ],
+  "publicBuildEnv": {
+    "PUBLIC_OPENAI_ADS_PIXEL_ID": "2cAZY96fYjnEsMfeaUPEtH"
+  }
 }

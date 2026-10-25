@@ -21,6 +21,15 @@ export function validModified(value){
  const time=Date.parse(value);return Number.isFinite(time)&&time<=Date.now()?new Date(time).toISOString():null;
 }
 const latest=values=>values.map(validModified).filter(Boolean).sort().at(-1)||null;
+export function publishingBuildEnvironment(config,inherited={}){
+ const saved=config.publicBuildEnv||{};
+ if(!saved||typeof saved!=='object'||Array.isArray(saved))throw Error('Die öffentliche Build-Konfiguration ist ungültig.');
+ for(const [key,value] of Object.entries(saved)){
+  if(key!=='PUBLIC_OPENAI_ADS_PIXEL_ID'||typeof value!=='string'||!/^[A-Za-z0-9_-]{8,100}$/.test(value))throw Error('Die öffentliche Build-Konfiguration enthält ein unzulässiges Feld.');
+  if(inherited[key]!==undefined&&inherited[key]!==value)throw Error('Die öffentliche Build-Konfiguration wurde außerhalb des geprüften Quellstands geändert. Gleiche die Website-Konfiguration vor dem Build ab.');
+ }
+ return {...inherited,...saved};
+}
 function structured(html){
  const values=[];
  for(const m of html.matchAll(/<script\b[^>]*type\s*=\s*["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)){
@@ -43,7 +52,14 @@ export function inspectSeoPage(html,url){
  const schema=structured(html),dates=[];
  function visit(v){if(!v||typeof v!=='object')return;for(const [k,x] of Object.entries(v)){if(k==='dateModified')dates.push(x);else if(typeof x==='object')visit(x);}}
  schema.forEach(visit);
- const main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]||html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1]||html;
+ let main=html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/i)?.[1]||html.match(/<body\b[^>]*>([\s\S]*?)<\/body>/i)?.[1]||html;
+ // The documented API examples rotate their sample dates/resetAt on every
+ // compilation. Keep their protocol, limits and copy in the fingerprint, but
+ // do not mistake those generated example dates for an editorial revision.
+ if(new URL(url).pathname==='/fuer-agenten/')main=main.replace(/<pre\b((?:[^>"']|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/pre>/gi,(block,attributes,body)=>{
+  const label=elements('<pre '+attributes+'>','pre')[0]?.a['aria-label'];
+  return /^JSON-Beispiel(anfrage|antwort)$/.test(label||'')?block.replace(body,body.replace(/\b\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z)?\b/g,'[Beispieldatum]')):block;
+ });
  const text=decode(main.replace(/<!--[\s\S]*?-->|<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,'').replace(/<[^>]*>/g,' ')).replace(/\s+/g,' ').trim();
  const contentMedia=elements(main).filter(v=>['img','amp-img','source'].includes(v.tag)).map(({a})=>({src:a.src,srcset:a.srcset,alt:a.alt}));
  const links=tags.filter(v=>v.tag==='a'&&v.a.href&&!/\b(nofollow|ugc|sponsored)\b/i.test(v.a.rel||'')).map(v=>v.a.href);
