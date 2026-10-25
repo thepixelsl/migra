@@ -121,7 +121,8 @@ export async function buildPublishingSeo(project,site,{previous,revisionDates={}
  const manifest={version:1,site,pages:{},changed:[],removed:[],links:auditInternalLinks(pages,{existingPaths,redirects})};
  for(const page of pages){
   const old=previous.pages?.[page.path],same=old?.hash===page.hash;
-  let modified=same?(validModified(old.lastmod)||null):latest([revisionDates[page.path],dateFile[page.path],sourceDate,page.modified]);
+  const recorded=latest([revisionDates[page.path],dateFile[page.path],sourceDate]);
+  let modified=same?(validModified(old.lastmod)||null):(recorded||page.modified);
   if(old&&!same&&old.lastmod&&modified<=old.lastmod)modified=null;
   manifest.pages[page.path]={hash:page.hash,lastmod:modified,title:page.title};
   if(!same)manifest.changed.push(page.path);

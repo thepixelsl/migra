@@ -114,6 +114,23 @@ test("gallery credits preserve foreign rights and do not claim arbitrary images 
   assert.deepEqual(result.slice(2, 5), fixture.slice(2, 5));
 });
 
+test("reviewed Hub galleries retain their primary photo, website reference and existing foreign image credits", () => {
+  const route='/gallery/paarshooting-mallorca/';
+  const own={"@type":"ImageObject",contentUrl:`${origin}/hub-assets/b99f6814-ec77-468e-969a-3ce735527164/photo.webp`,creator:{"@type":"Person",name:"York Augustin"}};
+  const foreign={...own,creator:{"@type":"Person",name:"Another photographer"}};
+  const fixture=[{...structuredClone(homePhoto),'@id':`${origin}${route}#primaryimage`},{'@type':'ImageGallery','@id':`${origin}${route}#gallery`,url:origin+route,
+    author:{'@type':'Person',name:'York Augustin'},publisher:{'@type':'Organization',name:'Artbild-Fotografie',url:origin+'/'},
+    primaryImageOfPage:structuredClone(own),hasPart:[structuredClone(own),foreign]}];
+  const $=load(`<html><head><link rel="canonical" href="${origin}${route}"><script type="application/ld+json">${serializeSchema(fixture)}</script></head><body></body></html>`);
+  const result=normalizeStructuredData($,route,{origin,homepageImage:homePhoto,portraitImage:`${origin}/images/portrait-riverside.webp`});
+  const gallery=result.find(node=>node['@type']==='ImageGallery');
+  assert.deepEqual(gallery.isPartOf,{'@id':ids.website});assert.deepEqual(gallery.publisher,{'@id':ids.business});
+  assert.deepEqual(gallery.primaryImageOfPage.creator,photoCredits(origin).creator);
+  assert.equal(gallery.primaryImageOfPage.creditText,photoCredits(origin).creditText);
+  assert.equal(gallery.hasPart[0].creditText,photoCredits(origin).creditText);
+  assert.deepEqual(gallery.hasPart[1],foreign);
+});
+
 test("reviewed gallery category covers receive credits inside portfolio lists without claiming unrelated collections", () => {
   const own = {
     "@type": "ImageObject", contentUrl: `${origin}/_astro/ART_4632.new-build-hash.webp`,

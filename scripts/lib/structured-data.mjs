@@ -36,6 +36,7 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
   const ownIdentity = (node) => {
     if (ownIds.has(node["@id"])) return node["@id"];
     if (types(node).includes("Person") && node.name === "York Augustin") return ids.person;
+    if (types(node).includes("Organization") && node.name === "Artbild-Fotografie" && node.url === `${origin}/`) return ids.business;
     return null;
   };
   const isReviewedPhotoCollection = (node) => {
@@ -54,7 +55,7 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
       const url = new URL(photo.contentUrl || photo.url);
       // Reviewed Artbild gallery photos and gallery-category covers only,
       // never arbitrary images, logos or a conflicting existing attribution.
-      if (url.origin !== origin || !/^\/(?:_astro|gallery|migrated-assets)\/.*\.(?:webp|jpe?g|png|avif)$/i.test(url.pathname)) return photo;
+      if (url.origin !== origin || !/^\/(?:_astro|gallery|migrated-assets|hub-assets)\/.*\.(?:webp|jpe?g|png|avif)$/i.test(url.pathname)) return photo;
       if (Object.entries(credits).some(([key, value]) => photo[key] !== undefined && !isDeepStrictEqual(photo[key], value))) return photo;
       return { ...photo, ...photoCredits(origin) };
     } catch { return photo; }
@@ -65,7 +66,8 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     const identity = ownIdentity(value);
     if (identity) return ref(identity);
     const node = Object.fromEntries(Object.entries(value).filter(([key]) => key !== "@context").map(([key, item]) => [key, rewrite(item)]));
-    if (types(node).some((type) => pageTypes.has(type)) && (node.url === canonical || node["@id"]?.split("#")[0] === canonical)) {
+    const ownPage=types(node).some((type)=>pageTypes.has(type)) || types(node).includes("ImageGallery") && node.primaryImageOfPage;
+    if (ownPage && (node.url === canonical || node["@id"]?.split("#")[0] === canonical)) {
       node.isPartOf = ref(ids.website);
     }
     if (types(node).some((type) => articleTypes.has(type))) {
@@ -75,8 +77,9 @@ export function normalizeStructuredData($, route, { origin, homepageImage, portr
     // Offer ordering is already determined by itemListElement. `position` is
     // not an Offer property (it belongs on ListItem/CreativeWork).
     if (types(node).includes("Offer")) delete node.position;
-    if (isReviewedPhotoCollection(node) && node.image) {
-      node.image = Array.isArray(node.image) ? node.image.map(creditGalleryPhoto) : creditGalleryPhoto(node.image);
+    if (isReviewedPhotoCollection(node)) {
+      for(const field of ['image','hasPart','primaryImageOfPage'])if(node[field])
+        node[field] = Array.isArray(node[field]) ? node[field].map(creditGalleryPhoto) : creditGalleryPhoto(node[field]);
     }
     return node;
   }
