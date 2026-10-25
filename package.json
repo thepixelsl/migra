@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "astro dev --host 127.0.0.1",
     "prebuild": "node scripts/validate-tracking-config.mjs",
-    "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files && npm run test:content",
+    "build": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files && npm run test:content && npm run publishing:seo",
     "test:content": "node --test tests/content-quality.test.mjs",
     "test:web-stories": "node scripts/validate-web-stories.mjs",
     "schema:files": "node scripts/normalize-structured-data.mjs",
@@ -29,7 +29,8 @@
     "test:migration-sanitizer": "node --test tests/migrated-html-sanitizer.test.mjs",
     "test:visual": "playwright test tests/visual/page-compare.spec.ts",
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
-    "astro": "astro"
+    "astro": "astro",
+    "publishing:seo": "node scripts/publishing-seo.mjs"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

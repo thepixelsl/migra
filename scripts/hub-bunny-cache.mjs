@@ -14,9 +14,11 @@ export function bunnyCachePaths(plan,releaseId) {
 }
 
 export async function refreshBunnyReleaseCache(plan,{
-  releaseId,key,fetcher=fetch,wait=delay,now=Date.now,timeoutMs=5*60*1000,onPurged=()=>{},
+  releaseId,key,fetcher=fetch,wait=delay,now=Date.now,timeoutMs=5*60*1000,onPurged=()=>{},seoPaths=[],
 }={}) {
   const paths=bunnyCachePaths(plan,releaseId);
+  if(!Array.isArray(seoPaths)||!seoPaths.every(path=>['/sitemap.xml','/image-sitemap.xml','/web-story-sitemap.xml'].includes(path)||/^\/[a-f0-9]{32}\.txt$/.test(path)))
+    throw Error('Der Bunny-Cache-Abgleich enthält eine unzulässige Suchmaschinen-Datei.');
   if(!key)throw Error('Der geschützte Bunny-Zugang für den Cache-Abgleich fehlt.');
   const deadline=now()+timeoutMs;
   const timeout=()=>{
@@ -36,7 +38,8 @@ export async function refreshBunnyReleaseCache(plan,{
   if(marker.siteId!=='artbild' || published.length!==paths.length || paths.some(path=>!published.includes(path)))
     throw Error('Die öffentliche Bunny-Version passt nicht zur freigegebenen Seitenliste.');
 
-  for(const path of paths) {
+  const selected=[...new Set([...paths,...seoPaths])];
+  for(const path of selected) {
     const endpoint=new URL('https://api.bunny.net/purge');
     endpoint.search=new URLSearchParams({url:origin+path,async:'false',exactPath:'true'}).toString();
     for(let attempt=0;;attempt++) {
@@ -60,5 +63,5 @@ export async function refreshBunnyReleaseCache(plan,{
       await wait(Math.min(2000*(attempt+1),Math.max(0,deadline-now())));
     }
   }
-  return paths;
+  return selected;
 }

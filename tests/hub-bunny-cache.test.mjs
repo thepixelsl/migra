@@ -45,6 +45,12 @@ test('invalid or foreign destinations and mismatched release plans never trigger
   await assert.rejects(refreshBunnyReleaseCache(plan,{...options,key:'',fetcher}),/Zugang/);
   assert.equal(calls,0);assert.deepEqual(bunnyCachePaths(plan,id),paths);
 });
+test('reviewed publication refreshes only the fixed sitemap files and the public IndexNow key alongside its pages',async()=>{
+ const seoPaths=['/sitemap.xml','/image-sitemap.xml','/web-story-sitemap.xml','/1234567890abcdef1234567890abcdef.txt'],purged=[];
+ const result=await refreshBunnyReleaseCache(plan,{...options,seoPaths,onPurged:path=>purged.push(path),fetcher:async url=>new URL(url).pathname==='/hub-release.json'?Response.json(marker):new Response('',{status:200})});
+ assert.deepEqual(result,[...paths,...seoPaths]);assert.deepEqual(purged,result);
+ for(const path of ['/robots.txt','/*','https://example.org/sitemap.xml','/sitemap.xml?q=1','/api/private/'])await assert.rejects(refreshBunnyReleaseCache(plan,{...options,seoPaths:[path],fetcher:()=>assert.fail('Must validate before network')}),/unzulässige/);
+});
 
 test('a stale public release or changed page list prevents all purges',async()=>{
   for(const value of [{...marker,id:'00000000-0000-4000-8000-000000000000'},
