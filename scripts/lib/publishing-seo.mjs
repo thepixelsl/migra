@@ -83,10 +83,12 @@ export async function buildPublishingSeo(project,site,{previous,revisionDates={}
  const origin=publishingOrigins[site];if(!origin)throw Error('Unbekannte Website.');
  const config=await json(join(project,'src/data/publishing-config.json'),null);
  if(!config||!/^[a-f0-9]{32}$/.test(config.key))throw Error('Der IndexNow-Schlüssel der Website fehlt.');
+ const runtimePaths=config.runtimePaths||[];
+ if(!Array.isArray(runtimePaths)||runtimePaths.some(path=>typeof path!=='string'||!/^\/(?:[a-z0-9-]+\/)*$/.test(path)))throw Error('Die bestätigten Laufzeitrouten der Website sind ungültig.');
  previous=previous||await json(join(project,'src/data/publishing-baseline.json'),{pages:{}});
  const dateFile=await json(join(project,'src/data/publishing-revisions.json'),{});
  sourceDate=sourceDate||dateFile._sourceDate||null;
- const pages=[],existingPaths=[],redirects={};
+ const pages=[],existingPaths=[...runtimePaths],redirects={};
  for(const file of await htmlFiles(join(project,'dist'))){
   const name=relative(join(project,'dist'),file).split('\\').join('/'),path='/'+name.replace(/index\.html$/,'');
   if(path==='/404.html'||/^\/(api|admin[^/]*)(\/|$)/.test(path))continue;

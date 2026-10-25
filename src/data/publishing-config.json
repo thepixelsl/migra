@@ -1,3 +1,6 @@
 {
-  "key": "a44f12c6665bc2447793b669badc3ada"
+  "key": "a44f12c6665bc2447793b669badc3ada",
+  "runtimePaths": [
+    "/agenten-test/"
+  ]
 }
