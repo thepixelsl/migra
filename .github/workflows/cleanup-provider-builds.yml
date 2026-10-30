@@ -1,0 +1,49 @@
+name: Retain current Bunny image and one rollback
+run-name: Retain Bunny builds ${{ inputs.current_release }}
+on:
+  workflow_dispatch:
+    inputs:
+      current_release:
+        description: Publicly confirmed current Hub release ID
+        required: true
+        type: string
+      rollback_release:
+        description: Previous publicly confirmed Hub release ID
+        required: true
+        type: string
+      apply:
+        description: Delete superseded images after validating the live application
+        required: true
+        default: false
+        type: boolean
+concurrency:
+  group: bunny-image-production
+  cancel-in-progress: false
+permissions:
+  contents: read
+  packages: write
+jobs:
+  retain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+      - name: Validate retention policy
+        run: node --test tests/provider-registry-retention.test.mjs tests/hub-bunny-state.test.mjs
+      - name: Retain confirmed current image and one rollback
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUNNYNET_API_KEY: ${{ secrets.BUNNYNET_API_KEY }}
+          CURRENT_RELEASE: ${{ inputs.current_release }}
+          ROLLBACK_RELEASE: ${{ inputs.rollback_release }}
+          APPLY_RETENTION: ${{ inputs.apply }}
+        run: node scripts/cleanup-provider-registry.mjs
+      - name: Save retention evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: provider-retention
+          path: provider-retention.json
+          retention-days: 7
