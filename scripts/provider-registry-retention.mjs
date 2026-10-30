@@ -7,7 +7,7 @@ export function registryRetentionPlan(versions,{currentTag,rollbackTag}){
   const current=versions.filter(v=>tags(v)?.includes(currentTag)),rollback=versions.filter(v=>tags(v)?.includes(rollbackTag));
   if(current.length!==1||rollback.length!==1||current[0].id===rollback[0].id)throw Error('Current image and distinct rollback image must both exist.');
   const retained=new Set([current[0].id,rollback[0].id]),cutoff=Date.parse(current[0].created_at);
-  const managed=v=>Array.isArray(tags(v))&&tags(v).every(t=>/^(?:prod-sha-[a-f0-9]{7,40}|sha-[a-f0-9]{7,40}|production|dev)$/.test(t));
+  const managed=v=>Array.isArray(tags(v))&&tags(v).every(t=>/^(?:prod-sha-[a-f0-9]{7,40}|sha-[a-f0-9]{7,40}|production|dev|\d{4}-\d{2}-\d{2}-[a-f0-9]{12}(?:-[a-z0-9]+)?)$/.test(t));
   const remove=versions.filter(v=>!retained.has(v.id)&&managed(v)&&Number.isFinite(Date.parse(v.created_at))&&Date.parse(v.created_at)<=cutoff);
   return {current:current[0],rollback:rollback[0],remove,protected:versions.filter(v=>!retained.has(v.id)&&!remove.includes(v))};
 }

@@ -11,6 +11,10 @@ test('registry pruning fails closed if either immutable retained image cannot be
  assert.throws(()=>registryRetentionPlan([version(1,['production'])],{currentTag:'missing',rollbackTag:'missing'}));
  assert.throws(()=>registryRetentionPlan([version(1,['a','b'])],{currentTag:'a',rollbackTag:'b'}));
 });
+test('historical date-and-commit build tags use the same retention policy',()=>{
+ const values=[version(1,['prod-sha-'+'a'.repeat(40)],'2026-10-05'),version(2,['prod-sha-'+'b'.repeat(40)]),version(3,['2026-08-06-f348fa0baa49-prices3'])];
+ assert.deepEqual(registryRetentionPlan(values,{currentTag:values[0].metadata.container.tags[0],rollbackTag:values[1].metadata.container.tags[0]}).remove.map(v=>v.id),[3]);
+});
 function service({wrongMarker=false,apply=false}={}){
  const currentRelease='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',rollbackRelease='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',currentTag='prod-sha-'+'a'.repeat(40),rollbackTag='prod-sha-'+'b'.repeat(40);
  let rows=[version(1,[currentTag],'2026-10-05'),version(2,[rollbackTag]),version(3,[])],deletes=[];
