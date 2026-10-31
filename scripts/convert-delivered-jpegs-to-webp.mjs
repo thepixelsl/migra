@@ -26,6 +26,11 @@ const textExtensions = new Set([
 ]);
 const jpegReferencePattern = /(?:https?:\/\/|\/)[^"'<>\s]*?\.jpe?g/gi;
 const jpegFilePattern = /\.jpe?g$/i;
+// Google Business Profile fetches these exact JPEG bytes independently of the
+// website's WebP images. Keep only the Hub's narrowly named export files.
+const googlePostPhoto = (file) => /^hub-assets\/[a-f0-9-]{36}\/[a-z0-9-]+-[a-f0-9]{16}-google\.jpg$/.test(
+  path.relative(distDir, file).split(path.sep).join("/"),
+);
 const passthroughVerificationFiles = new Set([
   path.join(distDir, "pinterest-78b70.html"),
   path.join(distDir, "pinterest-e6785.html"),
@@ -37,7 +42,7 @@ const initialFiles = await listFiles(distDir);
 const textFiles = initialFiles.filter(
   (file) => textExtensions.has(path.extname(file)) && !passthroughVerificationFiles.has(file),
 );
-const jpegFiles = initialFiles.filter((file) => jpegFilePattern.test(file));
+const jpegFiles = initialFiles.filter((file) => jpegFilePattern.test(file) && !googlePostPhoto(file));
 const textByFile = new Map(
   await Promise.all(
     textFiles.map(async (file) => [file, await fs.readFile(file, "utf8")]),
@@ -74,6 +79,7 @@ for (const [file, content] of textByFile) {
     }
 
     const source = resolveDistPath(pathname);
+    if (googlePostPhoto(source)) continue;
     const target = source.replace(jpegFilePattern, ".webp");
     const targetLiteral = literal.replace(jpegFilePattern, ".webp");
 
@@ -118,7 +124,7 @@ for (const [file, original] of textByFile) {
 await Promise.all(jpegFiles.map((file) => fs.unlink(file)));
 
 const finalFiles = await listFiles(distDir);
-const remainingJpegFiles = finalFiles.filter((file) => jpegFilePattern.test(file));
+const remainingJpegFiles = finalFiles.filter((file) => jpegFilePattern.test(file) && !googlePostPhoto(file));
 const remainingReferences = [];
 const remainingMimeTypes = [];
 
@@ -126,7 +132,10 @@ for (const file of finalFiles.filter(
   (entry) => textExtensions.has(path.extname(entry)) && !passthroughVerificationFiles.has(entry),
 )) {
   const content = await fs.readFile(file, "utf8");
-  const jpegReferences = [...content.matchAll(jpegReferencePattern)].map((match) => match[0]);
+  const jpegReferences = [...content.matchAll(jpegReferencePattern)].map((match) => match[0]).filter((literal) => {
+    const url = new URL(literal, siteOrigin);
+    return !localHosts.has(url.hostname) || !googlePostPhoto(resolveDistPath(decodeURIComponent(url.pathname)));
+  });
 
   if (jpegReferences.length > 0) {
     remainingReferences.push(`${relative(file)}: ${jpegReferences.slice(0, 3).join(", ")}`);
@@ -157,7 +166,7 @@ console.log([
   `${removedUnreferenced} nicht referenzierte JPEG-Kopien aus dist entfernt.`,
   `${rewrittenFiles} Textdateien aktualisiert.`,
   `Referenzierte Bilder: ${formatMiB(originalBytes)} MiB -> ${formatMiB(webpBytes)} MiB (${savingPercent} % kleiner).`,
-  "Prüfung: keine JPEG-Dateien, JPEG-URLs oder ausgehenden image/jpeg-Metatypen in dist.",
+  "Prüfung: Website-Bilder in WebP; gesonderte Google-Beitragsfotos bleiben als JPEG erhalten.",
 ].join("\n"));
 
 async function convertImage([source, target], index) {
