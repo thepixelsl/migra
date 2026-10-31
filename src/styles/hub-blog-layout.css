@@ -26,7 +26,12 @@
 }
 .article-surface.content-article .article-byline { justify-content: flex-start; }
 .article-surface.content-article .article-cover { margin-bottom: 12px; }
-.article-surface.content-article .cover-image img { aspect-ratio: 1.8; }
+/* Override the fixed hero ratios also in previews made by an older Hub. */
+.article-viewport .article-surface.content-article .cover-image img {
+  aspect-ratio: auto;
+  height: auto;
+  object-fit: contain;
+}
 .article-surface.content-article .content-block {
   padding-inline: 0;
   margin-inline: 0;
@@ -106,7 +111,6 @@
   .article-surface.content-article { --blog-gutter: 24px; }
   .article-surface.content-article .article-heading { padding-block: 40px 30px; }
   .article-surface.content-article .article-byline { flex-wrap: wrap; }
-  .article-surface.content-article .cover-image img { aspect-ratio: 1.25; }
   .article-surface.content-article .gallery-sequence { grid-template-columns: minmax(0, 1fr); }
   .article-surface.content-article .gallery-layout-editorial > :nth-child(n) { grid-column: auto; padding: 0; }
   .article-surface.content-article .text-columns,
