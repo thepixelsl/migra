@@ -52,7 +52,7 @@ jobs:
         run: npm ci
 
       - name: Test Bunny runtime
-        run: npm run test:bunny && node --test tests/hub-bunny-state.test.mjs tests/hub-bunny-cache.test.mjs
+        run: npm run test:bunny && node --test tests/hub-bunny-state.test.mjs tests/hub-bunny-cache.test.mjs tests/bunny-release.test.mjs
 
       - name: Test migrated HTML sanitizer
         run: npm run test:migration-sanitizer
