@@ -32,3 +32,9 @@ test("discounts actual package prices and keeps cent-rounded saving and price co
     assert.equal(calculateThankYouDiscount(invalid), null);
   }
 });
+
+test('uses the edited discount percentage and rejects unsupported rates',()=>{
+  assert.deepEqual(calculateThankYouDiscount(199255,15),{totalCents:199255,savingCents:29888,discountedCents:169367});
+  assert.deepEqual(calculateThankYouDiscount(64900,0),{totalCents:64900,savingCents:0,discountedCents:64900});
+  for(const rate of [-1,51,1.5,NaN])assert.equal(calculateThankYouDiscount(64900,rate),null);
+});

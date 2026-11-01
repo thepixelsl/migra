@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": null,
+  "galleryMonths": 3,
+  "bookingRule": "Es zählen die Gesamtstunden, unabhängig von der Anzahl der Tage. Dafür gilt das günstigste passende Paket. Pakete sind nicht miteinander kombinierbar.",
+  "packages": [
+    {
+      "id": "pure-moments",
+      "name": "Pure Moments",
+      "priceValue": 299,
+      "billingUnit": "package",
+      "minimumHours": 1,
+      "maximumHours": 1,
+      "priceNote": "Einstiegspaket {{purePrice}}",
+      "serviceType": "Fotografische Begleitung",
+      "duration": "1 Stunde",
+      "intro": "1 Stunde fotografische Begleitung.",
+      "showIntro": false,
+      "features": [
+        "1 Stunde fotografische Begleitung",
+        "Persönliches Vorgespräch und Beratung",
+        "Trauung, Brautpaarshooting, Gruppenfotos",
+        "Passwortgeschützte Onlinegalerie für {{galleryMonths}} Monate kostenlos",
+        "mindestens 30 Bilder",
+        "Grundlegende RAW-Bearbeitung aller gelieferten Bilder",
+        "Hochwertige Retusche ausgewählter Bilder inklusive",
+        "Color-Proofing für den Druck inklusive",
+        "keine Extra- oder versteckten Kosten (Festpreis)",
+        "Anfahrt in Norddeutschland inklusive",
+        "nicht mit anderen Paketen kombinierbar"
+      ],
+      "priceSuffix": "",
+      "image": {
+        "src": "original:pure",
+        "alt": "Brautpaar in Lauenbrück als Beispiel für das Pure Moments Paket"
+      }
+    },
+    {
+      "id": "standesamt-paket",
+      "name": "Standesamt Paket",
+      "priceValue": 649,
+      "billingUnit": "package",
+      "minimumHours": 2,
+      "maximumHours": 2,
+      "priceNote": "Festpreis fuer standesamtliche Trauungen",
+      "serviceType": "Standesamtliche Trauung mit Hochzeitsreportage",
+      "duration": "2 Stunden",
+      "intro": "Für standesamtliche Trauungen mit mehr Zeit für Getting Ready, Paarbilder und Familie.",
+      "showIntro": true,
+      "features": [
+        "2 Stunden Hochzeitsreportage",
+        "Persönliches Vorgespräch und Beratung",
+        "Kennenlernshooting",
+        "Getting Ready",
+        "Trauung, Brautpaarshooting und Gruppenfotos",
+        "Passwortgeschützte Onlinegalerie für {{galleryMonths}} Monate kostenlos",
+        "Mindestens 100 bearbeitete Bilder",
+        "Grundlegende RAW-Bearbeitung aller gelieferten Bilder",
+        "Hochwertige Retusche ausgewählter Bilder inklusive",
+        "Color-Proofing für den Druck inklusive",
+        "Anfahrt in Norddeutschland inklusive",
+        "Keine Extra- oder versteckten Kosten",
+        "Pakete sind nicht miteinander kombinierbar"
+      ],
+      "priceSuffix": "Festpreis",
+      "image": {
+        "src": "original:standesamt",
+        "alt": "Brautpaar in einer Umarmung beim Hochzeitsshooting"
+      }
+    },
+    {
+      "id": "rundum-sorglos-paket",
+      "name": "Rundum-Sorglos-Paket",
+      "priceValue": 249,
+      "billingUnit": "hour",
+      "minimumHours": 3,
+      "maximumHours": 10,
+      "priceNote": "Stundenpreis fuer laengere Hochzeitsreportagen",
+      "serviceType": "Hochzeitsreportage",
+      "duration": "3 bis 10 Stunden",
+      "intro": "Für längere Hochzeitsreportagen vom Getting Ready bis zur Feier.",
+      "showIntro": true,
+      "features": [
+        "Mindestens 3 bis höchstens 10 Stunden",
+        "Persönliches Vorgespräch und Beratung",
+        "Kennenlernshooting",
+        "Getting Ready auf Wunsch",
+        "Trauung, Brautpaarshooting und Gruppenfotos",
+        "Reportage von Empfang, Feier, Hochzeitstorte und Eröffnungstanz",
+        "Passwortgeschützte Onlinegalerie für {{galleryMonths}} Monate kostenlos",
+        "Mindestens 300 bearbeitete Bilder",
+        "Grundlegende RAW-Bearbeitung aller gelieferten Bilder",
+        "Hochwertige Retusche ausgewählter Bilder inklusive",
+        "Color-Proofing für den Druck inklusive",
+        "Anfahrt in Norddeutschland inklusive",
+        "Pakete sind nicht miteinander kombinierbar"
+      ],
+      "priceSuffix": "pro Stunde",
+      "image": {
+        "src": "original:reportage",
+        "alt": "Braut mit Blumenstrauß vor dem Eiffelturm in Paris"
+      }
+    }
+  ],
+  "texts": {
+    "heroKicker": "Hochzeitsfotograf Hamburg · Preise & Pakete",
+    "heroTitleFirst": "Hochzeitsfotograf",
+    "heroTitleSecond": "Hamburg Preise",
+    "heroIntro": "Hier findet ihr die passende Begleitung für eure Hochzeit. Alle Bilder erhaltet ihr grundlegend RAW-bearbeitet. Hochwertige Retusche ausgewählter Bilder und die Anfahrt in Norddeutschland sind inklusive.",
+    "heroPackagesLabel": "Pakete ansehen",
+    "heroContactLabel": "Termin anfragen",
+    "introHeading": "Ihr wisst vorab, was euch erwartet.",
+    "introKicker": "Persönlich begleitet",
+    "introBodyFirst": "Ich bin York. Im persönlichen Vorgespräch erzählt ihr mir von eurer Hochzeit und davon, welche Bilder euch wichtig sind. Daraus ergibt sich die passende Begleitung mit einem vereinbarten Gesamtpreis.",
+    "introBodySecond": "Die grundlegende RAW-Bearbeitung aller gelieferten Bilder, hochwertige Retusche ausgewählter Bilder, Color-Proofing für den Druck, die Anfahrt in Norddeutschland und eure passwortgeschützte Onlinegalerie für {{galleryMonths}} Monate sind in jedem Paket enthalten. Die Galerie ist in dieser Zeit kostenlos verfügbar. Bei Hochzeiten außerhalb Norddeutschlands stimmen wir die Reisekosten vor der Buchung ab.",
+    "aboutLabel": "Mehr über mich und meine Arbeitsweise",
+    "packagesHeading": "Pakete und Leistungen im Überblick",
+    "deliveryTiming": "In der Regel erhaltet Ihr die ersten 100 Bilder in den ersten 7 Tagen, sämtliche Bilder in der Regel binnen 2 Wochen.",
+    "deliveryException": "Die Angabe zu den ersten 100 Bildern gilt nicht für das 1-Stunden-Paket.",
+    "deliveryRetouch": "Spezielle Wünsche bei der Retusche erhöhen den Preis nicht, können aber die Bearbeitungszeit relevant verlängern.",
+    "deliveryHeading": "Bildübergabe & Bearbeitungszeit",
+    "deliveryKicker": "Nach eurer Hochzeit",
+    "qualityHeading": "Wie viel kostet ein guter Hochzeitsfotograf?",
+    "qualityBody": "Ein guter Hochzeitsfotograf macht nicht nur die Bilder auf Eurer Hochzeit, sondern investiert auch Arbeitszeit, nach der Hochzeit in die Bildbearbeitung, die Bildauswahl und ggf. in die Bildretusche, falls dies einmal nötig sein sollte. Daher habe ich noch keinen guten Hochzeitsfotografen für weniger als 100€ pro Stunde gesehen.",
+    "hourlyHeading": "Wie teuer ist ein Fotograf pro Stunde?",
+    "hourlyBody": "Ein guter Hochzeitsfotograf nimmt einen Preis, der sowohl die Kosten für die An- und Abfahrt, den Arbeitslohn vor Ort und den Arbeitslohn für die Bildbearbeitung abdeckt.",
+    "compositionHeading": "Warum kostet ein Hochzeitsfotograf so viel?",
+    "compositionBody": "Nicht nur eine hochwertige Ausrüstung, im Wert vieler tausend Euro, sondern auch die Bearbeitungzeit nach der Hochzeit, die oft viele Arbeitsstunden Zeit in Anspruch nimmt, müssen mit in den Preis einfließen.",
+    "compositionBodySecond": "So erklärt sich der Preis und die Preiszusammensetzung.",
+    "reviewsHeading": "Wie Paare die Begleitung erlebt haben",
+    "examplesHeading": "Was kostet eure fotografische Begleitung?",
+    "examplesKicker": "Euer Ablauf, euer Gesamtpreis",
+    "examplesIntro": "Diese Beispiele helfen euch bei der Planung einer Hochzeit in Hamburg. Wie viel Zeit ihr für einzelne Momente und Wege braucht, stimmen wir gemeinsam ab. Die verlinkten Reportagen zeigen meine Arbeit; die Beispielpreise beziehen sich auf die hier beschriebenen Abläufe.",
+    "examplesNote": "Ihr möchtet auch einen Teil der Feier begleiten lassen? Acht Stunden kosten im {{reportageName}} {{reportageTotal8}} (8 × {{reportagePrice}}). Welche Momente in diesen Zeitraum fallen, richtet sich nach eurem Tagesablauf. Die Anfahrt in Norddeutschland, die Bildbearbeitung und die Onlinegalerie für {{galleryMonths}} Monate sind bei allen Beispielen enthalten.",
+    "calculatorHeading": "Wie lange darf ich euch begleiten?",
+    "calculatorLabel": "Gesamte Begleitungsstunden",
+    "calculatorResultLabel": "Euer Gesamtpreis",
+    "calculatorPackageLink": "Alle Leistungen dieses Pakets ansehen",
+    "calculatorHint": "Zählt alle gewünschten Begleitungsstunden zusammen, auch an unterschiedlichen Tagen. Der Rechner wählt automatisch das günstigste passende Paket.",
+    "calculatorNote": "Es zählt die Gesamtstundenzahl, nicht die Anzahl der Tage. Pakete sind nicht miteinander kombinierbar. Außerhalb Norddeutschlands kommen die vorab vereinbarten Reisekosten hinzu. Termine und Ablauf stimmen wir persönlich ab.",
+    "calculatorIncluded": "Alle Bilder RAW-bearbeitet, hochwertige Retusche ausgewählter Bilder, Color-Proofing und Anfahrt in Norddeutschland inklusive. Eure Onlinegalerie ist {{galleryMonths}} Monate kostenlos verfügbar.",
+    "includedKicker": "Leistungen",
+    "includedHeading": "Bildbearbeitung und Retusche",
+    "includedBodyFirst": "Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet. Dabei stimme ich Weißabgleich, Helligkeit, Farben und Kontraste aufeinander ab. Ihr müsst später keine einzelnen Bilder für die Bearbeitung auswählen oder dafür extra bezahlen.",
+    "includedBodySecond": "Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im Preis enthalten. Dabei kümmere ich mich gezielt um störende Details, etwa einen Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit. Welche Bilder und Wünsche euch wichtig sind, besprechen wir gemeinsam. Ich retuschiere überwiegend manuell und bei Bedarf mit KI-Unterstützung; auf Wunsch auch vollständig ohne KI.",
+    "printKicker": "Für eure gedruckten Bilder",
+    "printHeading": "Color-Proofing für den Druck inklusive",
+    "printBodyFirst": "Wenn ihr eure Bilder drucken lassen möchtet, unterstütze ich euch mit Color-Proofing: Ich prüfe die zu erwartende Farbwiedergabe auf dem vorgesehenen Material und bereite die Druckdaten passend vor. Das gilt für Drucke auf hochwertigen und langlebigen Materialien, für Fotobücher und für Hintergründe.",
+    "printBodySecond": "Die Farbprüfung und Druckvorbereitung sind bei allen Paketen kostenlos enthalten. So könnt ihr eure Bilder auch für den Druck sorgfältig abstimmen lassen. Die Kosten für die Druckprodukte und Materialien kommen hinzu.",
+    "printLinkLabel": "Mehr über Color-Proofing und die Vorbereitung eurer Hochzeitsfotos für den Druck",
+    "faqCaption": "Transparente Pakete, klare Leistungen und planbare Kosten",
+    "faqHeading": "Häufige Fragen zu Hochzeitsfotograf Preisen",
+    "faqKicker": "Fragen & Antworten",
+    "faqIntro": "Antworten zu Preisen, enthaltenen Leistungen und der Übergabe eurer Bilder. Euren Gesamtpreis und Leistungsumfang halten wir vor der Buchung im Angebot fest.",
+    "relatedHeading": "Hilfreiche Seiten für eure Hochzeit",
+    "relatedKicker": "Weiter planen",
+    "ctaHeading": "Fragt euren Hochzeitstermin unverbindlich an",
+    "ctaKicker": "Ist euer Termin noch frei?",
+    "ctaBody": "Erzählt mir, wann und wo ihr heiratet und was ihr euch für eure Bilder wünscht. Ihr müsst euch noch nicht für ein Paket entschieden haben. Gemeinsam finden wir heraus, welche Begleitung zu eurem Tag passt.",
+    "ctaLabel": "Hochzeitstermin anfragen",
+    "seoTitle": "Hochzeitsfotograf Hamburg Preise",
+    "seoDescription": "Günstige Festpreisangebote für Deine Hochheitsreportage. Keine versteckten Kosten, keine Extrakosten",
+    "discountKicker": "Für eure Lieblingsbilder",
+    "discountHeading": "{{discountPercent}} % Dankeschön",
+    "discountInvitation": "{{discountImages}} eurer schönsten Bilder.\n{{discountPercent}} % Rabatt.",
+    "discountBody": "Für {{discountImages}} eurer schönsten Bilder, die ich zeigen darf, sage ich mit {{discountPercent}} % Rabatt vielen lieben Dank! Wenn euch die Idee gefällt, suchen wir nach der Hochzeit gemeinsam die passenden Bilder aus.",
+    "discountConditions": "Die {{discountPercent}} % gelten für den regulären Gesamtpreis eures Fotopakets. Der Rabatt wird gutgeschrieben, sobald für alle {{discountImages}} Bilder die Einwilligungen aller erkennbar abgebildeten Personen zur Veröffentlichung auf meiner Website vorliegen.",
+    "packageContactLabel": "Unverbindlich anfragen"
+  },
+  "faq": [
+    {
+      "id": "preise_faq_12",
+      "question": "Was kostet ein Hochzeitsfotograf in Hamburg bei Artbild?",
+      "answer": "{{pureName}} umfasst {{pureMin}} Stunde Begleitung für {{purePrice}}. Das {{standesamtName}} kostet {{standesamtPrice}} für {{standesamtMin}} Stunden. Längere Reportagen von {{reportageMin}} bis {{reportageMax}} Stunden berechne ich mit {{reportagePrice}} pro Stunde. Sechs Stunden kosten damit {{reportageTotal6}}, acht Stunden {{reportageTotal8}}. Die enthaltenen Leistungen findet ihr direkt beim jeweiligen Paket."
+    },
+    {
+      "id": "preise_faq_17",
+      "question": "Wie viele Stunden passen zu unserer Hochzeit?",
+      "answer": "Für eine kurze Begleitung kommt {{pureName}} mit einer Stunde infrage. Zwei Stunden geben euch mehr Zeit für die Trauung, Gratulationen und Paarbilder. Wenn ihr auch Vorbereitungen, Empfang oder Feier festhalten möchtet, planen wir eine längere Reportage. Entscheidend sind eure gewünschten Momente und die Wege zwischen den Orten. Das besprechen wir vor der Buchung gemeinsam."
+    },
+    {
+      "id": "preise_faq_19",
+      "question": "Wie wird der Preis berechnet, wenn wir an zwei Tagen heiraten?",
+      "answer": "Es zählen eure gesamten Begleitungsstunden, unabhängig von der Anzahl der Tage. Für diese Stundenzahl wird automatisch das günstigste passende Paket gewählt. Zum Beispiel ergeben eine Stunde Standesamt und sechs Stunden freie Trauung zusammen sieben Stunden: {{reportageTotal7}} im {{reportageName}}. Pakete sind nicht miteinander kombinierbar. Reisekosten außerhalb Norddeutschlands stimmen wir vorab ab."
+    },
+    {
+      "id": "preise_faq_18",
+      "question": "Ist ein Kennenlernshooting enthalten?",
+      "answer": "Im {{standesamtName}} und im {{reportageName}} ist ein Kennenlernshooting enthalten. Dabei erlebt ihr, wie ich arbeite, und könnt euch vor der Hochzeit mit dem Fotografiertwerden vertraut machen. {{pureName}} enthält ein persönliches Vorgespräch, aber kein Kennenlernshooting."
+    },
+    {
+      "id": "preise_faq_4",
+      "question": "Ist die Bearbeitung unserer Bilder im Preis enthalten?",
+      "answer": "Ja. Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet. Dazu gehören Weißabgleich, Helligkeit, Farben und Kontraste. Ihr müsst später keine einzelnen Fotos zur Bearbeitung auswählen oder dafür extra bezahlen. Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im Preis enthalten. Welche Bilder und Details euch dabei wichtig sind, besprechen wir gemeinsam."
+    },
+    {
+      "id": "preise_faq_delivery",
+      "question": "Wann bekommen wir unsere Bilder?",
+      "answer": "{{deliveryTiming}} {{deliveryException}} {{deliveryRetouch}}"
+    },
+    {
+      "id": "preise_faq_16",
+      "question": "Wie bekommen wir unsere Bilder und wie lange bleibt die Galerie verfügbar?",
+      "answer": "Ihr erhaltet eure Bilder in einer passwortgeschützten Onlinegalerie bei PicDrop. Die Galerie ist bei allen Paketen {{galleryMonths}} Monate kostenlos verfügbar. Ladet eure Bilder innerhalb dieser Zeit herunter und sichert sie für euch."
+    },
+    {
+      "id": "preise_faq_1",
+      "question": "Welche Fahrtkosten kommen hinzu?",
+      "answer": "In Norddeutschland ist die Anfahrt bei allen Paketen enthalten. Außerhalb Norddeutschlands berechne ich die tatsächlich anfallenden Reisekosten, keine pauschale Fahrtgebühr. Die Fahrzeit stelle ich nicht als Arbeitszeit in Rechnung. Die Reisekosten stimmen wir vor der Buchung ab."
+    },
+    {
+      "id": "preise_faq_15",
+      "question": "Können wir die Begleitung spontan verlängern?",
+      "answer": "Sprecht mich gerne darauf an. Wenn es keine Folgebuchung gibt, können wir die Begleitung verlängern. Den zusätzlichen Zeitraum und den Preis vereinbaren wir miteinander. Für wichtige Programmpunkte planen wir am besten schon im Vorgespräch genügend Zeit ein."
+    },
+    {
+      "id": "preise_faq_7",
+      "question": "Was passiert, wenn du krank wirst?",
+      "answer": "Ich bin gut vernetzt und werde einen zuverlässigen Ersatzfotografen für eure Hochzeit finden."
+    },
+    {
+      "id": "preise_faq_9",
+      "question": "Was passiert, wenn unsere Hochzeit nicht stattfinden kann?",
+      "answer": "Wenn eure Hochzeit nicht stattfindet, müsst ihr nicht das volle Honorar bezahlen. Bereits entstandene Kosten, etwa für gebuchte Flüge, nicht stornierbare Übernachtungen oder Anzahlungen, müssen übernommen werden."
+    },
+    {
+      "id": "preise_faq_13",
+      "question": "Welche Zahlungsbedingungen gelten?",
+      "answer": "Die Zahlungsbedingungen richten sich nach eurem Vertrag."
+    },
+    {
+      "id": "preise_faq_8",
+      "question": "Kannst du uns auch einen Videografen empfehlen?",
+      "answer": "Ja, ich arbeite mit zuverlässigen Videografen zusammen und empfehle euch gerne einen passenden Kontakt. Eine Videobegleitung ist in den Fotopaketen nicht enthalten."
+    }
+  ],
+  "relatedLinks": [
+    {
+      "href": "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
+      "label": "Getting Ready in Hamburg planen"
+    },
+    {
+      "href": "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+      "label": "Standesamtliche Trauung in Altona ansehen"
+    },
+    {
+      "href": "/gallery/traumhochzeit-in-hamburg/",
+      "label": "Hochzeit im Hotel Atlantic ansehen"
+    },
+    {
+      "href": "/portfolio/",
+      "label": "Portfolio ansehen"
+    }
+  ],
+  "images": {
+    "hero": {
+      "src": "original:hero",
+      "alt": "Brautpaar im Gegenlicht bei einer Hochzeitsreportage"
+    },
+    "faq": {
+      "src": "original:reportage",
+      "alt": "Braut mit Blumenstrauß vor dem Eiffelturm in Paris"
+    }
+  },
+  "discount": {
+    "percent": 10,
+    "images": 10
+  },
+  "examples": [
+    {
+      "id": "standesamt",
+      "title": "Standesamt und Paarbilder",
+      "hours": 2,
+      "packageId": "standesamt-paket",
+      "calculation": "Festpreis für das {{standesamtName}}",
+      "steps": [
+        "Ankommen, Trauung und Gratulationen",
+        "Gemeinsame Bilder mit Familie und Gästen",
+        "Paarshooting in der Nähe des Trauorts"
+      ],
+      "galleryHref": "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
+      "galleryLabel": "Hochzeitsreportage aus Altona ansehen"
+    },
+    {
+      "id": "reportage",
+      "title": "Vom Getting Ready bis zum Empfang",
+      "hours": 6,
+      "packageId": "rundum-sorglos-paket",
+      "calculation": "6 Stunden × {{reportagePrice}}",
+      "steps": [
+        "Vorbereitungen und erste Portraits",
+        "Trauung, Gratulationen und Empfang",
+        "Paarshooting und Gruppenbilder"
+      ],
+      "galleryHref": "/gallery/traumhochzeit-in-hamburg/",
+      "galleryLabel": "Hochzeitsreportage im Hotel Atlantic ansehen"
+    }
+  ],
+  "links": {
+    "contactHref": "/kontakt/",
+    "aboutHref": "/about/",
+    "printHref": "/hochzeitsfotos-drucken-color-proofing/"
+  }
+}

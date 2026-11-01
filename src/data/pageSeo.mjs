@@ -6,6 +6,9 @@
  * No invented ratings, dates, locations, official status or keyword-only content.
  */
 import hubPublications from './hub-publications.json' with {type:'json'};
+import pricingContent from './pricing-page.json' with {type:'json'};
+import {pricingText} from '../lib/pricing-content.mjs';
+const pricingOriginalImages={'original:hero':'src/assets/hochzeitsfotograf-preise/ART9896-1-1.jpg','original:pure':'src/assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg','original:standesamt':'src/assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg','original:reportage':'src/assets/hochzeitsfotograf-preise/ART_3680-Bearbeitet-Wiederhergestellt_web.jpg'};
 export const pageSeo = {
   "/kirchliche-trauungen-hamburg/": {
     keyword: "Kirchliche Trauungen Hamburg",
@@ -311,9 +314,10 @@ export const pageSeo = {
   },
   "/hochzeitsfotograf-preise/": {
     keyword: "Hochzeitsfotograf Hamburg Preise",
-    description: "Günstige Festpreisangebote für Deine Hochheitsreportage. Keine versteckten Kosten, keine Extrakosten",
-    image: "src/assets/hochzeitsfotograf-preise/ART9896-1-1.jpg",
-    alt: "Lachendes Paar im Gegenlicht bei einem Fotoshooting von Artbild-Fotografie",
+    title: pricingText(pricingContent.texts.seoTitle,pricingContent),
+    description: pricingText(pricingContent.texts.seoDescription,pricingContent),
+    image: pricingOriginalImages[pricingContent.images.hero.src] || 'public'+pricingContent.images.hero.src,
+    alt: pricingContent.images.hero.alt,
     focalPoint: "top",
   },
   "/hochzeitsfotograf-ratgeber/": {

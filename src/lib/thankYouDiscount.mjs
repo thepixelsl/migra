@@ -20,8 +20,8 @@ export function parseEuroCents(value) {
 }
 
 /** Round the 10% saving to cents, then subtract it so the displayed sums agree. */
-export function calculateThankYouDiscount(totalCents) {
-  if (!Number.isSafeInteger(totalCents) || totalCents < 0) return null;
-  const savingCents = Math.round(totalCents / 10);
+export function calculateThankYouDiscount(totalCents,percent=10) {
+  if (!Number.isSafeInteger(totalCents) || totalCents < 0 || !Number.isInteger(percent) || percent<0 || percent>50) return null;
+  const savingCents = Math.round(totalCents * percent / 100);
   return { totalCents, savingCents, discountedCents: totalCents - savingCents };
 }

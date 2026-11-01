@@ -1,21 +1,25 @@
 ---
 interface Props {
   termsHref?: string;
+  content?: any;
 }
 
 // Supply the published conditions page before releasing the offer.
-const { termsHref } = Astro.props;
+import {pricingText} from '../lib/pricing-content.mjs';
+const { termsHref, content } = Astro.props;
+const percent=content?.discount.percent ?? 10;
+const text=(key:string,fallback:string)=>content?pricingText(content.texts[key],content):fallback;
 ---
 
 <section class="thank-you" id="dankeschoen" aria-labelledby="thank-you-title">
   <div class="thank-you__copy">
-    <p class="thank-you__eyebrow">Für eure Lieblingsbilder</p>
-    <h2 id="thank-you-title">10 % Dankeschön</h2>
-    <p class="thank-you__invitation">10 eurer schönsten Bilder.{" "}<br />10 % Rabatt.</p>
-    <p class="thank-you__text">Für zehn eurer schönsten Bilder, die ich zeigen darf, sage ich mit <span class="thank-you__percent">10 %</span> Rabatt vielen lieben Dank! Wenn euch die Idee gefällt, suchen wir nach der Hochzeit gemeinsam die passenden Bilder aus.</p>
+    <p class="thank-you__eyebrow">{text('discountKicker','Für eure Lieblingsbilder')}</p>
+    <h2 id="thank-you-title">{text('discountHeading','10 % Dankeschön')}</h2>
+    <p class="thank-you__invitation">{text('discountInvitation','10 eurer schönsten Bilder.\n10 % Rabatt.')}</p>
+    <p class="thank-you__text">{text('discountBody','Für zehn eurer schönsten Bilder, die ich zeigen darf, sage ich mit 10 % Rabatt vielen lieben Dank! Wenn euch die Idee gefällt, suchen wir nach der Hochzeit gemeinsam die passenden Bilder aus.')}</p>
   </div>
 
-  <div class="thank-you__calculator" data-thank-you-calculator hidden>
+  <div class="thank-you__calculator" data-thank-you-calculator data-discount-percent={percent} hidden>
     <p class="thank-you__eyebrow">Euer Dankeschön in Euro</p>
     <label for="thank-you-total">Euer Gesamtpreis</label>
     <div class="thank-you__field">
@@ -33,17 +37,17 @@ const { termsHref } = Astro.props;
     <p class="thank-you__hint" id="thank-you-hint">Tragt den Gesamtpreis eures Fotopakets ein.</p>
     <p class="thank-you__error" id="thank-you-error" aria-live="polite" hidden>Bitte gebt einen gültigen Preis ein, zum Beispiel 1.992 oder 1.992,50.</p>
     <output for="thank-you-total" aria-live="polite" aria-atomic="true">
-      <span class="thank-you__result-label">Mit 10 % Dankeschön</span>
+      <span class="thank-you__result-label">Mit {percent} % Dankeschön</span>
       <strong data-thank-you-price aria-label="Noch kein Preis berechnet">…</strong>
       <span class="thank-you__saving" data-thank-you-saving>Hier seht ihr euren Preis mit Rabatt.</span>
     </output>
   </div>
 
-  <noscript><p class="thank-you__fallback">Euer Preis mit Dankeschön entspricht 90 % des regulären Gesamtpreises. Bei 1.992 € sind das 1.792,80 €.</p></noscript>
+  <noscript><p class="thank-you__fallback">Euer Preis mit Dankeschön entspricht {100-percent} % des regulären Gesamtpreises.</p></noscript>
 
   <div class="thank-you__conditions">
-    <p>Die <span class="thank-you__percent">10 %</span> gelten für den regulären Gesamtpreis eures Fotopakets. Der Rabatt wird gutgeschrieben, sobald für alle zehn Bilder die Einwilligungen aller erkennbar abgebildeten Personen zur Veröffentlichung auf meiner Website vorliegen.</p>
-    {termsHref && <a href={termsHref}>Bedingungen zum 10 % Dankeschön</a>}
+    <p>{text('discountConditions','Die 10 % gelten für den regulären Gesamtpreis eures Fotopakets. Der Rabatt wird gutgeschrieben, sobald für alle zehn Bilder die Einwilligungen aller erkennbar abgebildeten Personen zur Veröffentlichung auf meiner Website vorliegen.')}</p>
+    {termsHref && <a href={termsHref}>Bedingungen zum {percent} % Dankeschön</a>}
   </div>
 </section>
 
@@ -61,7 +65,7 @@ const { termsHref } = Astro.props;
     let hasBlurred = false;
     const update = () => {
       const cents = parseEuroCents(input.value);
-      const result = cents === null ? null : calculateThankYouDiscount(cents);
+      const result = cents === null ? null : calculateThankYouDiscount(cents,Number(calculator.dataset.discountPercent ?? 10));
       const invalid = input.value.trim() !== "" && result === null;
       input.setAttribute("aria-invalid", String(invalid && hasBlurred));
       error.hidden = !(invalid && hasBlurred);
@@ -116,6 +120,7 @@ const { termsHref } = Astro.props;
     line-height: 1.2;
   }
   .thank-you__invitation {
+    white-space: pre-line;
     margin: 24px 0;
     font-family: "Gilda Display", Georgia, serif;
     font-size: clamp(24px, 2.4vw, 30px);

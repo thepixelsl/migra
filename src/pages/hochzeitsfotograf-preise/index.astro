@@ -11,210 +11,49 @@ import { googleReviews } from "../../data/reviews";
 import { weddingBookingHoursRule, weddingGalleryMonths, weddingPackages } from "../../data/weddingPackages";
 import { packagePriceSchema } from "../../data/packagePriceSchema.mjs";
 import { PACKAGE_NAMES } from "../../lib/pricingTracking.mjs";
-import { pageSeo } from "../../data/pageSeo.mjs";
 import heroImage from "../../assets/hochzeitsfotograf-preise/ART9896-1-1.jpg";
 import pureMomentsImage from "../../assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg";
 import reportageImage from "../../assets/hochzeitsfotograf-preise/ART_3680-Bearbeitet-Wiederhergestellt_web.jpg";
 
+import content from '../../data/pricing-page.json';
+import {pricingText,formatPricingEuro} from '../../lib/pricing-content.mjs';
+const expand=(text:string)=>pricingText(text,content);
+const t=(key:keyof typeof content.texts)=>expand(content.texts[key]);
+const originals={'original:hero':heroImage,'original:pure':pureMomentsImage,'original:standesamt':standesamtImage,'original:reportage':reportageImage};
+const media=(src:string)=>originals[src as keyof typeof originals] || src;
+const heroMedia=media(content.images.hero.src), faqMedia=media(content.images.faq.src);
+const heroSize=typeof heroMedia==='string'?content.images.hero:heroMedia;
+
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/hochzeitsfotograf-preise/";
 const pageUrl = `${siteUrl}${pagePath}`;
-const title = "Hochzeitsfotograf Hamburg Preise";
-const description = pageSeo[pagePath].description;
-const primaryImage = new URL(heroImage.src, siteUrl).href;
+const title = t('seoTitle');
+const description = t('seoDescription');
+const primaryImage = new URL(typeof heroMedia==='string'?heroMedia:heroMedia.src, siteUrl).href;
 const [pureMoments, standesamtPackage, reportagePackage] = weddingPackages;
-const formatPrice = (value: number) =>
-  new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(value);
-const deliveryNotes = {
-  timing: "In der Regel erhaltet Ihr die ersten 100 Bilder in den ersten 7 Tagen, sämtliche Bilder in der Regel binnen 2 Wochen.",
-  exception: "Die Angabe zu den ersten 100 Bildern gilt nicht für das 1-Stunden-Paket.",
-  retouch: "Spezielle Wünsche bei der Retusche erhöhen den Preis nicht, können aber die Bearbeitungszeit relevant verlängern.",
-};
+const formatPrice = formatPricingEuro;
 const calculatorOptions = Array.from({ length: 10 }, (_, index) => {
   const hours = index + 1;
-  const item = weddingPackages
-    .filter((item) => hours >= item.minimumHours && hours <= item.maximumHours)
-    .sort((a, b) => (a.billingUnit === "hour" ? hours * a.priceValue : a.priceValue)
-      - (b.billingUnit === "hour" ? hours * b.priceValue : b.priceValue))[0];
-  return {
-    hours,
-    package: item,
-    total: item.billingUnit === "hour" ? hours * item.priceValue : item.priceValue,
-    calculation: item.billingUnit === "hour"
-      ? `${hours} Stunden × ${formatPrice(item.priceValue)}`
-      : `Festpreis für ${hours === 1 ? "1 Stunde" : `${hours} Stunden`}`,
-  };
+  const item = weddingPackages.filter(item=>hours>=item.minimumHours && hours<=item.maximumHours)
+    .sort((a,b)=>(a.billingUnit==='hour'?hours*a.priceValue:a.priceValue)-(b.billingUnit==='hour'?hours*b.priceValue:b.priceValue))[0];
+  return {hours, package:item, total:item.billingUnit==='hour'?hours*item.priceValue:item.priceValue,
+    calculation:item.billingUnit==='hour'?`${hours} Stunden × ${formatPrice(item.priceValue)}`:`Festpreis für ${hours===1?'1 Stunde':`${hours} Stunden`}`};
 });
-
-const pricingExamples = [
-  {
-    id: "standesamt",
-    title: "Standesamt und Paarbilder",
-    hours: standesamtPackage.minimumHours,
-    package: standesamtPackage,
-    total: standesamtPackage.priceValue,
-    calculation: "Festpreis für das Standesamt Paket",
-    steps: [
-      "Ankommen, Trauung und Gratulationen",
-      "Gemeinsame Bilder mit Familie und Gästen",
-      "Paarshooting in der Nähe des Trauorts",
-    ],
-    galleryHref: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
-    galleryLabel: "Hochzeitsreportage aus Altona ansehen",
-  },
-  {
-    id: "reportage",
-    title: "Vom Getting Ready bis zum Empfang",
-    hours: 6,
-    package: reportagePackage,
-    total: 6 * reportagePackage.priceValue,
-    calculation: `6 Stunden × ${formatPrice(reportagePackage.priceValue)}`,
-    steps: [
-      "Vorbereitungen und erste Portraits",
-      "Trauung, Gratulationen und Empfang",
-      "Paarshooting und Gruppenbilder",
-    ],
-    galleryHref: "/gallery/traumhochzeit-in-hamburg/",
-    galleryLabel: "Hochzeitsreportage im Hotel Atlantic ansehen",
-  },
-];
-
-const packageMedia = {
-  "pure-moments": {
-    image: pureMomentsImage,
-    alt: "Brautpaar in Lauenbrück als Beispiel für das Pure Moments Paket",
-    imageOrientation: "portrait",
-  },
-  "standesamt-paket": {
-    image: standesamtImage,
-    alt: "Brautpaar in einer Umarmung beim Hochzeitsshooting",
-    imageOrientation: "portrait",
-  },
-  "rundum-sorglos-paket": {
-    image: reportageImage,
-    alt: "Braut mit Blumenstrauß vor dem Eiffelturm in Paris",
-    imageOrientation: "portrait",
-  },
-} as const;
-
-const packages = weddingPackages.map((item) => ({
-  ...item,
-  ...packageMedia[item.id],
+const initialCalculation=calculatorOptions.find(option=>option.hours===6)!;
+const pricingExamples = content.examples.map(example=>{
+  const item=weddingPackages.find(item=>item.id===example.packageId)!;
+  return {...example,title:expand(example.title),steps:example.steps.map(expand),calculation:expand(example.calculation),package:item,total:item.billingUnit==='hour'?example.hours*item.priceValue:item.priceValue};
+});
+const packages=weddingPackages.map(item=>({...item,image:media(item.image.src),alt:item.image.alt,imageOrientation:'portrait',imageWidth:item.image.width,imageHeight:item.image.height}));
+const packageOffers=packages.map(item=>({
+  '@type':'Offer','@id':`${pageUrl}#angebot-${item.id}`,name:item.name,description:item.intro,url:`${pageUrl}#paket-${item.id}`,...packagePriceSchema(item),category:'Hochzeitsfotografie',
+  image:new URL(typeof item.image==='string'?item.image:item.image.src,siteUrl).href,
+  itemOffered:{'@type':'Service','@id':`${pageUrl}#leistung-${item.id}`,name:item.name,serviceType:item.serviceType,
+    description:`${item.intro} Dauer: ${item.duration}. ${weddingBookingHoursRule} Enthalten sind: ${item.features.join(', ')}.`,provider:{'@id':`${siteUrl}/#organization`},areaServed:[{'@type':'City',name:'Hamburg'},{'@type':'AdministrativeArea',name:'Norddeutschland'}]}
 }));
-
-const packageOffers = packages.map((item) => ({
-  "@type": "Offer",
-  "@id": `${pageUrl}#angebot-${item.id}`,
-  name: item.name,
-  description: item.intro,
-  url: `${pageUrl}#paket-${item.id}`,
-  ...packagePriceSchema(item),
-  category: "Hochzeitsfotografie",
-  image: new URL(item.image.src, siteUrl).href,
-  itemOffered: {
-    "@type": "Service",
-    "@id": `${pageUrl}#leistung-${item.id}`,
-    name: item.name,
-    serviceType: item.serviceType,
-    description: `${item.intro} Dauer: ${item.duration}. ${weddingBookingHoursRule} Enthalten sind: ${item.features.join(", ")}.`,
-    provider: {
-      "@id": `${siteUrl}/#organization`,
-    },
-    areaServed: [
-      { "@type": "City", name: "Hamburg" },
-      { "@type": "AdministrativeArea", name: "Norddeutschland" },
-    ],
-  },
-}));
-
-const faqItems = [
-  {
-    id: "preise_faq_12",
-    question: "Was kostet ein Hochzeitsfotograf in Hamburg bei Artbild?",
-    answer: `Pure Moments umfasst 1 Stunde Begleitung für ${formatPrice(pureMoments.priceValue)}. Das Standesamt Paket kostet ${formatPrice(standesamtPackage.priceValue)} für 2 Stunden. Längere Reportagen von ${reportagePackage.minimumHours} bis ${reportagePackage.maximumHours} Stunden berechne ich mit ${formatPrice(reportagePackage.priceValue)} pro Stunde. Sechs Stunden kosten damit ${formatPrice(6 * reportagePackage.priceValue)}, acht Stunden ${formatPrice(8 * reportagePackage.priceValue)}. Die enthaltenen Leistungen findet ihr direkt beim jeweiligen Paket.`,
-  },
-  {
-    id: "preise_faq_17",
-    question: "Wie viele Stunden passen zu unserer Hochzeit?",
-    answer: "Für eine kurze Begleitung kommt Pure Moments mit einer Stunde infrage. Zwei Stunden geben euch mehr Zeit für die Trauung, Gratulationen und Paarbilder. Wenn ihr auch Vorbereitungen, Empfang oder Feier festhalten möchtet, planen wir eine längere Reportage. Entscheidend sind eure gewünschten Momente und die Wege zwischen den Orten. Das besprechen wir vor der Buchung gemeinsam.",
-  },
-  {
-    id: "preise_faq_19",
-    question: "Wie wird der Preis berechnet, wenn wir an zwei Tagen heiraten?",
-    answer: `Es zählen eure gesamten Begleitungsstunden, unabhängig von der Anzahl der Tage. Für diese Stundenzahl wird automatisch das günstigste passende Paket gewählt. Zum Beispiel ergeben eine Stunde Standesamt und sechs Stunden freie Trauung zusammen sieben Stunden: ${formatPrice(7 * reportagePackage.priceValue)} im Rundum-Sorglos-Paket. Pakete sind nicht miteinander kombinierbar. Reisekosten außerhalb Norddeutschlands stimmen wir vorab ab.`,
-  },
-  {
-    id: "preise_faq_18",
-    question: "Ist ein Kennenlernshooting enthalten?",
-    answer: "Im Standesamt Paket und im Rundum-Sorglos-Paket ist ein Kennenlernshooting enthalten. Dabei erlebt ihr, wie ich arbeite, und könnt euch vor der Hochzeit mit dem Fotografiertwerden vertraut machen. Pure Moments enthält ein persönliches Vorgespräch, aber kein Kennenlernshooting.",
-  },
-  {
-    id: "preise_faq_4",
-    question: "Ist die Bearbeitung unserer Bilder im Preis enthalten?",
-    answer: "Ja. Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet. Dazu gehören Weißabgleich, Helligkeit, Farben und Kontraste. Ihr müsst später keine einzelnen Fotos zur Bearbeitung auswählen oder dafür extra bezahlen. Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im Preis enthalten. Welche Bilder und Details euch dabei wichtig sind, besprechen wir gemeinsam.",
-  },
-  {
-    id: "preise_faq_delivery",
-    question: "Wann bekommen wir unsere Bilder?",
-    answer: `${deliveryNotes.timing} ${deliveryNotes.exception} ${deliveryNotes.retouch}`,
-  },
-  {
-    id: "preise_faq_16",
-    question: "Wie bekommen wir unsere Bilder und wie lange bleibt die Galerie verfügbar?",
-    answer: `Ihr erhaltet eure Bilder in einer passwortgeschützten Onlinegalerie bei PicDrop. Die Galerie ist bei allen Paketen ${weddingGalleryMonths} Monate kostenlos verfügbar. Ladet eure Bilder innerhalb dieser Zeit herunter und sichert sie für euch.`,
-  },
-  {
-    id: "preise_faq_1",
-    question: "Welche Fahrtkosten kommen hinzu?",
-    answer: "In Norddeutschland ist die Anfahrt bei allen Paketen enthalten. Außerhalb Norddeutschlands berechne ich die tatsächlich anfallenden Reisekosten, keine pauschale Fahrtgebühr. Die Fahrzeit stelle ich nicht als Arbeitszeit in Rechnung. Die Reisekosten stimmen wir vor der Buchung ab.",
-  },
-  {
-    id: "preise_faq_15",
-    question: "Können wir die Begleitung spontan verlängern?",
-    answer: "Sprecht mich gerne darauf an. Wenn es keine Folgebuchung gibt, können wir die Begleitung verlängern. Den zusätzlichen Zeitraum und den Preis vereinbaren wir miteinander. Für wichtige Programmpunkte planen wir am besten schon im Vorgespräch genügend Zeit ein.",
-  },
-  {
-    id: "preise_faq_7",
-    question: "Was passiert, wenn du krank wirst?",
-    answer: "Ich bin gut vernetzt und werde einen zuverlässigen Ersatzfotografen für eure Hochzeit finden.",
-  },
-  {
-    id: "preise_faq_9",
-    question: "Was passiert, wenn unsere Hochzeit nicht stattfinden kann?",
-    answer: "Wenn eure Hochzeit nicht stattfindet, müsst ihr nicht das volle Honorar bezahlen. Bereits entstandene Kosten, etwa für gebuchte Flüge, nicht stornierbare Übernachtungen oder Anzahlungen, müssen übernommen werden.",
-  },
-  {
-    id: "preise_faq_13",
-    question: "Welche Zahlungsbedingungen gelten?",
-    answer: "Die Zahlungsbedingungen richten sich nach eurem Vertrag.",
-  },
-  {
-    id: "preise_faq_8",
-    question: "Kannst du uns auch einen Videografen empfehlen?",
-    answer: "Ja, ich arbeite mit zuverlässigen Videografen zusammen und empfehle euch gerne einen passenden Kontakt. Eine Videobegleitung ist in den Fotopaketen nicht enthalten.",
-  },
-];
-
-const relatedLinks = [
-  {
-    href: "/das-perfekte-getting-ready-fuer-deine-hochzeit-in-hamburg/",
-    label: "Getting Ready in Hamburg planen",
-  },
-  {
-    href: "/gallery/standesamtliche-trauung-standesamt-altona-hochzeitsfotograf-hamburg/",
-    label: "Standesamtliche Trauung in Altona ansehen",
-  },
-  {
-    href: "/gallery/traumhochzeit-in-hamburg/",
-    label: "Hochzeit im Hotel Atlantic ansehen",
-  },
-  {
-    href: "/portfolio/",
-    label: "Portfolio ansehen",
-  },
-];
-
+const faqItems=content.faq.map(item=>({...item,question:expand(item.question),answer:expand(item.answer)}));
+const relatedLinks=content.relatedLinks;
 
 const breadcrumbs = [
   { label: "Startseite", href: "/" },
@@ -234,13 +73,13 @@ const schemaGraph = {
         "@id": `${pageUrl}#service`,
       },
       datePublished: "2019-08-14T09:37:40+02:00",
-      dateModified: "2026-09-25T00:00:00+02:00",
+      dateModified: content.updatedAt || "2026-09-25T00:00:00+02:00",
       inLanguage: "de",
       primaryImageOfPage: {
         "@type": "ImageObject",
         url: primaryImage,
-        width: heroImage.width,
-        height: heroImage.height,
+        width: heroSize.width,
+        height: heroSize.height,
         caption: "Hochzeitsfotograf Hamburg Preise",
       },
       breadcrumb: {
@@ -316,8 +155,8 @@ const schemaGraph = {
     <meta property="og:url" content={pageUrl}>
     <meta property="og:site_name" content="Artbild-Fotografie">
     <meta property="og:image" content={primaryImage}>
-    <meta property="og:image:width" content={heroImage.width}>
-    <meta property="og:image:height" content={heroImage.height}>
+    <meta property="og:image:width" content={heroSize.width}>
+    <meta property="og:image:height" content={heroSize.height}>
     <meta property="og:image:alt" content="Hochzeitsfotograf Hamburg Preise">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content={title}>
@@ -336,16 +175,12 @@ const schemaGraph = {
       <article class="pricing">
         <header class="pricing-hero">
           <div class="pricing-hero__copy">
-            <p class="pricing-kicker">Hochzeitsfotograf Hamburg · Preise & Pakete</p>
-            <h1>Hochzeitsfotograf <span>Hamburg Preise</span></h1>
-            <p>
-              Hier findet ihr die passende Begleitung für eure Hochzeit. Alle
-              Bilder erhaltet ihr grundlegend RAW-bearbeitet. Hochwertige Retusche
-              ausgewählter Bilder und die Anfahrt in Norddeutschland sind inklusive.
-            </p>
+            <p class="pricing-kicker">{t('heroKicker')}</p>
+            <h1>{t('heroTitleFirst')} <span>{t('heroTitleSecond')}</span></h1>
+            <p>{t('heroIntro')}</p>
             <p class="pricing-hero__prices">
-              1 Stunde: {formatPrice(pureMoments.priceValue)} · 2 Stunden: {formatPrice(standesamtPackage.priceValue)}<br />
-              3-10 Stunden: {formatPrice(reportagePackage.priceValue)} pro Stunde
+              {pureMoments.duration}: {pureMoments.priceLabel} · {standesamtPackage.duration}: {standesamtPackage.priceLabel}<br />
+              {reportagePackage.duration}: {reportagePackage.priceLabel}
             </p>
             <div
               class="pricing-hero__actions"
@@ -367,9 +202,9 @@ const schemaGraph = {
                 data-user-intent="pakete_ansehen"
                 data-journey-stage="decision"
                 data-position="hero_primary"
-              >Pakete ansehen</a>
+              >{t('heroPackagesLabel')}</a>
               <a
-                href="/kontakt/"
+                href={content.links.contactHref}
                 data-track-event="contact_click"
                 data-cta-id="pricing_hero_contact"
                 data-cta-type="contact_form"
@@ -378,19 +213,21 @@ const schemaGraph = {
                 data-user-intent="termin_anfragen"
                 data-journey-stage="conversion"
                 data-position="hero_secondary"
-              >Termin anfragen</a>
+              >{t('heroContactLabel')}</a>
             </div>
           </div>
           <figure class="pricing-hero__image">
             <Image
-              src={heroImage}
+              src={heroMedia}
+              width={heroSize.width}
+              height={heroSize.height}
               widths={[520, 760, 1040, 1384]}
               sizes="(max-width: 620px) calc(100vw - 56px), (max-width: 1099px) 400px, 460px"
               format="webp"
               quality={88}
               loading="eager"
               fetchpriority="high"
-              alt="Brautpaar im Gegenlicht bei einer Hochzeitsreportage"
+              alt={content.images.hero.alt}
             />
           </figure>
         </header>
@@ -407,7 +244,7 @@ const schemaGraph = {
         >
           <a href="#pakete" data-track-event="cta_click" data-cta-id="pricing_toc_packages" data-cta-type="anchor_navigation">Pakete</a>
           <a href="#preisbeispiele" data-track-event="cta_click" data-cta-id="pricing_toc_examples" data-cta-type="anchor_navigation">Preisrechner & Beispiele</a>
-          <a href="#dankeschoen">10 % Dankeschön</a>
+          <a href="#dankeschoen">{content.discount.percent} % Dankeschön</a>
           <a href="#enthalten" data-track-event="cta_click" data-cta-id="pricing_toc_included" data-cta-type="anchor_navigation">Enthaltene Leistungen</a>
           <a href="#druckvorbereitung" data-track-event="cta_click" data-cta-id="pricing_toc_print" data-cta-type="anchor_navigation">Druckvorbereitung</a>
           <a href="#faq" data-track-event="cta_click" data-cta-id="pricing_toc_faq" data-cta-type="anchor_navigation">FAQ</a>
@@ -416,32 +253,20 @@ const schemaGraph = {
 
         <section class="pricing-intro" aria-labelledby="pricing-intro-title">
           <div>
-            <p class="pricing-kicker">Persönlich begleitet</p>
-            <h2 id="pricing-intro-title">Ihr wisst vorab, was euch erwartet.</h2>
+            <p class="pricing-kicker">{t('introKicker')}</p>
+            <h2 id="pricing-intro-title">{t('introHeading')}</h2>
           </div>
           <div class="pricing-copy">
-            <p>
-              Ich bin York. Im persönlichen Vorgespräch erzählt ihr mir von eurer
-              Hochzeit und davon, welche Bilder euch wichtig sind. Daraus ergibt
-              sich die passende Begleitung mit einem vereinbarten Gesamtpreis.
-            </p>
-            <p>
-              Die grundlegende RAW-Bearbeitung aller gelieferten Bilder,
-              hochwertige Retusche ausgewählter Bilder, Color-Proofing für den
-              Druck, die Anfahrt in Norddeutschland und eure
-              passwortgeschützte Onlinegalerie für {weddingGalleryMonths} Monate
-              sind in jedem Paket enthalten. Die Galerie ist in dieser Zeit
-              kostenlos verfügbar. Bei Hochzeiten außerhalb Norddeutschlands stimmen wir
-              die Reisekosten vor der Buchung ab.
-            </p>
-            <a class="pricing-text-link" href="/about/">Mehr über mich und meine Arbeitsweise</a>
+            <p>{t('introBodyFirst')}</p>
+            <p>{t('introBodySecond')}</p>
+            <a class="pricing-text-link" href={content.links.aboutHref}>{t('aboutLabel')}</a>
           </div>
         </section>
 
         <section class="pricing-packages" id="pakete" aria-labelledby="packages-title">
           <div class="pricing-section-heading">
             <p class="pricing-kicker">Pakete</p>
-            <h2 id="packages-title">Pakete und Leistungen im Überblick</h2>
+            <h2 id="packages-title">{t('packagesHeading')}</h2>
             <p>{weddingBookingHoursRule}</p>
           </div>
           <div class="pricing-package-grid">
@@ -458,7 +283,9 @@ const schemaGraph = {
                 <figure aria-label={`${item.name} Beispielbild`}>
                   <Image
                     src={item.image}
-                    widths={[323, 420, 640, 840, 1040].filter((width) => width <= item.image.width)}
+                    width={item.image.width || item.imageWidth}
+                    height={item.image.height || item.imageHeight}
+                    widths={[323, 420, 640, 840, 1040]}
                     sizes="(max-width: 620px) calc(100vw - 56px), (min-width: 1441px) min(calc(15vw + 107px), 503px), 323px"
                     format="webp"
                     quality={88}
@@ -474,37 +301,37 @@ const schemaGraph = {
                   <ul aria-label={`Enthaltene Leistungen: ${item.name}`}>
                     {item.features.map((feature) => <li>{feature}</li>)}
                   </ul>
-                  <a class="pricing-package__contact" href="/kontakt/" aria-label={`${item.name} unverbindlich anfragen`}>Unverbindlich anfragen <span aria-hidden="true">→</span></a>
+                  <a class="pricing-package__contact" href={content.links.contactHref} aria-label={`${item.name} unverbindlich anfragen`}>{t('packageContactLabel')} <span aria-hidden="true">→</span></a>
                 </div>
               </article>
             ))}
           </div>
           <aside class="pricing-delivery" aria-labelledby="delivery-title">
             <div>
-              <p class="pricing-kicker">Nach eurer Hochzeit</p>
-              <h3 id="delivery-title">Bildübergabe &amp; Bearbeitungszeit</h3>
+              <p class="pricing-kicker">{t('deliveryKicker')}</p>
+              <h3 id="delivery-title">{t('deliveryHeading')}</h3>
             </div>
             <div class="pricing-copy">
-              <p>{deliveryNotes.timing}</p>
-              <p>{deliveryNotes.exception}</p>
-              <p>{deliveryNotes.retouch}</p>
+              <p>{t('deliveryTiming')}</p>
+              <p>{t('deliveryException')}</p>
+              <p>{t('deliveryRetouch')}</p>
             </div>
           </aside>
         </section>
 
         <div class="pricing-price-context" id="preisgestaltung">
           <section aria-labelledby="price-quality-title">
-            <h2 id="price-quality-title">Wie viel kostet ein guter Hochzeitsfotograf?</h2>
-            <p>Ein guter Hochzeitsfotograf macht nicht nur die Bilder auf Eurer Hochzeit, sondern investiert auch Arbeitszeit, nach der Hochzeit in die Bildbearbeitung, die Bildauswahl und ggf. in die Bildretusche, falls dies einmal nötig sein sollte. Daher habe ich noch keinen guten Hochzeitsfotografen für weniger als 100€ pro Stunde gesehen.</p>
+            <h2 id="price-quality-title">{t('qualityHeading')}</h2>
+            <p>{t('qualityBody')}</p>
           </section>
           <section aria-labelledby="price-hourly-title">
-            <h2 id="price-hourly-title">Wie teuer ist ein Fotograf pro Stunde?</h2>
-            <p>Ein guter Hochzeitsfotograf nimmt einen Preis, der sowohl die Kosten für die An- und Abfahrt, den Arbeitslohn vor Ort und den Arbeitslohn für die Bildbearbeitung abdeckt.</p>
+            <h2 id="price-hourly-title">{t('hourlyHeading')}</h2>
+            <p>{t('hourlyBody')}</p>
           </section>
           <section aria-labelledby="price-composition-title">
-            <h2 id="price-composition-title">Warum kostet ein Hochzeitsfotograf so viel?</h2>
-            <p>Nicht nur eine hochwertige Ausrüstung, im Wert vieler tausend Euro, sondern auch die Bearbeitungzeit nach der Hochzeit, die oft viele Arbeitsstunden Zeit in Anspruch nimmt, müssen mit in den Preis einfließen.</p>
-            <p>So erklärt sich der Preis und die Preiszusammensetzung.</p>
+            <h2 id="price-composition-title">{t('compositionHeading')}</h2>
+            <p>{t('compositionBody')}</p>
+            <p>{t('compositionBodySecond')}</p>
           </section>
         </div>
 
@@ -515,7 +342,7 @@ const schemaGraph = {
             googleReviews.freddyNa,
           ]}
           sectionId="preise_review_manuel_r"
-          heading="Wie Paare die Begleitung erlebt haben"
+          heading={t('reviewsHeading')}
           contentTopic="hochzeitspakete"
           userIntent="leistung_einschaetzen"
           journeyStage="vergleich"
@@ -524,20 +351,15 @@ const schemaGraph = {
 
         <section class="pricing-examples" id="preisbeispiele" aria-labelledby="examples-title">
           <div class="pricing-section-heading">
-            <p class="pricing-kicker">Euer Ablauf, euer Gesamtpreis</p>
-            <h2 id="examples-title">Was kostet eure fotografische Begleitung?</h2>
-            <p>
-              Diese Beispiele helfen euch bei der Planung einer Hochzeit in Hamburg.
-              Wie viel Zeit ihr für einzelne Momente und Wege braucht, stimmen wir
-              gemeinsam ab. Die verlinkten Reportagen zeigen meine Arbeit; die
-              Beispielpreise beziehen sich auf die hier beschriebenen Abläufe.
-            </p>
+            <p class="pricing-kicker">{t('examplesKicker')}</p>
+            <h2 id="examples-title">{t('examplesHeading')}</h2>
+            <p>{t('examplesIntro')}</p>
           </div>
           <div class="pricing-calculator" data-pricing-calculator hidden>
             <div class="pricing-calculator__input">
               <p class="pricing-kicker">Preisrechner</p>
-              <h3>Wie lange darf ich euch begleiten?</h3>
-              <label for="pricing-duration">Gesamte Begleitungsstunden</label>
+              <h3>{t('calculatorHeading')}</h3>
+              <label for="pricing-duration">{t('calculatorLabel')}</label>
               <select id="pricing-duration" aria-describedby="pricing-calculator-hint">
                 {calculatorOptions.map((option) => (
                   <option
@@ -550,19 +372,19 @@ const schemaGraph = {
                   >{option.hours === 1 ? "1 Stunde" : `${option.hours} Stunden`}</option>
                 ))}
               </select>
-              <p id="pricing-calculator-hint">Zählt alle gewünschten Begleitungsstunden zusammen, auch an unterschiedlichen Tagen. Der Rechner wählt automatisch das günstigste passende Paket.</p>
+              <p id="pricing-calculator-hint">{t('calculatorHint')}</p>
             </div>
             <div class="pricing-calculator__result">
               <output for="pricing-duration" aria-live="polite" aria-atomic="true">
-                <span class="pricing-calculator__label">Euer Gesamtpreis</span>
-                <strong data-calculator-total>{formatPrice(6 * reportagePackage.priceValue)}</strong>
-                <span data-calculator-package>{reportagePackage.name}</span>
-                <span data-calculator-calculation>{`6 Stunden × ${formatPrice(reportagePackage.priceValue)}`}</span>
+                <span class="pricing-calculator__label">{t('calculatorResultLabel')}</span>
+                <strong data-calculator-total>{formatPrice(initialCalculation.total)}</strong>
+                <span data-calculator-package>{initialCalculation.package.name}</span>
+                <span data-calculator-calculation>{initialCalculation.calculation}</span>
               </output>
-              <p>Alle Bilder RAW-bearbeitet, hochwertige Retusche ausgewählter Bilder, Color-Proofing und Anfahrt in Norddeutschland inklusive. Eure Onlinegalerie ist {weddingGalleryMonths} Monate kostenlos verfügbar.</p>
-              <a data-calculator-package-link href={`#paket-${reportagePackage.id}`}>Alle Leistungen dieses Pakets ansehen</a>
+              <p>{t('calculatorIncluded')}</p>
+              <a data-calculator-package-link href={`#paket-${initialCalculation.package.id}`}>{t('calculatorPackageLink')}</a>
             </div>
-            <p class="pricing-calculator__note">Es zählt die Gesamtstundenzahl, nicht die Anzahl der Tage. Pakete sind nicht miteinander kombinierbar. Außerhalb Norddeutschlands kommen die vorab vereinbarten Reisekosten hinzu. Termine und Ablauf stimmen wir persönlich ab.</p>
+            <p class="pricing-calculator__note">{t('calculatorNote')}</p>
           </div>
           <div class="pricing-example-grid">
             {pricingExamples.map((example) => (
@@ -582,64 +404,34 @@ const schemaGraph = {
               </article>
             ))}
           </div>
-          <p class="pricing-examples__note">
-            Ihr möchtet auch einen Teil der Feier begleiten lassen? Acht Stunden
-            kosten im Rundum-Sorglos-Paket {formatPrice(8 * reportagePackage.priceValue)}
-            {` (8 × ${formatPrice(reportagePackage.priceValue)})`}. Welche Momente in
-            diesen Zeitraum fallen, richtet sich nach eurem Tagesablauf. Die
-            Anfahrt in Norddeutschland, die Bildbearbeitung und die Onlinegalerie
-            für {weddingGalleryMonths} Monate sind bei allen Beispielen enthalten.
-          </p>
+          <p class="pricing-examples__note">{t('examplesNote')}</p>
         </section>
 
 
 
-        <ThankYouDiscount />
+        <ThankYouDiscount content={content} />
 
         <section class="pricing-split" id="enthalten" aria-labelledby="included-title">
           <div>
-            <p class="pricing-kicker">Leistungen</p>
-            <h2 id="included-title">Bildbearbeitung und Retusche</h2>
+            <p class="pricing-kicker">{t('includedKicker')}</p>
+            <h2 id="included-title">{t('includedHeading')}</h2>
           </div>
           <div class="pricing-copy">
-            <p>
-              Alle Bilder, die ihr erhaltet, sind bereits grundlegend RAW-bearbeitet.
-              Dabei stimme ich Weißabgleich, Helligkeit, Farben und Kontraste
-              aufeinander ab. Ihr müsst später keine einzelnen Bilder für die
-              Bearbeitung auswählen oder dafür extra bezahlen.
-            </p>
-            <p>
-              Zusätzlich ist eine hochwertige Retusche ausgewählter Bilder im
-              Preis enthalten. Dabei kümmere ich mich gezielt um störende Details,
-              etwa einen Fussel auf dem Anzug oder eine vorübergehende Hautunreinheit.
-              Welche Bilder und Wünsche euch wichtig sind, besprechen wir gemeinsam.
-              Ich retuschiere überwiegend manuell und bei Bedarf mit KI-Unterstützung;
-              auf Wunsch auch vollständig ohne KI.
-            </p>
+            <p>{t('includedBodyFirst')}</p>
+            <p>{t('includedBodySecond')}</p>
           </div>
         </section>
 
         <section class="pricing-split" id="druckvorbereitung" aria-labelledby="print-title">
           <div>
-            <p class="pricing-kicker">Für eure gedruckten Bilder</p>
-            <h2 id="print-title">Color-Proofing für den Druck inklusive</h2>
+            <p class="pricing-kicker">{t('printKicker')}</p>
+            <h2 id="print-title">{t('printHeading')}</h2>
           </div>
           <div class="pricing-copy">
+            <p>{t('printBodyFirst')}</p>
+            <p>{t('printBodySecond')}</p>
             <p>
-              Wenn ihr eure Bilder drucken lassen möchtet, unterstütze ich euch
-              mit Color-Proofing: Ich prüfe die zu erwartende Farbwiedergabe auf
-              dem vorgesehenen Material und bereite die Druckdaten passend vor.
-              Das gilt für Drucke auf hochwertigen und langlebigen Materialien,
-              für Fotobücher und für Hintergründe.
-            </p>
-            <p>
-              Die Farbprüfung und Druckvorbereitung sind bei allen Paketen
-              kostenlos enthalten. So könnt ihr eure Bilder auch für den Druck
-              sorgfältig abstimmen lassen. Die Kosten für die Druckprodukte und
-              Materialien kommen hinzu.
-            </p>
-            <p>
-              <a href="/hochzeitsfotos-drucken-color-proofing/" data-track-event="cta_click" data-cta-id="pricing_color_proofing_article" data-cta-type="internal_article_link">Mehr über Color-Proofing und die Vorbereitung eurer Hochzeitsfotos für den Druck</a>
+              <a href={content.links.printHref} data-track-event="cta_click" data-cta-id="pricing_color_proofing_article" data-cta-type="internal_article_link">{t('printLinkLabel')}</a>
             </p>
           </div>
         </section>
@@ -657,8 +449,10 @@ const schemaGraph = {
         >
           <figure class="pricing-faq__media">
             <Image
-              src={reportageImage}
-              alt="Braut mit Blumenstrauß vor dem Eiffelturm in Paris"
+              src={faqMedia}
+              width={typeof faqMedia==='string'?content.images.faq.width:faqMedia.width}
+              height={typeof faqMedia==='string'?content.images.faq.height:faqMedia.height}
+              alt={content.images.faq.alt}
               widths={[264, 323]}
               sizes="(max-width: 379px) calc(100vw - 56px), 323px"
               loading="lazy"
@@ -666,19 +460,15 @@ const schemaGraph = {
               format="webp"
               quality={90}
             />
-            <figcaption>Transparente Pakete, klare Leistungen und planbare Kosten</figcaption>
+            <figcaption>{t('faqCaption')}</figcaption>
           </figure>
 
           <div class="pricing-faq__content">
-            <p class="pricing-kicker">Fragen & Antworten</p>
-            <h2 id="faq-title">Häufige Fragen zu Hochzeitsfotograf Preisen</h2>
-            <p>
-              Antworten zu Preisen, enthaltenen Leistungen und der Übergabe eurer
-              Bilder. Euren Gesamtpreis und Leistungsumfang halten wir vor der
-              Buchung im Angebot fest.
-            </p>
+            <p class="pricing-kicker">{t('faqKicker')}</p>
+            <h2 id="faq-title">{t('faqHeading')}</h2>
+            <p>{t('faqIntro')}</p>
 
-            <div class="pricing-faq__list" aria-label="Häufige Fragen zu Hochzeitsfotograf Preisen">
+            <div class="pricing-faq__list" aria-label={t('faqHeading')}>
               {faqItems.map((item, index) => (
                 <details
                   class="pricing-faq__item"
@@ -713,8 +503,8 @@ const schemaGraph = {
           data-content-format="related_links"
           data-position="after_faq"
         >
-          <p class="pricing-kicker">Weiter planen</p>
-          <h2 id="related-title">Hilfreiche Seiten für eure Hochzeit</h2>
+          <p class="pricing-kicker">{t('relatedKicker')}</p>
+          <h2 id="related-title">{t('relatedHeading')}</h2>
           <div>
             {relatedLinks.map((item, index) => (
               <a
@@ -742,16 +532,12 @@ const schemaGraph = {
           data-content-format="cta_section"
           data-position="page_bottom"
         >
-          <p class="pricing-kicker">Ist euer Termin noch frei?</p>
-          <h2 id="cta-title">Fragt euren Hochzeitstermin unverbindlich an</h2>
-          <p>
-            Erzählt mir, wann und wo ihr heiratet und was ihr euch für eure Bilder
-            wünscht. Ihr müsst euch noch nicht für ein Paket entschieden haben.
-            Gemeinsam finden wir heraus, welche Begleitung zu eurem Tag passt.
-          </p>
+          <p class="pricing-kicker">{t('ctaKicker')}</p>
+          <h2 id="cta-title">{t('ctaHeading')}</h2>
+          <p>{t('ctaBody')}</p>
           <div>
             <a
-              href="/kontakt/"
+              href={content.links.contactHref}
               data-track-event="cta_click"
               data-cta-id="preise_termin_anfragen"
               data-cta-type="contact_request"
@@ -759,7 +545,7 @@ const schemaGraph = {
               data-content-topic="terminverfuegbarkeit"
               data-user-intent="termin_anfragen"
               data-journey-stage="anfrage"
-            >Hochzeitstermin anfragen</a>
+            >{t('ctaLabel')}</a>
 
           </div>
         </section>
@@ -776,12 +562,12 @@ const schemaGraph = {
     const calculation = calculator.querySelector<HTMLElement>("[data-calculator-calculation]");
     const packageLink = calculator.querySelector<HTMLAnchorElement>("[data-calculator-package-link]");
     if (!duration || !total || !packageName || !calculation || !packageLink) return;
-    const formatter = new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
+    const formatAmount = (amount:number) => new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR", minimumFractionDigits:Number.isInteger(amount)?0:2, maximumFractionDigits:2 }).format(amount);
     const update = () => {
       const option = duration.selectedOptions[0];
       const amount = Number(option.dataset.total);
       if (!Number.isFinite(amount) || !option.dataset.packageId) return;
-      total.textContent = formatter.format(amount);
+      total.textContent = formatAmount(amount);
       packageName.textContent = option.dataset.packageName ?? "";
       calculation.textContent = option.dataset.calculation ?? "";
       packageLink.href = `#paket-${option.dataset.packageId}`;
