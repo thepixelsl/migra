@@ -31,7 +31,7 @@
     "test:visual:headed": "playwright test tests/visual/page-compare.spec.ts --headed",
     "astro": "astro",
     "publishing:seo": "node scripts/publishing-seo.mjs",
-    "build:site": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files && npm run test:content && npm run publishing:seo"
+    "build:site": "astro build && npm run social:cards && npm run images:webp && npm run social:cards:validate && npm run schema:files && npm run seo:files && node scripts/hub-content-before-check.mjs && npm run test:content && npm run publishing:seo"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
