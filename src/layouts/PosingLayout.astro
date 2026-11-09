@@ -24,7 +24,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
     hasPart: guideChapters.map((chapter, index) => {
       const cards = guideCards.filter(card => card.chapter === chapter.slug);
       return { '@type': 'Chapter', name: chapter.title, position: index + 1,
-        url: `${canonical}#pose-${cards[0].id}`, pagination: `${cards[0].page}–${cards.at(-1)!.page}` };
+        url: `${canonical}#pose-${cards[0].id}`, pagination: `${cards[0].page}-${cards.at(-1)!.page}` };
     }) },
   { '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`, itemListElement: breadcrumbs.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, item: absolute(item.path) })) },
 ] };
@@ -57,15 +57,15 @@ const schema = { '@context': 'https://schema.org', '@graph': [
         {breadcrumbs.map((item, index) => <>{index > 0 && <span aria-hidden="true">/</span>}{index === breadcrumbs.length - 1 ? <span aria-current="page">{item.name}</span> : <a href={item.path}>{item.name}</a>}</>)}
       </nav>
       <header class="guide-intro">
-        <p class="guide-kicker">Für deinen Moment vor der Kamera</p>
+        <p class="guide-kicker">Für dein nächstes Fotoshooting</p>
         <h1>{heading}</h1>
         <p class="guide-lead">{intro}</p>
         <p class="guide-byline">Ein Guide von <a href="/about/">York Augustin · Artbild-Fotografie</a></p>
       </header>
       <slot />
       <aside class="guide-context" aria-label="Rund um dein Fotoshooting">
-        <div><p class="guide-kicker">Von der Zeichnung zum Foto</p><h2>Dein Moment darf sich nach dir anfühlen.</h2></div>
-        <div><p>Die Zeichnungen sind eine Orientierung. Deine Haltung verändert sich mit deiner Kleidung, dem Ort und dem Menschen neben dir. Jede Bewegung bleibt in einem angenehmen Bereich.</p>
+        <div><p class="guide-kicker">Von der Zeichnung zum Foto</p><h2>Kein Stress vorm Shooting.</h2></div>
+        <div><p>Beim Shooting bleibt Zeit für einen Schnack. Die Zeichnungen helfen dir bei der Vorbereitung. Vor Ort schauen wir gemeinsam, welche Haltung zu dir, deiner Kleidung und dem Platz passt.</p>
         <p>Ein <a href="/gallery/lovebirds-am-elbstrand/">Kennenlernshooting am Elbstrand</a> zeigt, wie Nähe und Bewegung in echten Paarfotos wirken. Für die Vorbereitung eures Tages gibt es den <a href="/hochzeitsfotograf-ratgeber/">Hochzeitsfotograf-Ratgeber</a>.</p></div>
       </aside>
     </main>

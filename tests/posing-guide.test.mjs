@@ -68,7 +68,7 @@ test('structured book data describes the actual book and its four navigable chap
   for (const chapter of book.hasPart) {
     const article = $(new URL(chapter.url).hash);
     assert.equal(article.length, 1);
-    assert.equal(Number(chapter.pagination.split('–')[0]), Number(article.attr('data-guide-page')));
+    assert.equal(Number(chapter.pagination.split('-')[0]), Number(article.attr('data-guide-page')));
   }
 });
 

@@ -9,6 +9,7 @@ const source = resolve(process.argv[2] || join(project, '../posing-guide/01-pose
 const output = join(project, 'public/images/posing-guide');
 await mkdir(output, { recursive: true });
 const cards = [];
+const publicTitles = { '039': 'Huckepack', '044': 'Auf den Armen von vorn', '045': 'Auf den Armen von hinten' };
 for (const folder of (await readdir(source)).filter(name => /^\d{3}-/.test(name)).sort()) {
   const record = JSON.parse(await readFile(join(source, folder, 'pose.json'), 'utf8'));
   if (!/^zeichnung-v\d+\.png$/.test(record.image)) throw Error(`Unexpected image for ${folder}`);
@@ -22,7 +23,8 @@ for (const folder of (await readdir(source)).filter(name => /^\d{3}-/.test(name)
   }
   // Only this explicit allowlist is suitable for the public site.
   cards.push({ ...Object.fromEntries(['id', 'slug', 'title', 'location', 'description', 'camera', 'attention', 'variation'].map(key => [key, record[key] || ''])),
-    legend: record.legend || [], alt: `Posing-Illustration: ${record.title}.`, width, height,
+    title: publicTitles[record.id] || record.title,
+    legend: record.legend || [], alt: `Posing-Illustration: ${publicTitles[record.id] || record.title}.`, width, height,
     image: `/images/posing-guide/${basename}` });
 }
 if (cards.length !== 45 || new Set(cards.map(card => card.id)).size !== 45) throw Error('Expected the reviewed set of 45 illustrations.');

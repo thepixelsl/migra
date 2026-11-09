@@ -32,6 +32,8 @@ export class GuideMeter {
     this.active = new Map(); this.last = null;
   }
   reset() { this.active.clear(); this.last = null; this.opened = false; this.engaged = false; this.poses.clear(); this.readMs = 0; }
+  // A held or returning sheet is a temporary visual transition, not a new view.
+  suspend() { for (const state of this.active.values()) this.flush(state); this.last = null; }
   record(event, page, extra = {}) { this.emit({ event, measurement_page: 'posing_guide', ...page, ...extra }); }
   flush(state) {
     if (state.viewed && state.pending > 0) this.record('posing_guide_read_time', state.page, { guide_visible_ms: Math.round(state.pending) });
@@ -89,7 +91,7 @@ export function initializeGuideMeasurement(win = window, doc = document) {
   const pageData = element => ({ guide_mode: element.dataset.guideMode, guide_chapter: element.dataset.guideChapter?.replaceAll('-', '_'),
     guide_page_number: Number(element.dataset.guidePage), guide_content_id: element.dataset.guideContent });
   const visible = element => {
-    if (element.closest('[hidden],[inert],[aria-hidden="true"]') || !element.getClientRects().length) return false;
+    if (element.closest('[hidden],[inert],[aria-hidden="true"],[data-book-turning]') || !element.getClientRects().length) return false;
     const rect = element.getBoundingClientRect();
     const height = Math.max(0, Math.min(rect.bottom, win.innerHeight) - Math.max(0, rect.top));
     const width = Math.max(0, Math.min(rect.right, win.innerWidth) - Math.max(0, rect.left));
@@ -98,6 +100,7 @@ export function initializeGuideMeasurement(win = window, doc = document) {
   const sample = (forcePause = false) => {
     const consent = granted();
     if (!consent) { clear(); meter.reset(); return; }
+    if (doc.querySelector('[data-book-turning]')) { meter.suspend(); return; }
     const obscured = [...doc.querySelectorAll('[aria-modal="true"]')].some(element => element.getClientRects().length && win.getComputedStyle(element).visibility !== 'hidden');
     const active = !forcePause && doc.visibilityState === 'visible' && doc.hasFocus() && !obscured;
     const pages = active ? [...doc.querySelectorAll('[data-guide-page]')].filter(visible).map(pageData) : [];

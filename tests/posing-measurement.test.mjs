@@ -38,6 +38,16 @@ test('background, loss of focus and obscured surfaces add no reading time', () =
   assert.equal(events.filter(e => e.event === 'posing_guide_engaged').length, 0);
 });
 
+test('holding and returning a paper corner adds neither reading time nor another view', () => {
+  const { meter, events } = fixture();
+  tick(meter, 0); tick(meter, 1000); tick(meter, 2000);
+  meter.suspend(); meter.suspend();
+  tick(meter, 100_000); tick(meter, 101_000); tick(meter, 102_000, [], { active: false });
+  assert.equal(events.filter(e => e.event === 'posing_guide_page_view').length, 1);
+  assert.equal(events.filter(e => e.event === 'posing_guide_read_time').reduce((sum, e) => sum + e.guide_visible_ms, 0), 3000);
+  assert.equal(events.filter(e => e.event === 'posing_guide_engaged').length, 0);
+});
+
 test('desktop spreads count two pages without doubling visit reading time', () => {
   const { meter, events } = fixture(), spread = [page(), page('pose_009', 7)];
   for (let second = 0; second <= 30; second++) tick(meter, second * 1000, spread);

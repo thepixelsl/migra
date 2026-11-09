@@ -22,23 +22,23 @@ const titles = ['Titel', 'Übersicht', 'Haltung & Orientierung', ...guideCards.m
       <p class="guide-kicker">ARTBILD</p>
       <h2>Posing<br />Guide</h2>
       <figure><PosingImage card={coverCard} eager /></figure>
-      <p class="book-cover-line">Natürlich stehen.<br />Entspannt bewegen. Zusammen sein.</p>
-      <p class="book-cover-note">40 Karten mit Posen und Bildideen<br />für draußen, Hotels und private Räume.<br />Mit fünf Grundlagen zu Haltung und Perspektive.</p>
-      <footer class="book-page-footer"><span>Deine Pose. Dein Moment.</span><span>1 / {totalPages}</span></footer>
+      <p class="book-cover-line">Ein bisschen Starthilfe<br />für dein Fotoshooting.</p>
+      <p class="book-cover-note">40 Karten mit Posen und Bildideen<br />für draußen, Hotels und private Räume.<br />Dazu fünf Grundlagen fürs Shooting.</p>
+      <footer class="book-page-footer"><span>Moin aus Hamburg</span><span>1 / {totalPages}</span></footer>
       <PosingPageTurn index={0} />
     </article>
     <article class="book-page book-intro" id="inhalt" aria-label="Seite 2: Übersicht" data-guide-page="2" data-guide-content="contents" data-guide-chapter="intro" data-guide-mode="book">
-      <p class="guide-kicker">Dein Weg durch den Guide</p><h2>Deine Pose.<br />Dein Moment.</h2>
-      <p>Die Zeichnungen zeigen Haltungen, die zu unterschiedlichen Kleidern, Orten und Stimmungen passen. Kleine Veränderungen machen aus einer Pose deine eigene.</p>
+      <p class="guide-kicker">Das steckt im Buch</p><h2>Ein paar Ideen<br />für dein Shooting.</h2>
+      <p>Du brauchst kein Modeltraining. Die Zeichnungen zeigen dir, wie du stehst, sitzt oder dich zusammen mit deinem Partner bewegst.</p>
       <div class="book-contents">{guideChapters.map(chapter => <a href={`#pose-${guideCards.find(card => card.chapter === chapter.slug)!.id}`} data-book-jump={guideCards.find(card => card.chapter === chapter.slug)!.page - 1}><span>{chapter.label}</span><small>{chapter.count} Karten · Seite {guideCards.find(card => card.chapter === chapter.slug)!.page}</small></a>)}</div>
-      <p>Die Gruppen orientieren sich an den gezeichneten Beispielen. Jede passende Haltung kann ein Ausgangspunkt für dich sein.</p>
-      <p class="book-note">Eine Pose ist eine Idee. Deine Haltung darf sich so verändern, dass sie sich für dich natürlich anfühlt.</p>
+      <p>Die Kapitel sind nach den gezeichneten Beispielen sortiert. Welche Pose zu dir passt, hängt auch von deiner Kleidung und dem Platz vor Ort ab.</p>
+      <p class="book-note">Wenn's zwickt, passt die Haltung noch nicht. Ein kleiner Wechsel reicht oft.</p>
       <footer class="book-page-footer"><span>ARTBILD · Posing Guide</span><span>2 / {totalPages}</span></footer>
       <PosingPageTurn index={1} />
     </article>
     <article class="book-page book-intro" id="orientierung" aria-label="Seite 3: Haltung und Orientierung" data-guide-page="3" data-guide-content="orientation" data-guide-chapter="intro" data-guide-mode="book">
-      <p class="guide-kicker">Ein guter Ausgangspunkt</p><h2>Kleine Schritte.<br />Eine ruhige Haltung.</h2>
-      <h3>Die Zeichnung zeigt die Haltung</h3><p>Du siehst die Pose aus Sicht der Kamera. Die kleine Randzeichnung gibt dir eine schematische Orientierung. Der Hinweis darunter beschreibt, wo sich die Kamera befindet.</p>
+      <p class="guide-kicker">Bevor's losgeht</p><h2>Locker stehen.<br />Aufrecht sitzen.</h2>
+      <h3>Die Zeichnung zeigt die Haltung</h3><p>Du siehst die Pose so, wie die Kamera sie aufnimmt. Das kleine Kamerazeichen zeigt dir, wo die Kamera steht. Der Text darunter erklärt die Position genauer.</p>
       <h3>Ein sicherer Stand</h3><p>Deine Füße geben dir Halt. Becken und Oberkörper bleiben aufgerichtet, die Hände liegen locker. Kopf und Blick ergänzen die Haltung.</p>
       <h3>Aufgerichtet sitzen</h3><p>Du sitzt etwas weiter vorn auf einer festen Fläche, sodass weniger von den Oberschenkeln aufliegt. Deine Füße geben dir Halt, dein Oberkörper ist vom Becken aus aufgerichtet und deine Schultern bleiben locker.</p>
       <p class="book-note">Deine Haltung wirkt, als würde dich am Scheitel ein sanfter Zug nach oben aufrichten.</p>
@@ -48,7 +48,7 @@ const titles = ['Titel', 'Übersicht', 'Haltung & Orientierung', ...guideCards.m
     </article>
     {guideCards.map(card => <PosingCard card={card} />)}
   </div>
-  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span>Mit Pfeilen, Wischen oder Tastatur</span><button type="button" data-book-next>Weiter →</button></div>
+  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span>Mit Pfeilen, Tastatur oder ziehbaren Seitenecken</span><button type="button" data-book-next>Weiter →</button></div>
 </section>
 <script>
   import { installPosingBook } from '../lib/posing-book';
