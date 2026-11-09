@@ -34,6 +34,18 @@ export function installPosingBook(root: HTMLElement) {
   };
   const spread = (index: number): Array<HTMLElement | null> => mobile.matches ? [pages[index]]
     : index === 0 ? [null, pages[0]] : [pages[index], pages[index + 1] || null];
+  function preserveViewport(change: () => void) {
+    const scrollBefore = window.scrollY;
+    const before = stage.getBoundingClientRect();
+    // At the lower edge, keep the footer and turn controls in view as the
+    // mobile sheet changes height. Near the top, keep the scroll offset.
+    const followBottom = mobile.matches && before.top < 0 && before.bottom <= window.innerHeight;
+    change();
+    const offset = followBottom ? stage.getBoundingClientRect().bottom - before.bottom : 0;
+    const target = Math.max(0, window.scrollY + offset);
+    const scrollAfter = followBottom ? target : scrollBefore;
+    if (window.scrollY !== scrollAfter) window.scrollTo({ top: scrollAfter, behavior: 'instant' });
+  }
   const cancel = () => {
     operation++;
     if (drag) {
@@ -106,19 +118,17 @@ export function installPosingBook(root: HTMLElement) {
     previous.forEach(button => { button.disabled = current === 0; });
     next.forEach(button => { button.disabled = current + (double ? 2 : 1) >= pages.length; });
     corners.forEach(({ button, direction }) => { button.hidden = direction < 0 ? current === 0 : current + (double ? 2 : 1) >= pages.length; button.disabled = button.hidden; });
-    // Retain a height already reached so lower controls never move the viewport
-    // upwards when the next book page contains less text.
-    stage.style.minHeight = `${Math.ceil(Math.max(parseFloat(stage.style.minHeight) || 0, stage.getBoundingClientRect().height))}px`;
+    // A phone shows one sheet at a time, sized to its own content. Desktop
+    // spreads retain a common paper height for facing pages.
+    stage.style.minHeight = mobile.matches ? '' : `${Math.ceil(Math.max(parseFloat(stage.style.minHeight) || 0, stage.getBoundingClientRect().height))}px`;
     notify();
   }
   function commit(index: number, updateAddress = true) {
-    const scrollBefore = window.scrollY;
     const focusInPage = pages.some(page => page.contains(document.activeElement));
     requested = Math.max(0, Math.min(pages.length - 1, index)); current = normalize(requested);
-    render();
+    preserveViewport(render);
     if (focusInPage) stage.focus({ preventScroll: true });
     if (updateAddress) history.replaceState(null, '', `#${pages[requested].id}`);
-    if (window.scrollY !== scrollBefore) window.scrollTo({ top: scrollBefore, behavior: 'instant' });
   }
   async function begin(index: number, corner: Corner, gesture?: Drag) {
     const ticket = operation;
@@ -126,7 +136,7 @@ export function installPosingBook(root: HTMLElement) {
     try {
       const { createPaperTurn } = await loadRenderer();
       if (ticket !== operation || gesture?.cancelled) return;
-      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner,
+      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner, preserveViewport,
         finished: turned => {
           if (ticket !== operation) return;
           active?.destroy(); active = undefined; drag = undefined;
@@ -139,7 +149,10 @@ export function installPosingBook(root: HTMLElement) {
       if (gesture) { gesture.engine = turn; updateDrag(gesture); } else turn.animate();
     } catch {
       if (ticket !== operation) return;
-      stage.querySelector('.book-paper-overlay')?.remove(); stage.removeAttribute('data-book-turning'); stage.removeAttribute('aria-busy');
+      preserveViewport(() => {
+        stage.querySelector('.book-paper-overlay')?.remove(); stage.removeAttribute('data-book-turning'); stage.removeAttribute('aria-busy');
+        if (mobile.matches) stage.style.minHeight = '';
+      });
       // Basic book navigation survives an unavailable optional animation chunk.
       if (gesture) gesture.failed = true;
       if (!gesture) commit(index); else if (gesture.released) finishWithoutAnimation(gesture);

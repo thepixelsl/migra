@@ -93,7 +93,7 @@
   .book-page .pose-copy .pose-camera { font-size:12px; }
   .book-cover h2 { font-size:65px; }
   .book-cover .book-cover-line { font-size:24px; }
-  .book-intro { min-height:850px; padding-top:45px; }
+  .book-intro { min-height:0; padding-top:45px; }
   .book-intro h2 { font-size:37px; }
   .book-contents a { font-size:22px; }
   .book-bottom { gap:12px; }

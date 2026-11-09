@@ -19,7 +19,8 @@ for (const folder of (await readdir(source)).filter(name => /^\d{3}-/.test(name)
   const { width, height } = await sharp(original).metadata();
   for (const size of [640, 960]) {
     await sharp(original).resize({ width: size, withoutEnlargement: true }).webp({ quality: 82, effort: 5 }).toFile(join(output, `${basename}-${size}.webp`));
-    await sharp(original).resize({ width: size, withoutEnlargement: true }).avif({ quality: 55, effort: 5 }).toFile(join(output, `${basename}-${size}.avif`));
+    // Fresh URLs avoid cached application/octet-stream responses from the first release.
+    await sharp(original).resize({ width: size, withoutEnlargement: true }).avif({ quality: 55, effort: 5 }).toFile(join(output, `${basename}-${size}-v2.avif`));
   }
   // Only this explicit allowlist is suitable for the public site.
   cards.push({ ...Object.fromEntries(['id', 'slug', 'title', 'location', 'description', 'camera', 'attention', 'variation'].map(key => [key, record[key] || ''])),

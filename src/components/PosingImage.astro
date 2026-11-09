@@ -4,7 +4,7 @@ interface Props { card: GuideCard; eager?: boolean; sizes?: string; }
 const { card, eager = false, sizes = '(max-width: 800px) calc(100vw - 64px), 520px' } = Astro.props;
 ---
 <picture>
-  <source type="image/avif" srcset={`${card.image}-640.avif 640w, ${card.image}-960.avif 960w`} sizes={sizes} />
+  <source type="image/avif" srcset={`${card.image}-640-v2.avif 640w, ${card.image}-960-v2.avif 960w`} sizes={sizes} />
   <img src={`${card.image}-960.webp`} srcset={`${card.image}-640.webp 640w, ${card.image}-960.webp 960w`} sizes={sizes}
     width={card.width} height={card.height} alt={card.alt} loading={eager ? 'eager' : 'lazy'}
     fetchpriority={eager ? 'high' : undefined} decoding="async" draggable="false" />

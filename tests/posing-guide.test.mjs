@@ -76,7 +76,7 @@ test('public guide assets contain only screen derivatives and no private referen
   const files = await readdir('public/images/posing-guide');
   assert.equal(files.length, 180);
   for (const file of files) {
-    assert.match(file, /^\d{3}-[a-z0-9-]+-[a-f0-9]{12}-(640|960)\.(avif|webp)$/);
+    assert.match(file, /^\d{3}-[a-z0-9-]+-[a-f0-9]{12}-(640|960)(-v2\.avif|\.webp)$/);
     assert.ok((await stat(join('public/images/posing-guide', file))).size < 220_000, `${file} exceeds the image budget`);
   }
   const serialized = JSON.stringify(cards);

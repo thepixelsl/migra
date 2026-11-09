@@ -4,6 +4,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 
 const CONTENT_TYPES = new Map([
+  [".avif", "image/avif"],
   [".asc", "application/pgp-signature"],
   [".css", "text/css; charset=utf-8"],
   [".html", "text/html; charset=utf-8"],

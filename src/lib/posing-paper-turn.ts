@@ -8,6 +8,7 @@ type Options = {
   forward: boolean;
   portrait: boolean;
   corner: Corner;
+  preserveViewport: (change: () => void) => void;
   finished: (turned: boolean) => void;
 };
 
@@ -43,13 +44,14 @@ export async function createPaperTurn(options: Options) {
 
   const before = options.before.map(face), after = options.after.map(face);
   const faces = forward ? [...before, ...after] : [...after, ...before];
-  // Measure only the participating pages, then retain the largest height. A
-  // shorter page must never clamp the document's current scroll position.
+  // Both sides need enough room while curling. On phones this temporary
+  // animation height is released again when the sheet settles or is cancelled.
   host.classList.add('paper-measuring');
   host.style.setProperty('--paper-width', `${width}px`);
   host.append(...faces);
   const height = Math.ceil(Math.max(stage.getBoundingClientRect().height, ...faces.map(page => page.scrollHeight)));
-  stage.style.minHeight = `${height}px`;
+  const previousHeight = stage.style.minHeight;
+  options.preserveViewport(() => { stage.style.minHeight = `${height}px`; });
   host.classList.remove('paper-measuring');
   host.style.height = `${height}px`;
   const startPage = forward ? 0 : before.length;
@@ -103,9 +105,12 @@ export async function createPaperTurn(options: Options) {
     destroy() {
       if (disposed) return;
       disposed = true;
-      engine.destroy();
-      overlay.remove();
-      stage.removeAttribute('data-book-turning');
+      options.preserveViewport(() => {
+        engine.destroy();
+        overlay.remove();
+        stage.removeAttribute('data-book-turning');
+        if (portrait) stage.style.minHeight = previousHeight;
+      });
     },
   };
 }
