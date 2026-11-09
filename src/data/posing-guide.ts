@@ -23,3 +23,4 @@ export const guideCards = guideChapters.flatMap(chapter => records
 export type GuideCard = (typeof guideCards)[number];
 export const totalPages = guideCards.length + 3;
 export const coverCard = guideCards.find(card => card.id === '026')!;
+export const guidePageIds = ['titel', 'inhalt', 'orientierung', ...guideCards.map(card => `pose-${card.id}`)];

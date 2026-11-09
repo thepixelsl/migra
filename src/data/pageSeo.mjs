@@ -419,10 +419,6 @@ export const pageSeo = {
 // Guide search previews use the reviewed screen derivative, never private PNG masters.
 for (const [route, id, keyword] of [
   ['/posing-guide/', '026', 'Posing Guide'],
-  ['/posing-guide/posen-frauen/', '008', 'Posen für Frauen'],
-  ['/posing-guide/posen-maenner/', '016', 'Posen für Männer'],
-  ['/posing-guide/hochzeitsposen/', '026', 'Hochzeitsposen und Paarposen'],
-  ['/posing-guide/grundlagen/', '001', 'Posing Grundlagen'],
 ]) {
   const card = posingCards.find(card => card.id === id);
   if (!card) throw new Error('Missing posing guide preview: ' + id);

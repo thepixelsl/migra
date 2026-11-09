@@ -1,16 +1,17 @@
 ---
 import PosingImage from './PosingImage.astro';
-import { guidePath, totalPages, type GuideCard } from '../data/posing-guide';
-interface Props { card: GuideCard; book?: boolean; eager?: boolean; }
-const { card, book = false, eager = false } = Astro.props;
+import PosingPageTurn from './PosingPageTurn.astro';
+import { totalPages, type GuideCard } from '../data/posing-guide';
+interface Props { card: GuideCard; }
+const { card } = Astro.props;
 ---
-<article class:list={['pose-card', { 'book-page': book }]} id={book ? undefined : `pose-${card.id}`} aria-label={book ? `Seite ${card.page}: ${card.title}` : undefined}
-  data-guide-page={card.page} data-guide-content={`pose_${card.id}`} data-guide-chapter={card.chapter} data-guide-mode={book ? 'book' : 'reading'}>
+<article class="pose-card book-page" id={`pose-${card.id}`} aria-label={`Seite ${card.page}: ${card.title}`}
+  data-guide-page={card.page} data-guide-content={`pose_${card.id}`} data-guide-chapter={card.chapter} data-guide-mode="book">
   <header>
     <p class="guide-kicker">{card.group} · {String(card.number).padStart(2, '0')} / {card.count}</p>
     <h2>{card.title}</h2>
   </header>
-  <figure><PosingImage card={card} eager={eager} /></figure>
+  <figure><PosingImage card={card} /></figure>
   <div class="pose-copy">
     <p class="pose-location">{card.location}</p>
     <p>{card.description}</p>
@@ -18,7 +19,7 @@ const { card, book = false, eager = false } = Astro.props;
     <p class="pose-camera"><strong>Kamera zur Orientierung:</strong>{' '}{card.camera}</p>
     {card.legend.length > 0 && <ul class="pose-legend">{card.legend.map(label => <li>{label}</li>)}</ul>}
     {card.variation && <details><summary>Eine Variante für dich</summary><p>{card.variation}</p></details>}
-    {!book && <a class="guide-text-link" href={`${guidePath}#pose-${card.id}`}>Diese Pose im Buch <span aria-hidden="true">↗</span></a>}
   </div>
-  {book && <footer class="book-page-footer"><span>ARTBILD · Posing Guide</span><span>{card.page} / {totalPages}</span></footer>}
+  <footer class="book-page-footer"><span>ARTBILD · Posing Guide</span><span>{card.page} / {totalPages}</span></footer>
+  <PosingPageTurn index={card.page - 1} />
 </article>

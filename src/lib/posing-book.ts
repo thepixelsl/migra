@@ -1,13 +1,11 @@
-// Only visible spreads are instantiated; images in templates are not requested.
+// All book text is server-rendered. Only the current spread is displayed.
 export function installPosingBook(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>('[data-book-stage]')!;
   const chooser = root.querySelector<HTMLSelectElement>('[data-book-choice]')!;
   const status = root.querySelector<HTMLElement>('[data-book-status]')!;
   const previous = [...root.querySelectorAll<HTMLButtonElement>('[data-book-prev]')];
   const next = [...root.querySelectorAll<HTMLButtonElement>('[data-book-next]')];
-  const templates = [...root.querySelectorAll<HTMLTemplateElement>('template[data-book-page]')];
-  const cover = stage.firstElementChild!.cloneNode(true) as HTMLElement;
-  const pages = [cover, ...templates.map(template => template.content.firstElementChild as HTMLElement)];
+  const pages = [...stage.querySelectorAll<HTMLElement>(':scope > .book-page')];
   const mobile = matchMedia('(max-width: 800px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let current = 0;
@@ -19,21 +17,29 @@ export function installPosingBook(root: HTMLElement) {
     return mobile.matches || bounded === 0 ? bounded : 1 + 2 * Math.floor((bounded - 1) / 2);
   };
   const fromHash = () => {
-    const pose = location.hash.match(/^#pose-(\d{3})$/);
-    if (pose) { const index = templates.findIndex(template => template.dataset.poseId === pose[1]); return index < 0 ? 0 : index + 1; }
+    const id = pages.findIndex(page => `#${page.id}` === location.hash);
+    if (id >= 0) return id;
     const page = location.hash.match(/^#seite-(\d+)$/);
     return page ? Number(page[1]) - 1 : 0;
   };
   const cancelTurn = () => { animation?.cancel(); sheet?.remove(); animation = undefined; sheet = undefined; };
   function render() {
     const spread = !mobile.matches && current > 0 && current + 1 < pages.length;
-    const visible = [current, ...(spread ? [current + 1] : [])].map(index => {
-      const page = pages[index].cloneNode(true) as HTMLElement;
-      page.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
-      return page;
+    pages.forEach((page, index) => {
+      const visible = index === current || (spread && index === current + 1);
+      // Keep the actual pages in the document, including the pages not on display.
+      page.hidden = !visible;
+      page.classList.toggle('is-visible', visible);
+      page.classList.toggle('is-left', spread && index === current);
+      page.classList.toggle('is-right', spread && index === current + 1);
+      if (visible) page.querySelectorAll('img').forEach(image => { image.loading = 'eager'; });
     });
-    stage.replaceChildren(...visible);
     stage.classList.toggle('single', !spread);
+    root.classList.add('is-ready');
+    root.querySelectorAll<HTMLElement>('.guide-chapters [data-book-jump]').forEach(link => {
+      const selected = link.dataset.bookChapter ? link.dataset.bookChapter === pages[requested].dataset.guideChapter : requested < 3;
+      if (selected) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
+    });
     chooser.value = String(requested);
     status.textContent = spread ? `Seiten ${current + 1}–${current + 2} von ${pages.length}` : `Seite ${current + 1} von ${pages.length}`;
     previous.forEach(button => { button.disabled = current === 0; });
@@ -46,14 +52,19 @@ export function installPosingBook(root: HTMLElement) {
     if (target === current) { chooser.value = String(requested); return; }
     cancelTurn();
     const forward = target > current;
-    const old = stage.querySelector(forward ? '.book-page:last-child' : '.book-page:first-child')?.cloneNode(true) as HTMLElement | undefined;
+    const visiblePages = pages.filter(page => !page.hidden);
+    const old = (forward ? visiblePages.at(-1) : visiblePages[0])?.cloneNode(true) as HTMLElement | undefined;
+    const scrollBefore = window.scrollY;
+    const focusInPage = pages.some(page => page.contains(document.activeElement));
     current = target;
     render();
-    // A turn from the controls below a long page starts at the new illustration.
-    if (animate && root.getBoundingClientRect().top < 0) root.scrollIntoView({ block: 'start', behavior: 'auto' });
-    if (updateAddress) history.replaceState(null, '', `#seite-${requested + 1}`);
+    if (focusInPage) stage.focus({ preventScroll: true });
+    if (updateAddress) history.replaceState(null, '', `#${pages[requested].id}`);
+    // Selecting a chapter or page changes the book in place, never scrolls to its start.
+    if (window.scrollY !== scrollBefore) window.scrollTo({ top: scrollBefore, behavior: 'instant' });
     if (animate && old && !reduced.matches) {
       sheet = old;
+      old.removeAttribute('id');
       old.classList.add('book-turn-sheet', forward ? 'forward' : 'backward');
       old.setAttribute('aria-hidden', 'true');
       old.inert = true;

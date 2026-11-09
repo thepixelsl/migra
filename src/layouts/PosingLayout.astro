@@ -5,17 +5,27 @@ import DesktopNavigation from '../components/DesktopNavigation.astro';
 import PosingMeasurement from '../components/PosingMeasurement.astro';
 import '../styles/global.css';
 import '../styles/posing-guide.css';
-import { guidePath, guideChapters, coverCard } from '../data/posing-guide';
-const { title, description, heading, intro, chapter, image = coverCard } = Astro.props;
+import { guidePath, guideChapters, guideCards, coverCard, totalPages } from '../data/posing-guide';
+const { title, description, heading, intro, image = coverCard } = Astro.props;
 const site = Astro.site || new URL('https://artbild-fotografie.de');
 const canonical = new URL(Astro.url.pathname, site).href;
 const absolute = (path: string) => new URL(path, site).href;
-const breadcrumbs = [{ name: 'Startseite', path: '/' }, { name: 'Blog', path: '/blog/' }, { name: 'Posing Guide', path: guidePath }, ...(chapter ? [{ name: chapter.label, path: `${guidePath}${chapter.slug}/` }] : [])];
+const breadcrumbs = [{ name: 'Startseite', path: '/' }, { name: 'Blog', path: '/blog/' }, { name: 'Posing Guide', path: guidePath }];
 const schema = { '@context': 'https://schema.org', '@graph': [
-  { '@type': 'CollectionPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description, inLanguage: 'de',
+  { '@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description, inLanguage: 'de',
+    mainEntity: { '@id': `${canonical}#book` },
     author: { '@type': 'Person', name: 'York Augustin', url: absolute('/about/') },
     breadcrumb: { '@id': `${canonical}#breadcrumb` }, primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(`${image.image}-960.webp`), caption: image.alt },
     isPartOf: { '@type': 'WebSite', name: 'Artbild-Fotografie', url: absolute('/') } },
+  { '@type': 'Book', '@id': `${canonical}#book`, url: canonical, name: 'Posing Guide', description,
+    inLanguage: 'de', numberOfPages: totalPages, bookFormat: 'https://schema.org/EBook', isAccessibleForFree: true,
+    author: { '@type': 'Person', name: 'York Augustin', url: absolute('/about/') },
+    image: absolute(`${image.image}-960.webp`), mainEntityOfPage: { '@id': `${canonical}#webpage` },
+    hasPart: guideChapters.map((chapter, index) => {
+      const cards = guideCards.filter(card => card.chapter === chapter.slug);
+      return { '@type': 'Chapter', name: chapter.title, position: index + 1,
+        url: `${canonical}#pose-${cards[0].id}`, pagination: `${cards[0].page}–${cards.at(-1)!.page}` };
+    }) },
   { '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`, itemListElement: breadcrumbs.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, item: absolute(item.path) })) },
 ] };
 ---
@@ -52,10 +62,6 @@ const schema = { '@context': 'https://schema.org', '@graph': [
         <p class="guide-lead">{intro}</p>
         <p class="guide-byline">Ein Guide von <a href="/about/">York Augustin · Artbild-Fotografie</a></p>
       </header>
-      <nav class="guide-chapters" aria-label="Kapitel im Posing Guide">
-        <a href={guidePath} aria-current={!chapter ? 'page' : undefined}>Das ganze Buch <span>48 Seiten</span></a>
-        {guideChapters.map(item => <a href={`${guidePath}${item.slug}/`} aria-current={chapter?.slug === item.slug ? 'page' : undefined}>{item.label} <span>{item.count} Karten</span></a>)}
-      </nav>
       <slot />
       <aside class="guide-context" aria-label="Rund um dein Fotoshooting">
         <div><p class="guide-kicker">Von der Zeichnung zum Foto</p><h2>Dein Moment darf sich nach dir anfühlen.</h2></div>

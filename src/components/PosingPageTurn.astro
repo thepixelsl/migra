@@ -1,0 +1,8 @@
+---
+import { guidePageIds } from '../data/posing-guide';
+const { index } = Astro.props;
+---
+<nav class="book-fallback-controls" aria-label="Im Buch blättern">
+  {index > 0 ? <a href={`#${guidePageIds[index - 1]}`}>← Zurück</a> : <span />}
+  {index < guidePageIds.length - 1 && <a href={`#${guidePageIds[index + 1]}`}>Weiter →</a>}
+</nav>

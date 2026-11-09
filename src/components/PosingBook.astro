@@ -1,39 +1,42 @@
 ---
-import { guideCards, guideChapters, guidePath, coverCard, totalPages } from '../data/posing-guide';
+import { guideCards, guideChapters, coverCard, totalPages } from '../data/posing-guide';
 import PosingCard from './PosingCard.astro';
 import PosingImage from './PosingImage.astro';
+import PosingPageTurn from './PosingPageTurn.astro';
 const titles = ['Titel', 'Übersicht', 'Haltung & Orientierung', ...guideCards.map(card => card.title)];
 ---
 <section class="posing-book" aria-label="Posing Guide zum Blättern" data-posing-book>
-  {guideCards.map(card => <span class="book-anchor" id={`pose-${card.id}`} aria-hidden="true" />)}
+  <nav class="guide-chapters" aria-label="Kapitel im Buch">
+    <a href="#titel" data-book-jump="0" aria-current="location">Buchanfang <span>48 Seiten</span></a>
+    {guideChapters.map(chapter => {
+      const first = guideCards.find(card => card.chapter === chapter.slug)!;
+      return <a href={`#pose-${first.id}`} data-book-jump={first.page - 1} data-book-chapter={chapter.slug}>{chapter.label} <span>{chapter.count} Karten</span></a>;
+    })}
+  </nav>
   <div class="book-toolbar" data-book-controls hidden>
     <div class="book-turn-controls"><button type="button" data-book-prev aria-label="Vorherige Seite">←</button><span data-book-status role="status" aria-live="polite">Seite 1 von {totalPages}</span><button type="button" data-book-next aria-label="Nächste Seite">→</button></div>
     <label class="book-select">Direkt zu einer Seite <select data-book-choice aria-label="Direkt zu einer Seite">{titles.map((title, index) => <option value={index}>{index + 1} · {title}</option>)}</select></label>
   </div>
   <div class="book-stage single" data-book-stage tabindex="0" aria-label="Buchseiten; mit den Pfeiltasten blättern">
-    <article class="book-page book-cover" aria-label="Seite 1: Titel" data-guide-page="1" data-guide-content="cover" data-guide-chapter="intro" data-guide-mode="book">
+    <article class="book-page book-cover" id="titel" aria-label="Seite 1: Titel" data-guide-page="1" data-guide-content="cover" data-guide-chapter="intro" data-guide-mode="book">
       <p class="guide-kicker">ARTBILD</p>
       <h2>Posing<br />Guide</h2>
       <figure><PosingImage card={coverCard} eager /></figure>
       <p class="book-cover-line">Natürlich stehen.<br />Entspannt bewegen. Zusammen sein.</p>
       <p class="book-cover-note">40 Karten mit Posen und Bildideen<br />für draußen, Hotels und private Räume.<br />Mit fünf Grundlagen zu Haltung und Perspektive.</p>
       <footer class="book-page-footer"><span>Deine Pose. Dein Moment.</span><span>1 / {totalPages}</span></footer>
+      <PosingPageTurn index={0} />
     </article>
-  </div>
-  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span>Mit Pfeilen, Wischen oder Tastatur</span><button type="button" data-book-next>Weiter →</button></div>
-  <p class="book-reading-note">Die Kapitel oben enthalten alle Zeichnungen und Beschreibungen auch als fortlaufende Leseseiten.</p>
-  <template data-book-page data-page-title="Übersicht">
-    <article class="book-page book-intro" aria-label="Seite 2: Übersicht" data-guide-page="2" data-guide-content="contents" data-guide-chapter="intro" data-guide-mode="book">
+    <article class="book-page book-intro" id="inhalt" aria-label="Seite 2: Übersicht" data-guide-page="2" data-guide-content="contents" data-guide-chapter="intro" data-guide-mode="book">
       <p class="guide-kicker">Dein Weg durch den Guide</p><h2>Deine Pose.<br />Dein Moment.</h2>
       <p>Die Zeichnungen zeigen Haltungen, die zu unterschiedlichen Kleidern, Orten und Stimmungen passen. Kleine Veränderungen machen aus einer Pose deine eigene.</p>
-      <div class="book-contents">{guideChapters.map(chapter => <a href={`${guidePath}${chapter.slug}/`} data-book-jump={guideCards.find(card => card.chapter === chapter.slug)!.page - 1}><span>{chapter.label}</span><small>{chapter.count} Karten · Seite {guideCards.find(card => card.chapter === chapter.slug)!.page}</small></a>)}</div>
+      <div class="book-contents">{guideChapters.map(chapter => <a href={`#pose-${guideCards.find(card => card.chapter === chapter.slug)!.id}`} data-book-jump={guideCards.find(card => card.chapter === chapter.slug)!.page - 1}><span>{chapter.label}</span><small>{chapter.count} Karten · Seite {guideCards.find(card => card.chapter === chapter.slug)!.page}</small></a>)}</div>
       <p>Die Gruppen orientieren sich an den gezeichneten Beispielen. Jede passende Haltung kann ein Ausgangspunkt für dich sein.</p>
       <p class="book-note">Eine Pose ist eine Idee. Deine Haltung darf sich so verändern, dass sie sich für dich natürlich anfühlt.</p>
       <footer class="book-page-footer"><span>ARTBILD · Posing Guide</span><span>2 / {totalPages}</span></footer>
+      <PosingPageTurn index={1} />
     </article>
-  </template>
-  <template data-book-page data-page-title="Haltung & Orientierung">
-    <article class="book-page book-intro" aria-label="Seite 3: Haltung und Orientierung" data-guide-page="3" data-guide-content="orientation" data-guide-chapter="intro" data-guide-mode="book">
+    <article class="book-page book-intro" id="orientierung" aria-label="Seite 3: Haltung und Orientierung" data-guide-page="3" data-guide-content="orientation" data-guide-chapter="intro" data-guide-mode="book">
       <p class="guide-kicker">Ein guter Ausgangspunkt</p><h2>Kleine Schritte.<br />Eine ruhige Haltung.</h2>
       <h3>Die Zeichnung zeigt die Haltung</h3><p>Du siehst die Pose aus Sicht der Kamera. Die kleine Randzeichnung gibt dir eine schematische Orientierung. Der Hinweis darunter beschreibt, wo sich die Kamera befindet.</p>
       <h3>Ein sicherer Stand</h3><p>Deine Füße geben dir Halt. Becken und Oberkörper bleiben aufgerichtet, die Hände liegen locker. Kopf und Blick ergänzen die Haltung.</p>
@@ -41,9 +44,11 @@ const titles = ['Titel', 'Übersicht', 'Haltung & Orientierung', ...guideCards.m
       <p class="book-note">Deine Haltung wirkt, als würde dich am Scheitel ein sanfter Zug nach oben aufrichten.</p>
       <h3>Eine Haltung, die zu dir passt</h3><p>„Rechts“ und „links“ meinen deine eigene Körperseite. Alle Bewegungen bleiben in einem angenehmen Bereich. Die Varianten zeigen weitere Möglichkeiten derselben Haltung.</p>
       <footer class="book-page-footer"><span>ARTBILD · Posing Guide</span><span>3 / {totalPages}</span></footer>
+      <PosingPageTurn index={2} />
     </article>
-  </template>
-  {guideCards.map(card => <template data-book-page data-pose-id={card.id} data-page-title={card.title}><PosingCard card={card} book /></template>)}
+    {guideCards.map(card => <PosingCard card={card} />)}
+  </div>
+  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span>Mit Pfeilen, Wischen oder Tastatur</span><button type="button" data-book-next>Weiter →</button></div>
 </section>
 <script>
   import { installPosingBook } from '../lib/posing-book';

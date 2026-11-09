@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir, stat, access } from 'node:fs/promises';
 import { join } from 'node:path';
 import { load } from 'cheerio';
 
@@ -9,44 +9,67 @@ const chapters = { 'posen-frauen': 10, 'posen-maenner': 10, hochzeitsposen: 20, 
 const cards = JSON.parse(await readFile('src/data/posing-guide-cards.json', 'utf8'));
 const page = async route => load(await readFile(join('dist', route, 'index.html'), 'utf8'));
 
-test('all 45 illustrations and descriptions are readable without JavaScript on canonical chapter pages', async () => {
-  const seen = new Set();
-  for (const [slug, count] of Object.entries(chapters)) {
-    const route = `posing-guide/${slug}/`, $ = await page(route);
-    assert.equal($('link[rel=canonical]').attr('href'), `${origin}/${route}`);
-    assert.doesNotMatch($('meta[name=robots]').attr('content'), /noindex/);
-    assert.equal($('h1').length, 1);
-    const description = $('meta[name=description]').attr('content');
-    assert.ok(description.length >= 90 && description.length <= 170, route);
-    assert.equal($('meta[property="og:description"]').attr('content'), description);
-    assert.equal($('.pose-reading-list > article').length, count);
-    for (const article of $('.pose-reading-list > article').toArray()) {
-      const id = $(article).attr('id').replace('pose-', '');
-      assert.ok(!seen.has(id)); seen.add(id);
-      const card = cards.find(record => record.id === id);
-      assert.ok(card);
-      assert.ok($(article).text().includes(card.description));
-      assert.ok($(article).text().includes(card.camera));
-      assert.equal($(article).find('img').attr('src'), `${card.image}-960.webp`);
-      assert.ok($(article).find('source[type="image/avif"]').attr('srcset').includes('640w'));
-      assert.equal($(article).find('a').last().attr('href'), `/posing-guide/#pose-${id}`);
-    }
+test('the single book delivers all 45 descriptions and images as real HTML without interaction', async () => {
+  const $ = await page('posing-guide');
+  assert.equal($('link[rel=canonical]').attr('href'), `${origin}/posing-guide/`);
+  assert.doesNotMatch($('meta[name=robots]').attr('content'), /noindex/);
+  assert.equal($('h1').length, 1);
+  const description = $('meta[name=description]').attr('content');
+  assert.ok(description.length >= 90 && description.length <= 170);
+  assert.equal($('meta[property="og:description"]').attr('content'), description);
+  assert.equal($('template').length, 0);
+  assert.equal($('[data-book-stage] > .pose-card').length, 45);
+  for (const card of cards) {
+    const article = $(`[data-book-stage] > #pose-${card.id}`);
+    assert.equal(article.length, 1);
+    assert.equal(article.attr('data-guide-mode'), 'book');
+    assert.ok(article.text().includes(card.description));
+    assert.ok(article.text().includes(card.camera));
+    assert.equal(article.find('img').attr('src'), `${card.image}-960.webp`);
+    assert.equal(article.find('img').attr('loading'), 'lazy');
+    assert.ok(article.find('source[type="image/avif"]').attr('srcset').includes('640w'));
+    assert.ok(article.find('.book-fallback-controls a').length);
   }
-  assert.equal(seen.size, 45);
+  for (const [chapter, count] of Object.entries(chapters)) {
+    assert.equal($(`[data-book-stage] > [data-guide-chapter="${chapter}"]`).length, count);
+  }
 });
 
-test('book keeps 48 pages, crawlable chapter links and a lightweight initial image', async () => {
+test('the book has 48 pages, in-place chapter targets and no separate reading routes', async () => {
   const $ = await page('posing-guide');
-  assert.equal($('template[data-book-page]').length, 47);
+  assert.equal($('[data-book-stage] > .book-page').length, 48);
   assert.equal($('[data-book-choice] option').length, 48);
-  assert.equal($('[data-book-stage] img').length, 1);
-  assert.equal($('[data-book-stage] img').attr('loading'), 'eager');
-  assert.equal($('[data-book-stage] img').attr('fetchpriority'), 'high');
-  assert.equal($('link[rel=canonical]').attr('href'), `${origin}/posing-guide/`);
-  for (const slug of Object.keys(chapters)) assert.ok($(`nav.guide-chapters a[href="/posing-guide/${slug}/"]`).length);
-  for (const card of cards) assert.equal($(`#pose-${card.id}`).length, 1);
+  assert.equal($('[data-book-stage] img[loading=eager]').length, 1);
+  assert.equal($('[data-book-stage] img[fetchpriority=high]').length, 1);
+  for (const anchor of $('.guide-chapters a').toArray()) {
+    const href = $(anchor).attr('href');
+    assert.ok(href.startsWith('#'));
+    assert.equal($(href).length, 1);
+    assert.ok(Number.isInteger(Number($(anchor).attr('data-book-jump'))));
+  }
+  assert.equal($('.pose-reading-list').length, 0);
+  for (const slug of Object.keys(chapters)) {
+    assert.equal($(`a[href="/posing-guide/${slug}/"]`).length, 0);
+    await assert.rejects(access(`dist/posing-guide/${slug}/index.html`));
+  }
   assert.equal($('[data-desktop-submenu] a[href="/posing-guide/"]').length, 1);
-  assert.ok($('.mobile-navigation a[href="/posing-guide/"]').length || $('[data-mobile-navigation] a[href="/posing-guide/"]').length || $('a[data-cta-id="mobile_posing_guide"]').length);
+  assert.ok($('a[data-cta-id="mobile_posing_guide"]').length);
+});
+
+test('structured book data describes the actual book and its four navigable chapters', async () => {
+  const $ = await page('posing-guide');
+  const graph = $('script[type="application/ld+json"]').toArray().flatMap(node => JSON.parse($(node).text())['@graph'] || []);
+  const book = graph.find(node => node['@type'] === 'Book');
+  assert.equal(book.numberOfPages, 48);
+  assert.equal(book.bookFormat, 'https://schema.org/EBook');
+  assert.equal(book.hasPart.length, 4);
+  assert.equal(book.url, `${origin}/posing-guide/`);
+  assert.ok(graph.some(node => node['@type'] === 'BreadcrumbList'));
+  for (const chapter of book.hasPart) {
+    const article = $(new URL(chapter.url).hash);
+    assert.equal(article.length, 1);
+    assert.equal(Number(chapter.pagination.split('–')[0]), Number(article.attr('data-guide-page')));
+  }
 });
 
 test('public guide assets contain only screen derivatives and no private reference material', async () => {
@@ -61,11 +84,13 @@ test('public guide assets contain only screen derivatives and no private referen
   for (const card of cards) assert.ok(card.alt.length < 170);
 });
 
-test('guide and chapter pages are in the page and image sitemaps', async () => {
+test('only the book URL appears in the page and image sitemaps', async () => {
   const sitemap = await readFile('dist/sitemap.xml', 'utf8');
   const images = await readFile('dist/image-sitemap.xml', 'utf8');
-  for (const path of ['', ...Object.keys(chapters).map(slug => `${slug}/`)]) {
-    assert.ok(sitemap.includes(`${origin}/posing-guide/${path}`));
-    assert.ok(images.includes(`${origin}/posing-guide/${path}`));
+  assert.ok(sitemap.includes(`${origin}/posing-guide/`));
+  assert.ok(images.includes(`${origin}/posing-guide/`));
+  for (const slug of Object.keys(chapters)) {
+    assert.ok(!sitemap.includes(`${origin}/posing-guide/${slug}/`));
+    assert.ok(!images.includes(`${origin}/posing-guide/${slug}/`));
   }
 });
