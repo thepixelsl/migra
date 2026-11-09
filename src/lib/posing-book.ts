@@ -110,7 +110,7 @@ export function installPosingBook(root: HTMLElement) {
     stage.classList.toggle('single', !double);
     root.classList.add('is-ready');
     root.querySelectorAll<HTMLElement>('.guide-chapters [data-book-jump]').forEach(link => {
-      const selected = link.dataset.bookChapter ? link.dataset.bookChapter === pages[requested].dataset.guideChapter : requested < 3;
+      const selected = link.dataset.bookChapter ? link.dataset.bookChapter === pages[requested].dataset.guideChapter : requested === 0;
       if (selected) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
     });
     chooser.value = String(requested);

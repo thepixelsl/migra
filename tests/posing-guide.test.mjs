@@ -23,6 +23,7 @@ test('the single book delivers all 45 descriptions and images as real HTML witho
     const article = $(`[data-book-stage] > #pose-${card.id}`);
     assert.equal(article.length, 1);
     assert.equal(article.attr('data-guide-mode'), 'book');
+    assert.equal(article.attr('data-guide-content'), `pose_${card.id}`);
     assert.ok(article.text().includes(card.description));
     assert.ok(article.text().includes(card.camera));
     assert.equal(article.find('img').attr('src'), `${card.image}-960.webp`);
@@ -35,12 +36,27 @@ test('the single book delivers all 45 descriptions and images as real HTML witho
   }
 });
 
-test('the book has 48 pages, in-place chapter targets and no separate reading routes', async () => {
+test('the book has 46 pages, in-place chapter targets and no separate reading routes', async () => {
   const $ = await page('posing-guide');
-  assert.equal($('[data-book-stage] > .book-page').length, 48);
-  assert.equal($('[data-book-choice] option').length, 48);
+  assert.equal($('[data-book-stage] > .book-page').length, 46);
+  assert.equal($('[data-book-choice] option').length, 46);
   assert.equal($('[data-book-stage] img[loading=eager]').length, 1);
   assert.equal($('[data-book-stage] img[fetchpriority=high]').length, 1);
+  const bookPages = $('[data-book-stage] > .book-page').toArray();
+  assert.deepEqual(bookPages.map(node => $(node).attr('id')), ['titel', ...cards.map(card => `pose-${card.id}`)]);
+  assert.equal($('#inhalt, #orientierung, .book-intro').length, 0);
+  assert.deepEqual($('.guide-chapters [data-book-chapter]').toArray().map(node => $(node).attr('data-book-chapter')),
+    ['grundlagen', 'posen-frauen', 'posen-maenner', 'hochzeitsposen']);
+  bookPages.forEach((node, index) => {
+    const article = $(node);
+    assert.equal(Number(article.attr('data-guide-page')), index + 1);
+    assert.ok(article.find('img').length, `Page ${index + 1} must show an illustration`);
+    assert.ok(article.find('.book-page-footer').text().includes(`${index + 1} / 46`));
+    assert.equal($('[data-book-choice] option').eq(index).attr('value'), String(index));
+    const links = article.find('.book-fallback-controls a').toArray().map(link => $(link).attr('href'));
+    assert.deepEqual(links, [index > 0 && `#${$(bookPages[index - 1]).attr('id')}`,
+      index < bookPages.length - 1 && `#${$(bookPages[index + 1]).attr('id')}`].filter(Boolean));
+  });
   for (const anchor of $('.guide-chapters a').toArray()) {
     const href = $(anchor).attr('href');
     assert.ok(href.startsWith('#'));
@@ -60,9 +76,10 @@ test('structured book data describes the actual book and its four navigable chap
   const $ = await page('posing-guide');
   const graph = $('script[type="application/ld+json"]').toArray().flatMap(node => JSON.parse($(node).text())['@graph'] || []);
   const book = graph.find(node => node['@type'] === 'Book');
-  assert.equal(book.numberOfPages, 48);
+  assert.equal(book.numberOfPages, 46);
   assert.equal(book.bookFormat, 'https://schema.org/EBook');
   assert.equal(book.hasPart.length, 4);
+  assert.deepEqual(book.hasPart.map(chapter => chapter.pagination), ['2-6', '7-16', '17-26', '27-46']);
   assert.equal(book.url, `${origin}/posing-guide/`);
   assert.ok(graph.some(node => node['@type'] === 'BreadcrumbList'));
   for (const chapter of book.hasPart) {
