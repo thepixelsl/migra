@@ -1,3 +1,6 @@
+/* hub-content-removals */
+import {readFile as readRemovalFile} from 'node:fs/promises';
+import {contentRemovalResponse} from './hub-content-response.mjs';
 import { createAgentNetworkRegistry } from "./agent-networks.mjs";
 import { Buffer } from "node:buffer";
 import { createServer } from "node:http";
@@ -203,6 +206,7 @@ export async function createBunnyRuntime(options = {}) {
   const contactMailer = options.contactMailer ?? createContactMailer(env);
   const assetDirectory = options.assetDirectory || env.ASSET_DIRECTORY || DEFAULT_ASSET_DIRECTORY;
 
+  const contentRemovals = await readRemovalFile(path.join(assetDirectory,'hub-content-removals.json'),'utf8').then(JSON.parse).catch(e=>{if(e.code==='ENOENT')return null;throw e;});
   const agentNetworks = options.agentNetworks || createAgentNetworkRegistry();
   if (env.NODE_ENV === "production") agentNetworks.start?.();
 
@@ -293,7 +297,7 @@ export async function createBunnyRuntime(options = {}) {
         request = new Request(request, { headers });
       }
 
-      const response = await worker.fetch(request, workerEnv, {
+      const response = contentRemovalResponse(request,contentRemovals) || await worker.fetch(request, workerEnv, {
         waitUntil(promise) {
           Promise.resolve(promise).catch((error) => console.error("Background task failed", error));
         },
