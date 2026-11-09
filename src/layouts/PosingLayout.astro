@@ -51,7 +51,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
   </head>
   <body class="gallery-template posing-guide-page" data-page-type="posing_guide">
     <a class="guide-skip" href="#guide-main">Zum Posing Guide</a>
-    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <header class="gallery-header"><MobileNavigation showFloatingAction={false} /><DesktopNavigation /></header>
     <main id="guide-main" class="guide-shell">
       <nav class="guide-breadcrumb" aria-label="Breadcrumb">
         {breadcrumbs.map((item, index) => <>{index > 0 && <span aria-hidden="true">/</span>}{index === breadcrumbs.length - 1 ? <span aria-current="page">{item.name}</span> : <a href={item.path}>{item.name}</a>}</>)}
