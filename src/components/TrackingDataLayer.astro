@@ -258,11 +258,13 @@ import PricingTracking from "./PricingTracking.astro";
       const analyticsGranted = window.artbildConsentApi?.isServiceAllowed?.("googleAnalytics") === true;
       const marketingGranted = window.artbildConsentApi?.isServiceAllowed?.("metaPixel") === true;
       const clarityGranted = window.artbildConsentApi?.isServiceAllowed?.("microsoftClarity") === true;
+      const guideEvent = String(payload?.event || "").startsWith("posing_guide_");
+      if (guideEvent && !analyticsGranted) return;
       // OpenAI consent does not enable GTM, Google Analytics, Clarity, or Meta.
-      if (window.artbildConsentApi?.isServiceAllowed?.("openaiAds") === true) {
+      if (!guideEvent && window.artbildConsentApi?.isServiceAllowed?.("openaiAds") === true) {
         window.artbildOpenAIAds?.track?.(payload);
       }
-      window.artbildGoogleAds?.track?.(payload);
+      if (!guideEvent) window.artbildGoogleAds?.track?.(payload);
       if (!analyticsGranted && !marketingGranted) return;
 
       const eventPayload = compact({
@@ -274,6 +276,25 @@ import PricingTracking from "./PricingTracking.astro";
           && typeof value === "string" && /^[a-z0-9_]{1,80}$/.test(value))),
       });
       if (!eventPayload.event) return;
+
+      // Posing interest is analytics-only, with public IDs and bounded counters.
+      if (guideEvent) {
+        if (!["posing_guide_open", "posing_guide_page_view", "posing_guide_read_time", "posing_guide_engaged", "posing_guide_variant_open"].includes(payload.event)
+          || payload.measurement_page !== "posing_guide" || !["book", "reading"].includes(payload.guide_mode)
+          || !["intro", "posen_frauen", "posen_maenner", "hochzeitsposen", "grundlagen"].includes(payload.guide_chapter)
+          || !Number.isInteger(payload.guide_page_number) || payload.guide_page_number < 1 || payload.guide_page_number > 48
+          || !/^(cover|contents|orientation|pose_00[1-9]|pose_0[1-3][0-9]|pose_04[0-5])$/.test(payload.guide_content_id || "")) return;
+        Object.assign(eventPayload, { measurement_page: "posing_guide", guide_mode: payload.guide_mode,
+          guide_chapter: payload.guide_chapter, guide_page_number: payload.guide_page_number, guide_content_id: payload.guide_content_id });
+        if (payload.event === "posing_guide_read_time") {
+          if (!Number.isInteger(payload.guide_visible_ms) || payload.guide_visible_ms < 1 || payload.guide_visible_ms > 60000) return;
+          eventPayload.guide_visible_ms = payload.guide_visible_ms;
+        }
+        if (payload.event === "posing_guide_engaged") {
+          if (!["three_poses", "thirty_seconds"].includes(payload.guide_engagement_reason)) return;
+          eventPayload.guide_engagement_reason = payload.guide_engagement_reason;
+        }
+      }
 
       // Pricing attribution is a closed schema; never accept free text, URLs or form fields.
       if (["price_package_view", "price_package_click", "price_calculator_change", "price_contact_click", "generate_lead"].includes(eventPayload.event)) {
@@ -303,7 +324,7 @@ import PricingTracking from "./PricingTracking.astro";
         const { event, ...parameters } = eventPayload;
         window.gtag?.("event", event, { ...parameters, send_to: trackingConfiguration.googleAnalyticsId });
       }
-      if (marketingGranted) {
+      if (marketingGranted && !guideEvent) {
         window.artbildMetaPixel?.track?.(payload);
       }
     };

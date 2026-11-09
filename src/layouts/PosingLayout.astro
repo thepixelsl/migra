@@ -1,0 +1,69 @@
+---
+import FaviconHead from '../components/FaviconHead.astro';
+import MobileNavigation from '../components/MobileNavigation.astro';
+import DesktopNavigation from '../components/DesktopNavigation.astro';
+import PosingMeasurement from '../components/PosingMeasurement.astro';
+import '../styles/global.css';
+import '../styles/posing-guide.css';
+import { guidePath, guideChapters, coverCard } from '../data/posing-guide';
+const { title, description, heading, intro, chapter, image = coverCard } = Astro.props;
+const site = Astro.site || new URL('https://artbild-fotografie.de');
+const canonical = new URL(Astro.url.pathname, site).href;
+const absolute = (path: string) => new URL(path, site).href;
+const breadcrumbs = [{ name: 'Startseite', path: '/' }, { name: 'Blog', path: '/blog/' }, { name: 'Posing Guide', path: guidePath }, ...(chapter ? [{ name: chapter.label, path: `${guidePath}${chapter.slug}/` }] : [])];
+const schema = { '@context': 'https://schema.org', '@graph': [
+  { '@type': 'CollectionPage', '@id': `${canonical}#webpage`, url: canonical, name: title, description, inLanguage: 'de',
+    author: { '@type': 'Person', name: 'York Augustin', url: absolute('/about/') },
+    breadcrumb: { '@id': `${canonical}#breadcrumb` }, primaryImageOfPage: { '@type': 'ImageObject', contentUrl: absolute(`${image.image}-960.webp`), caption: image.alt },
+    isPartOf: { '@type': 'WebSite', name: 'Artbild-Fotografie', url: absolute('/') } },
+  { '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`, itemListElement: breadcrumbs.map((item, index) => ({ '@type': 'ListItem', position: index + 1, name: item.name, item: absolute(item.path) })) },
+] };
+---
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FaviconHead />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={absolute(`${image.image}-960.webp`)} />
+    <meta property="og:image:alt" content={image.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(schema).replace(/</g, '\\u003c')} />
+  </head>
+  <body class="gallery-template posing-guide-page" data-page-type="posing_guide">
+    <a class="guide-skip" href="#guide-main">Zum Posing Guide</a>
+    <header class="gallery-header"><MobileNavigation /><DesktopNavigation /></header>
+    <main id="guide-main" class="guide-shell">
+      <nav class="guide-breadcrumb" aria-label="Breadcrumb">
+        {breadcrumbs.map((item, index) => <>{index > 0 && <span aria-hidden="true">/</span>}{index === breadcrumbs.length - 1 ? <span aria-current="page">{item.name}</span> : <a href={item.path}>{item.name}</a>}</>)}
+      </nav>
+      <header class="guide-intro">
+        <p class="guide-kicker">Für deinen Moment vor der Kamera</p>
+        <h1>{heading}</h1>
+        <p class="guide-lead">{intro}</p>
+        <p class="guide-byline">Ein Guide von <a href="/about/">York Augustin · Artbild-Fotografie</a></p>
+      </header>
+      <nav class="guide-chapters" aria-label="Kapitel im Posing Guide">
+        <a href={guidePath} aria-current={!chapter ? 'page' : undefined}>Das ganze Buch <span>48 Seiten</span></a>
+        {guideChapters.map(item => <a href={`${guidePath}${item.slug}/`} aria-current={chapter?.slug === item.slug ? 'page' : undefined}>{item.label} <span>{item.count} Karten</span></a>)}
+      </nav>
+      <slot />
+      <aside class="guide-context" aria-label="Rund um dein Fotoshooting">
+        <div><p class="guide-kicker">Von der Zeichnung zum Foto</p><h2>Dein Moment darf sich nach dir anfühlen.</h2></div>
+        <div><p>Die Zeichnungen sind eine Orientierung. Deine Haltung verändert sich mit deiner Kleidung, dem Ort und dem Menschen neben dir. Jede Bewegung bleibt in einem angenehmen Bereich.</p>
+        <p>Ein <a href="/gallery/lovebirds-am-elbstrand/">Kennenlernshooting am Elbstrand</a> zeigt, wie Nähe und Bewegung in echten Paarfotos wirken. Für die Vorbereitung eures Tages gibt es den <a href="/hochzeitsfotograf-ratgeber/">Hochzeitsfotograf-Ratgeber</a>.</p></div>
+      </aside>
+    </main>
+    <footer class="guide-footer"><a href="/blog/">Zum Blog</a><span>ARTBILD · Posing Guide</span><a href="/kontakt/">Kontakt</a><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a></footer>
+    <PosingMeasurement />
+  </body>
+</html>

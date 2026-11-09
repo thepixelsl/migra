@@ -1,0 +1,25 @@
+---
+import PosingLayout from '../../layouts/PosingLayout.astro';
+import PosingCard from '../../components/PosingCard.astro';
+import { guideChapters, guideCards } from '../../data/posing-guide';
+export function getStaticPaths() {
+  return guideChapters.map(chapter => ({ params: { chapter: chapter.slug }, props: { chapter } }));
+}
+const { chapter } = Astro.props;
+const cards = guideCards.filter(card => card.chapter === chapter.slug);
+const image = cards.find(card => card.id === chapter.imageId) || cards[0];
+const titles = {
+  'posen-frauen': 'Posen für Frauen: 10 illustrierte Ideen | Artbild',
+  'posen-maenner': 'Posen für Männer: 10 illustrierte Ideen | Artbild',
+  'hochzeitsposen': 'Hochzeitsposen & Paarposen: 20 Bildideen | Artbild',
+  grundlagen: 'Posing-Grundlagen: Haltung & Kameraperspektive | Artbild',
+};
+---
+<PosingLayout title={titles[chapter.slug]} description={chapter.description}
+  heading={chapter.title} intro={chapter.intro} chapter={chapter} image={image}>
+  <nav class="pose-index" aria-label="Posen in diesem Kapitel">
+    {cards.map((card, index) => <a href={`#pose-${card.id}`}><span>{String(index + 1).padStart(2, '0')}</span>{card.title}</a>)}
+  </nav>
+  <p class="guide-caption">Die kleinen Kamerazeichen geben dir die Blickrichtung zur Orientierung. „Rechts“ und „links“ meinen deine eigene Körperseite.</p>
+  <div class="pose-reading-list">{cards.map((card, index) => <PosingCard card={card} eager={index === 0} />)}</div>
+</PosingLayout>

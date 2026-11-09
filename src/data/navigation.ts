@@ -43,6 +43,7 @@ export const desktopNavigationItems: NavigationItem[] = [
       link("Standesämter & Trauorte", "/standesamt-hamburg/", "desktop_registry_office_finder", "standesamt_hamburg", "standesamt_finden", "planung"),
       link("Kirchliche Trauungen", "/kirchliche-trauungen-hamburg/", "desktop_church_wedding_overview", "kirchliche_trauung", "kirchliche_trauung_planen", "planung"),
       link("Hochzeitsfotograf Ratgeber", "/hochzeitsfotograf-ratgeber/", "desktop_wedding_photographer_guide", "hochzeitsfotograf_ratgeber", "fotografenwahl_vorbereiten", "information"),
+      link("Posing Guide", "/posing-guide/", "desktop_posing_guide", "posing_guide", "posen_ansehen", "vorbereitung"),
     ],
   }),
   link("Über mich", "/about/", "desktop_about", "ueber_mich", "vertrauen_aufbauen", "vertrauen"),
@@ -62,6 +63,14 @@ export const mobileNavigationGroups: NavigationGroup[] = [
     items: [
       link("Standesämter & Trauorte", "/standesamt-hamburg/", "mobile_registry_office_finder", "standesamt_hamburg", "standesamt_finden", "planung"),
       link("Kirchliche Trauungen", "/kirchliche-trauungen-hamburg/", "mobile_church_wedding_overview", "kirchliche_trauung", "kirchliche_trauung_planen", "planung"),
+    ],
+  },
+  {
+    label: "Blog", secondary: true, contentTopic: "posing_guide",
+    userIntent: "shooting_vorbereiten", journeyStage: "vorbereitung",
+    items: [
+      link("Posing Guide", "/posing-guide/", "mobile_posing_guide", "posing_guide", "posen_ansehen", "vorbereitung"),
+      link("Hochzeitsfotograf Ratgeber", "/hochzeitsfotograf-ratgeber/", "mobile_wedding_photographer_guide", "hochzeitsfotograf_ratgeber", "fotografenwahl_vorbereiten", "information"),
     ],
   },
 ];

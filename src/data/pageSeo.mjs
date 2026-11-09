@@ -7,6 +7,7 @@
  */
 import hubPublications from './hub-publications.json' with {type:'json'};
 import pricingContent from './pricing-page.json' with {type:'json'};
+import posingCards from './posing-guide-cards.json' with {type:'json'};
 import {pricingText} from '../lib/pricing-content.mjs';
 const pricingOriginalImages={'original:hero':'src/assets/hochzeitsfotograf-preise/ART9896-1-1.jpg','original:pure':'src/assets/hochzeitsfotograf-niedersachsen/Hochzeit_Lauenbrueck_7587.jpg','original:standesamt':'src/assets/hochzeitsfotograf-preise/ART_0074-Bearbeitet_print.jpg','original:reportage':'src/assets/hochzeitsfotograf-preise/ART_3680-Bearbeitet-Wiederhergestellt_web.jpg'};
 export const pageSeo = {
@@ -414,6 +415,19 @@ export const pageSeo = {
     focalPoint: "top",
   },
 };
+
+// Guide search previews use the reviewed screen derivative, never private PNG masters.
+for (const [route, id, keyword] of [
+  ['/posing-guide/', '026', 'Posing Guide'],
+  ['/posing-guide/posen-frauen/', '008', 'Posen für Frauen'],
+  ['/posing-guide/posen-maenner/', '016', 'Posen für Männer'],
+  ['/posing-guide/hochzeitsposen/', '026', 'Hochzeitsposen und Paarposen'],
+  ['/posing-guide/grundlagen/', '001', 'Posing Grundlagen'],
+]) {
+  const card = posingCards.find(card => card.id === id);
+  if (!card) throw new Error('Missing posing guide preview: ' + id);
+  pageSeo[route] = { keyword, image: `public${card.image}-960.webp`, alt: card.alt, fit: 'contain' };
+}
 
 for (const entry of hubPublications) {
   if (Object.hasOwn(pageSeo,entry.path)) throw new Error('Hub address conflicts with an existing SEO page: '+entry.path);

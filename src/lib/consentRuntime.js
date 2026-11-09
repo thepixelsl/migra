@@ -43,7 +43,7 @@
     }
   };
   const prefixes = {
-    googleAnalytics: ["_ga", "_gid", "_gat"], googleAds: ["_gcl_", "_gac_"],
+    googleAnalytics: ["_ga", "_gid", "_gat", "artbild_posing_visit_v1"], googleAds: ["_gcl_", "_gac_"],
     microsoftClarity: ["_clck", "_clsk"], metaPixel: ["_fbp", "_fbc", "lastExternalReferrer"], openaiAds: ["__oppref", "__obref"],
   };
   const clean = state => {
