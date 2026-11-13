@@ -7,6 +7,7 @@ import "../../styles/global.css";
 import heroImage from "../../assets/hochzeitsfotograf-ratgeber/hochzeitsfotograf-hamburg-ratgeber-art9666.jpg";
 import standesamtImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-01.jpg";
 import reportImage from "../../assets/hochzeitsfotograf-ratgeber/standesamt-altona-hochzeitsreportage-02.jpg";
+import { guideCards } from "../../data/posing-guide";
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/hochzeitsfotograf-ratgeber/";
@@ -93,9 +94,10 @@ const faqItems = [
   },
 ];
 
+const couplesGuideCard = guideCards.find(card => card.chapter === 'hochzeitsposen');
 const relatedLinks = [
   {
-    href: "/posing-guide/#pose-026",
+    href: couplesGuideCard ? `/posing-guide/#pose-${couplesGuideCard.id}` : '/posing-guide/',
     label: "Posing Guide für Paare",
     text: "Gezeichnete Posen für Eure Hochzeitsfotos. So seht Ihr schon vorher, wohin mit Händen, Füßen und Blick.",
   },

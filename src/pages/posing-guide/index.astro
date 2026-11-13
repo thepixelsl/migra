@@ -1,10 +1,8 @@
 ---
 import PosingLayout from '../../layouts/PosingLayout.astro';
 import PosingBook from '../../components/PosingBook.astro';
+import { guidePage } from '../../data/posing-guide';
 ---
-<PosingLayout title="Posing Guide: Posen für Frauen, Männer & Hochzeit | Artbild"
-  description="Posing Guide mit 40 Posen für Frauen, Männer und Paare plus 5 Grundlagen. Zeichnungen und klare Beschreibungen für dein Fotoshooting in Hamburg."
-  heading="Posing Guide"
-  intro="Moin! Ob an der Alster, am Jungfernstieg oder in der Hotelsuite: Hier findest du 40 Posen und fünf Grundlagen fürs Shooting. Die Zeichnungen zeigen dir, wohin mit Händen, Füßen und Blick.">
+<PosingLayout {...guidePage}>
   <PosingBook />
 </PosingLayout>

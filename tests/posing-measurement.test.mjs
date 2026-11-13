@@ -77,9 +77,35 @@ test('measurement schema rejects private input, unknown events and unbounded cou
   const safe = guideParameters(payload('posing_guide_page_view', { email: 'private@example.invalid', url: '?name=Private', title: 'Private' }));
   assert.ok(safe); assert.doesNotMatch(JSON.stringify(safe), /private|url|title/i);
   assert.equal(guideParameters(payload('posing_guide_page_view', { guide_content_id: 'private@example.invalid' })), null);
-  assert.equal(guideParameters(payload('posing_guide_page_view', { guide_page_number: 49 })), null);
+  assert.equal(guideParameters(payload('posing_guide_page_view', { guide_page_number: 1001 })), null);
+  assert.equal(guideParameters(payload('posing_guide_page_view', { guide_content_id: 'pose_000' })), null);
+  assert.equal(guideParameters(payload('posing_guide_page_view', { guide_content_id: 'pose_1000' })), null);
   assert.equal(guideParameters(payload('posing_guide_read_time', { guide_visible_ms: 60_001 })), null);
   assert.equal(guideParameters(payload('posing_guide_unknown')), null);
+});
+
+test('new stable card IDs and reordered page numbers retain bounded analytics', () => {
+  for (const id of ['pose_046', 'pose_100', 'pose_999']) {
+    const value = payload('posing_guide_page_view', { guide_content_id: id, guide_page_number: 1000 });
+    assert.equal(guideParameters(value).guide_content_id, id);
+    const { meter, events } = fixture();
+    tick(meter, 0, [page(id, 49)]); tick(meter, 1000, [page(id, 49)]);
+    assert.equal(events.at(-1).guide_content_id, id);
+  }
+  const meter = new GuideMeter({ emit: () => {}, restore: { poses: ['pose_999', 'pose_000', 'private@example.invalid'] } });
+  assert.deepEqual([...meter.poses], ['pose_999']);
+});
+
+test('new editorial chapters are measured only through their public allowlist', () => {
+  const publicChapters = ['intro', 'kapitel_abc123'];
+  const value = payload('posing_guide_page_view', { guide_chapter: 'kapitel_abc123' });
+  assert.equal(guideParameters(value), null);
+  assert.equal(guideParameters(value, publicChapters).guide_chapter, 'kapitel_abc123');
+  assert.equal(guideParameters({ ...value, guide_chapter: 'unknown_private_input' }, publicChapters), null);
+  const events = [], meter = new GuideMeter({ emit: event => events.push(event), publicChapters });
+  const surface = { ...page(), guide_chapter: 'kapitel_abc123' };
+  tick(meter, 0, [surface]); tick(meter, 1000, [surface]);
+  assert.equal(events.at(-1).guide_chapter, 'kapitel_abc123');
 });
 
 test('the real delivery boundary preserves guide parameters, requires Analytics and excludes all advertising channels', async () => {
@@ -99,5 +125,15 @@ test('the real delivery boundary preserves guide parameters, requires Analytics 
   assert.doesNotMatch(JSON.stringify(deliveries), /private@example/); assert.equal(ads.length, 0);
   track(payload('posing_guide_read_time', { guide_visible_ms: 900_000 })); assert.equal(deliveries.length, 1);
   granted = false; track(payload('posing_guide_read_time', { guide_visible_ms: 1000 })); assert.equal(deliveries.length, 1);
+  granted = true; track(payload('posing_guide_page_view', { guide_content_id: 'pose_999', guide_page_number: 1000 }));
+  assert.equal(deliveries.length, 2); assert.equal(deliveries[1][2].guide_content_id, 'pose_999');
+  track(payload('posing_guide_page_view', { guide_content_id: 'pose_000' }));
+  track(payload('posing_guide_page_view', { guide_page_number: 1001 }));
+  assert.equal(deliveries.length, 2); assert.equal(ads.length, 0);
+  track(payload('posing_guide_page_view', { guide_chapter: 'kapitel_abc123' }));
+  assert.equal(deliveries.length, 2);
+  win.document = { querySelectorAll: () => [{ dataset: { guideChapter: 'kapitel-abc123' } }] };
+  track(payload('posing_guide_page_view', { guide_chapter: 'kapitel_abc123' }));
+  assert.equal(deliveries.length, 3); assert.equal(deliveries[2][2].guide_chapter, 'kapitel_abc123');
   assert.match(await readFile('src/lib/consentRuntime.js', 'utf8'), /googleAnalytics: \[[^\]]+artbild_posing_visit_v1/);
 });

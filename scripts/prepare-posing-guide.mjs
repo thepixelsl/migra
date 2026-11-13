@@ -7,6 +7,9 @@ import sharp from 'sharp';
 const project = resolve(import.meta.dirname, '..');
 const source = resolve(process.argv[2] || join(project, '../posing-guide/01-posen'));
 const output = join(project, 'public/images/posing-guide');
+const guideFile = join(project, 'src/data/posing-guide.json');
+const guide = JSON.parse(await readFile(guideFile, 'utf8'));
+if (guide.updatedAt !== null) throw Error('The guide has editorial changes. Import original artwork through Creative Hub instead.');
 await mkdir(output, { recursive: true });
 const cards = [];
 const publicTitles = { '039': 'Huckepack', '044': 'Auf den Armen von vorn', '045': 'Auf den Armen von hinten' };
@@ -29,5 +32,10 @@ for (const folder of (await readdir(source)).filter(name => /^\d{3}-/.test(name)
     image: `/images/posing-guide/${basename}` });
 }
 if (cards.length !== 45 || new Set(cards.map(card => card.id)).size !== 45) throw Error('Expected the reviewed set of 45 illustrations.');
-await writeFile(join(project, 'src/data/posing-guide-cards.json'), JSON.stringify(cards, null, 2) + '\n');
+const imported = new Map(cards.map(card => [card.id, card]));
+for (const chapter of guide.chapters) chapter.cards = chapter.cards.map(card => {
+  if (!imported.has(card.id)) throw Error(`Missing reviewed import card: ${card.id}`);
+  return imported.get(card.id);
+});
+await writeFile(guideFile, JSON.stringify(guide, null, 2) + '\n');
 console.log(`${cards.length} illustrations prepared as responsive WebP/AVIF; no private reference data copied.`);

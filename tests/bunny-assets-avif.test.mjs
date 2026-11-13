@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { createAssetBinding } from '../server/bunny-assets.mjs';
 
 test('guide AVIF images are delivered as images for browsers and publication checks', async () => {
-  const cards = JSON.parse(await readFile('src/data/posing-guide-cards.json', 'utf8'));
+  const cards = JSON.parse(await readFile('src/data/posing-guide.json', 'utf8')).chapters.flatMap(chapter => chapter.cards);
   const assets = createAssetBinding('public');
   const url = `https://artbild-fotografie.de${cards[0].image}-960-v2.avif`;
   for (const method of ['GET', 'HEAD']) {

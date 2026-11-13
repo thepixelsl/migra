@@ -6,7 +6,7 @@ import PosingMeasurement from '../components/PosingMeasurement.astro';
 import '../styles/global.css';
 import '../styles/posing-guide.css';
 import { guidePath, guideChapters, guideCards, coverCard, totalPages } from '../data/posing-guide';
-const { title, description, heading, intro, image = coverCard } = Astro.props;
+const { title, description, heading, kicker, intro, image = coverCard } = Astro.props;
 const site = Astro.site || new URL('https://artbild-fotografie.de');
 const canonical = new URL(Astro.url.pathname, site).href;
 const absolute = (path: string) => new URL(path, site).href;
@@ -21,7 +21,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
     inLanguage: 'de', numberOfPages: totalPages, bookFormat: 'https://schema.org/EBook', isAccessibleForFree: true,
     author: { '@type': 'Person', name: 'York Augustin', url: absolute('/about/') },
     image: absolute(`${image.image}-960.webp`), mainEntityOfPage: { '@id': `${canonical}#webpage` },
-    hasPart: guideChapters.map((chapter, index) => {
+    hasPart: guideChapters.filter(chapter => chapter.count > 0).map((chapter, index) => {
       const cards = guideCards.filter(card => card.chapter === chapter.slug);
       return { '@type': 'Chapter', name: chapter.title, position: index + 1,
         url: `${canonical}#pose-${cards[0].id}`, pagination: `${cards[0].page}-${cards.at(-1)!.page}` };
@@ -57,7 +57,7 @@ const schema = { '@context': 'https://schema.org', '@graph': [
         {breadcrumbs.map((item, index) => <>{index > 0 && <span aria-hidden="true">/</span>}{index === breadcrumbs.length - 1 ? <span aria-current="page">{item.name}</span> : <a href={item.path}>{item.name}</a>}</>)}
       </nav>
       <header class="guide-intro">
-        <p class="guide-kicker">Für dein nächstes Fotoshooting</p>
+        <p class="guide-kicker">{kicker}</p>
         <h1>{heading}</h1>
         <p class="guide-lead">{intro}</p>
         <p class="guide-byline">Ein Guide von <a href="/about/">York Augustin · Artbild-Fotografie</a></p>

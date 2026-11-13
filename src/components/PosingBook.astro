@@ -1,5 +1,5 @@
 ---
-import { guideCards, coverCard, totalPages } from '../data/posing-guide';
+import { guideCards, coverCard, guideCover, totalPages } from '../data/posing-guide';
 import PosingCard from './PosingCard.astro';
 import PosingImage from './PosingImage.astro';
 import PosingPageTurn from './PosingPageTurn.astro';
@@ -11,12 +11,12 @@ import PosingPageTurn from './PosingPageTurn.astro';
   </div>
   <div class="book-stage single" data-book-stage tabindex="0" aria-label="Buchseiten; mit den Pfeiltasten blättern">
     <article class="book-page book-cover" id="titel" aria-label="Seite 1: Titel" data-guide-page="1" data-guide-content="cover" data-guide-chapter="intro" data-guide-mode="book">
-      <p class="guide-kicker">ARTBILD</p>
-      <h2>Posing<br />Guide</h2>
+      <p class="guide-kicker">{guideCover.kicker}</p>
+      <h2>{guideCover.titleLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</h2>
       <figure><PosingImage card={coverCard} eager /></figure>
-      <p class="book-cover-line">Ein bisschen Starthilfe<br />für dein Fotoshooting.</p>
-      <p class="book-cover-note">40 Karten mit Posen und Bildideen<br />für draußen, Hotels und private Räume.<br />Dazu fünf Grundlagen fürs Shooting.</p>
-      <footer class="book-page-footer"><span>Moin aus Hamburg</span><span>1 / {totalPages}</span></footer>
+      <p class="book-cover-line">{guideCover.lineLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</p>
+      <p class="book-cover-note">{guideCover.noteLines.map((line, index) => <>{index > 0 && <br />}{line}</>)}</p>
+      <footer class="book-page-footer"><span>{guideCover.footer}</span><span>1 / {totalPages}</span></footer>
       <PosingPageTurn index={0} />
     </article>
     {guideCards.map(card => <PosingCard card={card} />)}
