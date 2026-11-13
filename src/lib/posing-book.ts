@@ -119,25 +119,9 @@ export function installPosingBook(root: HTMLElement) {
     previous.forEach(button => { button.disabled = current === 0; });
     next.forEach(button => { button.disabled = current + (double ? 2 : 1) >= pages.length; });
     corners.forEach(({ button, direction }) => { button.hidden = direction < 0 ? current === 0 : current + (double ? 2 : 1) >= pages.length; button.disabled = button.hidden; });
-    if (document.fullscreenElement === root) {
-      // Fit illustrations to the space left by the actual text and controls.
-      // Long or expanded descriptions can still scroll without shrinking text.
-      stage.style.minHeight = ''; root.style.removeProperty('--book-image-height');
-      const outerHeight = (element: HTMLElement) => {
-        const style = getComputedStyle(element);
-        return element.getBoundingClientRect().height + parseFloat(style.marginTop) + parseFloat(style.marginBottom);
-      };
-      const style = getComputedStyle(root);
-      const controls = [...root.querySelectorAll<HTMLElement>(':scope > [data-book-controls]')];
-      const available = root.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - controls.reduce((height, element) => height + outerHeight(element), 0);
-      const overflow = stage.getBoundingClientRect().height - available;
-      if (overflow > 0) {
-        const imageHeight = Math.max(...pages.filter(page => !page.hidden).map(page => page.querySelector('img')!.getBoundingClientRect().height));
-        root.style.setProperty('--book-image-height', `${Math.max(160, Math.floor(imageHeight - overflow))}px`);
-      }
-    }
     // A phone shows one sheet at a time, sized to its own content. Desktop
-    // spreads retain a common paper height for facing pages.
+    // spreads retain a common paper height, including in fullscreen. Shrinking
+    // it after a turn would clamp the scroll position and shift the new text.
     stage.style.minHeight = mobile.matches ? '' : `${Math.ceil(Math.max(parseFloat(stage.style.minHeight) || 0, stage.getBoundingClientRect().height))}px`;
     notify();
   }
@@ -223,7 +207,6 @@ export function installPosingBook(root: HTMLElement) {
     fullscreenButton.setAttribute('aria-pressed', String(fullscreen));
     if (fullscreen) { root.scrollTop = 0; stage.focus({ preventScroll: true }); }
     else {
-      root.style.removeProperty('--book-image-height');
       requestAnimationFrame(() => requestAnimationFrame(() => {
         window.scrollTo({ top: fullscreenScroll, behavior: 'instant' }); fullscreenButton.focus({ preventScroll: true });
       }));
@@ -247,7 +230,10 @@ export function installPosingBook(root: HTMLElement) {
     if (Math.abs(stage.clientWidth - width) < 1) return;
     width = stage.clientWidth; cancel(); stage.style.minHeight = ''; current = normalize(requested); render();
   }).observe(stage);
+  let viewportWidth = innerWidth, viewportHeight = innerHeight;
   window.addEventListener('resize', () => {
+    if (innerWidth === viewportWidth && innerHeight === viewportHeight) return;
+    viewportWidth = innerWidth; viewportHeight = innerHeight;
     if (document.fullscreenElement === root) { cancel(); stage.style.minHeight = ''; render(); }
   });
   reduced.addEventListener('change', cancel);
