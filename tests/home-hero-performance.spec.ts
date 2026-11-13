@@ -13,6 +13,7 @@ test.use({
 });
 
 test("mobile hero requests responsive modern images and only its immediate set", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   const heroRequests = new Set<string>();
   const originalImageRequests = new Set<string>();
 
@@ -35,9 +36,8 @@ test("mobile hero requests responsive modern images and only its immediate set",
 
   const slider = page.locator(".hero-slider--mobile");
   const desktopSlider = page.locator(".hero-slider--desktop");
-  const toggle = slider.locator("[data-slider-toggle]");
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(slider.locator("button")).toHaveCount(0);
+  await expect(desktopSlider.locator("button")).toHaveCount(0);
 
   await expect
     .poll(() => slider.locator(".hero-slider__slide img[src], .hero-slider__slide img[srcset]").count())
@@ -75,15 +75,14 @@ test("mobile hero requests responsive modern images and only its immediate set",
   await expect(desktopSlider.locator('img[fetchpriority="high"]')).toHaveCount(0);
 });
 
-test("percentage-based positioning keeps the hero centered and navigable", async ({ page }) => {
+test("automatic first advance keeps the hero centered", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
   await page.goto(baseUrl, { waitUntil: "load" });
 
   const slider = page.locator(".hero-slider--mobile");
-  const toggle = slider.locator("[data-slider-toggle]");
-  const next = slider.locator("[data-slider-next]");
-
-  await toggle.click();
-  await expect(toggle).toHaveAttribute("aria-pressed", "true");
+  await expect(
+    slider.locator('.hero-slider__slide[aria-hidden="false"] img'),
+  ).toHaveAttribute("alt", "Braut beim Fotoshooting in Paris");
   await expect
     .poll(() =>
       slider.locator('.hero-slider__slide img[alt="Lachende Braut vor dem Eiffelturm"]')
@@ -91,7 +90,6 @@ test("percentage-based positioning keeps the hero centered and navigable", async
     )
     .toBe(true);
 
-  await next.click();
   await expect(
     slider.locator('.hero-slider__slide[aria-hidden="false"] img'),
   ).toHaveAttribute("alt", "Lachende Braut vor dem Eiffelturm");

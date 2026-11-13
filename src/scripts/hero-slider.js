@@ -18,8 +18,6 @@
       this.index = Math.max(0, this.slides.findIndex((slide) => slide.classList.contains("is-initial")));
       this.interval = this.mode === "mobile" ? 4800 : 5200;
       this.timer = 0;
-      this.hoverPaused = false;
-      this.userPaused = false;
       this.pointerId = null;
       this.startX = 0;
       this.startY = 0;
@@ -31,19 +29,10 @@
       this.neighborQueue = [];
       this.pendingSlide = null;
       this.running = false;
-      this.controls = root.querySelector(".hero-slider__controls");
-      this.previousButton = root.querySelector("[data-slider-prev]");
-      this.nextButton = root.querySelector("[data-slider-next]");
-      this.toggleButton = root.querySelector("[data-slider-toggle]");
       this.onPointerDown = this.onPointerDown.bind(this);
       this.onPointerMove = this.onPointerMove.bind(this);
       this.onPointerUp = this.onPointerUp.bind(this);
-      this.onMouseEnter = this.onMouseEnter.bind(this);
-      this.onMouseLeave = this.onMouseLeave.bind(this);
       this.onVisibilityChange = this.onVisibilityChange.bind(this);
-      this.onPreviousClick = this.onPreviousClick.bind(this);
-      this.onNextClick = this.onNextClick.bind(this);
-      this.onToggleClick = this.onToggleClick.bind(this);
     }
 
     start() {
@@ -59,14 +48,7 @@
         slide.setAttribute("aria-label", `${index + 1} von ${this.slides.length}`);
       });
 
-      if (this.mode === "desktop") {
-        // A cursor left over the photographs must not prevent the first turn.
-        // Keep the controls still while the visitor is interacting with them.
-        this.controls?.addEventListener("mouseenter", this.onMouseEnter);
-        this.controls?.addEventListener("mouseleave", this.onMouseLeave);
-        this.controls?.addEventListener("pointerenter", this.onMouseEnter);
-        this.controls?.addEventListener("pointerleave", this.onMouseLeave);
-      } else {
+      if (this.mode === "mobile") {
         this.root.addEventListener("pointerdown", this.onPointerDown, { passive: true });
         this.root.addEventListener("pointermove", this.onPointerMove, { passive: true });
         this.root.addEventListener("pointerup", this.onPointerUp);
@@ -74,16 +56,11 @@
       }
 
       document.addEventListener("visibilitychange", this.onVisibilityChange);
-      this.previousButton?.addEventListener("click", this.onPreviousClick);
-      this.nextButton?.addEventListener("click", this.onNextClick);
-      this.toggleButton?.addEventListener("click", this.onToggleClick);
 
       this.render(true, true);
       this.queueNeighborImages();
       this.queueDeferredImages();
       this.root.classList.add("is-ready");
-      this.updateToggleButton();
-      this.hoverPaused = this.mode === "desktop" && Boolean(this.controls?.matches(":hover"));
 
       if (!reducedMotionQuery.matches) this.play();
     }
@@ -101,18 +78,11 @@
         image.loading = "lazy";
       });
 
-      this.controls?.removeEventListener("mouseenter", this.onMouseEnter);
-      this.controls?.removeEventListener("mouseleave", this.onMouseLeave);
-      this.controls?.removeEventListener("pointerenter", this.onMouseEnter);
-      this.controls?.removeEventListener("pointerleave", this.onMouseLeave);
       this.root.removeEventListener("pointerdown", this.onPointerDown);
       this.root.removeEventListener("pointermove", this.onPointerMove);
       this.root.removeEventListener("pointerup", this.onPointerUp);
       this.root.removeEventListener("pointercancel", this.onPointerUp);
       document.removeEventListener("visibilitychange", this.onVisibilityChange);
-      this.previousButton?.removeEventListener("click", this.onPreviousClick);
-      this.nextButton?.removeEventListener("click", this.onNextClick);
-      this.toggleButton?.removeEventListener("click", this.onToggleClick);
     }
 
     offsetFor(slideIndex) {
@@ -228,17 +198,7 @@
     }
 
     isPaused() {
-      return this.hoverPaused || this.userPaused || reducedMotionQuery.matches;
-    }
-
-    onMouseEnter() {
-      this.hoverPaused = true;
-      this.pause();
-    }
-
-    onMouseLeave() {
-      this.hoverPaused = false;
-      this.play();
+      return reducedMotionQuery.matches;
     }
 
     onVisibilityChange() {
@@ -247,36 +207,6 @@
       } else if (!this.isPaused() && !reducedMotionQuery.matches) {
         this.play();
       }
-    }
-
-    onPreviousClick() {
-      this.pause();
-      this.previous();
-      if (!this.userPaused && !reducedMotionQuery.matches) this.play();
-    }
-
-    onNextClick() {
-      this.pause();
-      this.next();
-      if (!this.userPaused && !reducedMotionQuery.matches) this.play();
-    }
-
-    onToggleClick() {
-      this.userPaused = !this.userPaused;
-      this.updateToggleButton();
-
-      if (this.userPaused) {
-        this.pause();
-      } else if (!reducedMotionQuery.matches) {
-        this.play();
-      }
-    }
-
-    updateToggleButton() {
-      if (!this.toggleButton) return;
-      this.toggleButton.setAttribute("aria-pressed", this.userPaused ? "true" : "false");
-      this.toggleButton.setAttribute("aria-label", this.userPaused ? "Slider abspielen" : "Slider pausieren");
-      this.toggleButton.textContent = this.userPaused ? "Play" : "Pause";
     }
 
     onPointerDown(event) {
