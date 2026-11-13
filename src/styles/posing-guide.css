@@ -18,6 +18,8 @@
 .guide-shell .guide-lead { max-width:690px; margin:25px auto 0; font:20px/1.7 "Gilda Display",Georgia,serif; }
 .guide-shell .guide-byline { margin-top:22px; font-size:11px; }
 .posing-book { position:relative; overflow-anchor:none; margin-block:0 clamp(48px,6vw,96px); }
+.book-view-controls { display:flex; justify-content:flex-end; align-items:center; gap:16px; margin-bottom:16px; }
+.book-view-status { color:var(--guide-muted); font:11px/1.5 "Raleway",Arial,sans-serif; }
 .posing-book button { font:500 12px/1.5 "Raleway",Arial,sans-serif; color:#302c28; background:white; border:1px solid var(--guide-line); border-radius:0; padding:12px 16px; cursor:pointer; }
 .posing-book button:hover { background:#f2ede5; }
 .posing-book button:disabled { opacity:.35; cursor:default; }
@@ -66,6 +68,7 @@
 .guide-footer a { color:inherit; text-underline-offset:4px; }
 @media (min-width:801px) and (max-width:1000px) { .book-page { padding-inline:30px; }.book-page h2{font-size:27px} }
 @media (max-width:800px) {
+  .book-view-controls { display:none; }
   .posing-guide-page .guide-shell { width:calc(100% - 40px); padding-top:0; }
   .guide-intro { margin:30px auto 34px; }
   .guide-shell .guide-lead { font-size:19px; }
@@ -107,32 +110,23 @@
 .book-paper-host.paper-measuring { visibility:hidden; }
 .book-paper-host.paper-measuring>.paper-face { position:absolute; width:var(--paper-width); height:auto; }
 .book-paper-host.paper-measuring .book-page { height:auto; }
-.posing-book .book-corner { --corner-size:76px; position:absolute; z-index:10; width:var(--corner-size); height:var(--corner-size); padding:0; border:0; background:transparent; touch-action:none; cursor:grab; }
+.posing-book .book-corner { --corner-size:96px; position:absolute; z-index:10; width:var(--corner-size); height:var(--corner-size); padding:0; border:0; background:transparent; touch-action:none; cursor:grab; }
 .posing-book .book-corner:hover { background:transparent; }
 .posing-book .book-corner:active { cursor:grabbing; }
 .book-stage[data-book-turning]>.book-corner { outline:none; }
 .book-corner.top { top:0; }.book-corner.bottom { bottom:0; }
 .book-corner.forward { right:0; }.book-corner.backward { left:0; }
-.book-corner::before { content:''; position:absolute; inset:0; opacity:.9; background:linear-gradient(45deg,transparent 46%,#a49177 48%,#d4c6b1 50%,#fffdf8 55%,#eee5d7 100%); clip-path:polygon(28% 0,100% 0,100% 72%); transition:opacity .2s,filter .2s; }
-.book-corner::after { content:'↙'; position:absolute; top:7px; right:9px; color:#79664f; font:20px/1 Georgia,serif; pointer-events:none; }
-.book-corner.top.backward::before { transform:scaleX(-1); }
-.book-corner.bottom.forward::before { transform:scaleY(-1); }
-.book-corner.bottom.backward::before { transform:scale(-1); }
-.book-corner.backward::after { right:auto; left:9px; transform:scaleX(-1); }
-.book-corner.bottom::after { top:auto; bottom:7px; transform:scaleY(-1); }
-.book-corner.bottom.backward::after { transform:scale(-1); }
-.book-corner:hover::before,.book-corner:focus-visible::before { opacity:1; }
-.book-corner:hover::before { filter:drop-shadow(-2px 2px 2px #5d48352b); }
-.book-corner-label { display:none; position:absolute; top:12px; right:calc(100% + 4px); white-space:nowrap; pointer-events:none; color:#75634e; font:11px/1.5 "Raleway",Arial,sans-serif; }
-.posing-book:not(.has-book-interaction) .book-stage[data-book-start] .top.forward .book-corner-label { display:block; }
-.book-corner[data-corner-tease]::before { animation:book-corner-invite 3.8s ease-in-out .4s 3; }
-.book-corner[data-corner-tease]::after { animation:book-corner-direction 3.8s ease-in-out .4s 3; }
-.book-corner.bottom[data-corner-tease]::after { animation-name:book-corner-direction-bottom; }
-.book-corner[data-corner-tease]:is(:hover,:focus-visible)::before,.book-corner[data-corner-tease]:is(:hover,:focus-visible)::after { animation-play-state:paused; }
-.book-stage[data-book-turning]>.book-corner::before,.book-stage[data-book-turning]>.book-corner::after { opacity:0; }
-.book-stage[data-book-turning] .book-corner-label { visibility:hidden; }
-@keyframes book-corner-invite { 0%,12%,58%,100% { clip-path:polygon(28% 0,100% 0,100% 72%); filter:none; } 30%,40% { clip-path:polygon(0 0,100% 0,100% 100%); filter:drop-shadow(-3px 4px 3px #5d483540); } }
-@keyframes book-corner-direction { 0%,12%,58%,100% { transform:none; } 30%,40% { transform:translate(-12px,12px); } }
-@keyframes book-corner-direction-bottom { 0%,12%,58%,100% { transform:scaleY(-1); } 30%,40% { transform:translate(-12px,-12px) scaleY(-1); } }
-@media(max-width:800px) { .posing-book .book-corner { --corner-size:60px; }.book-corner::after{font-size:18px}.book-corner-label{font-size:10px;top:10px} }
-@media(prefers-reduced-motion:reduce) { .book-corner::before,.book-corner::after { animation:none !important; transition:none; } }
+@media(max-width:800px) { .posing-book .book-corner { --corner-size:72px; } }
+
+/* Fullscreen keeps the real HTML pages and their keyboard/drag controls. */
+.posing-book:fullscreen { display:flex; flex-direction:column; align-items:center; width:100%; height:100%; box-sizing:border-box; margin:0; padding:clamp(20px,3vh,40px) clamp(28px,4vw,80px); overflow:auto; overscroll-behavior:contain; background:#fff; color:#2a2825; }
+.posing-book::backdrop { background:#fff; }
+.posing-book:fullscreen .book-view-controls { display:flex; flex:none; position:sticky; top:0; z-index:20; width:min(1160px,100%); margin-bottom:20px; background:#fff; }
+.posing-book:fullscreen .book-stage { flex:none; width:min(1160px,100%); }
+.posing-book:fullscreen .book-page { min-height:0; padding:clamp(28px,4vh,48px) clamp(30px,3.5vw,50px) clamp(24px,3vh,36px); }
+.posing-book:fullscreen .book-page figure img { max-height:var(--book-image-height,42vh); object-fit:contain; }
+.posing-book:fullscreen .book-cover h2 { font-size:clamp(44px,7vh,74px); margin:16px 0; }
+.posing-book:fullscreen .book-cover .book-cover-line { font-size:clamp(21px,3vh,27px); }
+.posing-book:fullscreen .book-cover .book-cover-note { margin:16px 0; }
+.posing-book:fullscreen .book-bottom { flex:none; width:min(1160px,100%); margin-top:24px; }
+.posing-book:fullscreen .book-help { flex:none; margin:12px 0 0; }

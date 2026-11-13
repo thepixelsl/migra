@@ -5,6 +5,10 @@ import PosingImage from './PosingImage.astro';
 import PosingPageTurn from './PosingPageTurn.astro';
 ---
 <section class="posing-book" aria-label="Posing Guide zum Blättern" data-posing-book>
+  <div class="book-view-controls" data-book-controls hidden>
+    <span class="book-view-status" data-book-view-status role="status" hidden></span>
+    <button type="button" data-book-fullscreen aria-pressed="false" hidden>Vollbild ↗</button>
+  </div>
   <div class="book-stage single" data-book-stage tabindex="0" aria-label="Buchseiten; mit den Pfeiltasten blättern">
     <article class="book-page book-cover" id="titel" aria-label="Seite 1: Titel" data-guide-page="1" data-guide-content="cover" data-guide-chapter="intro" data-guide-mode="book">
       <p class="guide-kicker">ARTBILD</p>

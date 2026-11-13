@@ -7,18 +7,19 @@ type Drag = { pointer: number; startX: number; startY: number; x: number; y: num
 export function installPosingBook(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>('[data-book-stage]')!;
   const status = root.querySelector<HTMLElement>('[data-book-status]')!;
+  const fullscreenButton = root.querySelector<HTMLButtonElement>('[data-book-fullscreen]')!;
+  const viewStatus = root.querySelector<HTMLElement>('[data-book-view-status]')!;
   const previous = [...root.querySelectorAll<HTMLButtonElement>('[data-book-prev]')];
   const next = [...root.querySelectorAll<HTMLButtonElement>('[data-book-next]')];
   const pages = [...stage.querySelectorAll<HTMLElement>(':scope > .book-page')];
   const mobile = matchMedia('(max-width: 800px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   let current = 0, requested = 0, operation = 0;
+  let fullscreenScroll = 0, wasFullscreen = false;
+  let interacted = false;
   let active: PaperTurn | undefined, drag: Drag | undefined;
   let renderer: Promise<typeof import('./posing-paper-turn')> | undefined;
-  const discover = () => {
-    root.classList.add('has-book-interaction');
-    stage.querySelectorAll('[data-corner-tease]').forEach(corner => corner.removeAttribute('data-corner-tease'));
-  };
+  const discover = () => { interacted = true; };
   const loadRenderer = () => renderer ||= import('./posing-paper-turn').catch(error => { renderer = undefined; throw error; });
   const notify = () => root.dispatchEvent(new Event('posing:pagechange', { bubbles: true }));
   const normalize = (index: number) => {
@@ -58,6 +59,7 @@ export function installPosingBook(root: HTMLElement) {
     }
     active?.destroy(); active = undefined;
     stage.removeAttribute('aria-busy');
+    stage.removeAttribute('data-book-teasing');
     notify();
   };
   const corners = (['top', 'bottom'] as Corner[]).flatMap(corner => ([-1, 1] as const).map(direction => {
@@ -66,11 +68,6 @@ export function installPosingBook(root: HTMLElement) {
     button.dataset.corner = `${corner}-${direction > 0 ? 'next' : 'previous'}`;
     const label = `${corner === 'top' ? 'Obere' : 'Untere'} ${direction > 0 ? 'rechte' : 'linke'} Seitenecke: ziehen oder ${direction > 0 ? 'weiter' : 'zurück'}blättern`;
     button.setAttribute('aria-label', label); button.title = label;
-    if (corner === 'top' && direction > 0) {
-      const hint = document.createElement('span');
-      hint.className = 'book-corner-label'; hint.textContent = 'Hier blättern'; hint.setAttribute('aria-hidden', 'true');
-      button.append(hint);
-    }
     stage.append(button);
     button.addEventListener('click', event => { if (event.detail === 0) void go(adjacent(direction), true, true, corner); });
     button.addEventListener('pointerdown', event => {
@@ -118,11 +115,27 @@ export function installPosingBook(root: HTMLElement) {
     });
     stage.classList.toggle('single', !double);
     root.classList.add('is-ready');
-    stage.toggleAttribute('data-book-start', current === 0);
     status.textContent = double ? `Seiten ${current + 1} und ${current + 2} von ${pages.length}` : `Seite ${current + 1} von ${pages.length}`;
     previous.forEach(button => { button.disabled = current === 0; });
     next.forEach(button => { button.disabled = current + (double ? 2 : 1) >= pages.length; });
     corners.forEach(({ button, direction }) => { button.hidden = direction < 0 ? current === 0 : current + (double ? 2 : 1) >= pages.length; button.disabled = button.hidden; });
+    if (document.fullscreenElement === root) {
+      // Fit illustrations to the space left by the actual text and controls.
+      // Long or expanded descriptions can still scroll without shrinking text.
+      stage.style.minHeight = ''; root.style.removeProperty('--book-image-height');
+      const outerHeight = (element: HTMLElement) => {
+        const style = getComputedStyle(element);
+        return element.getBoundingClientRect().height + parseFloat(style.marginTop) + parseFloat(style.marginBottom);
+      };
+      const style = getComputedStyle(root);
+      const controls = [...root.querySelectorAll<HTMLElement>(':scope > [data-book-controls]')];
+      const available = root.clientHeight - parseFloat(style.paddingTop) - parseFloat(style.paddingBottom) - controls.reduce((height, element) => height + outerHeight(element), 0);
+      const overflow = stage.getBoundingClientRect().height - available;
+      if (overflow > 0) {
+        const imageHeight = Math.max(...pages.filter(page => !page.hidden).map(page => page.querySelector('img')!.getBoundingClientRect().height));
+        root.style.setProperty('--book-image-height', `${Math.max(160, Math.floor(imageHeight - overflow))}px`);
+      }
+    }
     // A phone shows one sheet at a time, sized to its own content. Desktop
     // spreads retain a common paper height for facing pages.
     stage.style.minHeight = mobile.matches ? '' : `${Math.ceil(Math.max(parseFloat(stage.style.minHeight) || 0, stage.getBoundingClientRect().height))}px`;
@@ -135,32 +148,34 @@ export function installPosingBook(root: HTMLElement) {
     if (focusInPage) stage.focus({ preventScroll: true });
     if (updateAddress) history.replaceState(null, '', `#${pages[requested].id}`);
   }
-  async function begin(index: number, corner: Corner, gesture?: Drag) {
+  async function begin(index: number, corner: Corner, gesture?: Drag, tease = false) {
     const ticket = operation;
     stage.setAttribute('aria-busy', 'true');
     try {
       const { createPaperTurn } = await loadRenderer();
       if (ticket !== operation || gesture?.cancelled) return;
-      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner, preserveViewport,
+      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner, preserveViewport, tease,
         finished: turned => {
           if (ticket !== operation) return;
           active?.destroy(); active = undefined; drag = undefined;
           stage.removeAttribute('aria-busy');
-          if (turned) commit(index); else notify();
+          stage.removeAttribute('data-book-teasing');
+          if (turned && !tease) commit(index); else notify();
         },
       });
-      if (ticket !== operation || gesture?.cancelled) { turn.destroy(); return; }
+      if (ticket !== operation || gesture?.cancelled) { turn.destroy({ restoreLayout: false }); return; }
       active = turn;
-      if (gesture) { gesture.engine = turn; updateDrag(gesture); } else turn.animate();
+      if (tease) { stage.setAttribute('data-book-teasing', ''); turn.tease(); }
+      else if (gesture) { gesture.engine = turn; updateDrag(gesture); } else turn.animate();
     } catch {
       if (ticket !== operation) return;
       preserveViewport(() => {
-        stage.querySelector('.book-paper-overlay')?.remove(); stage.removeAttribute('data-book-turning'); stage.removeAttribute('aria-busy');
+        stage.querySelector('.book-paper-overlay')?.remove(); stage.removeAttribute('data-book-turning'); stage.removeAttribute('aria-busy'); stage.removeAttribute('data-book-teasing');
         if (mobile.matches) stage.style.minHeight = '';
       });
       // Basic book navigation survives an unavailable optional animation chunk.
       if (gesture) gesture.failed = true;
-      if (!gesture) commit(index); else if (gesture.released) finishWithoutAnimation(gesture);
+      if (tease) notify(); else if (!gesture) commit(index); else if (gesture.released) finishWithoutAnimation(gesture);
     }
   }
   function updateDrag(gesture: Drag) {
@@ -182,8 +197,37 @@ export function installPosingBook(root: HTMLElement) {
   }
   previous.forEach(button => button.addEventListener('click', () => void go(adjacent(-1))));
   next.forEach(button => button.addEventListener('click', () => void go(adjacent(1))));
+  fullscreenButton.hidden = !document.fullscreenEnabled || typeof root.requestFullscreen !== 'function';
+  fullscreenButton.addEventListener('click', async () => {
+    fullscreenButton.disabled = true; viewStatus.hidden = true; cancel();
+    try {
+      if (document.fullscreenElement === root) await document.exitFullscreen();
+      else { fullscreenScroll = window.scrollY; await root.requestFullscreen(); }
+    } catch {
+      viewStatus.textContent = 'Vollbild ist hier gerade nicht verfügbar.'; viewStatus.hidden = false;
+    } finally { fullscreenButton.disabled = false; }
+  });
+  document.addEventListener('fullscreenchange', () => {
+    const fullscreen = document.fullscreenElement === root;
+    if (!fullscreen && !wasFullscreen) return;
+    cancel(); stage.style.minHeight = ''; render();
+    fullscreenButton.textContent = fullscreen ? 'Vollbild verlassen ↙' : 'Vollbild ↗';
+    fullscreenButton.setAttribute('aria-pressed', String(fullscreen));
+    if (fullscreen) { root.scrollTop = 0; stage.focus({ preventScroll: true }); }
+    else {
+      root.style.removeProperty('--book-image-height');
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        window.scrollTo({ top: fullscreenScroll, behavior: 'instant' }); fullscreenButton.focus({ preventScroll: true });
+      }));
+    }
+    wasFullscreen = fullscreen;
+  });
   root.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { cancel(); return; }
+    if (event.key === 'Escape') {
+      cancel();
+      if (document.fullscreenElement === root) void document.exitFullscreen().catch(() => {});
+      return;
+    }
     if (event.altKey || event.ctrlKey || event.metaKey || (event.target as Element).closest('select,input,textarea,[contenteditable=true],summary')) return;
     if (event.key === 'ArrowRight') { event.preventDefault(); void go(adjacent(1)); }
     if (event.key === 'ArrowLeft') { event.preventDefault(); void go(adjacent(-1)); }
@@ -195,6 +239,9 @@ export function installPosingBook(root: HTMLElement) {
     if (Math.abs(stage.clientWidth - width) < 1) return;
     width = stage.clientWidth; cancel(); stage.style.minHeight = ''; current = normalize(requested); render();
   }).observe(stage);
+  window.addEventListener('resize', () => {
+    if (document.fullscreenElement === root) { cancel(); stage.style.minHeight = ''; render(); }
+  });
   reduced.addEventListener('change', cancel);
   window.addEventListener('blur', cancel);
   window.addEventListener('pagehide', cancel);
@@ -206,13 +253,19 @@ export function installPosingBook(root: HTMLElement) {
     if (entries.some(entry => entry.isIntersecting)) { preload.disconnect(); if (!reduced.matches) void loadRenderer().catch(() => {}); }
   }, { rootMargin: '300px' });
   preload.observe(stage);
-  // A brief corner demonstration never turns a page and ends on interaction.
+  // Once per load, show the real paper curl at the first visible outer corner.
+  // A gesture, navigation or reduced-motion preference always takes precedence.
+  let cornerVisible = false, hintConsumed = false;
+  function showCornerHint() {
+    if (hintConsumed || !cornerVisible || document.hidden) return;
+    hintConsumed = true; cornerHint.disconnect();
+    document.removeEventListener('visibilitychange', showCornerHint);
+    if (!reduced.matches && !interacted) void begin(adjacent(current < pages.length - 1 ? 1 : -1), 'top', undefined, true);
+  }
   const cornerHint = new IntersectionObserver(entries => {
-    for (const entry of entries) {
-      if (!entry.isIntersecting || entry.intersectionRatio < .8) continue;
-      cornerHint.unobserve(entry.target);
-      if (!reduced.matches && !root.classList.contains('has-book-interaction')) entry.target.setAttribute('data-corner-tease', '');
-    }
+    cornerVisible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .8);
+    showCornerHint();
   }, { threshold: .8 });
-  corners.filter(({ direction }) => direction > 0).forEach(({ button }) => cornerHint.observe(button));
+  document.addEventListener('visibilitychange', showCornerHint);
+  cornerHint.observe(corners.find(({ button }) => button.dataset.corner === `top-${current < pages.length - 1 ? 'next' : 'previous'}`)!.button);
 }

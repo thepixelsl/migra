@@ -10,6 +10,7 @@ type Options = {
   corner: Corner;
   preserveViewport: (change: () => void) => void;
   finished: (turned: boolean) => void;
+  tease?: boolean;
 };
 
 // The real, server-rendered pages stay in place. These short-lived copies only
@@ -49,7 +50,7 @@ export async function createPaperTurn(options: Options) {
   host.classList.add('paper-measuring');
   host.style.setProperty('--paper-width', `${width}px`);
   host.append(...faces);
-  const height = Math.ceil(Math.max(stage.getBoundingClientRect().height, ...faces.map(page => page.scrollHeight)));
+  const height = Math.ceil(options.tease ? stage.getBoundingClientRect().height : Math.max(stage.getBoundingClientRect().height, ...faces.map(page => page.scrollHeight)));
   const previousHeight = stage.style.minHeight;
   options.preserveViewport(() => { stage.style.minHeight = `${height}px`; });
   host.classList.remove('paper-measuring');
@@ -61,7 +62,7 @@ export async function createPaperTurn(options: Options) {
     showPageCorners: false, disableFlipByClick: false, drawShadow: true,
     maxShadowOpacity: .48, flippingTime: 900,
   });
-  let disposed = false, armed = false;
+  let disposed = false, armed = false, teaseFrame = 0;
   engine.on('changeState', (event: { data: string }) => {
     if (event.data === 'read' && armed && !disposed) {
       armed = false;
@@ -81,6 +82,30 @@ export async function createPaperTurn(options: Options) {
     return { x: clientX - rect.left, y: Math.max(1, Math.min(height - 1, clientY - rect.top)) };
   };
   return {
+    tease() {
+      // Use the same paper geometry as dragging, but stay close to the corner.
+      // This never calls flip/release or changes the engine's current page.
+      const controller = engine.getFlipController();
+      const extent = Math.max(48, Math.min(84, width * .16));
+      const edge = forward ? stage.clientWidth - 1 : 1;
+      const initial = { x: edge, y: corner === 'top' ? 1 : height - 1 };
+      if (!controller.start(initial)) { finished(false); return; }
+      const ease = (value: number) => (1 - Math.cos(Math.PI * value)) / 2;
+      const frames = Array.from({ length: 82 }, (_, index) => () => {
+        if (disposed) return;
+        const elapsed = index / 81 * 1350;
+        const amount = elapsed < 450 ? ease(elapsed / 450) : elapsed < 800 ? 1 : 1 - ease(Math.min(1, (elapsed - 800) / 550));
+        controller.fold({ x: edge + (forward ? -1 : 1) * extent * amount, y: initial.y + (corner === 'top' ? 1 : -1) * extent * .85 * amount });
+      });
+      // Let the renderer initialize its clock, then share its regular animation
+      // scheduler and cancellation path instead of starting a second frame loop.
+      teaseFrame = requestAnimationFrame(() => {
+        teaseFrame = 0;
+        if (!disposed) engine.getRender().startAnimation(frames, 1350, () => {
+          queueMicrotask(() => { if (!disposed) finished(false); });
+        });
+      });
+    },
     animate() {
       armed = true;
       if (forward) engine.flipNext(corner); else engine.flipPrev(corner);
@@ -102,14 +127,15 @@ export async function createPaperTurn(options: Options) {
       else if (turnPage) { if (forward) engine.flipNext(corner); else engine.flipPrev(corner); }
       else finished(false);
     },
-    destroy() {
+    destroy({ restoreLayout = true } = {}) {
       if (disposed) return;
       disposed = true;
+      cancelAnimationFrame(teaseFrame); teaseFrame = 0;
       options.preserveViewport(() => {
         engine.destroy();
         overlay.remove();
-        stage.removeAttribute('data-book-turning');
-        if (portrait) stage.style.minHeight = previousHeight;
+        if (!stage.querySelector('.book-paper-overlay')) stage.removeAttribute('data-book-turning');
+        if (restoreLayout && (portrait || options.tease)) stage.style.minHeight = previousHeight;
       });
     },
   };
