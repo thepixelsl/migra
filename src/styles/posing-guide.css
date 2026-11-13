@@ -110,12 +110,23 @@
 .book-paper-host.paper-measuring { visibility:hidden; }
 .book-paper-host.paper-measuring>.paper-face { position:absolute; width:var(--paper-width); height:auto; }
 .book-paper-host.paper-measuring .book-page { height:auto; }
-.posing-book .book-corner { --corner-size:96px; position:absolute; z-index:10; width:var(--corner-size); height:var(--corner-size); padding:0; border:0; background:transparent; touch-action:none; cursor:grab; }
+.posing-book .book-corner { --corner-size:96px; --fold-size:20px; --fold-x:1; --fold-y:1; position:absolute; z-index:10; width:var(--corner-size); height:var(--corner-size); padding:0; border:0; background:transparent; touch-action:none; cursor:grab; -webkit-tap-highlight-color:transparent; }
 .posing-book .book-corner:hover { background:transparent; }
 .posing-book .book-corner:active { cursor:grabbing; }
-.book-stage[data-book-turning]>.book-corner { outline:none; }
+.posing-book .book-corner:focus { outline:none; }
+/* A small folded tip indicates the much larger invisible touch target. */
+.book-corner::before,.book-corner::after { content:""; position:absolute; top:0; right:0; width:var(--fold-size); height:var(--fold-size); pointer-events:none; transform:scale(var(--fold-x),var(--fold-y)); }
+.book-corner::before { background:#fff; clip-path:polygon(0 0,100% 0,100% 100%); }
+.book-corner::after { background:linear-gradient(135deg,#fffdf9 0%,#f1eade 48%,#d9ccba 100%); clip-path:polygon(0 0,0 100%,100% 100%); filter:drop-shadow(-1px 1px 1px #4b392529); }
+.posing-book .book-corner:focus-visible { --fold-size:26px; outline:none; }
+.book-corner:focus-visible::after { background:linear-gradient(135deg,#fffdf9 0%,#e8dccb 48%,#9c8061 100%); filter:drop-shadow(-1px 1px 1px #6b4d3566); }
+.book-stage[data-book-turning]>.book-corner::before,.book-stage[data-book-turning]>.book-corner::after { visibility:hidden; }
 .book-corner.top { top:0; }.book-corner.bottom { bottom:0; }
-.book-corner.forward { right:0; }.book-corner.backward { left:0; }
+.book-corner.forward { right:0; }.book-corner.backward { left:0; --fold-x:-1; }
+.book-corner.bottom { --fold-y:-1; }
+.book-corner.backward::before,.book-corner.backward::after { right:auto; left:0; }
+.book-corner.bottom::before,.book-corner.bottom::after { top:auto; bottom:0; }
+@media(forced-colors:active) { .book-corner::after { background:ButtonText; filter:none; }.book-corner:focus-visible::after { background:Highlight; } }
 @media(max-width:800px) { .posing-book .book-corner { --corner-size:72px; } }
 
 /* Fullscreen keeps the real HTML pages and their keyboard/drag controls. */
