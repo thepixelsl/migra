@@ -62,7 +62,7 @@ export async function createPaperTurn(options: Options) {
     showPageCorners: false, disableFlipByClick: false, drawShadow: true,
     maxShadowOpacity: .48, flippingTime: 900,
   });
-  let disposed = false, armed = false, teaseFrame = 0;
+  let disposed = false, armed = false;
   engine.on('changeState', (event: { data: string }) => {
     if (event.data === 'read' && armed && !disposed) {
       armed = false;
@@ -74,6 +74,9 @@ export async function createPaperTurn(options: Options) {
     engine.on('init', () => resolve());
     engine.loadFromHTML(faces);
   });
+  // Keep the real sheet visible until the temporary renderer has drawn its
+  // initial spread. WebKit can deliver init before its first rendering frame.
+  await new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
   stage.setAttribute('data-book-turning', '');
   stage.dispatchEvent(new Event('posing:pagechange', { bubbles: true }));
 
@@ -97,13 +100,8 @@ export async function createPaperTurn(options: Options) {
         const amount = elapsed < 450 ? ease(elapsed / 450) : elapsed < 800 ? 1 : 1 - ease(Math.min(1, (elapsed - 800) / 550));
         controller.fold({ x: edge + (forward ? -1 : 1) * extent * amount, y: initial.y + (corner === 'top' ? 1 : -1) * extent * .85 * amount });
       });
-      // Let the renderer initialize its clock, then share its regular animation
-      // scheduler and cancellation path instead of starting a second frame loop.
-      teaseFrame = requestAnimationFrame(() => {
-        teaseFrame = 0;
-        if (!disposed) engine.getRender().startAnimation(frames, 1350, () => {
-          queueMicrotask(() => { if (!disposed) finished(false); });
-        });
+      engine.getRender().startAnimation(frames, 1350, () => {
+        queueMicrotask(() => { if (!disposed) finished(false); });
       });
     },
     animate() {
@@ -130,7 +128,6 @@ export async function createPaperTurn(options: Options) {
     destroy({ restoreLayout = true } = {}) {
       if (disposed) return;
       disposed = true;
-      cancelAnimationFrame(teaseFrame); teaseFrame = 0;
       options.preserveViewport(() => {
         engine.destroy();
         overlay.remove();
