@@ -255,11 +255,13 @@ export function installPosingBook(root: HTMLElement) {
   preload.observe(stage);
   // Once per load, show the real paper curl at the first visible outer corner.
   // A gesture, navigation or reduced-motion preference always takes precedence.
+  const consentDialog = document.querySelector<HTMLDialogElement>('[data-consent-dialog]');
   let cornerVisible = false, hintConsumed = false;
   function showCornerHint() {
-    if (hintConsumed || !cornerVisible || document.hidden) return;
+    if (hintConsumed || !cornerVisible || document.hidden || consentDialog?.open) return;
     hintConsumed = true; cornerHint.disconnect();
     document.removeEventListener('visibilitychange', showCornerHint);
+    consentDialog?.removeEventListener('close', showCornerHint);
     if (!reduced.matches && !interacted) void begin(adjacent(current < pages.length - 1 ? 1 : -1), 'top', undefined, true);
   }
   const cornerHint = new IntersectionObserver(entries => {
@@ -267,5 +269,6 @@ export function installPosingBook(root: HTMLElement) {
     showCornerHint();
   }, { threshold: .8 });
   document.addEventListener('visibilitychange', showCornerHint);
+  consentDialog?.addEventListener('close', showCornerHint);
   cornerHint.observe(corners.find(({ button }) => button.dataset.corner === `top-${current < pages.length - 1 ? 'next' : 'previous'}`)!.button);
 }
