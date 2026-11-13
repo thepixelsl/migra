@@ -33,18 +33,22 @@ function face(original: HTMLElement | null) {
 
 export async function createPaperTurn(options: Options) {
   const { stage, forward, portrait, corner, finished } = options;
+  // The library's portrait back turn slides the previous face over the whole
+  // current page. Mirror its forward curl instead, keeping the text readable.
+  const mirrored = portrait && !forward;
+  const engineForward = forward || mirrored;
   const width = stage.clientWidth / (portrait ? 1 : 2);
   const overlay = document.createElement('div');
   overlay.className = 'book-paper-overlay';
   overlay.setAttribute('aria-hidden', 'true');
   overlay.inert = true;
   const host = document.createElement('div');
-  host.className = 'book-paper-host';
+  host.className = `book-paper-host${mirrored ? ' paper-mirrored' : ''}`;
   overlay.append(host);
   stage.append(overlay);
 
   const before = options.before.map(face), after = options.after.map(face);
-  const faces = forward ? [...before, ...after] : [...after, ...before];
+  const faces = engineForward ? [...before, ...after] : [...after, ...before];
   // Both sides need enough room while curling. On phones this temporary
   // animation height is released again when the sheet settles or is cancelled.
   host.classList.add('paper-measuring');
@@ -55,7 +59,7 @@ export async function createPaperTurn(options: Options) {
   options.preserveViewport(() => { stage.style.minHeight = `${height}px`; });
   host.classList.remove('paper-measuring');
   host.style.height = `${height}px`;
-  const startPage = forward ? 0 : before.length;
+  const startPage = engineForward ? 0 : before.length;
   const engine = new PageFlip(host, {
     width, height, size: 'fixed', autoSize: false, usePortrait: portrait,
     startPage, showCover: false, useMouseEvents: false, mobileScrollSupport: false,
@@ -82,7 +86,8 @@ export async function createPaperTurn(options: Options) {
 
   const point = (clientX: number, clientY: number) => {
     const rect = host.getBoundingClientRect();
-    return { x: clientX - rect.left, y: Math.max(1, Math.min(height - 1, clientY - rect.top)) };
+    const x = clientX - rect.left;
+    return { x: mirrored ? width - x : x, y: Math.max(1, Math.min(height - 1, clientY - rect.top)) };
   };
   return {
     tease(teaseCorner: Corner = corner) {
@@ -90,7 +95,7 @@ export async function createPaperTurn(options: Options) {
       // This never calls flip/release or changes the engine's current page.
       const controller = engine.getFlipController();
       const extent = Math.max(48, Math.min(84, width * .16));
-      const edge = forward ? stage.clientWidth - 1 : 1;
+      const edge = engineForward ? stage.clientWidth - 1 : 1;
       const initial = { x: edge, y: teaseCorner === 'top' ? 1 : height - 1 };
       if (!controller.start(initial)) { finished(false); return false; }
       const ease = (value: number) => (1 - Math.cos(Math.PI * value)) / 2;
@@ -98,7 +103,7 @@ export async function createPaperTurn(options: Options) {
         if (disposed) return;
         const elapsed = index / 81 * 1350;
         const amount = elapsed < 450 ? ease(elapsed / 450) : elapsed < 800 ? 1 : 1 - ease(Math.min(1, (elapsed - 800) / 550));
-        controller.fold({ x: edge + (forward ? -1 : 1) * extent * amount, y: initial.y + (teaseCorner === 'top' ? 1 : -1) * extent * .85 * amount });
+        controller.fold({ x: edge + (engineForward ? -1 : 1) * extent * amount, y: initial.y + (teaseCorner === 'top' ? 1 : -1) * extent * .85 * amount });
       });
       engine.getRender().startAnimation(frames, 1350, () => {
         queueMicrotask(() => { if (!disposed) finished(false); });
@@ -107,7 +112,7 @@ export async function createPaperTurn(options: Options) {
     },
     animate() {
       armed = true;
-      if (forward) engine.flipNext(corner); else engine.flipPrev(corner);
+      if (engineForward) engine.flipNext(corner); else engine.flipPrev(corner);
     },
     startDrag(clientX: number, clientY: number) {
       armed = true;
@@ -123,7 +128,7 @@ export async function createPaperTurn(options: Options) {
       // Continue from the actual bend. In portrait mode the built-in release
       // threshold lies outside the viewport; use the visible page midpoint.
       if (position) controller.animateFlippingTo(position, { x: turnPage ? -width : width, y: corner === 'top' ? 0 : height }, turnPage);
-      else if (turnPage) { if (forward) engine.flipNext(corner); else engine.flipPrev(corner); }
+      else if (turnPage) { if (engineForward) engine.flipNext(corner); else engine.flipPrev(corner); }
       else finished(false);
     },
     destroy({ restoreLayout = true } = {}) {
