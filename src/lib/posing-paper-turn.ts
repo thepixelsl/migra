@@ -85,24 +85,25 @@ export async function createPaperTurn(options: Options) {
     return { x: clientX - rect.left, y: Math.max(1, Math.min(height - 1, clientY - rect.top)) };
   };
   return {
-    tease() {
+    tease(teaseCorner: Corner = corner) {
       // Use the same paper geometry as dragging, but stay close to the corner.
       // This never calls flip/release or changes the engine's current page.
       const controller = engine.getFlipController();
       const extent = Math.max(48, Math.min(84, width * .16));
       const edge = forward ? stage.clientWidth - 1 : 1;
-      const initial = { x: edge, y: corner === 'top' ? 1 : height - 1 };
-      if (!controller.start(initial)) { finished(false); return; }
+      const initial = { x: edge, y: teaseCorner === 'top' ? 1 : height - 1 };
+      if (!controller.start(initial)) { finished(false); return false; }
       const ease = (value: number) => (1 - Math.cos(Math.PI * value)) / 2;
       const frames = Array.from({ length: 82 }, (_, index) => () => {
         if (disposed) return;
         const elapsed = index / 81 * 1350;
         const amount = elapsed < 450 ? ease(elapsed / 450) : elapsed < 800 ? 1 : 1 - ease(Math.min(1, (elapsed - 800) / 550));
-        controller.fold({ x: edge + (forward ? -1 : 1) * extent * amount, y: initial.y + (corner === 'top' ? 1 : -1) * extent * .85 * amount });
+        controller.fold({ x: edge + (forward ? -1 : 1) * extent * amount, y: initial.y + (teaseCorner === 'top' ? 1 : -1) * extent * .85 * amount });
       });
       engine.getRender().startAnimation(frames, 1350, () => {
         queueMicrotask(() => { if (!disposed) finished(false); });
       });
+      return true;
     },
     animate() {
       armed = true;

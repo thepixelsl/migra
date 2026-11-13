@@ -165,8 +165,16 @@ export function installPosingBook(root: HTMLElement) {
       });
       if (ticket !== operation || gesture?.cancelled) { turn.destroy({ restoreLayout: false }); return; }
       active = turn;
-      if (tease) { stage.setAttribute('data-book-teasing', ''); turn.tease(); }
+      if (tease) {
+        // Font/image loading or mobile scrolling may have moved the corner
+        // while the optional renderer was being initialized.
+        const visible = visibleHintCorner();
+        if (!visible || document.hidden || consentDialog?.open || interacted) { cancel(); return false; }
+        stage.setAttribute('data-book-teasing', '');
+        if (!turn.tease(visible)) return false;
+      }
       else if (gesture) { gesture.engine = turn; updateDrag(gesture); } else turn.animate();
+      return true;
     } catch {
       if (ticket !== operation) return;
       preserveViewport(() => {
@@ -256,37 +264,44 @@ export function installPosingBook(root: HTMLElement) {
   // Once per load, show the real paper curl at the first visible outer corner.
   // A gesture, navigation or reduced-motion preference always takes precedence.
   const consentDialog = document.querySelector<HTMLDialogElement>('[data-consent-dialog]');
-  let cornerVisible = false, hintCorner: Corner = 'top', hintConsumed = false, hintLoading = false, hintRetried = false, hintRetryTimer = 0;
+  let hintConsumed = false, hintLoading = false, hintRetried = false, hintRetryTimer = 0;
+  function visibleHintCorner(): Corner | undefined {
+    const direction = current < pages.length - 1 ? 1 : -1;
+    return corners.filter(item => item.direction === direction && !item.button.hidden).map(({ button }) => {
+      const rect = button.getBoundingClientRect();
+      const ratio = rect.height > 0 ? Math.max(0, Math.min(innerHeight, rect.bottom) - Math.max(0, rect.top)) / rect.height : 0;
+      return { corner: button.classList.contains('bottom') ? 'bottom' as Corner : 'top' as Corner, ratio };
+    }).filter(item => item.ratio >= .7).sort((a, b) => b.ratio - a.ratio)[0]?.corner;
+  }
   async function showCornerHint() {
-    if (hintConsumed || hintLoading || interacted || !cornerVisible || document.hidden || consentDialog?.open || !navigator.onLine) return;
+    const visible = visibleHintCorner();
+    if (hintConsumed || hintLoading || interacted || !visible || document.hidden || consentDialog?.open || !navigator.onLine) return;
+    if (reduced.matches) { consumeHint(); return; }
     hintLoading = true;
-    try { await loadRenderer(); }
-    catch {
-      // A lost download must not consume the only visible corner demonstration.
-      // Retry once for a transient failure; reconnecting can also resume it.
-      if (!hintRetried) {
-        hintRetried = true;
-        hintRetryTimer = window.setTimeout(() => { hintRetryTimer = 0; void showCornerHint(); }, 1200);
+    try {
+      try { await loadRenderer(); }
+      catch {
+        // A lost download must not consume the only visible demonstration.
+        if (!hintRetried) {
+          hintRetried = true;
+          hintRetryTimer = window.setTimeout(() => { hintRetryTimer = 0; void showCornerHint(); }, 1200);
+        }
+        return;
       }
-      return;
+      if (hintConsumed || interacted || !visibleHintCorner() || document.hidden || consentDialog?.open) return;
+      if (reduced.matches) { consumeHint(); return; }
+      const started = await begin(adjacent(current < pages.length - 1 ? 1 : -1), visible, undefined, true);
+      if (started) consumeHint();
     } finally { hintLoading = false; }
-    if (hintConsumed || interacted || !cornerVisible || document.hidden || consentDialog?.open) return;
+  }
+  function consumeHint() {
     hintConsumed = true; cornerHint.disconnect();
     clearTimeout(hintRetryTimer);
     document.removeEventListener('visibilitychange', showCornerHint);
     window.removeEventListener('online', showCornerHint);
     consentDialog?.removeEventListener('close', showCornerHint);
-    if (!reduced.matches && !interacted) void begin(adjacent(current < pages.length - 1 ? 1 : -1), hintCorner, undefined, true);
   }
-  const cornerIntersections = new Map<Element, IntersectionObserverEntry>();
-  const cornerHint = new IntersectionObserver(entries => {
-    entries.forEach(entry => cornerIntersections.set(entry.target, entry));
-    const visible = [...cornerIntersections.values()].filter(entry => entry.isIntersecting && entry.intersectionRatio >= .7)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-    cornerVisible = !!visible;
-    if (visible) hintCorner = (visible.target as HTMLElement).classList.contains('bottom') ? 'bottom' : 'top';
-    showCornerHint();
-  }, { threshold: .7 });
+  const cornerHint = new IntersectionObserver(() => { void showCornerHint(); }, { threshold: .7 });
   document.addEventListener('visibilitychange', showCornerHint);
   window.addEventListener('online', showCornerHint);
   consentDialog?.addEventListener('close', showCornerHint);
