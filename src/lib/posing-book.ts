@@ -6,7 +6,6 @@ type Drag = { pointer: number; startX: number; startY: number; x: number; y: num
 
 export function installPosingBook(root: HTMLElement) {
   const stage = root.querySelector<HTMLElement>('[data-book-stage]')!;
-  const chooser = root.querySelector<HTMLSelectElement>('[data-book-choice]')!;
   const status = root.querySelector<HTMLElement>('[data-book-status]')!;
   const previous = [...root.querySelectorAll<HTMLButtonElement>('[data-book-prev]')];
   const next = [...root.querySelectorAll<HTMLButtonElement>('[data-book-next]')];
@@ -16,6 +15,10 @@ export function installPosingBook(root: HTMLElement) {
   let current = 0, requested = 0, operation = 0;
   let active: PaperTurn | undefined, drag: Drag | undefined;
   let renderer: Promise<typeof import('./posing-paper-turn')> | undefined;
+  const discover = () => {
+    root.classList.add('has-book-interaction');
+    stage.querySelectorAll('[data-corner-tease]').forEach(corner => corner.removeAttribute('data-corner-tease'));
+  };
   const loadRenderer = () => renderer ||= import('./posing-paper-turn').catch(error => { renderer = undefined; throw error; });
   const notify = () => root.dispatchEvent(new Event('posing:pagechange', { bubbles: true }));
   const normalize = (index: number) => {
@@ -63,10 +66,16 @@ export function installPosingBook(root: HTMLElement) {
     button.dataset.corner = `${corner}-${direction > 0 ? 'next' : 'previous'}`;
     const label = `${corner === 'top' ? 'Obere' : 'Untere'} ${direction > 0 ? 'rechte' : 'linke'} Seitenecke: ziehen oder ${direction > 0 ? 'weiter' : 'zurück'}blättern`;
     button.setAttribute('aria-label', label); button.title = label;
+    if (corner === 'top' && direction > 0) {
+      const hint = document.createElement('span');
+      hint.className = 'book-corner-label'; hint.textContent = 'Hier blättern'; hint.setAttribute('aria-hidden', 'true');
+      button.append(hint);
+    }
     stage.append(button);
     button.addEventListener('click', event => { if (event.detail === 0) void go(adjacent(direction), true, true, corner); });
     button.addEventListener('pointerdown', event => {
       if (event.button !== 0 || button.disabled) return;
+      discover();
       event.preventDefault(); cancel();
       button.focus({ preventScroll: true }); button.setPointerCapture(event.pointerId);
       const gesture: Drag = { pointer: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, moved: 0, released: false, cancelled: false, forward: direction > 0, target: adjacent(direction), handle: button };
@@ -109,11 +118,7 @@ export function installPosingBook(root: HTMLElement) {
     });
     stage.classList.toggle('single', !double);
     root.classList.add('is-ready');
-    root.querySelectorAll<HTMLElement>('.guide-chapters [data-book-jump]').forEach(link => {
-      const selected = link.dataset.bookChapter ? link.dataset.bookChapter === pages[requested].dataset.guideChapter : requested === 0;
-      if (selected) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current');
-    });
-    chooser.value = String(requested);
+    stage.toggleAttribute('data-book-start', current === 0);
     status.textContent = double ? `Seiten ${current + 1} und ${current + 2} von ${pages.length}` : `Seite ${current + 1} von ${pages.length}`;
     previous.forEach(button => { button.disabled = current === 0; });
     next.forEach(button => { button.disabled = current + (double ? 2 : 1) >= pages.length; });
@@ -141,7 +146,7 @@ export function installPosingBook(root: HTMLElement) {
           if (ticket !== operation) return;
           active?.destroy(); active = undefined; drag = undefined;
           stage.removeAttribute('aria-busy');
-          if (turned) commit(index); else { chooser.value = String(requested); notify(); }
+          if (turned) commit(index); else notify();
         },
       });
       if (ticket !== operation || gesture?.cancelled) { turn.destroy(); return; }
@@ -169,6 +174,7 @@ export function installPosingBook(root: HTMLElement) {
     }
   }
   async function go(index: number, animate = true, updateAddress = true, corner: Corner = 'top') {
+    discover();
     cancel();
     const target = normalize(index);
     if (target === current || !animate || reduced.matches) { commit(index, updateAddress); return; }
@@ -176,14 +182,8 @@ export function installPosingBook(root: HTMLElement) {
   }
   previous.forEach(button => button.addEventListener('click', () => void go(adjacent(-1))));
   next.forEach(button => button.addEventListener('click', () => void go(adjacent(1))));
-  chooser.addEventListener('change', () => void go(Number(chooser.value)));
-  root.addEventListener('click', event => {
-    const link = (event.target as Element).closest<HTMLAnchorElement>('[data-book-jump]');
-    if (!link || (event as MouseEvent).metaKey || (event as MouseEvent).ctrlKey || (event as MouseEvent).shiftKey) return;
-    event.preventDefault(); void go(Number(link.dataset.bookJump));
-  });
   root.addEventListener('keydown', event => {
-    if (event.key === 'Escape') { cancel(); chooser.value = String(requested); return; }
+    if (event.key === 'Escape') { cancel(); return; }
     if (event.altKey || event.ctrlKey || event.metaKey || (event.target as Element).closest('select,input,textarea,[contenteditable=true],summary')) return;
     if (event.key === 'ArrowRight') { event.preventDefault(); void go(adjacent(1)); }
     if (event.key === 'ArrowLeft') { event.preventDefault(); void go(adjacent(-1)); }
@@ -206,4 +206,13 @@ export function installPosingBook(root: HTMLElement) {
     if (entries.some(entry => entry.isIntersecting)) { preload.disconnect(); if (!reduced.matches) void loadRenderer().catch(() => {}); }
   }, { rootMargin: '300px' });
   preload.observe(stage);
+  // A brief corner demonstration never turns a page and ends on interaction.
+  const cornerHint = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting || entry.intersectionRatio < .8) continue;
+      cornerHint.unobserve(entry.target);
+      if (!reduced.matches && !root.classList.contains('has-book-interaction')) entry.target.setAttribute('data-corner-tease', '');
+    }
+  }, { threshold: .8 });
+  corners.filter(({ direction }) => direction > 0).forEach(({ button }) => cornerHint.observe(button));
 }

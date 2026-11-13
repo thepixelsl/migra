@@ -1,22 +1,10 @@
 ---
-import { guideCards, guideChapters, coverCard, totalPages } from '../data/posing-guide';
+import { guideCards, coverCard, totalPages } from '../data/posing-guide';
 import PosingCard from './PosingCard.astro';
 import PosingImage from './PosingImage.astro';
 import PosingPageTurn from './PosingPageTurn.astro';
-const titles = ['Titel', ...guideCards.map(card => card.title)];
 ---
 <section class="posing-book" aria-label="Posing Guide zum Blättern" data-posing-book>
-  <nav class="guide-chapters" aria-label="Kapitel im Buch">
-    <a href="#titel" data-book-jump="0" aria-current="location">Buchanfang <span>{totalPages} Seiten</span></a>
-    {guideChapters.map(chapter => {
-      const first = guideCards.find(card => card.chapter === chapter.slug)!;
-      return <a href={`#pose-${first.id}`} data-book-jump={first.page - 1} data-book-chapter={chapter.slug}>{chapter.label} <span>{chapter.count} Karten</span></a>;
-    })}
-  </nav>
-  <div class="book-toolbar" data-book-controls hidden>
-    <div class="book-turn-controls"><button type="button" data-book-prev aria-label="Vorherige Seite">←</button><span data-book-status role="status" aria-live="polite">Seite 1 von {totalPages}</span><button type="button" data-book-next aria-label="Nächste Seite">→</button></div>
-    <label class="book-select">Direkt zu einer Seite <select data-book-choice aria-label="Direkt zu einer Seite">{titles.map((title, index) => <option value={index}>{index + 1} · {title}</option>)}</select></label>
-  </div>
   <div class="book-stage single" data-book-stage tabindex="0" aria-label="Buchseiten; mit den Pfeiltasten blättern">
     <article class="book-page book-cover" id="titel" aria-label="Seite 1: Titel" data-guide-page="1" data-guide-content="cover" data-guide-chapter="intro" data-guide-mode="book">
       <p class="guide-kicker">ARTBILD</p>
@@ -29,7 +17,8 @@ const titles = ['Titel', ...guideCards.map(card => card.title)];
     </article>
     {guideCards.map(card => <PosingCard card={card} />)}
   </div>
-  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span>Mit Pfeilen, Tastatur oder ziehbaren Seitenecken</span><button type="button" data-book-next>Weiter →</button></div>
+  <div class="book-bottom" data-book-controls hidden><button type="button" data-book-prev>← Zurück</button><span data-book-status role="status" aria-live="polite">Seite 1 von {totalPages}</span><button type="button" data-book-next>Weiter →</button></div>
+  <p class="book-help" data-book-controls hidden>An den Seitenecken klicken oder ziehen. Mit den Pfeiltasten blättern.</p>
 </section>
 <script>
   import { installPosingBook } from '../lib/posing-book';

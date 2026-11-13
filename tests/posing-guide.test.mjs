@@ -39,30 +39,22 @@ test('the single book delivers all 45 descriptions and images as real HTML witho
 test('the book has 46 pages, in-place chapter targets and no separate reading routes', async () => {
   const $ = await page('posing-guide');
   assert.equal($('[data-book-stage] > .book-page').length, 46);
-  assert.equal($('[data-book-choice] option').length, 46);
+  assert.equal($('.guide-chapters, .book-toolbar, [data-book-choice]').length, 0);
+  assert.equal($('.book-bottom [data-book-status]').length, 1);
   assert.equal($('[data-book-stage] img[loading=eager]').length, 1);
   assert.equal($('[data-book-stage] img[fetchpriority=high]').length, 1);
   const bookPages = $('[data-book-stage] > .book-page').toArray();
   assert.deepEqual(bookPages.map(node => $(node).attr('id')), ['titel', ...cards.map(card => `pose-${card.id}`)]);
   assert.equal($('#inhalt, #orientierung, .book-intro').length, 0);
-  assert.deepEqual($('.guide-chapters [data-book-chapter]').toArray().map(node => $(node).attr('data-book-chapter')),
-    ['grundlagen', 'posen-frauen', 'posen-maenner', 'hochzeitsposen']);
   bookPages.forEach((node, index) => {
     const article = $(node);
     assert.equal(Number(article.attr('data-guide-page')), index + 1);
     assert.ok(article.find('img').length, `Page ${index + 1} must show an illustration`);
     assert.ok(article.find('.book-page-footer').text().includes(`${index + 1} / 46`));
-    assert.equal($('[data-book-choice] option').eq(index).attr('value'), String(index));
     const links = article.find('.book-fallback-controls a').toArray().map(link => $(link).attr('href'));
     assert.deepEqual(links, [index > 0 && `#${$(bookPages[index - 1]).attr('id')}`,
       index < bookPages.length - 1 && `#${$(bookPages[index + 1]).attr('id')}`].filter(Boolean));
   });
-  for (const anchor of $('.guide-chapters a').toArray()) {
-    const href = $(anchor).attr('href');
-    assert.ok(href.startsWith('#'));
-    assert.equal($(href).length, 1);
-    assert.ok(Number.isInteger(Number($(anchor).attr('data-book-jump'))));
-  }
   assert.equal($('.pose-reading-list').length, 0);
   for (const slug of Object.keys(chapters)) {
     assert.equal($(`a[href="/posing-guide/${slug}/"]`).length, 0);
