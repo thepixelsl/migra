@@ -17,6 +17,9 @@ test("mobile hero requests responsive modern images and only its immediate set",
   const originalImageRequests = new Set<string>();
 
   page.on("response", (response) => {
+    // Astro's development toolbar also fetches full-size diagnostic copies.
+    // Measure browser image delivery for the slider, not those dev-only audits.
+    if (response.request().resourceType() !== "image") return;
     const url = response.url();
     const pathname = new URL(url).pathname;
 
@@ -33,7 +36,7 @@ test("mobile hero requests responsive modern images and only its immediate set",
   const slider = page.locator(".hero-slider--mobile");
   const desktopSlider = page.locator(".hero-slider--desktop");
   const toggle = slider.locator("[data-slider-toggle]");
-  await toggle.evaluate((button: HTMLButtonElement) => button.click());
+  await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
 
   await expect
@@ -79,7 +82,7 @@ test("percentage-based positioning keeps the hero centered and navigable", async
   const toggle = slider.locator("[data-slider-toggle]");
   const next = slider.locator("[data-slider-next]");
 
-  await toggle.evaluate((button: HTMLButtonElement) => button.click());
+  await toggle.click();
   await expect(toggle).toHaveAttribute("aria-pressed", "true");
   await expect
     .poll(() =>
@@ -88,7 +91,7 @@ test("percentage-based positioning keeps the hero centered and navigable", async
     )
     .toBe(true);
 
-  await next.evaluate((button: HTMLButtonElement) => button.click());
+  await next.click();
   await expect(
     slider.locator('.hero-slider__slide[aria-hidden="false"] img'),
   ).toHaveAttribute("alt", "Lachende Braut vor dem Eiffelturm");

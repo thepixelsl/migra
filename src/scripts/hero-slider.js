@@ -29,6 +29,9 @@
       this.neighborTimer = 0;
       this.preloadQueue = [];
       this.neighborQueue = [];
+      this.pendingSlide = null;
+      this.running = false;
+      this.controls = root.querySelector(".hero-slider__controls");
       this.previousButton = root.querySelector("[data-slider-prev]");
       this.nextButton = root.querySelector("[data-slider-next]");
       this.toggleButton = root.querySelector("[data-slider-toggle]");
@@ -44,6 +47,7 @@
     }
 
     start() {
+      this.running = true;
       this.root.hidden = false;
       this.root.setAttribute("role", "region");
       this.root.setAttribute("aria-roledescription", "carousel");
@@ -56,10 +60,12 @@
       });
 
       if (this.mode === "desktop") {
-        this.root.addEventListener("mouseenter", this.onMouseEnter);
-        this.root.addEventListener("mouseleave", this.onMouseLeave);
-        this.root.addEventListener("pointerenter", this.onMouseEnter);
-        this.root.addEventListener("pointerleave", this.onMouseLeave);
+        // A cursor left over the photographs must not prevent the first turn.
+        // Keep the controls still while the visitor is interacting with them.
+        this.controls?.addEventListener("mouseenter", this.onMouseEnter);
+        this.controls?.addEventListener("mouseleave", this.onMouseLeave);
+        this.controls?.addEventListener("pointerenter", this.onMouseEnter);
+        this.controls?.addEventListener("pointerleave", this.onMouseLeave);
       } else {
         this.root.addEventListener("pointerdown", this.onPointerDown, { passive: true });
         this.root.addEventListener("pointermove", this.onPointerMove, { passive: true });
@@ -77,12 +83,15 @@
       this.queueDeferredImages();
       this.root.classList.add("is-ready");
       this.updateToggleButton();
+      this.hoverPaused = this.mode === "desktop" && Boolean(this.controls?.matches(":hover"));
 
       if (!reducedMotionQuery.matches) this.play();
     }
 
     stop() {
+      this.running = false;
       this.pause();
+      this.clearPendingSlide();
       this.clearPreloadTimer();
       this.clearNeighborTimer();
       this.root.classList.remove("is-ready", "is-dragging");
@@ -92,10 +101,10 @@
         image.loading = "lazy";
       });
 
-      this.root.removeEventListener("mouseenter", this.onMouseEnter);
-      this.root.removeEventListener("mouseleave", this.onMouseLeave);
-      this.root.removeEventListener("pointerenter", this.onMouseEnter);
-      this.root.removeEventListener("pointerleave", this.onMouseLeave);
+      this.controls?.removeEventListener("mouseenter", this.onMouseEnter);
+      this.controls?.removeEventListener("mouseleave", this.onMouseLeave);
+      this.controls?.removeEventListener("pointerenter", this.onMouseEnter);
+      this.controls?.removeEventListener("pointerleave", this.onMouseLeave);
       this.root.removeEventListener("pointerdown", this.onPointerDown);
       this.root.removeEventListener("pointermove", this.onPointerMove);
       this.root.removeEventListener("pointerup", this.onPointerUp);
@@ -146,23 +155,61 @@
       return this.imageIsReady(slide);
     }
 
-    goTo(slideIndex) {
+    goTo(slideIndex, automatic = false) {
+      if (!this.running || (automatic && this.pendingSlide)) return;
       const count = this.slides.length;
       const targetIndex = (slideIndex + count) % count;
+      this.clearPendingSlide();
 
       if (!this.prepareSlide(targetIndex)) {
+        const slide = this.slides[targetIndex];
+        const image = slide.querySelector("img");
+        const pending = {
+          image, automatic,
+          loaded: () => {
+            if (this.pendingSlide !== pending || !this.imageIsReady(slide)) return;
+            this.clearPendingSlide();
+            if (!this.running || document.hidden || (automatic && this.isPaused())) return;
+            this.showSlide(targetIndex);
+          },
+          failed: () => {
+            if (this.pendingSlide === pending) this.clearPendingSlide();
+          },
+        };
+        this.pendingSlide = pending;
+        image.addEventListener("load", pending.loaded);
+        image.addEventListener("error", pending.failed);
+        // A cached image may have finished between preparation and listening.
+        if (this.imageIsReady(slide)) pending.loaded();
         this.queueNeighborImages();
         return;
       }
 
+      this.showSlide(targetIndex);
+    }
+
+    clearPendingSlide() {
+      const pending = this.pendingSlide;
+      if (!pending) return;
+      pending.image.removeEventListener("load", pending.loaded);
+      pending.image.removeEventListener("error", pending.failed);
+      this.pendingSlide = null;
+    }
+
+    showSlide(targetIndex) {
       this.index = targetIndex;
       this.dragOffset = 0;
       this.render(true);
       this.queueNeighborImages();
+      // Give each displayed photograph its full interval, even after a slow load.
+      if (this.timer) {
+        this.pause();
+        this.play();
+      }
     }
 
-    next() {
-      this.goTo(this.index + 1);
+    next(automatic = false) {
+      this.goTo(this.index + 1, automatic);
     }
 
     previous() {
@@ -170,13 +217,14 @@
     }
 
     play() {
-      if (this.timer || this.isPaused() || document.hidden) return;
-      this.timer = window.setInterval(() => this.next(), this.interval);
+      if (!this.running || this.timer || this.isPaused() || document.hidden) return;
+      this.timer = window.setInterval(() => this.next(true), this.interval);
     }
 
     pause() {
       window.clearInterval(this.timer);
       this.timer = 0;
+      if (this.pendingSlide?.automatic) this.clearPendingSlide();
     }
 
     isPaused() {

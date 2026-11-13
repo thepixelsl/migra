@@ -376,6 +376,7 @@ a {
 
 .hero-slider__viewport {
   position: relative;
+  z-index: 0;
   width: 100%;
   height: var(--slider-height);
   overflow: hidden;
