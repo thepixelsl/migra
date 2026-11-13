@@ -223,6 +223,12 @@ test("uses immutable caching for built Astro assets", async () => {
   assert.equal(response.headers.get("cache-control"), "public, max-age=31536000, immutable");
 });
 
+test("does not cache missing Astro assets as immutable", async () => {
+  const response = await fetch(`${baseUrl}/_astro/missing.js`);
+  assert.equal(response.status, 404);
+  assert.equal(response.headers.get("cache-control"), "no-store");
+});
+
 test("serves the agent Markdown, llms.txt and OpenAPI files with readable types", async () => {
   const markdown = await fetch(`${baseUrl}/fuer-agenten.md`);
   assert.equal(markdown.status, 200);

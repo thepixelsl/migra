@@ -43,7 +43,7 @@ import instagramLogo from "../assets/home/social/instagram-glyph-gradient.png";
 import pinterestLogo from "../assets/home/social/pinterest-badge-primary.png";
 import contactEmailIcon from "../assets/home/contact/email-icon.png";
 import contactPlannerIcon from "../assets/home/contact/weekly-planner-icon.png";
-import heroSliderScript from "../scripts/hero-slider.js?url&no-inline";
+import heroSliderScript from "../scripts/hero-slider.js?raw";
 import homeRevealScript from "../scripts/home-reveal.js?url&no-inline";
 import portfolioShowcaseCarouselScript from "../scripts/portfolio-showcase-carousel.js?url&no-inline";
 import storyCarouselScript from "../scripts/story-carousel.js?url&no-inline";
@@ -488,7 +488,6 @@ const homepageSchema = {
   <meta property="og:image" content={homepagePhotoUrl}>
   <meta property="og:image:alt" content={homepageSeo.imageAlt}>
   <script type="application/ld+json" set:html={JSON.stringify(homepageSchema)}></script>
-  <script is:inline src={heroSliderScript} defer></script>
   <script is:inline src={homeRevealScript} defer></script>
   <script is:inline src={storyCarouselScript} defer></script>
   <script is:inline src={portfolioShowcaseCarouselScript} defer></script>
@@ -1336,5 +1335,6 @@ const homepageSchema = {
   </footer>
   </div>
 
+  <script is:inline set:html={heroSliderScript}></script>
 </body>
 </html>

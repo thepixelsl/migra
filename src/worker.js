@@ -196,7 +196,9 @@ export default {
     }
 
     if (url.pathname.startsWith("/_astro/")) {
-      responseHeaders.set("Cache-Control", "public, max-age=31536000, immutable");
+      responseHeaders.set("Cache-Control", assetResponse.ok || assetResponse.status === 304
+        ? "public, max-age=31536000, immutable"
+        : "no-store");
     }
 
     if (!isExplicitDownloadPath(url.pathname)) {

@@ -127,3 +127,25 @@ test("automatic first advance keeps the hero centered", async ({ page }) => {
   expect(positions.offsets).toContain("100%");
   expect(positions.offsets).toContain("-100%");
 });
+
+test("mobile hero starts and advances when external slider scripts are unavailable", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  // Cover both hashed production assets and Astro's development script path.
+  await page.route("**/hero-slider*.js*", (route) => route.fulfill({
+    status: 404,
+    contentType: "text/plain",
+    body: "External slider script unavailable",
+  }));
+  await page.goto(baseUrl, { waitUntil: "domcontentloaded" });
+
+  const slider = page.locator(".hero-slider--mobile");
+  const activeImage = slider.locator('.hero-slider__slide[aria-hidden="false"] img');
+  await expect(slider).toHaveClass(/is-ready/);
+  await expect(slider.locator("button")).toHaveCount(0);
+  await expect(page.locator(".hero-slider--desktop button")).toHaveCount(0);
+  await expect.poll(() => activeImage.evaluate((image: HTMLImageElement) =>
+    image.complete && image.naturalWidth > 0
+  )).toBe(true);
+  await expect(activeImage).toHaveAttribute("alt", "Braut beim Fotoshooting in Paris");
+  await expect(activeImage).toHaveAttribute("alt", "Lachende Braut vor dem Eiffelturm");
+});
