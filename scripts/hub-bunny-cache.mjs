@@ -38,7 +38,9 @@ export async function refreshBunnyReleaseCache(plan,{
   if(marker.siteId!=='artbild' || published.length!==paths.length || paths.some(path=>!published.includes(path)))
     throw Error('Die öffentliche Bunny-Version passt nicht zur freigegebenen Seitenliste.');
 
-  const selected=[...new Set([...paths,...seoPaths])];
+  /* hub-content-removals */
+  if((plan.removals||[]).some(row=>!publicPath(row.path)))throw Error('Ungültige gelöschte Cache-Adresse.');
+  const selected=[...new Set([...paths,...seoPaths,...(plan.removals||[]).flatMap(row=>[row.path,row.path.replace(/\/$/,'')])])];
   for(const path of selected) {
     const endpoint=new URL('https://api.bunny.net/purge');
     endpoint.search=new URLSearchParams({url:origin+path,async:'false',exactPath:'true'}).toString();
