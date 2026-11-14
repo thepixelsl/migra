@@ -2,6 +2,7 @@
 import type { createPaperTurn } from './posing-paper-turn';
 type PaperTurn = Awaited<ReturnType<typeof createPaperTurn>>;
 type Corner = 'top' | 'bottom';
+type Tease = false | 'automatic' | 'hover';
 type Drag = { pointer: number; startX: number; startY: number; x: number; y: number; moved: number; released: boolean; cancelled: boolean; engine?: PaperTurn; started?: boolean; failed?: boolean; forward: boolean; target: number; handle: HTMLElement };
 
 export function installPosingBook(root: HTMLElement) {
@@ -14,10 +15,33 @@ export function installPosingBook(root: HTMLElement) {
   const pages = [...stage.querySelectorAll<HTMLElement>(':scope > .book-page')];
   const mobile = matchMedia('(max-width: 800px)');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const motionKey = 'artbild-posing-motion';
+  let motionChoice: boolean | undefined, animationFailed = false;
+  try {
+    const stored = localStorage.getItem(motionKey);
+    if (stored === 'on' || stored === 'off') motionChoice = stored === 'on';
+  } catch { /* The reader also works when browser storage is unavailable. */ }
+  const motionAllowed = () => motionChoice ?? !reduced.matches;
+  const motionControls = document.createElement('div');
+  motionControls.className = 'book-motion-controls';
+  const motionButton = document.createElement('button');
+  motionButton.type = 'button'; motionButton.dataset.bookMotion = '';
+  const motionStatus = document.createElement('span');
+  motionStatus.dataset.bookMotionStatus = ''; motionStatus.setAttribute('role', 'status');
+  motionControls.append(motionButton, motionStatus);
+  const help = root.querySelector('.book-help');
+  if (help) help.after(motionControls); else root.append(motionControls);
+  function renderMotionControl() {
+    motionButton.textContent = animationFailed ? 'Animation erneut versuchen' : motionAllowed() ? 'Animation ausschalten' : 'Animation einschalten';
+    motionButton.setAttribute('aria-pressed', String(motionAllowed() && !animationFailed));
+    motionStatus.textContent = animationFailed ? 'Die Animation ist vorübergehend nicht verfügbar. Du kannst weiterblättern.'
+      : !motionAllowed() && reduced.matches && motionChoice === undefined ? 'Deine Systemeinstellung reduziert Bewegung.' : '';
+    root.dataset.bookMotion = motionAllowed() ? 'on' : 'off';
+  }
   let current = 0, requested = 0, operation = 0;
   let fullscreenScroll = 0, wasFullscreen = false;
   let interacted = false;
-  let active: PaperTurn | undefined, drag: Drag | undefined;
+  let active: PaperTurn | undefined, drag: Drag | undefined, hoverHint: HTMLElement | undefined;
   let renderer: Promise<typeof import('./posing-paper-turn')> | undefined;
   const discover = () => { interacted = true; };
   const loadRenderer = () => renderer ||= import('./posing-paper-turn').catch(error => { renderer = undefined; throw error; });
@@ -52,6 +76,7 @@ export function installPosingBook(root: HTMLElement) {
   }
   const cancel = () => {
     operation++;
+    hoverHint = undefined;
     if (drag) {
       drag.cancelled = true;
       if (drag.handle.hasPointerCapture(drag.pointer)) drag.handle.releasePointerCapture(drag.pointer);
@@ -70,14 +95,25 @@ export function installPosingBook(root: HTMLElement) {
     button.setAttribute('aria-label', label); button.title = label;
     stage.append(button);
     button.addEventListener('click', event => { if (event.detail === 0) void go(adjacent(direction), true, true, corner); });
+    button.addEventListener('pointerenter', event => {
+      // Use the actual mouse event, including on Windows touch laptops whose
+      // primary-pointer media query can still report coarse/no-hover.
+      if (event.pointerType !== 'mouse' || !motionAllowed() || button.disabled || drag || stage.hasAttribute('aria-busy')) return;
+      cancel(); hoverHint = button;
+      void begin(adjacent(direction), corner, undefined, 'hover');
+    });
+    button.addEventListener('pointerleave', () => {
+      if (hoverHint !== button) return;
+      hoverHint = undefined; cancel();
+    });
     button.addEventListener('pointerdown', event => {
       if (event.button !== 0 || button.disabled) return;
       discover();
-      event.preventDefault(); cancel();
+      event.preventDefault(); hoverHint = undefined; cancel();
       button.focus({ preventScroll: true }); button.setPointerCapture(event.pointerId);
       const gesture: Drag = { pointer: event.pointerId, startX: event.clientX, startY: event.clientY, x: event.clientX, y: event.clientY, moved: 0, released: false, cancelled: false, forward: direction > 0, target: adjacent(direction), handle: button };
       drag = gesture;
-      if (!reduced.matches) void begin(gesture.target, corner, gesture);
+      if (motionAllowed()) void begin(gesture.target, corner, gesture);
     });
     button.addEventListener('pointermove', event => {
       if (!drag || drag.pointer !== event.pointerId) return;
@@ -91,7 +127,7 @@ export function installPosingBook(root: HTMLElement) {
       gesture.x = event.clientX; gesture.y = event.clientY; gesture.released = true;
       gesture.moved = Math.max(gesture.moved, Math.hypot(gesture.x - gesture.startX, gesture.y - gesture.startY));
       if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
-      if (reduced.matches || gesture.failed) {
+      if (!motionAllowed() || gesture.failed) {
         finishWithoutAnimation(gesture);
       } else updateDrag(gesture);
     });
@@ -132,13 +168,13 @@ export function installPosingBook(root: HTMLElement) {
     if (focusInPage) stage.focus({ preventScroll: true });
     if (updateAddress) history.replaceState(null, '', `#${pages[requested].id}`);
   }
-  async function begin(index: number, corner: Corner, gesture?: Drag, tease = false) {
+  async function begin(index: number, corner: Corner, gesture?: Drag, tease: Tease = false) {
     const ticket = operation;
     stage.setAttribute('aria-busy', 'true');
     try {
       const { createPaperTurn } = await loadRenderer();
       if (ticket !== operation || gesture?.cancelled) return;
-      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner, preserveViewport, tease,
+      const turn = await createPaperTurn({ stage, before: spread(current), after: spread(normalize(index)), forward: normalize(index) > current, portrait: mobile.matches, corner, preserveViewport, tease: Boolean(tease),
         finished: turned => {
           if (ticket !== operation) return;
           active?.destroy(); active = undefined; drag = undefined;
@@ -149,11 +185,12 @@ export function installPosingBook(root: HTMLElement) {
       });
       if (ticket !== operation || gesture?.cancelled) { turn.destroy({ restoreLayout: false }); return; }
       active = turn;
+      animationFailed = false; renderMotionControl();
       if (tease) {
         // Font/image loading or mobile scrolling may have moved the corner
         // while the optional renderer was being initialized.
-        const visible = visibleHintCorner();
-        if (!visible || document.hidden || consentDialog?.open || interacted) { cancel(); return false; }
+        const visible = tease === 'hover' ? corner : visibleHintCorner();
+        if (!visible || !motionAllowed() || document.hidden || consentDialog?.open || (tease === 'automatic' ? interacted : !hoverHint)) { cancel(); return false; }
         stage.setAttribute('data-book-teasing', '');
         if (!turn.tease(visible)) return false;
       }
@@ -161,6 +198,7 @@ export function installPosingBook(root: HTMLElement) {
       return true;
     } catch {
       if (ticket !== operation) return;
+      animationFailed = true; renderMotionControl();
       preserveViewport(() => {
         stage.querySelector('.book-paper-overlay')?.remove(); stage.removeAttribute('data-book-turning'); stage.removeAttribute('aria-busy'); stage.removeAttribute('data-book-teasing');
         if (mobile.matches) stage.style.minHeight = '';
@@ -184,7 +222,7 @@ export function installPosingBook(root: HTMLElement) {
     discover();
     cancel();
     const target = normalize(index);
-    if (target === current || !animate || reduced.matches) { commit(index, updateAddress); return; }
+    if (target === current || !animate || !motionAllowed()) { commit(index, updateAddress); return; }
     await begin(index, corner);
   }
   previous.forEach(button => button.addEventListener('click', () => void go(adjacent(-1))));
@@ -236,15 +274,16 @@ export function installPosingBook(root: HTMLElement) {
     viewportWidth = innerWidth; viewportHeight = innerHeight;
     if (document.fullscreenElement === root) { cancel(); stage.style.minHeight = ''; render(); }
   });
-  reduced.addEventListener('change', cancel);
+  reduced.addEventListener('change', () => { cancel(); renderMotionControl(); });
   window.addEventListener('blur', cancel);
   window.addEventListener('pagehide', cancel);
   window.addEventListener('hashchange', () => void go(fromHash(), false, false));
   requested = Math.max(0, Math.min(pages.length - 1, fromHash())); current = normalize(requested);
   render();
+  renderMotionControl();
   root.querySelectorAll<HTMLElement>('[data-book-controls]').forEach(control => { control.hidden = false; });
   const preload = new IntersectionObserver(entries => {
-    if (entries.some(entry => entry.isIntersecting)) { preload.disconnect(); if (!reduced.matches) void loadRenderer().catch(() => {}); }
+    if (entries.some(entry => entry.isIntersecting)) { preload.disconnect(); if (motionAllowed()) void loadRenderer().catch(() => {}); }
   }, { rootMargin: '300px' });
   preload.observe(stage);
   // Once per load, show the real paper curl at the first visible outer corner.
@@ -261,12 +300,13 @@ export function installPosingBook(root: HTMLElement) {
   }
   async function showCornerHint() {
     const visible = visibleHintCorner();
-    if (hintConsumed || hintLoading || interacted || !visible || document.hidden || consentDialog?.open || !navigator.onLine) return;
-    if (reduced.matches) { consumeHint(); return; }
+    if (hintConsumed || hintLoading || interacted || hoverHint || stage.hasAttribute('aria-busy') || !visible || document.hidden || consentDialog?.open || !navigator.onLine) return;
+    if (!motionAllowed()) { consumeHint(); return; }
     hintLoading = true;
     try {
       try { await loadRenderer(); }
       catch {
+        animationFailed = true; renderMotionControl();
         // A lost download must not consume the only visible demonstration.
         if (!hintRetried) {
           hintRetried = true;
@@ -274,9 +314,9 @@ export function installPosingBook(root: HTMLElement) {
         }
         return;
       }
-      if (hintConsumed || interacted || !visibleHintCorner() || document.hidden || consentDialog?.open) return;
-      if (reduced.matches) { consumeHint(); return; }
-      const started = await begin(adjacent(current < pages.length - 1 ? 1 : -1), visible, undefined, true);
+      if (hintConsumed || interacted || hoverHint || !visibleHintCorner() || document.hidden || consentDialog?.open) return;
+      if (!motionAllowed()) { consumeHint(); return; }
+      const started = await begin(adjacent(current < pages.length - 1 ? 1 : -1), visible, undefined, 'automatic');
       if (started) consumeHint();
     } finally { hintLoading = false; }
   }
@@ -293,4 +333,17 @@ export function installPosingBook(root: HTMLElement) {
   consentDialog?.addEventListener('close', showCornerHint);
   const hintDirection = current < pages.length - 1 ? 1 : -1;
   corners.filter(({ direction }) => direction === hintDirection).forEach(({ button }) => cornerHint.observe(button));
+  motionButton.addEventListener('click', () => {
+    motionChoice = animationFailed || !motionAllowed();
+    animationFailed = false; hoverHint = undefined; cancel();
+    try { localStorage.setItem(motionKey, motionChoice ? 'on' : 'off'); } catch { /* Optional preference only. */ }
+    renderMotionControl();
+    if (motionAllowed()) {
+      // An explicit opt-in can replay the demonstration even when the system's
+      // reduced-motion preference consumed the initial automatic hint.
+      interacted = false; hintConsumed = false;
+      corners.filter(({ button }) => !button.hidden).forEach(({ button }) => cornerHint.observe(button));
+      void showCornerHint();
+    }
+  });
 }

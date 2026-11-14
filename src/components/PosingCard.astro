@@ -16,7 +16,6 @@ const { card } = Astro.props;
     <p class="pose-location">{card.location}</p>
     <p>{card.description}</p>
     {card.attention && <p><strong>Zur Haltung:</strong>{' '}{card.attention}</p>}
-    <p class="pose-camera"><strong>Kamera zur Orientierung:</strong>{' '}{card.camera}</p>
     {card.legend.length > 0 && <ul class="pose-legend">{card.legend.map(label => <li>{label}</li>)}</ul>}
     {card.variation && <details><summary>Eine Variante für dich</summary><p>{card.variation}</p></details>}
   </div>

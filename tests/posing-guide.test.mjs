@@ -31,7 +31,7 @@ test('the single book delivers every edited description and image as real HTML w
     assert.equal(article.attr('data-guide-mode'), 'book');
     assert.equal(article.attr('data-guide-content'), `pose_${card.id}`);
     assert.ok(article.text().includes(card.description));
-    assert.ok(article.text().includes(card.camera));
+    assert.equal(article.find('.pose-camera').length, 0);
     assert.equal(article.find('img').attr('src'), `${card.image}-960.webp`);
     assert.equal(article.find('img').attr('loading'), 'lazy');
     assert.ok(article.find('source[type="image/avif"]').attr('srcset').includes('640w'));

@@ -60,6 +60,9 @@
 .book-bottom { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:20px; margin-top:clamp(24px,3vw,44px); }
 .book-bottom span { text-align:center; font:12px/1.65 "Raleway",Arial,sans-serif; color:var(--guide-muted); }
 .guide-shell .book-help { margin-top:16px; text-align:center; font:11px/1.7 "Raleway",Arial,sans-serif; color:var(--guide-muted); }
+.book-motion-controls { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px 16px; margin-top:12px; }
+.book-motion-controls [role="status"] { max-width:440px; font:11px/1.6 "Raleway",Arial,sans-serif; color:var(--guide-muted); }
+.book-motion-controls [role="status"]:empty { display:none; }
 .posing-book [hidden] { display:none !important; }
 .guide-context { display:grid; grid-template-columns:1fr 1fr; gap:65px; margin:100px 0 80px; padding-top:50px; border-top:1px solid var(--guide-line); }
 .guide-context h2 { margin-top:20px; font-size:38px; }
