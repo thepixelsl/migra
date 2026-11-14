@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "updatedAt": "2026-11-14T13:10:11.052Z",
+  "updatedAt": "2026-11-14T16:24:00.344Z",
   "nextCardId": 85,
   "page": {
     "title": "Posing Guide: Posen für Frauen, Männer & Hochzeit | Artbild",
@@ -405,16 +405,16 @@
           "id": "024",
           "slug": "am-gelaender",
           "title": "Locker am Geländer stehen",
-          "location": "Terrasse · Elbufer",
-          "description": "Du stehst mit etwas Abstand vor einem festen Geländer. Beide Unterarme liegen locker darauf, dein Oberkörper ist leicht nach vorn geneigt. Die Hände sind entspannt und dein Kopf ist zur Kamera neben dir gewendet.",
+          "location": "Krugkoppelbrücke · Alster",
+          "description": "Du stehst seitlich an der steinernen Brüstung. Ein Unterarm liegt auf der breiten Steinabdeckung, die andere Hand ruht locker auf diesem Unterarm. Dein Oberkörper ist leicht nach vorn geneigt und dein Kopf zum Betrachter gewendet.",
           "camera": "Die Kamera steht schräg seitlich vor dir ungefähr auf Brusthöhe.",
-          "attention": "Deine Füße stehen sicher auf dem Boden und tragen dein Gewicht.",
+          "attention": "Deine Füße stehen sicher auf dem Gehweg und tragen dein Gewicht. Der Unterarm liegt nur zur leichten Unterstützung auf der Steinabdeckung.",
           "variation": "In der aufrechteren Variante liegt nur eine Hand auf dem Geländer.",
           "legend": [],
           "alt": "Posing-Illustration: Locker am Geländer stehen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/024-am-gelaender-d20fa6d6cb71"
+          "image": "/images/posing-guide/024-am-gelaender-d81002385b7b"
         },
         {
           "id": "025",
@@ -756,7 +756,7 @@
           "alt": "Posing-Illustration: Zusammen am Sessel.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/046-zusammen-am-sessel-02b2a6fcaed1"
+          "image": "/images/posing-guide/046-zusammen-am-sessel-b49f2f0c9208"
         },
         {
           "id": "047",
@@ -771,7 +771,7 @@
           "alt": "Posing-Illustration: Sitzend und stehend verbunden.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/047-sitzend-und-stehend-verbunden-44b3b6e1d214"
+          "image": "/images/posing-guide/047-sitzend-und-stehend-verbunden-0b956e48bbe3"
         },
         {
           "id": "048",
@@ -786,7 +786,7 @@
           "alt": "Posing-Illustration: Gemeinsam eine Treppe hinab.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/048-gemeinsam-eine-treppe-hinab-1a26b775c8f3"
+          "image": "/images/posing-guide/048-gemeinsam-eine-treppe-hinab-4c22e1276b44"
         },
         {
           "id": "049",
@@ -801,7 +801,7 @@
           "alt": "Posing-Illustration: Ein Handkuss am Trauzimmer.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/049-handkuss-am-trauzimmer-7dd004d8d3a6"
+          "image": "/images/posing-guide/049-handkuss-am-trauzimmer-c6202f3901a9"
         },
         {
           "id": "050",
@@ -816,7 +816,7 @@
           "alt": "Posing-Illustration: Eine sanfte Drehung.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/050-eine-sanfte-drehung-fa7259233225"
+          "image": "/images/posing-guide/050-eine-sanfte-drehung-987798b24feb"
         },
         {
           "id": "051",
@@ -831,7 +831,7 @@
           "alt": "Posing-Illustration: Nähe beim Tanzen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/051-nah-beim-tanzen-936ed7c405e5"
+          "image": "/images/posing-guide/051-nah-beim-tanzen-0a0b5d9e9681"
         },
         {
           "id": "052",
@@ -846,7 +846,7 @@
           "alt": "Posing-Illustration: Lachend Hand in Hand.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/052-lachend-hand-in-hand-bff0ee45a308"
+          "image": "/images/posing-guide/052-lachend-hand-in-hand-b5700982d231"
         },
         {
           "id": "053",
@@ -861,7 +861,7 @@
           "alt": "Posing-Illustration: Ein Kuss auf die Schläfe.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/053-ein-kuss-auf-die-schlaefe-ba1aa315522c"
+          "image": "/images/posing-guide/053-ein-kuss-auf-die-schlaefe-233c197a26bf"
         },
         {
           "id": "054",
@@ -1026,7 +1026,7 @@
           "alt": "Posing-Illustration: Einander auf der Brücke zuwenden.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/064-einander-auf-der-bruecke-zuwenden-4c90b2aa075c"
+          "image": "/images/posing-guide/064-einander-auf-der-bruecke-zuwenden-1832a233c4e9"
         },
         {
           "id": "065",
@@ -1041,7 +1041,7 @@
           "alt": "Posing-Illustration: Nah beieinander auf der Stahlbrücke.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/065-nah-beieinander-auf-der-stahlbruecke-5e52bff97644"
+          "image": "/images/posing-guide/065-nah-beieinander-auf-der-stahlbruecke-b79a9a29d271"
         },
         {
           "id": "066",
@@ -1056,7 +1056,7 @@
           "alt": "Posing-Illustration: Nähe unter dem Backsteinbogen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/066-naehe-unter-dem-backsteinbogen-9b937585ec45"
+          "image": "/images/posing-guide/066-naehe-unter-dem-backsteinbogen-958c5cf26946"
         },
         {
           "id": "067",
@@ -1071,7 +1071,7 @@
           "alt": "Posing-Illustration: Einander im Stehen sanft anheben.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/067-einander-im-stehen-sanft-anheben-0a8e2a1a1a3c"
+          "image": "/images/posing-guide/067-einander-im-stehen-sanft-anheben-a96b649362af"
         },
         {
           "id": "068",
@@ -1086,7 +1086,7 @@
           "alt": "Posing-Illustration: Die Wange am Elbstrand berühren.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/068-die-wange-am-elbstrand-beruehren-ee4a437134fe"
+          "image": "/images/posing-guide/068-die-wange-am-elbstrand-beruehren-e8601ef4896f"
         },
         {
           "id": "069",
@@ -1101,7 +1101,7 @@
           "alt": "Posing-Illustration: Die Schläfe an die Schulter lehnen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/069-schlaefe-an-die-schulter-lehnen-251576110952"
+          "image": "/images/posing-guide/069-schlaefe-an-die-schulter-lehnen-674653d81d4e"
         },
         {
           "id": "070",
@@ -1116,7 +1116,7 @@
           "alt": "Posing-Illustration: Gemeinsam über die Elbe schauen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/070-gemeinsam-ueber-die-elbe-schauen-14b675f8c31a"
+          "image": "/images/posing-guide/070-gemeinsam-ueber-die-elbe-schauen-8560a681489c"
         },
         {
           "id": "071",
@@ -1131,7 +1131,7 @@
           "alt": "Posing-Illustration: Eine Umarmung über die Schultern.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/071-umarmung-ueber-die-schultern-5205fc935319"
+          "image": "/images/posing-guide/071-umarmung-ueber-die-schultern-a1f098f1cf48"
         },
         {
           "id": "072",
@@ -1146,7 +1146,7 @@
           "alt": "Posing-Illustration: Spielerisch die Hosenträger halten.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/072-spielerisch-die-hosentraeger-halten-003438dd9f55"
+          "image": "/images/posing-guide/072-spielerisch-die-hosentraeger-halten-99fb631533f2"
         },
         {
           "id": "073",
@@ -1161,7 +1161,7 @@
           "alt": "Posing-Illustration: Die Fliege des Partners richten.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/073-die-fliege-des-partners-richten-ea5eac17ed2a"
+          "image": "/images/posing-guide/073-die-fliege-des-partners-richten-33dc03eae332"
         },
         {
           "id": "074",
@@ -1176,7 +1176,7 @@
           "alt": "Posing-Illustration: Seitlicher Handkontakt am Hals.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/074-haende-sanft-an-hals-und-schulter-78c221cfaeb5"
+          "image": "/images/posing-guide/074-haende-sanft-an-hals-und-schulter-6273637c9a8b"
         },
         {
           "id": "075",
@@ -1191,7 +1191,7 @@
           "alt": "Posing-Illustration: Versetzt nebeneinander lachen.",
           "width": 960,
           "height": 960,
-          "image": "/images/posing-guide/075-versetzt-nebeneinander-lachen-497e5e22e40d"
+          "image": "/images/posing-guide/075-versetzt-nebeneinander-lachen-f6c0bd13d4b0"
         },
         {
           "id": "076",
