@@ -298,7 +298,7 @@ test("mobile finder stays fixed while its result changes", async ({ page }) => {
     activeResultCard.getByRole("heading", { name: "Standesamt Hamburg-Nord" }),
   ).toBeVisible();
   await expect(activeResultCard).toContainText(
-    "Kümmellstraße 5–7 / Robert-Koch-Straße 17",
+    "Kümmellstraße 5-7 / Robert-Koch-Straße 17",
   );
   await expect(activeResultCard.locator('a[href^="tel:"]')).toHaveText([
     "040 42804-5308",
@@ -319,7 +319,7 @@ test("mobile finder stays fixed while its result changes", async ({ page }) => {
   await expect(
     activeResultCard.getByRole("heading", { name: "Standesamt Hamburg-Mitte" }),
   ).toBeVisible();
-  await expect(activeResultCard).toContainText("Caffamacherreihe 1–3");
+  await expect(activeResultCard).toContainText("Caffamacherreihe 1-3");
   await expect(status).toContainText("Standesamt Hamburg-Mitte");
   await expect(status).toContainText("Neuwerk");
   await settleLayout(page);

@@ -704,6 +704,28 @@ const schemaGraph = {
           syncRequestType();
         }
 
+        // The Finder passes a fixed occasion, never personal details in the URL.
+        // A prepared booking inquiry keeps precedence over this optional hint.
+        if (!bookingInquiryDraft && new URLSearchParams(window.location.search).get("anlass") === "standesamt-altona") {
+          if (requestType instanceof HTMLSelectElement) {
+            requestType.value = "standesamtliche-trauung";
+          }
+          if (locationField instanceof HTMLInputElement && !locationField.value.trim()) {
+            locationField.value = "Standesamt Hamburg-Altona";
+          }
+          if (messageField instanceof HTMLTextAreaElement && !messageField.value.trim()) {
+            messageField.value = "Ich interessiere mich für die fotografische Begleitung unserer standesamtlichen Trauung in Hamburg-Altona.";
+          }
+          if (sourcePath instanceof HTMLInputElement) {
+            sourcePath.value = "/standesamt-hamburg/";
+          }
+          if (draftNote instanceof HTMLElement) {
+            draftNote.textContent = "Auftragsart und Ort sind für eure Anfrage zur Trauung in Altona vorgemerkt. Ergänzt euren Wunschtermin und passt die Angaben bei Bedarf an.";
+            draftNote.hidden = false;
+          }
+          syncRequestType();
+        }
+
         if (yearField instanceof HTMLInputElement) {
           const expectedYear = new Intl.DateTimeFormat("de-DE", {
             timeZone: "Europe/Berlin",
