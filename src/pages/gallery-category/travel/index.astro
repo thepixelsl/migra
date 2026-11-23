@@ -7,7 +7,6 @@ import MobileNavigation from "../../../components/MobileNavigation.astro";
 import DesktopNavigation from "../../../components/DesktopNavigation.astro";
 import Breadcrumbs from "../../../components/Breadcrumbs.astro";
 import { travelGalleries } from "../../../data/travelGalleries";
-import lovebirdsElbstrand from "../../../assets/portfolio/lovebirds-elbstrand.jpg";
 
 const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "https://artbild-fotografie.de";
 const pagePath = "/gallery-category/travel/";
@@ -22,7 +21,7 @@ const imageModules = import.meta.glob("../../../assets/travel-galleries/**/*.{jp
   import: "default",
 }) as Record<string, ImageMetadata>;
 
-const travelCards = travelGalleries.map((gallery, index) => {
+const cards = travelGalleries.map((gallery, index) => {
   const imageEntry = Object.entries(imageModules).find(([path]) =>
     path.endsWith(`/travel-galleries/${gallery.slug}/${gallery.images[0]}`),
   );
@@ -41,21 +40,6 @@ const travelCards = travelGalleries.map((gallery, index) => {
     eager: index === 0,
   };
 });
-
-const cards = [
-  ...travelCards.slice(0, 1),
-  {
-    title: "Lovebirds am Elbstrand",
-    description:
-      "Paarshooting und Verlobungsshooting am Hamburger Elbstrand mit natürlicher Nähe und ruhigem Licht.",
-    href: "/gallery/lovebirds-am-elbstrand/",
-    location: "Hamburg, Elbstrand",
-    image: lovebirdsElbstrand,
-    alt: "Verlobungsshooting am Elbstrand in Hamburg - Vorschau",
-    eager: false,
-  },
-  ...travelCards.slice(1),
-];
 
 const primaryImage = cards[0].image;
 const primaryImageUrl = new URL(primaryImage.src, siteUrl).href;
@@ -329,6 +313,7 @@ const schemaGraph = {
 
   .travel-card a {
     display: grid;
+    align-content: start;
     min-height: 100%;
     color: inherit;
     text-decoration: none;
@@ -336,22 +321,17 @@ const schemaGraph = {
 
   .travel-card figure {
     margin: 0;
-    aspect-ratio: 4 / 5;
-    background: #eee9e3;
-    overflow: hidden;
   }
 
   .travel-card :global(img) {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: block;
-    object-fit: cover;
-    transition: transform 420ms ease, filter 420ms ease;
+    transition: filter 420ms ease;
   }
 
   .travel-card a:hover :global(img),
   .travel-card a:focus-visible :global(img) {
-    transform: scale(1.02);
     filter: brightness(.92);
   }
 
@@ -410,10 +390,6 @@ const schemaGraph = {
     .travel-card-grid {
       grid-template-columns: 1fr;
       gap: 42px;
-    }
-
-    .travel-card figure {
-      aspect-ratio: 5 / 4;
     }
   }
 </style>
