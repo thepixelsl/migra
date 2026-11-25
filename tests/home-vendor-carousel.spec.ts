@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4322";
+const getontPath = "/getont-hochzeits-dj-hamburg/";
 
 const vendorLinks = [
+  getontPath,
   "https://katharinaseidldesign.de/",
   "https://foboxy.de/",
   "/gallery/ella-deck-couture/",
@@ -26,8 +28,8 @@ test("vendor carousel preserves the former four-card spacing on desktop", async 
 
   await carousel.scrollIntoViewIfNeeded();
   await expect(carousel).toHaveClass(/is-enhanced/);
-  await expect(cards).toHaveCount(5);
-  await expect(current).toHaveText("1–4");
+  await expect(cards).toHaveCount(vendorLinks.length);
+  await expect(current).toHaveText("1-4");
   await expect(previous).toBeDisabled();
   await expect(next).toBeEnabled();
 
@@ -76,15 +78,19 @@ test("vendor carousel preserves the former four-card spacing on desktop", async 
     "false",
     "false",
     "true",
+    "true",
   ]);
   expect(initialLayout.hiddenLinkTabIndex).toBe("-1");
 
   await next.click();
-  await expect(current).toHaveText("2–5");
+  await expect(current).toHaveText("2-5");
+  await expect(next).toBeEnabled();
+  await next.click();
+  await expect(current).toHaveText("3-6");
   await expect(next).toBeDisabled();
   await expect(previous).toBeEnabled();
   await expect(cards.nth(0)).toHaveAttribute("aria-hidden", "true");
-  await expect(cards.nth(4)).toHaveAttribute("aria-hidden", "false");
+  await expect(cards.last()).toHaveAttribute("aria-hidden", "false");
   await expect(
     carousel.locator('a[href="/gallery/yildiz-duman-werner/"]'),
   ).not.toHaveAttribute("tabindex", "-1");
@@ -152,7 +158,7 @@ test("vendor carousel keeps two cards and the original gap on tablet", async ({
   const current = carousel.locator("[data-vendor-carousel-current]");
 
   await carousel.scrollIntoViewIfNeeded();
-  await expect(current).toHaveText("1–2");
+  await expect(current).toHaveText("1-2");
 
   const layout = await carousel.evaluate((element) => {
     const carouselViewport = element.querySelector<HTMLElement>(
@@ -186,15 +192,17 @@ test("vendor carousel keeps two cards and the original gap on tablet", async ({
     "true",
     "true",
     "true",
+    "true",
   ]);
 
   await next.click();
-  await expect(current).toHaveText("2–3");
+  await expect(current).toHaveText("2-3");
   await next.click();
   await next.click();
-  await expect(current).toHaveText("4–5");
+  await next.click();
+  await expect(current).toHaveText("5-6");
   await expect(next).toBeDisabled();
-  await expect(cards.nth(4)).toHaveAttribute("aria-hidden", "false");
+  await expect(cards.last()).toHaveAttribute("aria-hidden", "false");
 });
 
 test("vendor carousel is swipeable and keyboard-operable on iPhone", async ({
@@ -212,6 +220,13 @@ test("vendor carousel is swipeable and keyboard-operable on iPhone", async ({
 
   await carousel.scrollIntoViewIfNeeded();
   await expect(current).toHaveText("1");
+  const getontCard = carousel.locator("[data-vendor-carousel-card]").first();
+  await expect(getontCard).toHaveAttribute("aria-hidden", "false");
+  await expect(getontCard.getByRole("heading", { name: "getont" })).toBeVisible();
+  const portrait = getontCard.getByRole("img", { name: "Mats Voerg mit Kopfhörern um den Hals" });
+  await expect(portrait).toBeVisible();
+  await expect.poll(() => portrait.evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  await expect(getontCard.getByRole("link", { name: "getont kennenlernen" })).toHaveAttribute("href", getontPath);
 
   const mobileLayout = await carousel.evaluate((element) => {
     const carouselViewport = element.querySelector<HTMLElement>(
@@ -261,4 +276,8 @@ test("vendor carousel is swipeable and keyboard-operable on iPhone", async ({
   await expect(
     carousel.locator('a[href="/gallery/yildiz-duman-werner/"]'),
   ).toHaveAttribute("tabindex", "-1");
+  await previous.click();
+  await previous.click();
+  await getontCard.getByRole("link", { name: "getont kennenlernen" }).click();
+  await expect(page).toHaveURL(new RegExp(`${getontPath}$`));
 });

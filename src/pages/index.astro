@@ -27,6 +27,7 @@ import portfolioMallorcaImage from "../assets/paarshooting-mallorca/ART0783-1.jp
 import portfolioGettingReadyImage from "../assets/braut-fotoshooting-hamburg/ART_8427-Bearbeitet-2-1024x683.jpg";
 import portfolioBarberhouseImage from "../assets/portfolio/barberhouse-hamburg.jpg";
 import portfolioFloralImage from "../assets/portfolio/floral-art.jpg";
+import getontPortrait from "../assets/getont-hochzeits-dj-hamburg/mats-voerg.jpg";
 import heroOpeningImage from "../assets/home/hero/cropped-hochzeitsreportage_hamburg_festpreis-scaled-1.jpg";
 import heroParis17Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-17.jpg";
 import heroParis25Image from "../assets/traumhochzeit-paris/paris_braut_fotoshooting-25.jpg";
@@ -314,6 +315,13 @@ const portfolioShowcase: PortfolioShowcaseItem[] = [
 ];
 
 const vendors = [
+  {
+    name: "getont",
+    text: "Die Hamburger DJ-Agentur von Mats Voerg vermittelt DJs für Eure Hochzeitsfeier, auf Wunsch mit Live-Saxophon.",
+    href: "/getont-hochzeits-dj-hamburg/",
+    cta: "getont kennenlernen",
+    portrait: { image: getontPortrait, alt: "Mats Voerg mit Kopfhörern um den Hals" },
+  },
   {
     name: "Katharina Seidl",
     text: "Florale Arbeiten von Katharina Seidl sind in der Floral-Art-Bildstrecke zu sehen.",
@@ -1055,10 +1063,6 @@ const homepageSchema = {
         <p class="eyebrow">Empfehlungen für Eure Hochzeit</p>
         <h2 id="vendor-title">Hochzeitsdienstleister in Hamburg und Umgebung</h2>
         <p>Hier findet Ihr Anlaufstellen für Eure Hochzeitsplanung und Einblicke in meine Zusammenarbeit mit lokalen Dienstleistern.</p>
-        <p>
-          Sucht Ihr noch Musik für Eure Feier? Hier lernt Ihr die Hamburger{" "}
-          <a href="/getont-hochzeits-dj-hamburg/" data-track-event="cta_click" data-cta-id="home_vendor_getont" data-cta-type="vendor_link" data-section-id="home_vendor_recommendations" data-content-topic="hochzeitsdienstleister_hamburg" data-user-intent="dienstleister_ansehen" data-journey-stage="planung">DJ-Agentur getont</a> kennen.
-        </p>
       </div>
       <div class="vendor-carousel" data-vendor-carousel data-home-reveal data-home-reveal-delay="90">
         <p class="visually-hidden" id="vendor-carousel-instructions">
@@ -1122,7 +1126,18 @@ const homepageSchema = {
                 <span class="visually-hidden" id={`vendor-card-position-${index + 1}`}>
                   {index + 1} von {vendors.length}:
                 </span>
-                <h3 id={`vendor-card-title-${index + 1}`}>{vendor.name}</h3>
+                <div class:list={[vendor.portrait && "vendor-card__identity"]}>
+                  {vendor.portrait && <Image
+                    src={vendor.portrait.image}
+                    alt={vendor.portrait.alt}
+                    widths={[72, 104, 144, 208, 312]}
+                    sizes="(max-width: 620px) 104px, 72px"
+                    loading="lazy"
+                    decoding="async"
+                    format="webp"
+                  />}
+                  <h3 id={`vendor-card-title-${index + 1}`}>{vendor.name}</h3>
+                </div>
                 <p>{vendor.text}</p>
                 <a
                   href={vendor.href}
@@ -1342,3 +1357,30 @@ const homepageSchema = {
   <script is:inline set:html={heroSliderScript}></script>
 </body>
 </html>
+
+<style>
+  .vendor-card__identity {
+    --portrait-width: 72px;
+    display: grid;
+    grid-template-columns: var(--portrait-width) minmax(0, 1fr);
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .vendor-card__identity img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .vendor-card__identity h3 {
+    margin: 0;
+  }
+
+  @media (max-width: 620px) {
+    .vendor-card__identity {
+      --portrait-width: 104px;
+    }
+  }
+</style>
