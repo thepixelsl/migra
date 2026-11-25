@@ -17,6 +17,13 @@ test("secure contact page contains local assets, contact guidance and SEO metada
   await expect(page.getByRole("heading", { level: 1, name: "Kontakt und PGP-Schlüssel" }))
     .toBeVisible();
   await expect(
+    page.getByRole("heading", {
+      level: 2,
+      name: "Sicherer Kontakt für Mitarbeitende von Behörden und Organisationen mit Sicherheitsaufgaben, Angehörige des Diplomatischen Dienstes und Paare, die mit diskretem Personenschutz heiraten",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
     page.getByRole("link", { name: "York-Augustin-2C86E0AD-Oeffentlich.asc" }),
   ).toHaveAttribute("href", "/downloads/York-Augustin-2C86E0AD-Oeffentlich.asc");
   await expect(
@@ -35,11 +42,8 @@ test("secure contact page contains local assets, contact guidance and SEO metada
   expect(mainText).toContain("Der Download allein verschlüsselt noch keine Nachricht");
   expect(mainText).not.toContain("S/MIME");
   expect(mainText).not.toContain("DigiCert");
-  expect(mainText).not.toContain("Diplomatischen Dienstes");
-  expect(mainText).not.toContain("Behörden und Organisationen mit Sicherheitsaufgaben");
   expect(mainText).toContain("„Termin noch frei?“");
   expect(mainText).toContain("Dafür genügt das gewünschte Datum");
-  expect(mainText).not.toContain("Personenschutz");
   expect(mainText).not.toContain("Signal nach Vereinbarung");
   expect(mainText).not.toContain("EU-Chatkontrolle");
   expect(mainText).not.toContain("Häufige Fragen zum sicheren Hochzeitskontakt");
