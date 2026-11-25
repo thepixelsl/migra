@@ -92,8 +92,9 @@ export const pageSeo = {
   },
   "/getont-hochzeits-dj-hamburg/": {
     keyword: "getont Hochzeits-DJ Hamburg",
-    image: "public/images/portrait-riverside.jpg",
-    alt: "York Augustin, Fotograf von Artbild-Fotografie und Autor der Empfehlung",
+    image: "src/assets/getont-hochzeits-dj-hamburg/mats-voerg.jpg",
+    alt: "Mats Voerg, DJ und Gründer von getont, mit Kopfhörern um den Hals",
+    fit: "contain",
   },
   "/hochzeitsfotos-drucken-color-proofing/": {
     keyword: "Hochzeitsfotos drucken Color-Proofing",

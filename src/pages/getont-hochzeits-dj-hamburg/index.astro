@@ -1,8 +1,10 @@
 ---
+import { Image } from "astro:assets";
 import Breadcrumbs from "../../components/Breadcrumbs.astro";
 import DesktopNavigation from "../../components/DesktopNavigation.astro";
 import FaviconHead from "../../components/FaviconHead.astro";
 import MobileNavigation from "../../components/MobileNavigation.astro";
+import ownerPortrait from "../../assets/getont-hochzeits-dj-hamburg/mats-voerg.jpg";
 import "../../styles/global.css";
 
 const path = "/getont-hochzeits-dj-hamburg/";
@@ -60,7 +62,17 @@ const breadcrumbs = [
           >Zur Website von getont <span aria-hidden="true">↗</span></a>
         </header>
 
-        {/* Hier kann später ein Foto mit Bildbeschreibung eingefügt werden. */}
+        <figure class="recommendation__portrait">
+          <Image
+            src={ownerPortrait}
+            alt="Mats Voerg mit Kopfhörern um den Hals"
+            widths={[360, 480, 640, 853]}
+            sizes="(max-width: 504px) calc(100vw - 44px), 460px"
+            format="webp"
+            quality={88}
+          />
+          <figcaption>Mats Voerg, DJ und Gründer von getont</figcaption>
+        </figure>
 
         <div class="recommendation__body">
           <p>
@@ -100,6 +112,23 @@ const breadcrumbs = [
     margin: 0;
     font-size: clamp(22px, 2.7vw, 28px);
     line-height: 1.4;
+  }
+
+  .recommendation__portrait {
+    width: min(460px, 100%);
+    margin: 36px 0 0;
+  }
+
+  .recommendation__portrait img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .recommendation__portrait figcaption {
+    margin-top: 10px;
+    color: #57534e;
+    font: 600 13px/1.5 "Raleway", Arial, sans-serif;
   }
 
   .recommendation__body {
