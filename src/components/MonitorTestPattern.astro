@@ -1,16 +1,22 @@
 ---
+import { detailTones, fineTones, scaleTones } from "../data/monitor-test-tones.mjs";
+
 const { prefix = "screen" } = Astro.props;
-const steps = [0, 26, 51, 77, 102, 128, 153, 179, 204, 230, 255];
+const fill = (value: number) => `background-color:rgb(${value},${value},${value})`;
 const groups = [
-  { key: "dark", title: "Dunkle Details", note: "Wie die Falten in einem dunklen Anzug.", values: [8, 16, 24, 32, 48] },
-  { key: "light", title: "Helle Details", note: "Wie die Struktur in einem weißen Brautkleid.", values: [247, 239, 231, 223, 207] },
+  { key: "dark", title: "Dunkle Details", note: "Wie die Falten in einem dunklen Anzug.", values: detailTones.dark },
+  { key: "light", title: "Helle Details", note: "Wie die Struktur in einem weißen Brautkleid.", values: detailTones.light },
+];
+const fineGroups = [
+  { key: "dark", title: "Nahe Schwarz", values: fineTones.dark },
+  { key: "light", title: "Nahe Weiß", values: fineTones.light },
 ];
 ---
 <div class="monitor-pattern">
   <section class="monitor-scale" aria-labelledby={`${prefix}-scale-title`}>
     <h3 id={`${prefix}-scale-title`}>Von Schwarz bis Weiß</h3>
     <div class="monitor-scale__steps" role="img" aria-label="Elf Graustufen von reinem Schwarz bis reinem Weiß. Benachbarte Felder sollten unterscheidbar sein.">
-      {steps.map((value) => <span data-tone={value} style={`background-color:rgb(${value},${value},${value})`}></span>)}
+      {scaleTones.map((value) => <span data-tone={value} style={fill(value)}></span>)}
     </div>
     <div class="monitor-scale__labels" aria-hidden="true"><span>Schwarz</span><span>Weiß</span></div>
     <p>Ihr solltet die elf Stufen voneinander unterscheiden können.</p>
@@ -23,7 +29,7 @@ const groups = [
         <div class:list={["monitor-detail__field", `monitor-detail__field--${group.key}`]} role="img" aria-label={`Fünf nummerierte ${group.key === "dark" ? "dunkelgraue Felder auf schwarzem" : "hellgraue Felder auf weißem"} Hintergrund. Feld 1 hat den kleinsten Unterschied zum Hintergrund.`}>
           {group.values.map((value, index) => (
             <div class="monitor-detail__item">
-              <span class="monitor-detail__patch" data-tone={value} style={`background-color:rgb(${value},${value},${value})`}></span>
+              <span class="monitor-detail__patch" data-tone={value} style={fill(value)}></span>
               <span class="monitor-detail__number" aria-hidden="true">{index + 1}</span>
             </div>
           ))}
@@ -32,6 +38,23 @@ const groups = [
     ))}
   </div>
   <p class="monitor-pattern__hint"><strong>Schaut auf die Flächen, nicht nur auf die Zahlen.</strong> Die Felder 2 bis 5 sollten sich vom Hintergrund abheben. Feld 1 ist absichtlich sehr zart und kann je nach Bildschirm und Raumlicht schwer erkennbar sein.</p>
+  <details class="monitor-fine">
+    <summary>Feine Details</summary>
+    <p>Welche benachbarten Flächen könnt ihr noch unterscheiden? Die feinsten Stufen können je nach Bildschirm und Raumlicht verschmelzen.</p>
+    <div class="monitor-fine__grid">
+      {fineGroups.map((group) => (
+        <section aria-labelledby={`${prefix}-fine-${group.key}-title`}>
+          <h3 id={`${prefix}-fine-${group.key}-title`}>{group.title}</h3>
+          <div class="monitor-fine__strip" role="img" aria-label={`Benachbarte sRGB-Graustufen mit den Werten ${group.values.join(", ")}.`}>
+            {group.values.map((value) => <span data-tone={value} style={fill(value)}></span>)}
+          </div>
+          <div class="monitor-fine__labels" aria-hidden="true">
+            {group.values.map((value) => <span>{value}</span>)}
+          </div>
+        </section>
+      ))}
+    </div>
+  </details>
 </div>
 
 <style>
@@ -47,5 +70,13 @@ const groups = [
   .monitor-detail__patch{display:block;width:100%;aspect-ratio:1;min-height:28px;border:0;box-shadow:none;opacity:1;filter:none}
   .monitor-detail__number{display:block;text-align:center;font-size:12px;line-height:1;margin-top:14px}
   .monitor-pattern__hint{max-width:790px;margin-top:28px;font-size:14px}
-  @media(max-width:650px){.monitor-detail-grid{grid-template-columns:minmax(0,1fr);gap:28px}.monitor-detail__field{gap:14px;padding:22px}.monitor-pattern__hint{font-size:13px}}
+  .monitor-fine{margin-top:26px;padding-top:20px;border-top:1px solid #818181}
+  .monitor-fine summary{width:fit-content;min-height:32px;font-weight:700;cursor:pointer}
+  .monitor-fine summary:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+  .monitor-fine__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 32px;margin-top:20px}
+  .monitor-fine__grid h3{margin:0 0 8px;font:700 14px/1.55 "Raleway",Arial,sans-serif;letter-spacing:normal}
+  .monitor-fine__strip,.monitor-fine__labels{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr)}
+  .monitor-fine__strip{height:clamp(60px,8vw,100px)}
+  .monitor-fine__labels{margin-top:7px;font-size:12px;font-variant-numeric:tabular-nums;text-align:center}
+  @media(max-width:650px){.monitor-detail-grid,.monitor-fine__grid{grid-template-columns:minmax(0,1fr)}.monitor-detail-grid{gap:28px}.monitor-detail__field{gap:14px;padding:22px}.monitor-pattern__hint{font-size:13px}}
 </style>
