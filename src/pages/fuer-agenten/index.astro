@@ -344,7 +344,7 @@ const schemaGraph = {
             <div><dt>Datumsformat</dt><dd><code>YYYY-MM-DD</code></dd></div>
             <div><dt>Aufeinanderfolgende Daten erforderlich?</dt><dd>Nein</dd></div>
             <div><dt>Prüfzeitraum</dt><dd>Heute bis höchstens 24 Monate im Voraus</dd></div>
-            <div><dt>Abfragelimit</dt><dd>Höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden</dd></div>
+            <div><dt>Abfragelimit</dt><dd>Höchstens zwei zur Kalenderprüfung angenommene Abfragen innerhalb von 24 Stunden. Bei HTTP 429 gibt Retry-After die Wartezeit an.</dd></div>
             <div><dt>Verbindliches Ergebnis?</dt><dd>Nein</dd></div>
             <div><dt>Reservierung?</dt><dd>Nein</dd></div>
           </dl>

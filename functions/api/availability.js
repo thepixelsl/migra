@@ -1,5 +1,9 @@
 import { writeAgentAvailabilityAudit } from "../_agent-audit.js";
 import {
+  AVAILABILITY_BUSY_MESSAGE,
+  reserveAvailabilityAdmission,
+} from "../_availability-admission.js";
+import {
   json,
   methodNotAllowed,
   parseDateValue,
@@ -23,74 +27,47 @@ export function onRequestOptions() {
   });
 }
 
-async function checkAvailability({ request, env }) {
-  const url = new URL(request.url);
-  const dates = url.searchParams.getAll("date");
-  if (dates.length !== 1) {
-    return json(
-      {
-        error: "invalid_date",
-        message: "Bitte genau ein Datum im Format YYYY-MM-DD senden.",
-      },
-      400,
-    );
-  }
+function unavailable() {
+  return json({
+    status: "temporarily_disabled",
+    message: "Die automatische Terminprüfung ist gerade nicht verfügbar. Bitte sendet mir euren Wunschtermin über das Kontaktformular - ich prüfe ihn persönlich.",
+    action_label: "Termin persönlich anfragen",
+    action_href: "/kontakt/#kontaktformular",
+  }, 503);
+}
 
-  const date = parseDateValue(dates[0]);
-  if (!date) {
+async function checkAvailability({ request, env, date }) {
+  let rateLimit;
+  try {
+    rateLimit = await reservePublicAvailabilityDate(request, env, date);
+  } catch {
+    return unavailable();
+  }
+  if (!rateLimit.allowed) {
     return json(
       {
-        error: "invalid_date",
-        message: "Bitte ein gültiges Datum im Format YYYY-MM-DD senden.",
+        status: "rate_limited",
+        message: RATE_LIMIT_MESSAGE,
+        action_label: "Zum Kontaktformular",
+        action_href: "/kontakt/#kontaktformular",
       },
-      400,
+      429,
+      {
+        "Retry-After": String(publicAvailabilityRetryAfterSeconds(rateLimit)),
+        "X-RateLimit-Limit": String(rateLimit.limit),
+        "X-RateLimit-Remaining": "0",
+        ...(rateLimit.resetAt ? { "X-RateLimit-Reset": rateLimit.resetAt } : {}),
+      },
     );
   }
 
   try {
     const blockedDates = await readBlockedDates(env);
-    let rateLimit;
-    try {
-      rateLimit = await reservePublicAvailabilityDate(request, env, date);
-    } catch {
-      return json({
-        status: "temporarily_disabled",
-        message: "Die automatische Terminprüfung ist gerade nicht verfügbar. Bitte sendet mir euren Wunschtermin über das Kontaktformular - ich prüfe ihn persönlich.",
-        action_label: "Termin persönlich anfragen",
-        action_href: "/kontakt/#kontaktformular",
-      }, 503);
-    }
-
-    if (!rateLimit.allowed) {
-      return json(
-        {
-          status: "rate_limited",
-          message: RATE_LIMIT_MESSAGE,
-          action_label: "Zum Kontaktformular",
-          action_href: "/kontakt/#kontaktformular",
-        },
-        429,
-        {
-          "Retry-After": String(publicAvailabilityRetryAfterSeconds(rateLimit)),
-          "X-RateLimit-Limit": String(rateLimit.limit),
-          "X-RateLimit-Remaining": "0",
-          ...(rateLimit.resetAt ? { "X-RateLimit-Reset": rateLimit.resetAt } : {}),
-        },
-      );
-    }
-
-    return json(
-      {
-        date,
-        available: !blockedDates.includes(date),
-      },
-      200,
-      {
-        "X-RateLimit-Limit": String(rateLimit.limit),
-        "X-RateLimit-Remaining": String(rateLimit.remaining),
-        ...(rateLimit.resetAt ? { "X-RateLimit-Reset": rateLimit.resetAt } : {}),
-      },
-    );
+    return json({ date, available: !blockedDates.includes(date) }, 200, {
+      "X-RateLimit-Limit": String(rateLimit.limit),
+      "X-RateLimit-Remaining": String(rateLimit.remaining),
+      ...(rateLimit.resetAt ? { "X-RateLimit-Reset": rateLimit.resetAt } : {}),
+    });
   } catch {
     return json({
       error: "temporarily_unavailable",
@@ -99,25 +76,45 @@ async function checkAvailability({ request, env }) {
   }
 }
 
+export async function checkSingleDateAvailability({ request, env, date }) {
+  const admission = await reserveAvailabilityAdmission(request, env).catch(() => null);
+  if (!admission) return { response: unavailable(), observe: false };
+  if (!admission.allowed) {
+    const response = json({
+      status: "rate_limited",
+      message: AVAILABILITY_BUSY_MESSAGE,
+      action_label: "Zum Kontaktformular",
+      action_href: "/kontakt/#kontaktformular",
+    }, 429, { "Retry-After": String(admission.retryAfter) });
+    return { response, observe: false };
+  }
+  return { response: await checkAvailability({ request, env, date }), observe: true };
+}
+
 export function onRequest() {
   return methodNotAllowed("GET, OPTIONS");
 }
 
-// One observation per actual check. The HTML adapter supplies its own receipt and
-// original request so its source remains visible, without duplicate audit rows.
-export async function onRequestGet({ request, env, audit = true }) {
-  const response = await checkAvailability({ request, env });
-  if (!audit) return response;
+export async function onRequestGet({ request, env }) {
   const dates = new URL(request.url).searchParams.getAll("date");
-  if (dates.length !== 1 || !parseDateValue(dates[0])) return response;
+  if (dates.length !== 1) {
+    return json({ error: "invalid_date", message: "Bitte genau ein Datum im Format YYYY-MM-DD senden." }, 400);
+  }
+  const date = parseDateValue(dates[0]);
+  if (!date) {
+    return json({ error: "invalid_date", message: "Bitte ein gültiges Datum im Format YYYY-MM-DD senden." }, 400);
+  }
+
+  const { response, observe } = await checkSingleDateAvailability({ request, env, date });
+  if (!observe) return response;
   const payload = await response.clone().json();
   const id = crypto.randomUUID();
   try {
-    await writeAgentAvailabilityAudit({ id, env, request, dates,
-      results: response.ok && typeof payload.available === "boolean" ? [{ date: dates[0], available: payload.available }] : [],
+    const stored = await writeAgentAvailabilityAudit({ id, env, request, dates: [date],
+      results: response.ok && typeof payload.available === "boolean" ? [{ date, available: payload.available }] : [],
       responseStatus: response.status,
     });
-    response.headers.set("X-Artbild-Check-Id", id);
+    if (stored) response.headers.set("X-Artbild-Check-Id", id);
   } catch {
     // Observability must not prevent a visitor from checking a date.
     console.error("Availability observation could not be stored");

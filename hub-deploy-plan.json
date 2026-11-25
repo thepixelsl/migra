@@ -1,7 +1,8 @@
 {
-  "title": "Bunny: Fehler in der Anfrageverarbeitung beheben",
+  "title": "Bunny: Weiterleitungen, Terminprüfung und Kontaktformular absichern",
   "paths": [
     "/kontakt/",
-    "/fuer-agenten/"
+    "/fuer-agenten/",
+    "/datenschutz/"
   ]
 }

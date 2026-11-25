@@ -64,6 +64,10 @@ fails closed. The public website remains available.
 
 `ADMIN_PUBLIC_ORIGIN` must match the actual HTTPS browser origin. For a dev
 deployment use its HTTPS URL; the production value is `https://artbild-fotografie.de`.
+The runtime accepts the Artbild domains and their configured Bunny aliases for
+public traffic. Additional origins must match `ADMIN_PUBLIC_ORIGIN` or a host in
+`BUNNY_INDEXABLE_HOSTS`. Unrecognized authorities receive HTTP 400. The
+`/healthz` and `/readyz` endpoints also accept internal probe hosts.
 The `__Host-` cookie is `HttpOnly`, `Secure`, `SameSite=Strict`; only hashes of
 opaque session tokens are stored. Sessions expire after 30 minutes of
 inactivity and at most four hours. `/admin-security/` provides server-side
@@ -114,14 +118,25 @@ Check the generated `https://...bunny.run` URL, then verify:
 
 ## Appointment observations
 
-The protected `/admin-termine/` dashboard aggregates the last 30 days, independently
-of its ten-row detail limit. A request is one validated server-side check; successful
-multi-date requests can return several date results. Repeated checks count again.
-429 attempts count as rejected requests and never as delivered availability results.
-The FAB sends `X-Artbild-Availability-Source: fab`; agent forms send `agent_form`.
-These are declared entry points, not proof of human input. The HTML adapter logs the
-original request once and disables auditing only in its internal single-date call.
-HEAD and invalid date input do not create observations.
+The protected `/admin-termine/` dashboard aggregates stored observations from the
+last 30 days, independently of its ten-row detail limit. An observation is one
+admitted server-side check. Repeated checks each count when recorded. Successful
+multi-date checks can return several date results. Stored 429 responses count as
+rejections. The FAB sends `X-Artbild-Availability-Source: fab` and agent forms send
+`agent_form`. These are declared entry points, not proof of human input.
+The HTML adapter records the original request once. HEAD and invalid dates do not
+create observations.
+
+Before calendar work, the public date check, agent API and HTML day pages share
+admission limits of 12 checks per pseudonymous client and runtime per UTC minute
+and 120 checks across all pods per UTC minute. The single database counter
+persists across pod restarts and contains only the time bucket and count.
+An early 429 with `Retry-After` does not read the calendar, reserve a
+24-hour slot, or write an observation. After admission, the existing
+24-hour limits apply before the calendar lookup. A reserved slot can
+count if the calendar then fails. The audit records up to 240 details per UTC
+hour. At the detail limit checks still return the calendar result, and no receipt
+ID is issued. Older stored observations remain subject to normal retention.
 
 The runtime adds `metadata_json` to the existing audit table at startup, preserving
 old rows as `legacy` with no inferred entry point. Rollback to the prior image remains
@@ -151,4 +166,4 @@ Die Adminansicht zeigt Diagramme, eine paginierte Rangliste der Wunschtermine un
 - `unknown`: keine hinreichenden Merkmale. Nie stillschweigend als Mensch oder nachgewiesener Bot gezählt.
 - Meta-Vorschau, KI-Crawler, Nutzerabruf, Suche und Werbe-Crawler getrennt; alte `Meta-Crawler`-Einträge bleiben ausdrücklich unaufgelöst.
 
-Diagramme zählen Server-Anfragen. Die Termintabelle zählt jeden angefragten Tag pro Anfrage; Mehrfachanfragen können mehrere Tabellenzeilen beitragen. Wiederholungen und abgewiesene gültige Datumsabfragen zählen erneut, weder eindeutige Personen noch Buchungswahrscheinlichkeiten. Keine Prognose aus Crawler-Mengen.
+Diagramme zählen protokollierte Server-Anfragen. Die Termintabelle zählt jeden angefragten Tag pro protokollierter Anfrage. Mehrfachanfragen können mehrere Tabellenzeilen beitragen. Protokollierte Wiederholungen und abgewiesene Datumsabfragen zählen erneut. Die Zahlen erlauben keine Rückschlüsse auf eindeutige Personen oder Buchungswahrscheinlichkeiten.

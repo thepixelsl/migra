@@ -4,15 +4,26 @@ import { mkdtemp, rm } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { createClient } from "@libsql/client";
-import { identifyAgentClient, readAgentAvailabilityAudit, writeAgentAvailabilityAudit } from "../functions/_agent-audit.js";
+import { AGENT_AUDIT_MAX_ROWS_PER_HOUR, identifyAgentClient, readAgentAvailabilityAudit, writeAgentAvailabilityAudit } from "../functions/_agent-audit.js";
+import {
+  AVAILABILITY_ADMISSION_CLIENT_LIMIT,
+  AVAILABILITY_ADMISSION_TOTAL_LIMIT,
+  AVAILABILITY_ADMISSION_WINDOW_MS,
+  reserveAvailabilityAdmission,
+} from "../functions/_availability-admission.js";
+import { agentAvailabilityDateBounds } from "../functions/_agent-availability-contract.js";
+import { onRequestGet as checkDate } from "../functions/api/availability.js";
+import { onRequestGet as checkAlias, onRequestPost as checkBatch } from "../functions/api/agent-availability.js";
 import { availabilitySignals } from "../src/lib/availabilitySignals.mjs";
 import { botDistribution, rankedDates } from "../src/lib/availabilityAdmin.mjs";
 import { onRequestGet as adminStatistics } from "../functions/api/admin/agent-requests.js";
 import { availabilityChannel } from "../functions/_agent-identity.js";
 import { readAvailabilityStatistics } from "../functions/_availability-statistics.js";
-import { createBunnyDatabase } from "../server/bunny-database.mjs";
+import { createBunnyDatabase, createD1Adapter } from "../server/bunny-database.mjs";
 import { createBunnyRuntime } from "../server/bunny-server.mjs";
 import { compileNetworkList, createAgentNetworkRegistry } from "../server/agent-networks.mjs";
+import { handleAgentAvailabilityTrial } from "../server/agent-availability-trial.mjs";
+import { AgentRateLimiter } from "../src/AgentRateLimiter.js";
 
 const request = (ua = "", headers = {}) => new Request("https://artbild-fotografie.de/api/availability?date=2027-06-01", { headers: { "User-Agent": ua, ...headers } });
 
@@ -68,6 +79,163 @@ async function databaseFixture(t) {
   t.after(() => rm(directory, { recursive: true, force: true }));
   return { directory, config };
 }
+
+const admissionSalt = "example-availability-salt-at-least-32-characters";
+const checkHeaders = { "X-Real-IP": "192.0.2.19" };
+
+function availabilityFixture(database) {
+  const origin = "https://artbild-fotografie.de";
+  const day = new Date(agentAvailabilityDateBounds().minDate + "T00:00:00Z");
+  const dates = Array.from({ length: 4 }, () => {
+    const value = day.toISOString().slice(0, 10);
+    day.setUTCDate(day.getUTCDate() + 1);
+    return value;
+  });
+  let calendarReads = 0;
+  const env = {
+    AGENT_RATE_LIMIT_SALT: admissionSalt,
+    PUBLIC_AVAILABILITY_RATE_LIMIT_DB: database.d1,
+    AGENT_RATE_LIMIT_DB: database.d1,
+    AGENT_AUDIT_DB: database.d1,
+    AVAILABILITY_KV: { async get() { calendarReads++; return "[]"; } },
+  };
+  const get = (path) => new Request(origin + path, { headers: checkHeaders });
+  return {
+    env, dates, calendarReads: () => calendarReads,
+    getDate: (date = dates[0]) => checkDate({ request: get("/api/availability?date=" + date), env }),
+    getAlias: (date = dates[0]) => checkAlias({ request: get("/api/agent-availability?date=" + date), env }),
+    getTrial: (date = dates[0]) => handleAgentAvailabilityTrial({ request: get("/agenten-test/" + date + "/"), env }),
+    postBatch: () => checkBatch({ env, request: new Request(origin + "/api/agent-availability", {
+      method: "POST",
+      headers: { ...checkHeaders, "Content-Type": "application/json" },
+      body: JSON.stringify({ dates: dates.slice(0, 2) }),
+    }) }),
+  };
+}
+
+test("short-lived admission caps each source and is shared by independent Bunny adapters", async (t) => {
+  const { config } = await databaseFixture(t);
+  const database = await createBunnyDatabase(config);
+  t.after(() => database.close());
+  const otherRuntime = createClient({ url: config.BUNNY_DATABASE_URL });
+  t.after(() => otherRuntime.close());
+  const first = { PUBLIC_AVAILABILITY_RATE_LIMIT_SALT: admissionSalt, PUBLIC_AVAILABILITY_RATE_LIMIT_DB: database.d1 };
+  const second = { ...first, PUBLIC_AVAILABILITY_RATE_LIMIT_DB: createD1Adapter(otherRuntime) };
+  const now = AVAILABILITY_ADMISSION_WINDOW_MS + 5000;
+  const client = request("", checkHeaders);
+  for (let index = 0; index < AVAILABILITY_ADMISSION_CLIENT_LIMIT; index++) {
+    assert.equal((await reserveAvailabilityAdmission(client, first, now)).allowed, true);
+  }
+  assert.deepEqual(await reserveAvailabilityAdmission(client, first, now), { allowed: false, retryAfter: 55 });
+  await database.client.execute({
+    sql: "UPDATE availability_admission SET admitted = ? WHERE id = 1",
+    args: [AVAILABILITY_ADMISSION_TOTAL_LIMIT - 1],
+  });
+  const otherClient = request("", { "X-Real-IP": "192.0.2.20" });
+  const decisions = await Promise.all([
+    reserveAvailabilityAdmission(otherClient, first, now),
+    reserveAvailabilityAdmission(otherClient, second, now),
+  ]);
+  assert.equal(decisions.filter(({ allowed }) => allowed).length, 1);
+  assert.equal((await reserveAvailabilityAdmission(client, second, now)).allowed, false);
+  assert.equal((await reserveAvailabilityAdmission(client, second, now + AVAILABILITY_ADMISSION_WINDOW_MS)).allowed, true);
+});
+
+test("Cloudflare fallback uses a shared transactional admission counter", async () => {
+  const now = AVAILABILITY_ADMISSION_WINDOW_MS + 5000;
+  const values = new Map([["availabilityAdmission", { start: AVAILABILITY_ADMISSION_WINDOW_MS, count: AVAILABILITY_ADMISSION_TOTAL_LIMIT - 1 }]]);
+  const limiter = new AgentRateLimiter({ storage: {
+    transaction: async (callback) => callback({
+      get: async (key) => values.get(key),
+      put: async (key, value) => values.set(key, value),
+    }),
+  } });
+  limiter.currentTime = () => now;
+  const env = {
+    AGENT_RATE_LIMIT_SALT: admissionSalt,
+    AGENT_RATE_LIMITER: {
+      jurisdiction(jurisdiction) {
+        assert.equal(jurisdiction, "eu");
+        return { getByName(name) {
+          assert.equal(name, "availability-admission");
+          return { fetch: (url, options) => limiter.fetch(new Request(url, options)) };
+        } };
+      },
+    },
+  };
+  const client = request("", { "CF-Connecting-IP": "192.0.2.21" });
+  assert.equal((await reserveAvailabilityAdmission(client, env, now)).allowed, true);
+  assert.equal((await reserveAvailabilityAdmission(client, env, now)).allowed, false);
+});
+
+test("short-window admission denial skips calendar, daily quotas and audit on every check route", async (t) => {
+  t.mock.timers.enable({ apis: ["Date"] });
+  const { config } = await databaseFixture(t);
+  const database = await createBunnyDatabase(config);
+  t.after(() => database.close());
+  const fixture = availabilityFixture(database);
+  const start = Math.floor(Date.now() / AVAILABILITY_ADMISSION_WINDOW_MS) * AVAILABILITY_ADMISSION_WINDOW_MS;
+  await database.client.execute({
+    sql: "INSERT INTO availability_admission VALUES (1, ?, ?)",
+    args: [start, AVAILABILITY_ADMISSION_TOTAL_LIMIT],
+  });
+  for (const check of [fixture.getDate, fixture.getAlias, fixture.getTrial, fixture.postBatch]) {
+    const response = await check();
+    assert.equal(response.status, 429);
+    assert.ok(Number(response.headers.get("retry-after")) > 0);
+    assert.equal(response.headers.has("x-artbild-check-id"), false);
+  }
+  assert.equal(fixture.calendarReads(), 0);
+  assert.deepEqual(await readAgentAvailabilityAudit(fixture.env), []);
+  for (const table of ["public_availability_requests", "agent_availability_requests"]) {
+    const { rows } = await database.client.execute(`SELECT COUNT(*) AS count FROM ${table}`);
+    assert.equal(rows[0].count, 0);
+  }
+});
+
+test("daily quota denials skip calendar lookup and retain admitted audit evidence", async (t) => {
+  const { config } = await databaseFixture(t);
+  const database = await createBunnyDatabase(config);
+  t.after(() => database.close());
+  const fixture = availabilityFixture(database);
+  for (const date of fixture.dates.slice(0, 3)) {
+    assert.equal((await fixture.getDate(date)).status, 200);
+  }
+  assert.equal((await fixture.getTrial(fixture.dates[3])).status, 429);
+  assert.equal((await fixture.postBatch()).status, 200);
+  assert.equal((await fixture.postBatch()).status, 200);
+  assert.equal((await fixture.postBatch()).status, 429);
+  assert.equal(fixture.calendarReads(), 5);
+  const audit = await readAgentAvailabilityAudit(fixture.env);
+  assert.equal(audit.length, 7);
+  assert.equal(audit.filter(({ responseStatus }) => responseStatus === 429).length, 2);
+});
+
+test("audit storage never exceeds the hourly cap and omits receipts beyond it", async (t) => {
+  t.mock.timers.enable({ apis: ["Date"] });
+  const { config } = await databaseFixture(t);
+  const database = await createBunnyDatabase(config);
+  t.after(() => database.close());
+  const fixture = availabilityFixture(database);
+  await database.client.execute({
+    sql: `WITH RECURSIVE seeded(n) AS (
+      SELECT 1 UNION ALL SELECT n + 1 FROM seeded WHERE n < ?
+    )
+    INSERT INTO agent_availability_audit
+      (id, requested_at, client_label, identity_source, dates_json, results_json, response_status)
+    SELECT 'existing-' || n, ?, 'Test', 'unknown', '[]', '[]', 200 FROM seeded`,
+    args: [AGENT_AUDIT_MAX_ROWS_PER_HOUR - 1, Date.now()],
+  });
+  const observations = await Promise.all([fixture.getDate(), fixture.getAlias()]);
+  assert.ok(observations.every(({ status }) => status === 200));
+  assert.equal(observations.filter((response) => response.headers.has("x-artbild-check-id")).length, 1);
+  const trial = await fixture.getTrial();
+  assert.equal(trial.status, 200);
+  assert.equal(trial.headers.has("x-artbild-check-id"), false);
+  assert.match(await trial.text(), /keine Prüfnummer ausgestellt/);
+  const { rows } = await database.client.execute("SELECT COUNT(*) AS count FROM agent_availability_audit");
+  assert.equal(rows[0].count, AGENT_AUDIT_MAX_ROWS_PER_HOUR);
+});
 
 test("migrates an existing audit table additively and preserves historical observations", async (t) => {
   const { config } = await databaseFixture(t);

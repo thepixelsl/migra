@@ -16,9 +16,9 @@ export const agentBookingPage = {
 
 export const agentDateNavigation = {
   label: "Monat und Wunschdatum wählen",
-  instructions: "Öffne die Monatsübersicht, wähle den Monat und anschließend ausschließlich den gewünschten Tag. Die Tagesseite liefert eine aktuelle Kalenderauskunft mit Prüfzeitpunkt und Prüfnummer.",
+  instructions: "Öffne die Monatsübersicht, wähle den Monat und anschließend ausschließlich den gewünschten Tag. Die Tagesseite liefert eine aktuelle Kalenderauskunft mit Prüfzeitpunkt und bei protokollierten Prüfungen eine Prüfnummer.",
   overviewNotice: "Die Übersichten werden aus dem gültigen Prüfzeitraum erzeugt und enthalten keine Verfügbarkeiten. Erst das Öffnen einer Tagesseite prüft den Kalender; dabei gilt dasselbe Limit wie bei der Einzelabfrage: höchstens drei unterschiedliche Tage innerhalb von 24 Stunden.",
-  resultNotice: "Nenne Wunschdatum, Ergebnis, Prüfzeitpunkt, Prüfnummer und die Tagesseite als Quelle. Wenn der Abruf scheitert oder keine aktuelle Auskunft vorliegt, kennzeichne den Termin als nicht geprüft. Ein Fehler bedeutet nicht, dass der Termin belegt ist.",
+  resultNotice: "Nenne Wunschdatum, Ergebnis, Prüfzeitpunkt und die Tagesseite als Quelle. Ergänze die Prüfnummer, wenn eine vorliegt. Wenn der Abruf scheitert oder keine aktuelle Auskunft vorliegt, kennzeichne den Termin als nicht geprüft. Ein Fehler bedeutet nicht, dass der Termin belegt ist.",
 };
 
 export const singleDateAvailabilityRules = {
@@ -82,12 +82,12 @@ export const agentQuickFacts = [
   ["Anbieter", "Artbild-Fotografie, York Augustin, Hamburg"],
   ["Zweck", "Preise prüfen, Wunschdaten unverbindlich abfragen und anschließend einen konkreten Fotoauftrag anfragen"],
   ["Leistung", "Hochzeitsfotografie und fotografische Begleitung"],
-  ["Terminprüfung über Seitenlinks", "Monat und Wunschdatum wählen; Tagesauskunft mit Prüfzeitpunkt und Prüfnummer"],
+  ["Terminprüfung über Seitenlinks", "Monat und Wunschdatum wählen. Tagesauskunft mit Prüfzeitpunkt und gegebenenfalls Prüfnummer"],
   ["GET-Schnellzugriff", "Genau ein Datum ohne Request-Body"],
   ["GET-Abfragelimit", "Höchstens drei unterschiedliche Kalendertage innerhalb von 24 Stunden"],
   ["Wunschdaten je POST-Abfrage", "Ein bis drei unterschiedliche Daten"],
   ["Müssen die Daten aufeinanderfolgen?", "Nein"],
-  ["POST-Abfragelimit", "Höchstens zwei erfolgreiche Terminabfragen innerhalb von 24 Stunden"],
+  ["POST-Abfragelimit", "Höchstens zwei zur Kalenderprüfung angenommene Abfragen innerhalb von 24 Stunden"],
   ["Technisches Anfrageprotokoll", "Bot-Kategorie, Nachweisstatus, konkrete Wunschdaten, Ergebnis und Zeitpunkt; automatische Löschung nach 30 Tagen"],
   ["Prüfzeitraum", "Heute bis höchstens 24 Monate im Voraus"],
   ["Hochzeiten", "Anfrage mindestens sechs Monate vorher empfohlen; dies ist keine technische Mindestfrist"],

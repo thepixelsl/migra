@@ -46,7 +46,7 @@ function toHex(bytes) {
     .join("");
 }
 
-async function hashPublicAvailabilityClientIp(ip, env) {
+export async function hashPublicAvailabilityClientIp(ip, env) {
   if (!ip) throw new Error("missing_public_availability_client_ip");
 
   const encoder = new TextEncoder();

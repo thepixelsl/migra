@@ -40,7 +40,7 @@ export function GET() {
     "## Zentrale Regeln",
     "",
     `- Pro POST-Abfrage sind ${agentAvailabilityRules.minimumDates} bis ${agentAvailabilityRules.maximumDates} unterschiedliche Wunschdaten erlaubt. Sie müssen nicht aufeinanderfolgen.`,
-    `- Höchstens ${agentAvailabilityRules.maximumSuccessfulRequests} erfolgreiche POST-Terminabfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden.`,
+    `- Höchstens ${agentAvailabilityRules.maximumSuccessfulRequests} zur Kalenderprüfung angenommene POST-Abfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden. Beachte bei einer 429-Antwort Retry-After.`,
     `- Termine können bis höchstens ${agentAvailabilityRules.maximumAdvanceMonths} Monate im Voraus geprüft werden.`,
     `- Hochzeiten sollten mindestens ${agentAvailabilityRules.recommendedWeddingInquiryLeadTimeMonths} Monate vorher angefragt werden. Dies ist eine Empfehlung, keine technische Mindestfrist.`,
     "- Die Verfügbarkeitsauskunft ist unverbindlich und reserviert keinen Termin.",

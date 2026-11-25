@@ -6,9 +6,14 @@ import {
   PUBLIC_AVAILABILITY_MAX_UNIQUE_DATES,
   PUBLIC_AVAILABILITY_RATE_LIMIT_WINDOW_MS,
 } from "../functions/_public-availability-rate-limit.js";
+import {
+  AVAILABILITY_ADMISSION_TOTAL_LIMIT,
+  AVAILABILITY_ADMISSION_WINDOW_MS,
+} from "../functions/_availability-admission.js";
 
 const ACTIVE_TIMESTAMPS_KEY = "activeTimestamps";
 const PUBLIC_AVAILABILITY_DATES_KEY = "publicAvailabilityDates";
+const AVAILABILITY_ADMISSION_KEY = "availabilityAdmission";
 
 function activeTimestamps(value, now) {
   const cutoff = now - AGENT_RATE_LIMIT_WINDOW_MS;
@@ -110,6 +115,18 @@ export class AgentRateLimiter {
     });
   }
 
+  async reserveAvailabilityAdmission(now) {
+    const start = Math.floor(now / AVAILABILITY_ADMISSION_WINDOW_MS) * AVAILABILITY_ADMISSION_WINDOW_MS;
+    return this.ctx.storage.transaction(async (transaction) => {
+      const previous = await transaction.get(AVAILABILITY_ADMISSION_KEY);
+      if (previous?.start > start) return false;
+      const count = previous?.start === start ? previous.count : 0;
+      if (count >= AVAILABILITY_ADMISSION_TOTAL_LIMIT) return false;
+      await transaction.put(AVAILABILITY_ADMISSION_KEY, { start, count: count + 1 });
+      return true;
+    });
+  }
+
   async scheduleCleanup(timestamps) {
     if (!timestamps.length) {
       await this.ctx.storage.deleteAlarm();
@@ -138,6 +155,9 @@ export class AgentRateLimiter {
     }
 
     const now = this.currentTime();
+    if (url.pathname === "/reserve-availability") {
+      return Response.json({ allowed: await this.reserveAvailabilityAdmission(now) });
+    }
     if (url.pathname === "/reserve-public-date") {
       let payload;
       try {

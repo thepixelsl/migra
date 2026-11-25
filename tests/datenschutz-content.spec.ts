@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { productionTrackingDefaults } from "../src/config/trackingDefaults.mjs";
+import { trackingRelease } from "../src/config/trackingRelease.mjs";
 
 const baseUrl = process.env.ASTRO_URL ?? "http://127.0.0.1:4321";
 
@@ -29,7 +30,6 @@ const removedInfrastructureTerms = [
   "SHA-256-Hash",
   "geheimen Salt",
   "sessionStorage",
-  "URL-Parameter",
   "öffentlich erreichbaren Endpunkt",
   "Data Layer",
   "Containerkonfiguration",
@@ -59,7 +59,7 @@ test("privacy page names providers, locations and processed data without infrast
   const main = page.locator("main");
   const mainText = await main.innerText();
 
-  expect(mainText).toContain("Stand: 30. September 2026");
+  expect(mainText).toContain("Stand: 25. November 2026");
   expect(mainText).toContain("eine Buchungsanfrage über die Agentenseite vorbereiten");
   expect(mainText).toContain("spätestens nach 30 Minuten verworfen");
   expect(mainText).toContain("Eine Übermittlung an uns erfolgt erst");
@@ -87,10 +87,12 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("WhatsApp Ireland Limited");
   expect(mainText).toContain("vorgegebene Nachrichtentext an WhatsApp übermittelt");
   expect(mainText).toContain("höchstens drei unterschiedliche Kalendertage innerhalb von 24 Stunden");
-  expect(mainText).toContain("Wiederholte Prüfungen desselben Datums erhöhen die Anzahl nicht");
+  expect(mainText).toContain("Wiederholte Prüfungen desselben Datums erhöhen die Anzahl unterschiedlicher Tage nicht");
   expect(mainText).toContain("Begrenzte Terminabfrage für Buchungsagenten");
   expect(mainText).toContain("ein bis drei konkrete Wunschdaten");
-  expect(mainText).toContain("höchstens zwei erfolgreiche Abfragen innerhalb von 24 Stunden");
+  expect(mainText).toContain("höchstens zwei zur Kalenderabfrage angenommene Anfragen innerhalb von 24 Stunden");
+  expect(mainText).toContain("Ein gemeinsames kurzfristiges Abfragelimit schützt die Terminprüfung zusätzlich");
+  expect(mainText).toContain("protokollieren wir pro Stunde eine begrenzte Anzahl an Terminprüfungen");
   expect(mainText).toContain("pseudonyme Kurzzeitkennung");
   expect(mainText).toContain("abgeleitete Bot- oder Dienst-Kategorie");
   expect(mainText).toContain("konkret angefragten Wunschdaten");
@@ -106,7 +108,7 @@ test("privacy page names providers, locations and processed data without infrast
   expect(mainText).toContain("im nächsten regelmäßigen Bereinigungslauf gelöscht");
 
   const config = JSON.parse(await page.locator("#artbild-tracking-config").textContent() || "{}");
-  expect(Object.values(config.providerRelease)).not.toContain(true);
+  expect(config.providerRelease).toEqual(trackingRelease);
   expect(mainText).toContain("Cookie enthält die gewählten Services");
   expect(mainText).toContain("180 Tagen");
   expect(mainText).toContain("keine neuen Messdaten erhoben oder gesendet");

@@ -17,6 +17,10 @@ import {
 } from "../_public-availability-rate-limit.js";
 import { writeAgentAvailabilityAudit } from "../_agent-audit.js";
 import {
+  AVAILABILITY_BUSY_MESSAGE,
+  reserveAvailabilityAdmission,
+} from "../_availability-admission.js";
+import {
   json,
   methodNotAllowed,
   parseDateValue,
@@ -227,6 +231,7 @@ export function onRequestGet({ request, env }) {
       rateLimit: {
         maximumSuccessfulRequests: AGENT_RATE_LIMIT_MAX_REQUESTS,
         windowHours: AGENT_RATE_LIMIT_WINDOW_MS / (60 * 60 * 1000),
+        notes: "Jede zur Kalenderprüfung angenommene POST-Abfrage zählt, auch bei einem späteren Kalenderfehler. Beachte bei HTTP 429 den Header Retry-After.",
       },
       clientIdentification: {
         authentication: "Optionaler Bearer-Schlüssel für eine bestätigte Client-Kennzeichnung.",
@@ -251,23 +256,29 @@ export async function onRequestPost({ request, env }) {
   }
   if (parsed.response) return parsed.response;
 
-  let blockedDates;
-  try {
-    blockedDates = await readBlockedDates(env);
-  } catch {
-    const response = json(
-      {
-        error: "temporarily_unavailable",
-        message: "Die Terminprüfung ist gerade nicht verfügbar.",
-      },
-      503,
-    );
+  const admission = await reserveAvailabilityAdmission(request, env).catch(() => null);
+  if (!admission) {
+    return json({
+      error: "temporarily_unavailable",
+      message: "Die Agenten-Terminprüfung ist gerade nicht verfügbar.",
+    }, 503);
+  }
+  if (!admission.allowed) {
+    return json({
+      error: "rate_limited",
+      message: AVAILABILITY_BUSY_MESSAGE,
+      results: [],
+      advice: { message: ADVICE_MESSAGE },
+    }, 429, { "Retry-After": String(admission.retryAfter) });
+  }
+
+  async function observe(response, results = []) {
     try {
       await writeAgentAvailabilityAudit({
         env,
         request,
         dates: parsed.dates,
-        results: [],
+        results,
         responseStatus: response.status,
       });
     } catch {}
@@ -278,30 +289,17 @@ export async function onRequestPost({ request, env }) {
   try {
     rateLimit = await reserveAgentAvailabilityRequest(request, env);
   } catch {
-    const response = json(
-      {
-        error: "temporarily_unavailable",
-        message: "Die Agenten-Terminprüfung ist gerade nicht verfügbar.",
-      },
-      503,
-    );
-    try {
-      await writeAgentAvailabilityAudit({
-        env,
-        request,
-        dates: parsed.dates,
-        results: [],
-        responseStatus: response.status,
-      });
-    } catch {}
-    return response;
+    return observe(json({
+      error: "temporarily_unavailable",
+      message: "Die Agenten-Terminprüfung ist gerade nicht verfügbar.",
+    }, 503));
   }
 
   if (!rateLimit.allowed) {
-    const response = json(
+    return observe(json(
       {
         error: "rate_limited",
-        message: "Innerhalb von 24 Stunden sind höchstens zwei erfolgreiche Terminabfragen möglich.",
+        message: "Innerhalb von 24 Stunden sind höchstens zwei POST-Terminprüfungen möglich.",
         results: [],
         advice: { message: ADVICE_MESSAGE },
         rateLimit: {
@@ -312,24 +310,24 @@ export async function onRequestPost({ request, env }) {
       },
       429,
       { "Retry-After": String(retryAfterSeconds(rateLimit)) },
-    );
-    try {
-      await writeAgentAvailabilityAudit({
-        env,
-        request,
-        dates: parsed.dates,
-        results: [],
-        responseStatus: response.status,
-      });
-    } catch {}
-    return response;
+    ));
+  }
+
+  let blockedDates;
+  try {
+    blockedDates = await readBlockedDates(env);
+  } catch {
+    return observe(json({
+      error: "temporarily_unavailable",
+      message: "Die Terminprüfung ist gerade nicht verfügbar.",
+    }, 503));
   }
 
   const results = parsed.dates.map((date) => ({
     date,
     available: !blockedDates.includes(date),
   }));
-  const response = json({
+  return observe(json({
     results,
     advice: { message: ADVICE_MESSAGE },
     rateLimit: {
@@ -337,17 +335,7 @@ export async function onRequestPost({ request, env }) {
       remaining: rateLimit.remaining,
       resetAt: rateLimit.resetAt,
     },
-  });
-  try {
-    await writeAgentAvailabilityAudit({
-      env,
-      request,
-      dates: parsed.dates,
-      results,
-      responseStatus: response.status,
-    });
-  } catch {}
-  return response;
+  }), results);
 }
 
 export function onRequest() {

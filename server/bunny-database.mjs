@@ -55,6 +55,11 @@ const SCHEMA_STATEMENTS = [
     ON public_availability_requests (ip_hash, requested_at)`,
   `CREATE INDEX IF NOT EXISTS idx_public_availability_requests_time
     ON public_availability_requests (requested_at)`,
+  `CREATE TABLE IF NOT EXISTS availability_admission (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    window_start INTEGER NOT NULL,
+    admitted INTEGER NOT NULL
+  )`,
   `CREATE TABLE IF NOT EXISTS admin_auth_attempts (
     id TEXT PRIMARY KEY,
     bucket_hash TEXT NOT NULL,

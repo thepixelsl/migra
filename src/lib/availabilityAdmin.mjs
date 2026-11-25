@@ -134,7 +134,7 @@ export function renderAvailabilityStatistics(root, statistics, { blockedDates = 
   }
   draw();
   const details=el('details',undefined,'usage-method');details.append(el('summary','Was wird gezählt?'));
-  details.append(el('p',`Zeitraum: ${statistics.windowDays} Tage · ${number(totals.requests)} Server-Abfragen, davon ${number(totals.limited)} am Limit abgewiesen und ${number(totals.errors)} mit Fehler. Eine Anfrage kann bis zu drei Wunschtermine enthalten. Diagramme zählen Anfragen; die Tabelle zählt jeden darin angefragten Termin einmal.`));
+  details.append(el('p',`Zeitraum: ${statistics.windowDays} Tage · ${number(totals.requests)} protokollierte Abfragen, davon ${number(totals.limited)} am Tageslimit abgewiesen und ${number(totals.errors)} mit Fehler. Die Statistik umfasst nur die begrenzt gespeicherten Abfragen. Diagramme zählen Anfragen. Die Tabelle zählt jeden darin angefragten Termin einmal.`));
   details.append(el('p','Netzbeleg bedeutet: Bot-Kennung und ein passender, veröffentlichter Bot-IP-Bereich stimmen überein. Grundlage ist die vom Hosting-Proxy gemeldete IP; dies bestätigt keine Person und keinen konkreten Auftrag. Nur gemeldete Kennungen, API-Clients und unklare Abrufe bleiben separat.'));
   details.append(el('p',`Manuell ist eine Schätzung aus Formularbedienung, Browserkennung und fehlenden Automatisierungssignalen. Ältere Einträge ohne diese Merkmale werden nicht rückwirkend als Menschen eingestuft.${totals.differentiatedSince?` Neue Erfassung seit ${time(totals.differentiatedSince)}.`:''} Die Speicherung umfasst höchstens 30 Tage, keine Besucherprofile.`));root.append(details);
 }

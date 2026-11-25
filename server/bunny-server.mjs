@@ -18,6 +18,14 @@ const MODULE_DIRECTORY = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_ASSET_DIRECTORY = path.resolve(MODULE_DIRECTORY, "../dist");
 const MAX_REQUEST_BODY_BYTES = 8 * 1024 * 1024;
 const MAX_ADMIN_LOGIN_BODY_BYTES = 8 * 1024;
+const HEALTH_PATHS = new Set(["/healthz", "/readyz"]);
+const BUNNY_PUBLIC_AUTHORITIES = [
+  "artbild-fotografie.de", "www.artbild-fotografie.de",
+  "artbild-fotografie.ch", "www.artbild-fotografie.ch",
+  "mc-k5f22r07h0.bunny.run", "mc-k5f22r07h0.b-cdn.net",
+];
+const LOOPBACK_HOSTNAMES = new Set(["localhost", "127.0.0.1", "[::1]"]);
+const LOOPBACK_PEERS = new Set(["127.0.0.1", "::1", "::ffff:127.0.0.1"]);
 const HSTS_HEADER_VALUE = "max-age=31536000; includeSubDomains; preload";
 const CONTENT_SECURITY_POLICY_DIRECTIVES = [
   "default-src 'self'",
@@ -68,7 +76,7 @@ async function readRequestBody(request, maxBytes = MAX_REQUEST_BODY_BYTES) {
   return chunks.length ? Buffer.concat(chunks) : undefined;
 }
 
-function readRequestMetadata(request, env) {
+function readRequestMetadata(request, env, approvedAuthorities) {
   const headers = new Headers();
   for (const [name, value] of Object.entries(request.headers)) {
     if (Array.isArray(value)) {
@@ -99,6 +107,14 @@ function readRequestMetadata(request, env) {
 
   const url = URL.parse(target, `${publicProtocol}://${publicHost}`);
   if (!url) return null;
+  const localDevelopment = env.NODE_ENV !== "production"
+    && LOOPBACK_PEERS.has(request.socket.remoteAddress)
+    && LOOPBACK_HOSTNAMES.has(url.hostname);
+  // Health probes answer directly and can use the container's internal host.
+  // All other handlers, including redirects, see an approved authority only.
+  if (!approvedAuthorities.has(url.host) && !localDevelopment && !HEALTH_PATHS.has(url.pathname)) {
+    return null;
+  }
   headers.set("x-forwarded-proto", url.protocol.slice(0, -1));
   return { headers, url };
 }
@@ -212,6 +228,8 @@ export async function createBunnyRuntime(options = {}) {
   const env = { ...process.env, ...(options.env || {}) };
   const database = options.database || await createBunnyDatabase(env);
   const adminAuthentication = createAdminAuthentication({ env, database, now: options.now || Date.now });
+  const approvedAuthorities = new Set([...BUNNY_PUBLIC_AUTHORITIES, ...indexableHosts(env)]);
+  if (adminAuthentication.origin) approvedAuthorities.add(new URL(adminAuthentication.origin).host);
   const contactMailer = options.contactMailer ?? createContactMailer(env);
   const assetDirectory = options.assetDirectory || env.ASSET_DIRECTORY || DEFAULT_ASSET_DIRECTORY;
 
@@ -234,7 +252,7 @@ export async function createBunnyRuntime(options = {}) {
   const server = createServer(async (nodeRequest, nodeResponse) => {
     let requestUrl;
     try {
-      const metadata = readRequestMetadata(nodeRequest, env);
+      const metadata = readRequestMetadata(nodeRequest, env, approvedAuthorities);
       if (!metadata) {
         const response = new Response(nodeRequest.method === "HEAD" ? null : "Bad Request", {
           status: 400,
@@ -247,7 +265,7 @@ export async function createBunnyRuntime(options = {}) {
       requestUrl = url;
       let request = await toWebRequest(nodeRequest, metadata);
 
-      if (url.pathname === "/healthz" || url.pathname === "/readyz") {
+      if (HEALTH_PATHS.has(url.pathname)) {
         let databaseReady = true;
         if (url.pathname === "/readyz") {
           try {

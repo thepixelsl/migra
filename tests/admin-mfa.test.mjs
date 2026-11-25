@@ -247,9 +247,13 @@ test("all admin API paths reject Basic and spoofed identities; writes require ca
     const r = await fetch(f.url + endpoint, { headers: { Authorization: `Basic ${Buffer.from("york:dev-secret").toString("base64")}`, "Cf-Access-Authenticated-User-Email": "info@example.com" } });
     assert.equal(r.status, 401);
   }
-  for (const extra of [{}, { Origin: "https://evil.example", "X-Forwarded-Host": "evil.example" }]) {
+  for (const [extra, expectedStatus] of [
+    [{}, 403],
+    [{ Origin: "https://unconfigured.invalid" }, 403],
+    [{ Origin: TEST_ADMIN_ORIGIN, "X-Forwarded-Host": "unconfigured.invalid" }, 400],
+  ]) {
     const r = await fetch(f.url + "/api/admin/availability", { method: "POST", headers: { Cookie: enrolled.cookie, "Content-Type": "application/json", ...extra }, body: JSON.stringify({ date: "2030-09-01", action: "block" }) });
-    assert.equal(r.status, 403);
+    assert.equal(r.status, expectedStatus);
   }
   const head = await fetch(f.url + "/admin-login/", { method: "HEAD" });
   assert.equal(head.status, 200);

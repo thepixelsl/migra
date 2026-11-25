@@ -3,7 +3,9 @@ import { availabilityChannel, reportedAgentIdentity, auditAudience } from "./_ag
 
 export const AGENT_AUDIT_RETENTION_DAYS = 30;
 export const AGENT_AUDIT_RETENTION_MS = AGENT_AUDIT_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+export const AGENT_AUDIT_MAX_ROWS_PER_HOUR = 240;
 
+const AUDIT_HOUR_MS = 60 * 60 * 1000;
 const CLIENT_LABEL_MAX_LENGTH = 64;
 const CLIENT_TOKEN_MAX_LENGTH = 512;
 const AUDIT_RESULTS_LIMIT = 100;
@@ -115,8 +117,11 @@ export async function writeAgentAvailabilityAudit({
   const identity = await identifyAgentClient(request, env);
   const validDates = Array.isArray(dates) ? dates.filter(parseDateValue) : [];
   const validResults = normalizeResults(results);
+  const hourStart = Math.floor(requestedAt / AUDIT_HOUR_MS) * AUDIT_HOUR_MS;
 
-  return database
+  // Keep the original receipts and history. Test the indexed hourly cap in the
+  // same statement as the insert so parallel runtimes cannot exceed it.
+  const inserted = await database
     .prepare(`
       INSERT INTO agent_availability_audit (
         id,
@@ -128,7 +133,14 @@ export async function writeAgentAvailabilityAudit({
         results_json,
         response_status,
         metadata_json
-      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      )
+      SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?
+      WHERE NOT EXISTS (
+        SELECT 1
+        FROM agent_availability_audit
+        WHERE requested_at >= ? AND requested_at < ?
+        LIMIT 1 OFFSET ?
+      )
     `)
     .bind(
       id,
@@ -140,8 +152,12 @@ export async function writeAgentAvailabilityAudit({
       JSON.stringify(validResults),
       Number(responseStatus),
       JSON.stringify({ version: 2, channel: availabilityChannel(request), audience: identity.audience, device: identity.device, botName: identity.botName, activity: identity.activity, evidence: identity.evidence }),
+      hourStart,
+      hourStart + AUDIT_HOUR_MS,
+      AGENT_AUDIT_MAX_ROWS_PER_HOUR - 1,
     )
     .run();
+  return Number(inserted?.meta?.changes ?? inserted?.rowsAffected ?? 0) === 1;
 }
 
 function parseStoredJson(value, fallback) {

@@ -167,6 +167,33 @@ test("rejects a request target without an application path", async () => {
   assert.equal(response.headers["cache-control"], "no-store");
 });
 
+test("keeps redirects on configured Bunny authorities", async () => {
+  for (const route of ["/about", "/freie-termine/", "/agenten-test"]) {
+    for (const host of ["unconfigured.invalid", "artbild-fotografie.de:8443"]) {
+      const rejected = await fetch(`${baseUrl}${route}`, {
+        headers: { "X-Forwarded-Host": host },
+        redirect: "manual",
+      });
+      assert.equal(rejected.status, 400, route);
+      assert.equal(rejected.headers.has("location"), false, route);
+      await rejected.body?.cancel();
+    }
+  }
+
+  const canonical = await fetch(`${baseUrl}/about?ref=test`, {
+    headers: { "X-Forwarded-Host": "www.artbild-fotografie.ch", "X-Forwarded-Proto": "http" },
+    redirect: "manual",
+  });
+  assert.equal(canonical.status, 301);
+  assert.equal(canonical.headers.get("location"), "https://artbild-fotografie.ch/about/?ref=test");
+
+  const probe = await fetch(`${baseUrl}/readyz`, {
+    headers: { "X-Forwarded-Host": "bunny-probe.internal" },
+  });
+  assert.equal(probe.status, 200);
+  assert.equal((await probe.json()).ok, true);
+});
+
 test("indexes only the configured production host", async () => {
   const production = await fetch(`${baseUrl}/`, {
     headers: { "X-Forwarded-Host": "artbild-fotografie.de" },

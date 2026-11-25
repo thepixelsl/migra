@@ -390,22 +390,7 @@ function validate(payload) {
   return {};
 }
 
-async function recentSubmissionCount(db, ipHash, email) {
-  if (!db) return 0;
-  const row = await db
-    .prepare(`
-      SELECT COUNT(*) AS count
-      FROM contact_requests
-      WHERE created_at >= datetime('now', '-15 minutes')
-        AND (ip_hash = ? OR email = ?)
-    `)
-    .bind(ipHash, email)
-    .first();
-  return Number(row?.count || 0);
-}
-
 async function pruneStoredContactData(db) {
-  if (!db) return;
   await db
     .prepare(`
       UPDATE contact_requests
@@ -436,9 +421,10 @@ async function updateStoredRequestStatus(db, requestId, status) {
     .run();
 }
 
-async function storeInD1(db, payload, ipHash) {
+async function reserveContactRequest(db, payload, ipHash) {
   const id = crypto.randomUUID();
-  await db
+  // The quota and the row that consumes it are evaluated in one write.
+  const result = await db
     .prepare(`
       INSERT INTO contact_requests (
         id,
@@ -459,7 +445,13 @@ async function storeInD1(db, payload, ipHash) {
         user_agent,
         ip_hash
       )
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+      WHERE (
+        SELECT COUNT(*)
+        FROM contact_requests
+        WHERE created_at >= datetime('now', '-15 minutes')
+          AND (ip_hash = ? OR email = ?)
+      ) < 3
     `)
     .bind(
       id,
@@ -479,9 +471,14 @@ async function storeInD1(db, payload, ipHash) {
       payload.sourcePath,
       null,
       ipHash,
+      ipHash,
+      payload.email,
     )
     .run();
-  return id;
+  const inserted = result?.meta?.changes ?? result?.rowsAffected;
+  if (inserted === 0) return null;
+  if (inserted === 1) return id;
+  throw new Error("contact_reservation_result_unknown");
 }
 
 export function onRequestOptions() {
@@ -549,18 +546,6 @@ export async function onRequestPost({ request, env }) {
   const ipHash = await sha256(`${hashSalt}:${ip}`);
   const smtp = configuredSmtp(env);
 
-  if (db) {
-    await pruneStoredContactData(db);
-    const recentCount = await recentSubmissionCount(db, ipHash, payload.email);
-    if (recentCount >= 3) {
-      return reply(request, {
-        ok: false,
-        title: "Zu viele Anfragen",
-        message: "Bitte wartet einen Moment, bevor ihr erneut sendet.",
-      }, 429);
-    }
-  }
-
   if (!smtp || typeof env.CONTACT_MAILER !== "function") {
     return reply(request, {
       ok: false,
@@ -571,7 +556,16 @@ export async function onRequestPost({ request, env }) {
 
   let requestId = "";
   try {
-    requestId = db ? await storeInD1(db, payload, ipHash) : crypto.randomUUID();
+    if (!db) throw new Error("missing_contact_database");
+    await pruneStoredContactData(db);
+    requestId = await reserveContactRequest(db, payload, ipHash);
+    if (!requestId) {
+      return reply(request, {
+        ok: false,
+        title: "Zu viele Anfragen",
+        message: "Bitte wartet einen Moment, bevor ihr erneut sendet.",
+      }, 429);
+    }
     await sendSmtpMail(env, payload, request, requestId);
     try {
       await updateStoredRequestStatus(db, requestId, "delivered");

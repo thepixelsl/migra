@@ -1,7 +1,7 @@
 import { agentAvailabilityDateBounds } from "../functions/_agent-availability-contract.js";
 import { writeAgentAvailabilityAudit } from "../functions/_agent-audit.js";
 import { parseDateValue } from "../functions/_availability.js";
-import { onRequestGet as checkSingleDate } from "../functions/api/availability.js";
+import { checkSingleDateAvailability } from "../functions/api/availability.js";
 
 const ROOT = "/agenten-test/";
 const HEADERS = {
@@ -76,11 +76,11 @@ export async function handleAgentAvailabilityTrial({ request, env }) {
     )}</li>`).join("\n");
     return html(request, "Wunschtermin für einen Fotoauftrag prüfen", `
 <p>Hier können Buchungsassistenten einen konkreten Wunschtermin bei Artbild-Fotografie selbst prüfen.</p>
-<p>Öffne den Monat des Wunschdatums und danach den gewünschten Tag. Die Tagesseite liefert die aktuelle Verfügbarkeit mit Prüfzeitpunkt und Prüfnummer.</p>
+<p>Öffne den Monat des Wunschdatums und danach den gewünschten Tag. Die Tagesseite liefert die aktuelle Verfügbarkeit mit Prüfzeitpunkt und bei protokollierten Prüfungen eine Prüfnummer.</p>
 <p>Die Monats- und Tagesübersichten enthalten keine Verfügbarkeiten. Erst das Öffnen einer einzelnen Tagesseite prüft den Kalender. Innerhalb von 24 Stunden können höchstens drei unterschiedliche Tage geprüft werden; es gilt dasselbe Limit wie bei der bestehenden Einzelabfrage.</p>
 <h2>Monat des Wunschdatums</h2><ul class="dates" aria-label="Monate">${items}</ul>
 <p>Prüfzeitraum: ${escapeHtml(bounds.minDate)} bis ${escapeHtml(bounds.maxDate)}. Der empfohlene Vorlauf von sechs Monaten für Hochzeiten ist keine technische Mindestfrist.</p>
-<p>Die Prüfung protokolliert Datum, Ergebnis, Zeitpunkt und eine grobe Bot-Kategorie für höchstens 30 Tage. Sie ist ausschließlich für konkrete Fotoanfragen vorgesehen.</p>`);
+<p>Das begrenzte Prüfprotokoll erfasst Datum, Ergebnis, Zeitpunkt und eine grobe Bot-Kategorie für höchstens 30 Tage. Die Prüfung ist ausschließlich für konkrete Fotoanfragen vorgesehen.</p>`);
   }
 
   // Fetch services can remove a trailing slash; serve either spelling without a redirect loop.
@@ -110,39 +110,40 @@ export async function handleAgentAvailabilityTrial({ request, env }) {
   // HEAD must never read the calendar, consume the query budget or create an audit entry.
   if (request.method === "HEAD") return html(request, "Terminprüfung", "");
 
-  const checkUrl = new URL("/api/availability", url);
-  checkUrl.searchParams.set("date", date);
   const checkedAt = new Date().toISOString();
-  const id = `trial-${crypto.randomUUID()}`;
-  // Reuse the existing handler and identity headers so every alias shares one date budget.
-  const response = await checkSingleDate({
-    request: new Request(checkUrl, { headers: request.headers }), env, audit: false,
-  });
+  const { response, observe } = await checkSingleDateAvailability({ request, env, date });
   const payload = await response.json();
   const successful = response.ok && payload.date === date && typeof payload.available === "boolean";
   const status = successful ? 200 : response.ok ? 503 : response.status;
-  try {
-    await writeAgentAvailabilityAudit({
-      id, env, request, dates: [date],
-      results: successful ? [{ date, available: payload.available }] : [],
-      responseStatus: status, requestedAt: Date.parse(checkedAt),
-    });
-  } catch {
-    return html(request, "Termin nicht geprüft", "<p>Die nachvollziehbare Terminprüfung ist gerade nicht möglich. Bitte frage den Fotoauftrag persönlich an.</p>", 503);
+  let receiptId;
+  if (observe) {
+    const id = `trial-${crypto.randomUUID()}`;
+    try {
+      const stored = await writeAgentAvailabilityAudit({
+        id, env, request, dates: [date],
+        results: successful ? [{ date, available: payload.available }] : [],
+        responseStatus: status, requestedAt: Date.parse(checkedAt),
+      });
+      if (stored) receiptId = id;
+    } catch {
+      return html(request, "Termin nicht geprüft", "<p>Die nachvollziehbare Terminprüfung ist gerade nicht möglich. Bitte frage den Fotoauftrag persönlich an.</p>", 503);
+    }
   }
 
-  const headers = { "X-Artbild-Check-Id": id };
+  const headers = receiptId ? { "X-Artbild-Check-Id": receiptId } : {};
   for (const name of ["X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset", "Retry-After"]) {
     if (response.headers.has(name)) headers[name] = response.headers.get(name);
   }
   const result = successful ? payload.available ? "Aktuell verfügbar" : "Aktuell nicht verfügbar" : "Nicht geprüft";
-  return html(request, `Termin ${dayFormatter.format(new Date(`${date}T00:00:00Z`))}: ${result}`, `
+  const title = status === 503 ? "Termin nicht geprüft" : `Termin ${dayFormatter.format(new Date(`${date}T00:00:00Z`))}: ${result}`;
+  return html(request, title, `
 <section class="result" aria-label="Prüfergebnis"><dl>
 <dt>Wunschdatum</dt><dd>${escapeHtml(date)}</dd>
 <dt>Verfügbarkeit</dt><dd>${result}</dd>
 ${successful ? `<dt>Kalenderwert</dt><dd><code>available: ${payload.available}</code></dd>` : ""}
 <dt>${successful ? "Geprüft am (UTC)" : "Prüfversuch am (UTC)"}</dt><dd><time datetime="${checkedAt}">${checkedAt}</time></dd>
-<dt>Prüfnummer</dt><dd><code>${id}</code></dd></dl></section>
+${receiptId ? `<dt>Prüfnummer</dt><dd><code>${receiptId}</code></dd>` : ""}</dl></section>
+${successful && !receiptId ? "<p>Für diese Prüfung wurde keine Prüfnummer ausgestellt.</p>" : ""}
 ${successful ? "<p>Diese Antwort gibt den Kalenderstand zum genannten Prüfzeitpunkt wieder. Sie ist unverbindlich und keine Reservierung.</p>" : `<p>${escapeHtml(payload.message || "Die Terminprüfung ist vorübergehend nicht möglich.")} Ein technischer Fehler sagt nichts über die Verfügbarkeit des Datums aus.</p>`}
 <p>${link(new URL(ROOT, url), "Zur Monatsübersicht")}</p>`, status, headers);
 }

@@ -96,7 +96,7 @@ export function GET() {
     "- Datumsformat: YYYY-MM-DD",
     "- Daten müssen eindeutig sein: Ja",
     "- Daten müssen aufeinanderfolgen: Nein",
-    `- Abfragelimit: ${agentAvailabilityRules.maximumSuccessfulRequests} erfolgreiche Abfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden`,
+    `- Abfragelimit: ${agentAvailabilityRules.maximumSuccessfulRequests} zur Kalenderprüfung angenommene POST-Abfragen innerhalb von ${agentAvailabilityRules.windowHours} Stunden. Beachte bei einer 429-Antwort Retry-After.`,
     `- Prüfzeitraum: heute bis höchstens ${agentAvailabilityRules.maximumAdvanceMonths} Monate im Voraus`,
     "- Ergebnis verbindlich: Nein",
     "- Reservierung durch die Abfrage: Nein",
