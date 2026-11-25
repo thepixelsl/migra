@@ -32,46 +32,26 @@ const schema = { "@context": "https://schema.org", "@type": "WebPage", "@id": `$
     <main>
       <Breadcrumbs items={breadcrumbs} siteUrl={siteUrl} currentUrl={pageUrl} />
       <div class="screen-shell">
-        <header class="screen-hero">
-          <p class="screen-eyebrow">Für eure Bilder zu Hause</p>
-          <h1>Eure Hochzeitsfotos.<br />Bis ins Detail.</h1>
-          <p class="screen-intro">Die feine Spitze im Brautkleid, die Falten im dunklen Anzug: Mit diesem Bildschirm-Check seht ihr, ob euer Gerät helle und dunkle Abstufungen zeigt.</p>
-          <a class="screen-button" href="#test">Zum Bildschirm-Check <span aria-hidden="true">↓</span></a>
-          <p class="screen-caption">Etwa eine Minute · auf Computer, Tablet und Smartphone</p>
-        </header>
-
-        <section class="screen-preparation" aria-labelledby="vorbereitung">
-          <h2 id="vorbereitung">Bevor ihr beginnt</h2>
-          <ol>
-            <li><strong>Ruhiges Licht.</strong> Vermeidet direkte Sonne und Spiegelungen auf dem Bildschirm. Schaut möglichst gerade auf das Display.</li>
-            <li><strong>Neutrale Darstellung.</strong> Schaltet Nachtmodus, Blaulichtfilter und automatische Farbanpassungen wie True Tone für die Betrachtung aus. Wählt am Monitor, falls vorhanden, „Standard“ oder „sRGB“ und deaktiviert dynamischen Kontrast.</li>
-            <li><strong>Angenehme Helligkeit.</strong> Stellt die Helligkeit passend zum Raum ein. Weiß soll hell wirken, euch aber nicht blenden. Lasst die Einstellung beim Vergleich mit euren Fotos gleich.</li>
-          </ol>
-        </section>
-
         <section class="screen-test" aria-labelledby="test">
-          <div class="screen-test__heading">
-            <div><p class="screen-eyebrow">Ein Blick auf helle und dunkle Details</p><h2 id="test">Der Graustufentest</h2></div>
-            <button class="screen-button screen-button--outline" type="button" data-open-screen-test hidden>Test groß anzeigen <span aria-hidden="true">↗</span></button>
-          </div>
+          <header class="screen-test__heading">
+            <div>
+              <h1 id="test">Bildschirm-Check</h1>
+              <p>Schaut gerade auf den Bildschirm und vermeidet Spiegelungen. Welche Nachbarfelder könnt ihr unterscheiden?</p>
+            </div>
+            <button class="screen-button" type="button" data-open-screen-test aria-haspopup="dialog" aria-controls="screen-test-dialog" hidden>Test groß anzeigen <span aria-hidden="true">↗</span></button>
+          </header>
           <MonitorTestPattern prefix="page" />
-          <p class="screen-test__download"><a href="/downloads/artbild-bildschirm-check.png" download>Testbild mit Feinstufen herunterladen (PNG)</a> und im selben Bildbetrachter wie eure Fotos öffnen.</p>
-        </section>
-
-        <section class="screen-reading" aria-labelledby="ergebnis">
-          <h2 id="ergebnis">Was ihr daraus ablesen könnt</h2>
-          <div class="screen-reading__columns">
-            <div><h3>Die Abstufungen sind sichtbar</h3><p>Die sichtbaren Felder zeigen, welche Helligkeitsunterschiede ihr auf eurem Gerät bei diesem Raumlicht unterscheiden könnt. Mit den Feinstufen könnt ihr prüfen, wo sehr zarte Nuancen nahe Schwarz oder Weiß zusammenlaufen.</p></div>
-            <div><h3>Mehrere Felder verschwinden</h3><p>Wenn schon gröbere Felder verschmelzen, können auch Falten im Anzug oder Strukturen im Kleid verloren gehen. Prüft Raumlicht, Blickwinkel und Bildmodus. Passt die Helligkeit behutsam an und vergleicht bei Bedarf auf einem anderen Gerät.</p></div>
+          <div class="screen-test__footer">
+            <p>Verschmelzen schon gröbere Stufen, prüft Raumlicht und Bildschirmhelligkeit.</p>
+            <a href="/downloads/artbild-bildschirm-check.png" download>Testbild herunterladen (PNG)</a>
           </div>
-          <p class="screen-limit"><strong>Ein Sichttest für zu Hause.</strong> Für verlässliche Aussagen über Leuchtdichte, Tonkurve und Farbtreue braucht es ein Messgerät und ein passendes Monitorprofil.</p>
         </section>
 
         <section class="screen-reference" aria-labelledby="referenzfoto">
           <div>
-            <h2 id="referenzfoto">Details im Hochzeitsfoto vergleichen</h2>
-            <p>Achtet auf die Stickerei am weißen Kleid, auf die Falten im dunkelblauen Jackett und auf die Hauttöne. Betrachtet das Foto in der Galerie auf demselben Gerät und bei gleichem Raumlicht.</p>
-            <a href="/gallery/hochzeit-valerie-und-tim/">Zur Hochzeitsgalerie von Valerie und Tim <span aria-hidden="true">→</span></a>
+            <h2 id="referenzfoto">Im Foto vergleichen</h2>
+            <p>Erkennt ihr die Stickerei im Kleid und die Falten im dunklen Jackett?</p>
+            <a href="/gallery/hochzeit-valerie-und-tim/">Zur Galerie von Valerie und Tim <span aria-hidden="true">→</span></a>
           </div>
           <Image
             src={referencePhoto}
@@ -83,21 +63,13 @@ const schema = { "@context": "https://schema.org", "@type": "WebPage", "@id": `$
             class="screen-reference__photo"
           />
         </section>
-
-        <section class="screen-next" aria-labelledby="bilder-geniessen">
-          <h2 id="bilder-geniessen">Jetzt sind eure Erinnerungen dran.</h2>
-          <p>Öffnet eure Hochzeitsgalerie auf demselben Gerät und bei ähnlichem Raumlicht. Wenn ihr eure Lieblingsbilder als Fotobuch oder Druck genießen möchtet, findet ihr hier meine Hinweise zur Druckvorbereitung.</p>
-          <a href="/hochzeitsfotos-drucken-color-proofing/">Hochzeitsfotos drucken &amp; Color-Proofing <span aria-hidden="true">→</span></a>
-        </section>
-        <p class="screen-sources">Mehr zum Hintergrund: <a href="https://www.eizo.de/monitortest/">EIZO Monitortest</a> · <a href="https://www.eizo.de/farbmanagement-kalibrierung/alles-ueber-monitor-kalibrierung">Monitorkalibrierung</a> · <a href="https://support.apple.com/de-de/109351">Helligkeit und Farbanpassungen bei Apple</a></p>
         <footer class="gallery-footer screen-footer"><span>ARTBILD-Fotografie · York Augustin</span><nav aria-label="Rechtliches"><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a><a href="/kontakt/">Kontakt</a></nav></footer>
       </div>
     </main>
-    <dialog class="screen-dialog" aria-labelledby="screen-dialog-title">
+    <dialog class="screen-dialog" id="screen-test-dialog" aria-labelledby="screen-dialog-title">
       <div class="screen-dialog__inner">
-        <header class="screen-dialog__header"><h2 id="screen-dialog-title">ARTBILD · Bildschirm-Check</h2><button type="button" class="screen-button screen-button--outline" data-close-screen-test>Schließen <span aria-hidden="true">×</span></button></header>
-        <MonitorTestPattern prefix="dialog" />
-        <p class="screen-dialog__note">Vergleicht die Felder bei gleichbleibender Helligkeit und ohne Spiegelungen.</p>
+        <header class="screen-dialog__header"><h2 id="screen-dialog-title">Bildschirm-Check</h2><button type="button" class="screen-button" data-close-screen-test>Schließen <span aria-hidden="true">×</span></button></header>
+        <MonitorTestPattern prefix="dialog" heading="h3" />
       </div>
     </dialog>
   </body>
@@ -116,36 +88,25 @@ const schema = { "@context": "https://schema.org", "@type": "WebPage", "@id": `$
 </script>
 
 <style>
+  main > :global(.site-breadcrumb){margin-top:clamp(12px,2vw,26px)}
   .screen-shell{width:min(calc(1100px + var(--desktop-width-extra, 0px)),calc(100% - 64px));margin-inline:auto;color:#303030}
-  .screen-hero{max-width:810px;margin-inline:auto;padding:70px 0 76px;text-align:center}
-  .screen-eyebrow{font-family:"Raleway",Arial,sans-serif;text-transform:uppercase;letter-spacing:.19em;font-size:11px;line-height:1.6;margin:0 0 20px;color:#59544e}
-  h1,h2,h3{font-family:"Gilda Display",Georgia,serif;font-weight:400;letter-spacing:-.018em}
-  h1{font-size:clamp(43px,5.4vw,76px);line-height:1.12;margin:0 0 26px}
-  h2{font-size:clamp(29px,3vw,39px);line-height:1.2;margin:0 0 26px;scroll-margin-top:24px}
-  h3{font-size:25px;line-height:1.3;margin:0 0 14px}
-  p{margin:0 0 22px}.screen-intro{max-width:640px;margin:0 auto 32px;font-size:21px;line-height:1.7}
-  .screen-button{display:inline-flex;justify-content:center;align-items:center;gap:18px;min-height:48px;padding:13px 23px;background:#242424;color:#fff;border:1px solid #242424;font-family:"Raleway",Arial,sans-serif;font-size:13px;font-weight:600;line-height:1.5;text-decoration:none;cursor:pointer;border-radius:0}
-  .screen-button[hidden]{display:none}.screen-button--outline{background:transparent;color:#242424}.screen-button:hover{background:#404040;color:#fff}
+  h1,h2{font-family:"Gilda Display",Georgia,serif;font-weight:400;letter-spacing:-.018em;line-height:1.2}
+  h1{font-size:clamp(36px,4.3vw,54px);margin:0 0 8px;scroll-margin-top:24px}
+  h2{font-size:clamp(26px,3vw,36px);margin:0 0 12px}
+  .screen-test__heading{display:flex;align-items:flex-end;justify-content:space-between;gap:14px 24px;margin:clamp(16px,2vw,24px) 0 18px}
+  .screen-test__heading p{max-width:76ch;margin:0;font-size:17px;line-height:1.55}
+  .screen-button{display:inline-flex;flex:none;align-items:center;justify-content:center;gap:12px;min-height:44px;padding:9px 15px;background:transparent;color:#242424;border:1px solid #242424;font:600 13px/1.5 "Raleway",Arial,sans-serif;cursor:pointer;border-radius:0}
+  .screen-button[hidden]{display:none}.screen-button:hover{background:#404040;color:#fff}
   .screen-shell :is(a,button):focus-visible,.screen-dialog button:focus-visible{outline:2px solid #242424;outline-offset:5px}
-  .screen-caption{margin:18px 0 0;font-family:"Raleway",Arial,sans-serif;font-size:12px;color:#59544e}
-  .screen-preparation{border-block:1px solid #dfd8cf;padding:38px 0 30px;margin-bottom:70px}
-  .screen-preparation ol{list-style:none;counter-reset:preparation;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:34px;margin:0;padding:0}
-  .screen-preparation li{counter-increment:preparation;font-size:16px;line-height:1.7}
-  .screen-preparation li::before{content:"0" counter(preparation);display:block;font-family:"Raleway",Arial,sans-serif;font-size:12px;letter-spacing:.12em;color:#59544e;margin-bottom:12px}
-  .screen-preparation strong{display:block;font-family:"Raleway",Arial,sans-serif;font-size:14px;margin-bottom:8px}
-  .screen-test__heading{display:flex;align-items:center;justify-content:space-between;gap:24px;margin-bottom:28px}.screen-test__heading h2{margin-bottom:0}.screen-test__heading .screen-eyebrow{margin-bottom:10px}
-  .screen-test__download{font-family:"Raleway",Arial,sans-serif;font-size:12px;margin:18px 0 0;line-height:1.7}
-  .screen-reading{padding:72px 0}.screen-reading__columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:54px}.screen-reading__columns p{font-size:18px}
-  .screen-reference{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);align-items:center;gap:clamp(24px,4vw,56px);padding:clamp(24px,4vw,48px);margin-bottom:72px;background:#ededed}
-  .screen-reference p{font-size:17px;line-height:1.65}.screen-reference a{font-size:16px;line-height:1.5}.screen-reference__photo{display:block;width:100%;height:auto}
-  .screen-limit{border-top:1px solid #dfd8cf;padding-top:24px;margin:20px 0 0;font-size:16px}.screen-next{background:#f5f2ed;padding:42px 48px;max-width:850px;margin-inline:auto}.screen-next p{font-size:18px}.screen-next>a{font-size:16px}
-  .screen-sources{font-family:"Raleway",Arial,sans-serif;font-size:11px;line-height:1.9;color:#59544e;margin:38px 0 0}
+  .screen-test__footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;margin:14px 0 0;font:400 13px/1.6 "Raleway",Arial,sans-serif}
+  .screen-test__footer p{margin:0}
+  .screen-reference{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);align-items:center;gap:clamp(20px,4vw,48px);padding:clamp(20px,4vw,40px);margin-top:clamp(32px,6vw,64px);background:#ededed}
+  .screen-reference p{font-size:17px;line-height:1.55;margin:0 0 12px}.screen-reference a{font-size:16px;line-height:1.5}.screen-reference__photo{display:block;width:100%;height:auto}
   .screen-footer{display:flex;justify-content:space-between;gap:24px;margin-top:36px;padding:24px 0 36px;border-top:1px solid #dfd8cf;font-family:"Raleway",Arial,sans-serif;font-size:12px}.screen-footer nav{display:flex;flex-wrap:wrap;gap:20px}
   .screen-dialog{width:100vw;max-width:none;height:100dvh;max-height:none;margin:0;padding:24px;border:0;background:#b8b8b8;color:#171717;overflow:auto}
-  .screen-dialog::backdrop{background:#b8b8b8}.screen-dialog__inner{max-width:1300px;margin:auto}.screen-dialog__header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:14px}.screen-dialog__header h2{font-size:22px;margin:0}.screen-dialog__note{font-family:"Raleway",Arial,sans-serif;font-size:13px;margin:20px 0 0}
+  .screen-dialog::backdrop{background:#b8b8b8}.screen-dialog__inner{max-width:1300px;margin:auto}.screen-dialog__header{display:flex;align-items:center;justify-content:space-between;gap:12px}.screen-dialog__header h2{font-size:22px;margin:0}
   :global(html.screen-test-open){overflow:hidden}
-  @media(max-width:800px){.screen-preparation ol{grid-template-columns:minmax(0,1fr);gap:24px}.screen-reading__columns{gap:30px}.screen-preparation{margin-bottom:48px}.screen-test__heading{align-items:flex-start;flex-direction:column}.screen-hero{padding:48px 0 55px}}
-  @media(max-width:800px){.screen-reference{grid-template-columns:minmax(0,1fr);margin-bottom:48px}}
-  @media(max-width:600px){.screen-shell{width:calc(100% - 40px)}.screen-hero{text-align:left;padding-top:38px}.screen-intro{font-size:19px}.screen-eyebrow{font-size:10px}.screen-reading{padding:48px 0}.screen-reading__columns{grid-template-columns:minmax(0,1fr);gap:18px}.screen-next{padding:30px 24px}.screen-footer{flex-direction:column}.screen-dialog{padding:16px}.screen-dialog__header h2{font-size:18px}.screen-dialog__header .screen-button{padding:10px 13px;font-size:12px}.screen-caption{font-size:11px}}
+  @media(max-width:800px){.screen-reference{grid-template-columns:minmax(0,1fr)}}
+  @media(max-width:600px){.screen-shell{width:calc(100% - 32px)}.screen-test__heading{align-items:flex-start;flex-direction:column}.screen-footer{flex-direction:column}.screen-dialog{padding:16px}.screen-dialog__header h2{font-size:19px}}
   @media(prefers-reduced-motion:reduce){:global(html){scroll-behavior:auto}}
 </style>
