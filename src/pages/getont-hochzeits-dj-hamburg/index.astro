@@ -1,0 +1,138 @@
+---
+import Breadcrumbs from "../../components/Breadcrumbs.astro";
+import DesktopNavigation from "../../components/DesktopNavigation.astro";
+import FaviconHead from "../../components/FaviconHead.astro";
+import MobileNavigation from "../../components/MobileNavigation.astro";
+import "../../styles/global.css";
+
+const path = "/getont-hochzeits-dj-hamburg/";
+const pageUrl = new URL(path, Astro.site ?? "https://artbild-fotografie.de/").href;
+const heading = "getont – Hochzeits-DJs aus Hamburg";
+const title = `${heading} | Artbild-Fotografie`;
+const description = "Die Hamburger DJ-Agentur getont vermittelt DJs für Hochzeiten und bietet Live-Saxophon in Kombination mit einem DJ an.";
+const breadcrumbs = [
+  { label: "Startseite", href: "/" },
+  { label: "getont", href: path },
+];
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <FaviconHead />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={pageUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={pageUrl} />
+  </head>
+  <body class="gallery-template">
+    <header class="gallery-header">
+      <MobileNavigation />
+      <DesktopNavigation />
+    </header>
+    <main>
+      <Breadcrumbs items={breadcrumbs} currentUrl={pageUrl} />
+      <article class="recommendation">
+        <header>
+          <p class="eyebrow">Hochzeitsmusik</p>
+          <h1>{heading}</h1>
+          <p class="recommendation__lead">
+            Die Hamburger Agentur getont vermittelt DJs für Eure Hochzeitsfeier. Auf Wunsch könnt Ihr den DJ mit Live-Saxophon kombinieren.
+          </p>
+          <a
+            class="recommendation__website"
+            href="https://getont.de/"
+            rel="external"
+            data-track-event="external_resource_click"
+            data-resource-id="vendor_getont"
+            data-resource-type="vendor_website"
+            data-cta-id="getont_website"
+            data-cta-type="vendor_link"
+            data-content-topic="hochzeitsdienstleister_hamburg"
+            data-user-intent="dienstleister_ansehen"
+            data-journey-stage="planung"
+          >Zur Website von getont <span aria-hidden="true">↗</span></a>
+        </header>
+
+        {/* Hier kann später ein Foto mit Bildbeschreibung eingefügt werden. */}
+
+        <div class="recommendation__body">
+          <p>
+            In den DJ-Profilen auf getont.de könnt Ihr Euch einen Eindruck von den verschiedenen Musikstilen verschaffen. Im Vorgespräch besprecht Ihr Eure Lieblingssongs, den Ablauf der Feier und welche Ton- und Lichttechnik Eure Location braucht.
+          </p>
+          <a class="recommendation__back" href="/#hochzeitsdienstleister">Weitere Hochzeitsdienstleister</a>
+        </div>
+      </article>
+    </main>
+    <footer class="gallery-footer">
+      <span>Artbild-Fotografie · York Augustin</span>
+      <nav aria-label="Footer">
+        <a href="/kontakt/">Kontakt</a>
+        <a href="/impressum/">Impressum</a>
+        <a href="/datenschutz/">Datenschutz</a>
+      </nav>
+    </footer>
+  </body>
+</html>
+
+<style>
+  .recommendation {
+    width: min(760px, calc(100% - 44px));
+    margin: clamp(36px, 5vw, 64px) auto clamp(64px, 9vw, 118px);
+  }
+
+  .recommendation h1 {
+    margin: 12px 0 24px;
+    font-size: clamp(42px, 5.5vw, 68px);
+    font-weight: 400;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  .recommendation__lead {
+    max-width: 42ch;
+    margin: 0;
+    font-size: clamp(22px, 2.7vw, 28px);
+    line-height: 1.4;
+  }
+
+  .recommendation__body {
+    margin-top: 32px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+  }
+
+  .recommendation__body p {
+    max-width: 58ch;
+    margin: 0;
+    font-size: 20px;
+    line-height: 1.55;
+  }
+
+  .recommendation__website {
+    display: inline-flex;
+    gap: 16px;
+    align-items: center;
+    margin-top: 24px;
+    padding: 13px 19px;
+    background: #222631;
+    color: #fff;
+    font: 700 14px/1.4 "Raleway", Arial, sans-serif;
+    text-decoration: none;
+  }
+
+  .recommendation__website:hover {
+    background: #434753;
+  }
+
+  .recommendation__back {
+    display: table;
+    margin-top: 24px;
+    text-underline-offset: 4px;
+  }
+</style>

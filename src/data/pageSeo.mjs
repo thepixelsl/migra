@@ -90,6 +90,11 @@ export const pageSeo = {
     image: "public/images/portrait-riverside.jpg",
     alt: "York Augustin, Fotograf von Artbild-Fotografie, am Wasser",
   },
+  "/getont-hochzeits-dj-hamburg/": {
+    keyword: "getont Hochzeits-DJ Hamburg",
+    image: "public/images/portrait-riverside.jpg",
+    alt: "York Augustin, Fotograf von Artbild-Fotografie und Autor der Empfehlung",
+  },
   "/hochzeitsfotos-drucken-color-proofing/": {
     keyword: "Hochzeitsfotos drucken Color-Proofing",
     image: "src/assets/hochzeitsfotos-drucken-color-proofing/brautpaarportrait.jpg",
