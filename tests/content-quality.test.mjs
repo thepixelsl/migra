@@ -23,7 +23,9 @@ for (const file of await htmlFiles(dist)) {
   if (!$("main").length || route.startsWith("/admin-") || $("meta[http-equiv=refresh]").length) continue;
   pages.push({ $, route });
 }
-assert.ok(pages.length > 80, "Expected the complete built public site, including archive pages");
+/* hub-content-removals */
+const removalPlan=await fs.readFile(path.resolve('public/hub-content-removals.json'),'utf8').then(JSON.parse);
+assert.ok(pages.length > 80-removalPlan.routes.length, "Expected the complete built public site, including archive pages");
 
 test("public pages have one main heading and meaningful descriptions", () => {
   const errors = [];
