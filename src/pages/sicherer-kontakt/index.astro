@@ -182,17 +182,6 @@ const schemaGraph = {
             <div class="secure-hero__overlay"></div>
             <div class="secure-hero__content">
               <h1 id="secure-contact-title">Kontakt und PGP-Schlüssel</h1>
-              <div>
-                <p>
-                  Für die erste Anfrage genügen Name, E-Mail-Adresse und
-                  Wunschdatum. Vertrauliche Angaben sollten nicht in einer
-                  unverschlüsselten Erstnachricht stehen.
-                </p>
-                <p>
-                  Für technisch geeignete PGP-Programme steht unten ein
-                  öffentlicher Schlüssel zum Download bereit.
-                </p>
-              </div>
             </div>
           </div>
         </section>
@@ -201,63 +190,25 @@ const schemaGraph = {
           <header class="secure-copy__heading">
             <h2 id="secure-copy-title">
               Sicherer Kontakt für Mitarbeitende von Behörden und Organisationen mit
-              Sicherheitsaufgaben, Angehörige des Diplomatischen Dienstes und Paare,
-              die mit diskretem Personenschutz heiraten
+              Sicherheitsaufgaben, Angehörige des Diplomatischen Dienstes und für
+              Hochzeiten mit diskretem Personenschutz
             </h2>
           </header>
 
-          <div class="secure-original-copy">
-            <div>
-              <p>
-                Der Kontakt-Link auf dieser Seite öffnet eine normale E-Mail. Eine
-                solche Nachricht ist nicht automatisch Ende-zu-Ende verschlüsselt.
-              </p>
-              <p>
-                Wenn Sie PGP bereits in einem geeigneten E-Mail-Programm verwenden,
-                können Sie diesen öffentlichen Schlüssel herunterladen:
-              </p>
-              <a
-                class="secure-download"
-                href={pgpDownload}
-                download
-                rel="nofollow"
-                aria-label="York-Augustin-2C86E0AD-Oeffentlich.asc herunterladen"
-              >
-                York-Augustin-2C86E0AD-Oeffentlich.asc
-              </a>
-              <p>
-                Prüfen Sie die Identität des Schlüssels vor der Übermittlung
-                vertraulicher Daten über einen unabhängig vereinbarten Kontaktweg.
-                Der Download allein verschlüsselt noch keine Nachricht.
-              </p>
-              <p>
-                Wenn Ihre Organisation einen eigenen Kommunikationsweg vorgibt,
-                nennen Sie ihn bitte zunächst ohne vertrauliche Inhalte. Die
-                technische Eignung wird vor einem weiteren Austausch abgestimmt.
-              </p>
-            </div>
-            <div>
-              <p>
-                Zunächst wird nur geprüft, ob der gewünschte Termin verfügbar ist.
-                Dafür sind noch keine Angaben zu Schutzpersonen, Adressen oder
-                internen Abläufen erforderlich.
-              </p>
-              <p>
-                Teilen Sie weitere Informationen erst mit, wenn der Termin passt
-                und ein geeigneter Kommunikationsweg vereinbart wurde.
-              </p>
-              <p>
-                Die Verfügbarkeit Ihres Wunschtermins können Sie vorab über das
-                Kontakt-Symbol (FAB) unten rechts mit „Termin noch frei?“ prüfen.
-                Dafür genügt das gewünschte Datum.
-              </p>
-              <p>
-                Diese Seite beschreibt lediglich die angebotenen Kontaktwege. Sie
-                gibt keine Garantie für die Sicherheit fremder Geräte, Programme
-                oder E-Mail-Systeme.
-              </p>
-              <p>Herzlichen Dank!</p>
-            </div>
+          <div class="secure-contact-details">
+            <a
+              class="secure-download"
+              href={pgpDownload}
+              download
+              rel="nofollow"
+            >
+              Öffentlichen PGP-Schlüssel herunterladen
+            </a>
+            <p>
+              Zunächst muss ich prüfen, ob ich an Ihrem Wunschtermin verfügbar bin.
+              Erst danach sollten weitere Informationen mitgeteilt werden.
+            </p>
+            <p>Herzlichen Dank!</p>
           </div>
         </section>
 
@@ -272,10 +223,6 @@ const schemaGraph = {
           data-position="after_security_information"
         >
           <h2 id="secure-cta-title">Erstkontakt per E-Mail</h2>
-          <p>
-            Der Mail-Link öffnet Ihr Standardprogramm. Die Nachricht wird dadurch
-            nicht automatisch verschlüsselt.
-          </p>
           <a
             class="secure-button"
             href={secureMailto}
@@ -308,10 +255,9 @@ const schemaGraph = {
           <div class="secure-featured__copy">
             <h2 id="secure-featured-title">Paarshooting-Fotogalerie</h2>
             <p>
-              Mit einem tollen Paarshooting von Artbild-Fotografie hielt dieses
-              Paar seine Erinnerungen an die gemeinsame Zeit in seiner Wohnung auf
-              Mallorca fest. Die beiden haben mir erlaubt, Euch ein paar Bilder
-              davon zu zeigen.
+              Mit einem tollen Paarshooting von Artbild-Fotografie versüßte sich
+              dieses Paar ihre Erinnerung in ihrer Wohnung auf Mallorca. Die beiden
+              haben mir erlaubt, Euch ein paar Bilder davon zu zeigen.
             </p>
             <a class="secure-button secure-button--light" href="/gallery/paarshooting-mallorca/">
               Jetzt ansehen!
@@ -707,8 +653,6 @@ const schemaGraph = {
     min-height: inherit;
     padding: clamp(72px, 8vw, 118px) clamp(72px, 9vw, 145px);
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(48px, 8vw, 112px);
     align-items: start;
     color: #fff;
   }
@@ -721,17 +665,6 @@ const schemaGraph = {
     font-weight: 400;
     letter-spacing: .01em;
     line-height: 1.2;
-  }
-
-  .secure-hero__content p {
-    margin: 0 0 16px;
-    color: #fff;
-    font-size: clamp(17px, 1.45vw, 21px);
-    line-height: 1.42;
-  }
-
-  .secure-hero__content p:last-child {
-    margin-bottom: 0;
   }
 
   .secure-copy {
@@ -757,37 +690,19 @@ const schemaGraph = {
     text-wrap: balance;
   }
 
-  .secure-copy__heading > p:last-child {
-    max-width: 680px;
-    margin: 0 auto;
-    color: #67615c;
-    font-size: clamp(17px, 1.35vw, 20px);
-    line-height: 1.65;
-  }
-
-  .secure-original-copy {
-    margin-top: clamp(52px, 6vw, 82px);
-    padding: clamp(42px, 5vw, 68px) 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(54px, 7vw, 92px);
+  .secure-contact-details {
+    margin-top: clamp(36px, 5vw, 68px);
+    padding-top: clamp(26px, 4vw, 44px);
     border-top: 1px solid #d9d5d0;
-    border-bottom: 1px solid #d9d5d0;
+    text-align: center;
   }
 
-  .secure-original-copy > div {
-    min-width: 0;
-  }
-
-  .secure-original-copy p {
-    margin: 0 0 20px;
+  .secure-contact-details p {
+    max-width: 540px;
+    margin: 22px auto 0;
     color: #605b56;
     font-size: clamp(16px, 1.25vw, 18px);
     line-height: 1.72;
-  }
-
-  .secure-original-copy .secure-download {
-    margin: 2px 0 24px;
   }
 
   .secure-download {
@@ -815,7 +730,7 @@ const schemaGraph = {
     margin: 0 auto;
     padding: clamp(56px, 7vw, 88px) clamp(46px, 5vw, 76px);
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: clamp(34px, 6vw, 80px);
     align-items: center;
     border-top: 1px solid #ddd9d4;
@@ -824,20 +739,13 @@ const schemaGraph = {
   }
 
   .secure-mail-cta h2 {
-    margin: 18px 0 0;
+    margin: 0;
     color: #44413e;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: .48em;
     line-height: 1.5;
     text-transform: uppercase;
-  }
-
-  .secure-mail-cta > p {
-    margin: 0;
-    color: #5e5954;
-    font-size: clamp(16px, 1.35vw, 19px);
-    line-height: 1.55;
   }
 
   .secure-button {
@@ -926,27 +834,16 @@ const schemaGraph = {
     }
 
     .secure-hero__content {
-      grid-template-columns: 1fr;
-      gap: 26px;
       align-content: center;
-    }
-
-    .secure-hero__content > div {
-      max-width: 560px;
     }
 
     .secure-copy {
       padding-inline: 24px;
     }
 
-    .secure-original-copy,
     .secure-mail-cta,
     .secure-featured {
       grid-template-columns: 1fr;
-    }
-
-    .secure-original-copy {
-      gap: 22px;
     }
 
     .secure-mail-cta {
@@ -987,11 +884,6 @@ const schemaGraph = {
 
     .secure-hero h1 {
       font-size: clamp(34px, 10vw, 44px);
-    }
-
-    .secure-hero__content p {
-      font-size: 16px;
-      line-height: 1.5;
     }
 
     .secure-copy {

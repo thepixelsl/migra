@@ -19,16 +19,13 @@ test("secure contact page contains local assets, contact guidance and SEO metada
   await expect(
     page.getByRole("heading", {
       level: 2,
-      name: "Sicherer Kontakt für Mitarbeitende von Behörden und Organisationen mit Sicherheitsaufgaben, Angehörige des Diplomatischen Dienstes und Paare, die mit diskretem Personenschutz heiraten",
+      name: "Sicherer Kontakt für Mitarbeitende von Behörden und Organisationen mit Sicherheitsaufgaben, Angehörige des Diplomatischen Dienstes und für Hochzeiten mit diskretem Personenschutz",
       exact: true,
     }),
   ).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "York-Augustin-2C86E0AD-Oeffentlich.asc" }),
-  ).toHaveAttribute("href", "/downloads/York-Augustin-2C86E0AD-Oeffentlich.asc");
-  await expect(
-    page.getByRole("link", { name: "York-Augustin-2C86E0AD-Oeffentlich.asc" }),
-  ).toHaveAttribute("download", "");
+  const pgpDownload = page.getByRole("link", { name: "Öffentlichen PGP-Schlüssel herunterladen" });
+  await expect(pgpDownload).toHaveAttribute("href", "/downloads/York-Augustin-2C86E0AD-Oeffentlich.asc");
+  await expect(pgpDownload).toHaveAttribute("download", "");
   await expect(
     page.locator('.secure-mail-cta a[href^="mailto:info@artbild-fotografie.de"]'),
   ).toHaveCount(1);
@@ -36,18 +33,11 @@ test("secure contact page contains local assets, contact guidance and SEO metada
     page.getByRole("link", { name: "Jetzt ansehen!" }),
   ).toHaveAttribute("href", "/gallery/paarshooting-mallorca/");
 
-  const mainText = await page.locator("main").innerText();
-  expect(mainText).toContain("öffentlichen Schlüssel");
-  expect(mainText).toContain("nicht automatisch Ende-zu-Ende verschlüsselt");
-  expect(mainText).toContain("Der Download allein verschlüsselt noch keine Nachricht");
-  expect(mainText).not.toContain("S/MIME");
-  expect(mainText).not.toContain("DigiCert");
-  expect(mainText).toContain("„Termin noch frei?“");
-  expect(mainText).toContain("Dafür genügt das gewünschte Datum");
-  expect(mainText).not.toContain("Signal nach Vereinbarung");
-  expect(mainText).not.toContain("EU-Chatkontrolle");
-  expect(mainText).not.toContain("Häufige Fragen zum sicheren Hochzeitskontakt");
-  expect(mainText).not.toContain("Fachliche Grundlage und Aktualität");
+  await expect(page.locator("main p")).toHaveText([
+    "Zunächst muss ich prüfen, ob ich an Ihrem Wunschtermin verfügbar bin. Erst danach sollten weitere Informationen mitgeteilt werden.",
+    "Herzlichen Dank!",
+    "Mit einem tollen Paarshooting von Artbild-Fotografie versüßte sich dieses Paar ihre Erinnerung in ihrer Wohnung auf Mallorca. Die beiden haben mir erlaubt, Euch ein paar Bilder davon zu zeigen.",
+  ]);
 
   const metadata = await page.evaluate(() => ({
     canonical: document.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href,
@@ -56,9 +46,6 @@ test("secure contact page contains local assets, contact guidance and SEO metada
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     hero: document.querySelector(".secure-hero")?.getBoundingClientRect(),
     heroImage: document.querySelector(".secure-hero img")?.getBoundingClientRect(),
-    originalCopyColumns: getComputedStyle(
-      document.querySelector(".secure-original-copy") as HTMLElement,
-    ).gridTemplateColumns,
   }));
 
   expect(metadata.canonical).toBe("https://artbild-fotografie.de/sicherer-kontakt/");
@@ -75,7 +62,6 @@ test("secure contact page contains local assets, contact guidance and SEO metada
   expect(metadata.imageSources.some((src) => src.includes("ART3390"))).toBe(false);
   expect(metadata.hero?.width).toBeCloseTo(metadata.heroImage?.width ?? 0, 0);
   expect(metadata.hero?.height).toBeCloseTo(metadata.heroImage?.height ?? 0, 0);
-  expect(metadata.originalCopyColumns.split(" ").length).toBe(2);
   expect(metadata.overflow).toBe(0);
 
   mkdirSync(screenshotDirectory, { recursive: true });
@@ -100,15 +86,11 @@ test("secure contact page and mobile menu remain touch friendly", async ({ page 
     heroImagePosition: getComputedStyle(
       document.querySelector(".secure-hero img") as HTMLElement,
     ).position,
-    originalCopyColumns: getComputedStyle(
-      document.querySelector(".secure-original-copy") as HTMLElement,
-    ).gridTemplateColumns,
   }));
 
   expect(layout.scrollWidth).toBe(layout.clientWidth);
   expect(layout.heroWidth).toBeLessThanOrEqual(layout.clientWidth - 20);
   expect(layout.heroImagePosition).toBe("absolute");
-  expect(layout.originalCopyColumns.split(" ").length).toBe(1);
 
   mkdirSync(screenshotDirectory, { recursive: true });
   await page.screenshot({
