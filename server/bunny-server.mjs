@@ -68,7 +68,7 @@ async function readRequestBody(request, maxBytes = MAX_REQUEST_BODY_BYTES) {
   return chunks.length ? Buffer.concat(chunks) : undefined;
 }
 
-async function toWebRequest(request, env) {
+function readRequestMetadata(request, env) {
   const headers = new Headers();
   for (const [name, value] of Object.entries(request.headers)) {
     if (Array.isArray(value)) {
@@ -89,9 +89,21 @@ async function toWebRequest(request, env) {
   const publicHost = firstHeaderValue(headers.get("x-forwarded-host"))
     || firstHeaderValue(headers.get("host"))
     || "localhost";
-  headers.set("x-forwarded-proto", publicProtocol);
+  // Accept an origin-form target and keep its authority separate from its path.
+  const target = request.url;
+  if (!target?.startsWith("/") || target.startsWith("//")
+    || target.split("?", 1)[0].includes("\\") || /[\u0000-\u0020\u007f#]/.test(target)
+    || !/^https?$/i.test(publicProtocol) || /[/\\?#@\s]/.test(publicHost)) {
+    return null;
+  }
 
-  const url = new URL(request.url || "/", `${publicProtocol}://${publicHost}`);
+  const url = URL.parse(target, `${publicProtocol}://${publicHost}`);
+  if (!url) return null;
+  headers.set("x-forwarded-proto", url.protocol.slice(0, -1));
+  return { headers, url };
+}
+
+async function toWebRequest(request, { headers, url }) {
   const maxBodyBytes = url.pathname === "/api/agent-availability"
     ? AGENT_AVAILABILITY_MAX_BODY_BYTES
     : adminAuthPath(url.pathname)
@@ -220,9 +232,20 @@ export async function createBunnyRuntime(options = {}) {
   };
 
   const server = createServer(async (nodeRequest, nodeResponse) => {
+    let requestUrl;
     try {
-      let request = await toWebRequest(nodeRequest, env);
-      const url = new URL(request.url);
+      const metadata = readRequestMetadata(nodeRequest, env);
+      if (!metadata) {
+        const response = new Response(nodeRequest.method === "HEAD" ? null : "Bad Request", {
+          status: 400,
+          headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" },
+        });
+        await writeNodeResponse(nodeResponse, withBunnyHeaders(response, env));
+        return;
+      }
+      const { url } = metadata;
+      requestUrl = url;
+      let request = await toWebRequest(nodeRequest, metadata);
 
       if (url.pathname === "/healthz" || url.pathname === "/readyz") {
         let databaseReady = true;
@@ -301,12 +324,14 @@ export async function createBunnyRuntime(options = {}) {
       });
       await writeNodeResponse(nodeResponse, withBunnyHeaders(response, env, url));
     } catch (error) {
+      if (nodeResponse.headersSent || nodeResponse.destroyed) {
+        nodeResponse.destroy();
+        return;
+      }
       const status = error instanceof RangeError ? 413 : 500;
       if (status === 500) console.error("Unhandled Bunny request error", error);
-      const requestUrl = new URL(nodeRequest.url || "/", "http://bunny.internal");
-      const pathname = requestUrl.pathname;
       const agentPayloadTooLarge = status === 413
-        && pathname === "/api/agent-availability";
+        && requestUrl?.pathname === "/api/agent-availability";
       const response = agentPayloadTooLarge
         ? Response.json(
           { error: "payload_too_large", message: "Die Anfrage ist zu groß." },
@@ -325,7 +350,7 @@ export async function createBunnyRuntime(options = {}) {
       await writeNodeResponse(
         nodeResponse,
         withBunnyHeaders(response, env, requestUrl),
-      );
+      ).catch(() => nodeResponse.destroy());
     }
   });
 

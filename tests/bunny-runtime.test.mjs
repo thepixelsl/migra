@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { TEST_ADMIN_SECRET, TEST_SETUP_TOKEN, TEST_ADMIN_ORIGIN, enrollTestAdmin, loginTestAdmin, adminTestClient } from "./helpers/admin-login.mjs";
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { request as httpRequest } from "node:http";
 import os from "node:os";
 import path from "node:path";
 import { after, before, test } from "node:test";
@@ -136,6 +137,34 @@ test("health and readiness endpoints report a ready persistent database", async 
     assert.deepEqual(await response.json(), { ok: true, database: "bunny" });
     assert.equal(response.headers.get("x-robots-tag"), "noindex, nofollow, noarchive");
   }
+});
+
+test("rejects invalid request URL metadata and keeps serving subsequent requests", async () => {
+  for (const headers of [
+    { "X-Forwarded-Host": "localhost:65536" },
+    { "X-Forwarded-Proto": "ftp" },
+  ]) {
+    const response = await fetch(`${baseUrl}/healthz`, { headers, redirect: "manual" });
+    assert.equal(response.status, 400);
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    assert.equal(response.headers.has("location"), false);
+    assert.equal(await response.text(), "Bad Request");
+  }
+
+  const ready = await fetch(`${baseUrl}/readyz`);
+  assert.equal(ready.status, 200);
+  assert.equal((await ready.json()).ok, true);
+});
+
+test("rejects a request target without an application path", async () => {
+  const response = await new Promise((resolve, reject) => {
+    const request = httpRequest(baseUrl, { method: "OPTIONS", path: "*" }, resolve);
+    request.once("error", reject);
+    request.end();
+  });
+  response.resume();
+  assert.equal(response.statusCode, 400);
+  assert.equal(response.headers["cache-control"], "no-store");
 });
 
 test("indexes only the configured production host", async () => {
